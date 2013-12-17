@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://www.openarchives.org/OAI/2.0/"
+         xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+   <responseDate>2013-12-17T14:14:00Z</responseDate>
+   <request metadataPrefix="oai_dc" verb="ListRecords">http://content.cdlib.org/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;set=oac:images</request>
+   <ListRecords>
+      <record>
+         <header>
+            <identifier>13030/hb796nb5mn</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+         <metadata>
+            <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+                       xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+                       xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+               <dc:title>Story of the San Francisco earthquake and conflagration as far as it affected the Conreid Metropolitan Opera Company April 18th, 19th and 20th, 1906.</dc:title>
+               <dc:creator>Goerlitz, Ernest</dc:creator>
+               <dc:subject>Buildings--Earthquake effects</dc:subject>
+               <dc:subject>Conreid Metropolitan Opera Company</dc:subject>
+               <dc:subject>Earthquakes--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>Fires--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>San Francisco Earthquake, Calif., 1906--Personal narratives</dc:subject>
+               <dc:subject>The 1906 San Francisco Earthquake and Fire Digital Collection</dc:subject>
+               <dc:publisher>California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:publisher>
+               <dc:contributor>Goerlitz, Ernest</dc:contributor>
+               <dc:date>1958</dc:date>
+               <dc:date>1958</dc:date>
+               <dc:type>text</dc:type>
+               <dc:type>still image</dc:type>
+               <dc:identifier>http://ark.cdlib.org/ark:/13030/hb796nb5mn</dc:identifier>
+               <dc:identifier>MS 3478</dc:identifier>
+               <dc:identifier>chs00000147_42a.xml</dc:identifier>
+               <dc:relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</dc:relation>
+               <dc:relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</dc:relation>
+               <dc:relation>eqf</dc:relation>
+               <dc:relation>http://calisphere.universityofcalifornia.edu/</dc:relation>
+               <dc:relation>http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:relation>
+               <dc:format>mods</dc:format>
+            </oai_dc:dc>
+         </metadata>
+      </record>
+      <record>
+         <header>
+            <identifier>13030/hb0c6003kb</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+         <metadata>
+            <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+                       xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+                       xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+               <dc:title>An eye witness</dc:title>
+               <dc:creator>Robertson, Myrtle</dc:creator>
+               <dc:subject>Earthquakes--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>Fires--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>San Francisco Earthquake, Calif., 1906--Personal narratives</dc:subject>
+               <dc:subject>The 1906 San Francisco Earthquake and Fire Digital Collection</dc:subject>
+               <dc:subject>An eye witness</dc:subject>
+               <dc:description>Narrator of document was an art student at the Mark Hopkins Art Institute, San Francisco, during the time of the earthquake.</dc:description>
+               <dc:description>Narrative by Myrtle Robertson, "given substantially in her own words," giving a firsthand account of the 1906 San Francisco earthquake and fire. The narrative is preceded by a brief introduction by an unknown transcriber.</dc:description>
+               <dc:publisher>California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:publisher>
+               <dc:contributor>Robertson, Myrtle</dc:contributor>
+               <dc:date>undated</dc:date>
+               <dc:type>text</dc:type>
+               <dc:type>still image</dc:type>
+               <dc:identifier>http://ark.cdlib.org/ark:/13030/hb0c6003kb</dc:identifier>
+               <dc:identifier>MS 3498</dc:identifier>
+               <dc:identifier>chs00000480_42a.xml</dc:identifier>
+               <dc:relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</dc:relation>
+               <dc:relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</dc:relation>
+               <dc:relation>eqf</dc:relation>
+               <dc:relation>MS 3498</dc:relation>
+               <dc:relation>http://calisphere.universityofcalifornia.edu/</dc:relation>
+               <dc:relation>http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:relation>
+               <dc:format>mods</dc:format>
+            </oai_dc:dc>
+         </metadata>
+      </record>
+      <record>
+         <header>
+            <identifier>13030/hb367nb2vx</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+         <metadata>
+            <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+                       xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+                       xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+               <dc:title>Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.</dc:title>
+               <dc:creator>Rankin, Ivan S.</dc:creator>
+               <dc:subject>Buildings--Earthquake effects--California--San Francisco</dc:subject>
+               <dc:subject>Earthquakes--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>Fires--California--San Francisco--Personal narratives</dc:subject>
+               <dc:subject>Refugee camps--California--Oakland</dc:subject>
+               <dc:subject>San Francisco Earthquake, Calif., 1906--Personal narratives</dc:subject>
+               <dc:subject>The 1906 San Francisco Earthquake and Fire Digital Collection</dc:subject>
+               <dc:subject>Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.</dc:subject>
+               <dc:description>Describes Rankin's personal experience of the earthquake, his trip that morning into San Francisco, damage to landmark buildings, and creation of a refugee camp on California Field, a football field in Berkeley, which he helped to patrol.</dc:description>
+               <dc:publisher>California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:publisher>
+               <dc:contributor>Rankin, Ivan S.</dc:contributor>
+               <dc:date>1969, April 25</dc:date>
+               <dc:date>1969-04-25</dc:date>
+               <dc:type>text</dc:type>
+               <dc:type>still image</dc:type>
+               <dc:identifier>http://ark.cdlib.org/ark:/13030/hb367nb2vx</dc:identifier>
+               <dc:identifier>MS 3497</dc:identifier>
+               <dc:identifier>chs00000479_42a.xml</dc:identifier>
+               <dc:relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</dc:relation>
+               <dc:relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</dc:relation>
+               <dc:relation>eqf</dc:relation>
+               <dc:relation>MS 3497</dc:relation>
+               <dc:relation>http://calisphere.universityofcalifornia.edu/</dc:relation>
+               <dc:relation>http://www.californiahistoricalsociety.org/collections/northbaker_research.html</dc:relation>
+               <dc:format>mods</dc:format>
+            </oai_dc:dc>
+         </metadata>
+      </record>
+   </ListRecords>
+</OAI-PMH>

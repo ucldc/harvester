@@ -1,21 +1,12 @@
 import os
 from sickle import Sickle
+import solr
 
 URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
 
 class Harvester(object):
     '''Base class for harvest objects.'''
-    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'CDL']
-    def __init__(self, user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
-        self.user_email = user_email
-        self.collection_name = collection_name
-        self.campuses = []
-        for campus in campuses:
-            if campus not in self.campus_valid:
-                raise ValueError('Campus value '+campus+' in not one of '+str(self.campus_valid))
-            self.campuses.append(campus)
-        self.repositories = repositories
-        self.type = harvest_type
+    def __init__(self, url_harvest, extra_data):
         self.url = url_harvest
         self.extra_data = extra_data
 
@@ -25,15 +16,11 @@ class Harvester(object):
     def next(self):
         raise NotImplementedError
 
-    def email_user(self, msg):
-        '''Email the user who initiated the harvest'''
-        pass
-
 
 class OAIHarvester(Harvester):
     '''Harvester for oai'''
-    def __init__(self, user_email, collection_name, campuses, repositories, url_harvest, extra_data):
-        super(OAIHarvester, self).__init__(user_email, collection_name, campuses, repositories, 'OAI', url_harvest, extra_data)
+    def __init__(self, url_harvest, extra_data):
+        super(OAIHarvester, self).__init__(url_harvest, extra_data)
         #TODO: check extra_data?
         self.oai_client = Sickle(url_harvest)
         self.records = self.oai_client.ListRecords(set=extra_data, metadataPrefix='oai_dc')
@@ -47,17 +34,7 @@ class OAIHarvester(Harvester):
         '''
         sickle_rec = self.records.next()
         rec = sickle_rec.metadata
-        #add required metadata to oai record
-        #campus, repo, collection name
-        rec['collection_name'] = self.collection_name
-        if 'publisher' not in rec:
-            rec['publisher'] = []
-        rec['publisher'].append(self.campuses)
-        rec['publisher'].append(self.repositories)
-        rec['campus'] = self.campuses
-        rec['repository'] = self.repositories
         return rec
-
 
 
 class HarvestController(object):
@@ -65,14 +42,65 @@ class HarvestController(object):
     collection, then retrieves records for the given collection, massages them
     to match the solr schema and then sends to solr for updates.
     '''
+    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'CDL']
     harvest_types = { 'OAI': OAIHarvester,
         }
-    def get_harvester_for_collection_type(self, harvest_type):
-        '''Get the correct harvester for a given type of harvest'''
-        # the mapping needs to go somewhere
-        return self.harvest_types.get(harvest_type, None)
+    dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
-    def harvest_collection(self, user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
-        '''Harvest a collection'''
-        pass
+    def __init__(self, user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
+        self.user_email = user_email
+        self.collection_name = collection_name
+        self.campuses = []
+        for campus in campuses:
+            if campus not in self.campus_valid:
+                raise ValueError('Campus value '+campus+' in not one of '+str(self.campus_valid))
+            self.campuses.append(campus)
+        self.repositories = repositories
+        self.harvester = self.harvest_types.get(harvest_type, None)(url_harvest, extra_data)
+        self.solr = solr.Solr(URL_SOLR)
 
+    def validate_input_dict(self, indata):
+        '''Validate the data from the harvester. Currently only DC elements
+        supported'''
+        if not isinstance(indata, dict):
+            raise TypeError("Input data must be a dictionary")
+        for key, value in indata.items():
+            if key not in self.dc_elements:
+                raise ValueError('Input data must be in DC elements. Problem key is:' + unicode(key))
+
+    def create_solr_id(self, identifier):
+        '''Create an id that is good for solr. Take campus, repo and collection
+        name to form prefix to individual item id. Ensures unique ids in solr,
+        in case any local ids are identical.
+        May do something smarter when known GUIDs (arks, doi, etc) are in use.
+        Takes a list of possible identifiers and creates a string id.
+        '''
+        if not isinstance(identifier, list):
+            raise TypeError('Identifier field should be a list')
+        campusStr = '-'.join(self.campuses)
+        repoStr = '-'.join(self.repositories)
+        sID = '-'.join((campusStr, repoStr, self.collection_name, identifier[0]))
+        return sID
+
+    def create_solr_doc(self, indata):
+        '''Create a document that is compatible with our solr index.
+        Currently it is not auto updated, this code will need to be touched
+        when solr schema changes
+        '''
+        self.validate_input_dict(indata)
+        #dc.title required
+        if 'title' not in indata:
+            raise ValueError('Item must have a title')
+        sDoc = indata
+        sDoc['id'] = self.create_solr_id(sDoc['identifier'])
+        sDoc['collection_name'] = self.collection_name
+        sDoc['campus'] = self.campuses
+        sDoc['repository'] = self.repositories
+        return sDoc
+
+    def harvest(self):
+        '''Harvest the collection'''
+        for rec in self.harvester:
+            #validate record
+            solrDoc = self.create_solr_doc(rec)
+            self.solr.add(solrDoc, commit=True)
