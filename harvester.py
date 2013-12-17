@@ -59,13 +59,20 @@ class OAIHarvester(Harvester):
         return rec
 
 
-def get_harvester_for_collection_type(harvest_type):
-    '''Get the correct harvester for a given type of harvest'''
-    # the mapping needs to go somewhere
-    harvest_types = { 'OAI': OAIHarvester,
-            }
-    return harvest_types.get(harvest_type, None)
 
-def harvest_collection(user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
-    '''Harvest a collection'''
-    pass
+class HarvestController(object):
+    '''Controller for the harvesting. Selects correct harvester for the given 
+    collection, then retrieves records for the given collection, massages them
+    to match the solr schema and then sends to solr for updates.
+    '''
+    harvest_types = { 'OAI': OAIHarvester,
+        }
+    def get_harvester_for_collection_type(self, harvest_type):
+        '''Get the correct harvester for a given type of harvest'''
+        # the mapping needs to go somewhere
+        return self.harvest_types.get(harvest_type, None)
+
+    def harvest_collection(self, user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
+        '''Harvest a collection'''
+        pass
+

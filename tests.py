@@ -22,12 +22,24 @@ class ScriptFileTestCase(TestCase):
         self.assertTrue(os.path.exists(path_script))
 
 
-class testHarvestFunctionContract(TestCase):
-    '''Check for function then call in expected manner'''
-    def testHarvestFnExists(self):
+class testHarvestController(TestCase):
+    '''Test the harvest controller class'''
+    def testHarvestControllerExists(self):
+        from harvester import HarvestController
+        harvester = HarvestController()
         self.assertTrue(hasattr(harvester, 'harvest_collection'))
         self.assertTrue(callable(harvester.harvest_collection))
         harvester.harvest_collection('email@example.com', 'collectionname', 'campuses', 'repositories', 'type', 'url_harvest', 'extra_data')
+        
+    def testOAIHarvesterType(self):
+        '''Check the correct object returned for type of harvest'''
+        harvest_cls = harvester.HarvestController().get_harvester_for_collection_type('OAI')
+        self.assertRaises(ValueError, harvest_cls, 'email@example.com', 'collectionname', ['campuses'], ['repositories'], 'url_harvest', 'extra_data')
+        harvest_obj = harvest_cls('email@example.com', 'collectionname', ['UCLA'], ['repositories'], 'http://oai.ucsd.edu/Oai/Oai-script', 'set_spec=mscl_scheffler')
+        self.assertIsInstance(harvest_obj, harvester.OAIHarvester)
+        self.assertTrue(harvest_obj.campuses == ['UCLA'])
+        self.assertTrue(harvest_obj.type == 'OAI')
+
 
 class testHarvesterClass(TestCase):
     '''Test the abstract Harvester class'''
@@ -38,22 +50,12 @@ class testHarvesterClass(TestCase):
         h = h('email@example.com', 'collectionname', ['UCLA'], ['repositories'], 'OAI', 'url_harvest', 'extra_data')
 
 
-class testGetHarvesterObject(TestCase):
-    '''Check the correct object returned for type of harvest'''
-    def testOAIHarvesterType(self):
-        harvest_cls = harvester.get_harvester_for_collection_type('OAI')
-        self.assertRaises(ValueError, harvest_cls, 'email@example.com', 'collectionname', ['campuses'], ['repositories'], 'url_harvest', 'extra_data')
-        harvest_obj = harvest_cls('email@example.com', 'collectionname', ['UCLA'], ['repositories'], 'http://oai.ucsd.edu/Oai/Oai-script', 'set_spec=mscl_scheffler')
-        self.assertIsInstance(harvest_obj, harvester.OAIHarvester)
-        self.assertTrue(harvest_obj.campuses == ['UCLA'])
-        self.assertTrue(harvest_obj.type == 'OAI')
-
 class testOAIHarvester(TestCase):
     '''Test the OAIHarvester
     Currently using a live site as test, must be better way
     '''
     def setUp(self):
-        self.harvester = harvester.get_harvester_for_collection_type('OAI')('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'http://digital2.library.ucla.edu/oai2_0.do', 'latimes')
+        self.harvester = harvester.HarvestController().get_harvester_for_collection_type('OAI')('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'http://digital2.library.ucla.edu/oai2_0.do', 'latimes')
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
