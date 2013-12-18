@@ -43,7 +43,7 @@ class HarvestController(object):
     collection, then retrieves records for the given collection, massages them
     to match the solr schema and then sends to solr for updates.
     '''
-    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'CDL']
+    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
     harvest_types = { 'OAI': OAIHarvester,
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
