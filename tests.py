@@ -198,7 +198,7 @@ class FullOAIHarvestTestCase(TestCase):
 
     def testFullHarvest(self):
         controller = harvester.HarvestController('email@example.com',
-                'Santa Clara University: Digital Objects', ['CDL'],
+                'Santa Clara University: Digital Objects', ['UCDL'],
                 ['Calisphere'], 'OAI',
                 'http://content.cdlib.org/oai', extra_data='scu:objects'
                 )
