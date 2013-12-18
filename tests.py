@@ -183,16 +183,25 @@ class ScriptFileTestCase(TestCase):
 
 @skipUnlessIntegrationTest()
 class FullOAIHarvestTestCase(TestCase):
-    '''Test that the full integration with sickle and solr work. Use oac oai?
-    and test solr instance.
+    '''Test that the full integration with sickle and solr work. 
+    The scu:objects content.cdlib.org OAI set work well for full integration
+    test with the solr instance.
     Should use appstrap to create local solr loaded with known docs to make
     this work best.
+    NOTE: As of 2013-12-17 there are 126 Santa Clara University Objects
     '''
     def setUp(self):
         requests.get = real_requests_get
 
+    def tearDown(self):
+        requests.get = mockRequestsGet
+
     def testFullHarvest(self):
-        controller = harvester.HarvestController('email@example.com', 'Calisphere Image Collection', ['CDL'], ['Calisphere'], 'OAI', 'http://content.cdlib.org/oai', 'oac:images')
+        controller = harvester.HarvestController('email@example.com',
+                'Santa Clara University: Digital Objects', ['CDL'],
+                ['Calisphere'], 'OAI',
+                'http://content.cdlib.org/oai', extra_data='scu:objects'
+                )
         controller.harvest()
 
 
