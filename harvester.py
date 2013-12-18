@@ -1,4 +1,5 @@
 import os
+import sys
 from sickle import Sickle
 import solr
 
@@ -104,3 +105,22 @@ class HarvestController(object):
             #validate record
             solrDoc = self.create_solr_doc(rec)
             self.solr.add(solrDoc, commit=True)
+
+if __name__=='__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Harvest a collection')
+    parser.add_argument('user_email', type=str, nargs='?', help='user email')
+    parser.add_argument('collection_name', type=str, nargs='?',
+            help='name of collection in registry')
+    parser.add_argument('campuses', type=str, nargs='?',
+            help='Comma delimited string of campuses')
+    parser.add_argument('repositories', type=str, nargs='?',
+            help='Comma delimited string of repositories')
+    parser.add_argument('harvest_type', type=str, nargs='?', help='Type of harvest (Only OAI)')
+    parser.add_argument('url_harvest', type=str, nargs='?', help='URL for harvest')
+    parser.add_argument('extra_data', type=str, nargs='?', help='String of extra data required by type of harvest')
+    args = parser.parse_args()
+    campus_list = args.campuses.split(',')
+    repository_list = args.repositories.split(':-:')
+    harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+    harvester.harvest()

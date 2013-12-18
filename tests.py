@@ -48,7 +48,6 @@ class testHarvestController(TestCase):
 
     def testHarvestControllerExists(self):
         from harvester import HarvestController
-        #self.harvester = harvester.HarvestController().get_harvester_for_collection_type('OAI')('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'http://digital2.library.ucla.edu/oai2_0.do', 'latimes')
         controller = HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI.xml', 'latimes')
         self.assertTrue(hasattr(controller, 'harvester'))
         self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
