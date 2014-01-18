@@ -244,7 +244,11 @@ class TestLogFileName(TestCase):
 @skipUnlessIntegrationTest()
 class TestHarvesterLogSetup(TestCase):
     '''Test that the log gets setup and run'''
-    pass
+    def testLogDirExists(self):
+        log_file_path = harvester.get_log_file_path('x')
+        log_file_dir = log_file_path.rsplit('/', 1)[0]
+        self.assertTrue(os.path.isdir(log_file_dir))
+
 
 @skipUnlessIntegrationTest()
 class ScriptFileTestCase(TestCase):
