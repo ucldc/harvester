@@ -1,7 +1,10 @@
 import os
 import sys
+import datetime
 from sickle import Sickle
 import solr
+import logbook
+from logbook import FileHandler
 
 URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
 
@@ -59,6 +62,7 @@ class HarvestController(object):
         self.repositories = repositories
         self.harvester = self.harvest_types.get(harvest_type, None)(url_harvest, extra_data)
         self.solr = solr.Solr(URL_SOLR)
+        self.logger = logbook.Logger('HarvestController')
 
     def validate_input_dict(self, indata):
         '''Validate the data from the harvester. Currently only DC elements
@@ -101,12 +105,20 @@ class HarvestController(object):
 
     def harvest(self):
         '''Harvest the collection'''
+        self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection_name, str(self.campuses), str(self.repositories), str(self.solr) )))
+        n = 0
+        interval = 100
         for rec in self.harvester:
             #validate record
             solrDoc = self.create_solr_doc(rec)
             self.solr.add(solrDoc, commit=True)
+            n += 1
+            if n % interval == 0:
+                self.logger.info(' '.join((str(n), 'records harvested')))
+                if n >= 10*interval:
+                    interval = 10*interval
 
-if __name__=='__main__':
+def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, nargs='?', help='user email')
@@ -119,8 +131,32 @@ if __name__=='__main__':
     parser.add_argument('harvest_type', type=str, nargs='?', help='Type of harvest (Only OAI)')
     parser.add_argument('url_harvest', type=str, nargs='?', help='URL for harvest')
     parser.add_argument('extra_data', type=str, nargs='?', help='String of extra data required by type of harvest')
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def get_log_file_path(collection_name):
+    '''Get the log file name for the given collection, start time and environment
+    '''
+    log_file_dir = os.environ.get('DIR_HARVESTER_LOG', os.path.join(os.environ.get('HOME', '.'), 'log'))
+    log_file_name = 'harvester-' + collection_name + '-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
+    return os.path.join(log_file_dir, log_file_name)
+
+def main(log_handler=None):
+    args = parse_args()
     campus_list = args.campuses.split(',')
     repository_list = args.repositories.split(':-:')
-    harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
-    harvester.harvest()
+    if not log_handler:
+        log_handler = FileHandler(get_log_file_path(args.collection_name))
+    with log_handler.applicationbound():
+        logger = logbook.Logger('HarvestMain')
+        logger.info('Init harvester next')
+        logger.info(' '.join(('ARGS:', args.user_email, args.collection_name, str(campus_list), str(repository_list), args.harvest_type, args.url_harvest, args.extra_data)))
+        harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+        logger.info('Start harvesting next')
+        try:
+            harvester.harvest()
+            logger.info('Finished harvest')
+        except Exception, e:
+            logger.error("Error while harvesting:"+str(e))
+
+if __name__=='__main__':
+    main()

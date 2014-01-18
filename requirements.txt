@@ -6,3 +6,4 @@ solrpy==0.9.6
 #for testing
 mock==1.0.1
 wsgiref==0.1.2
+logbook
