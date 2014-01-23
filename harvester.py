@@ -7,6 +7,7 @@ import logbook
 from logbook import FileHandler
 
 URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
+EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 
 class Harvester(object):
     '''Base class for harvest objects.'''
@@ -140,23 +141,29 @@ def get_log_file_path(collection_name):
     log_file_name = 'harvester-' + collection_name + '-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
     return os.path.join(log_file_dir, log_file_name)
 
-def main(log_handler=None):
+def main(log_handler=None, mail_handler=None):
     args = parse_args()
     campus_list = args.campuses.split(',')
     repository_list = args.repositories.split(':-:')
     if not log_handler:
         log_handler = FileHandler(get_log_file_path(args.collection_name))
+    if not mail_handler:
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR)
     with log_handler.applicationbound():
-        logger = logbook.Logger('HarvestMain')
-        logger.info('Init harvester next')
-        logger.info(' '.join(('ARGS:', args.user_email, args.collection_name, str(campus_list), str(repository_list), args.harvest_type, args.url_harvest, args.extra_data)))
-        harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
-        logger.info('Start harvesting next')
-        try:
-            harvester.harvest()
-            logger.info('Finished harvest')
-        except Exception, e:
-            logger.error("Error while harvesting:"+str(e))
+        with mail_handler.applicationbound():
+            logger = logbook.Logger('HarvestMain')
+            logger.info('Init harvester next')
+            msg = ' '.join(('ARGS:', args.user_email, args.collection_name, str(campus_list), str(repository_list), args.harvest_type, args.url_harvest, args.extra_data))
+            logger.info(msg)
+            #email directly
+            harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+            logger.info('Start harvesting next')
+            try:
+                harvester.harvest()
+                logger.info('Finished harvest')
+                #email directly
+            except Exception, e:
+                logger.error("Error while harvesting:"+str(e))
 
 if __name__=='__main__':
     main()

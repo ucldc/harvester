@@ -177,13 +177,19 @@ class TestMain(TestCase):
         sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
         self.log_handler = logbook.TestHandler()
         self.log_handler.push_thread()
+        #self.mail_handler = logbook.TestHandler()
+        #self.mail_handler.push_thread()
 
     def tearDown(self):
+        #self.mail_handler.pop_thread()
         self.log_handler.pop_thread()
+
+    def testReturnAdd(self):
+        self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
-        harvester.main(log_handler=self.log_handler)
+        harvester.main(log_handler=self.log_handler, mail_handler=self.log_handler)
         self.assertEqual(len(self.log_handler.records), 4)
         self.assertEqual(self.log_handler.formatted_records[3], '[ERROR] HarvestMain: Error while harvesting:Boom!')
 
