@@ -32,14 +32,16 @@ def mockRequestsGet(filename, **kwargs):
     with codecs.open(filename, 'r', 'utf8') as foo:
         resp = MockResponse(foo.read())
     return resp
-real_requests_get = requests.get
-requests.get = mockRequestsGet
-
 
 class TestHarvestOAIController(TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = mockRequestsGet
         self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI.xml', 'extra_data')
+
+    def tearDown(self):
+        requests.get = self.real_requests_get
 
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
@@ -49,12 +51,15 @@ class TestHarvestOAIController(TestCase):
 class TestHarvestController(TestCase):
     '''Test the harvest controller class'''
     def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = mockRequestsGet
         self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI.xml', 'extra_data')
-        self.log_handler = logbook.TestHandler()
-        self.log_handler.push_thread()
+        self.test_log_handler = logbook.TestHandler()
+        self.test_log_handler.push_thread()
 
     def tearDown(self):
-        self.log_handler.pop_thread()
+        self.test_log_handler.pop_thread()
+        requests.get = self.real_requests_get
 
     def testHarvestControllerExists(self):
         from harvester import HarvestController
@@ -131,11 +136,11 @@ class TestHarvestController(TestCase):
     def testLoggingMoreThan1000(self):
         controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI-2400-records.xml', 'extra_data')
         controller.harvest()
-        self.assertEqual(len(self.log_handler.records), 12)
-        self.assertEqual(self.log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
-        self.assertEqual(self.log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
-        print len(self.log_handler.records), self.log_handler.formatted_records
+        self.assertEqual(len(self.test_log_handler.records), 12)
+        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
+        print len(self.test_log_handler.records), self.test_log_handler.formatted_records
 
 class TestHarvesterClass(TestCase):
     '''Test the abstract Harvester class'''
@@ -149,12 +154,15 @@ class TestOAIHarvester(TestCase):
     '''Test the OAIHarvester
     '''
     def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = mockRequestsGet
         self.harvester = harvester.OAIHarvester('testOAI.xml', 'latimes')
-        self.log_handler = logbook.TestHandler()
-        self.log_handler.push_thread()
+        self.test_log_handler = logbook.TestHandler()
+        self.test_log_handler.push_thread()
 
     def tearDown(self):
-        self.log_handler.pop_thread()
+        self.test_log_handler.pop_thread()
+        requests.get = self.real_requests_get
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
@@ -174,55 +182,47 @@ class TestOAIHarvester(TestCase):
 class TestMain(TestCase):
     '''Test the main function'''
     def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = mockRequestsGet
         sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
-        self.log_handler = logbook.TestHandler()
-        self.log_handler.push_thread()
+        self.test_log_handler = logbook.TestHandler()
+        def deliver(msg, email):
+            #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
+            pass
+        self.test_log_handler.deliver = deliver
+        self.test_log_handler.push_thread()
         #self.mail_handler = logbook.TestHandler()
         #self.mail_handler.push_thread()
 
     def tearDown(self):
+        requests.get = self.real_requests_get
         #self.mail_handler.pop_thread()
-        self.log_handler.pop_thread()
+        self.test_log_handler.pop_thread()
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
-        harvester.main(log_handler=self.log_handler, mail_handler=self.log_handler)
-        self.assertEqual(len(self.log_handler.records), 4)
-        self.assertEqual(self.log_handler.formatted_records[3], '[ERROR] HarvestMain: Error while harvesting:Boom!')
+        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
+        self.assertEqual(len(self.test_log_handler.records), 4)
+        self.assertEqual(self.test_log_handler.formatted_records[3], '[ERROR] HarvestMain: Error while harvesting:Boom!')
 
     def testMainFn(self):
         with patch('harvester.solr.Solr', autospec=True) as mock:
             instance = mock.return_value
             with patch.object(instance, 'add') as mock_method:
-                harvester.main(log_handler=self.log_handler)
+                harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         mock.assert_called_once_with('http://107.21.228.130:8080/solr/dc-collection/')
         self.assertEqual(mock_method.call_count, 128)
-        self.assertEqual(len(self.log_handler.records), 6)
-        self.assertEqual(self.log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com Santa Clara University: Digital Objects [\'UCDL\'] [\'Calisphere\'] OAI testOAI-128-records.xml extra_data="scu:objects"')
-        self.assertEqual(self.log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
-        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.log_handler.formatted_records[3])
-        self.assertEqual(self.log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.log_handler.formatted_records[5], u'[INFO] HarvestMain: Finished harvest')
+        self.assertEqual(len(self.test_log_handler.records), 6)
+        self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com Santa Clara University: Digital Objects [\'UCDL\'] [\'Calisphere\'] OAI testOAI-128-records.xml extra_data="scu:objects"')
+        self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
+        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[3])
+        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Finished harvest of Santa Clara University: Digital Objects')
 
-solr_test_doc = {
-        'publisher': ['California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
-'description': ["Describes Rankin's personal experience of the earthquake, his trip that morning into San Francisco, damage to landmark buildings, and creation of a refugee camp on California Field, a football field in Berkeley, which he helped to patrol."],
-    'repository': ['test_repo_name'],
-    'creator': ['Rankin, Ivan S.'],
-    'collection_name': 'test_collection_name', 'format': ['mods'],
-    'campus': ['UCLA'],
-    'contributor': ['Rankin, Ivan S.'],
-    'relation': ['http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx', 'http://bancroft.berkeley.edu/collections/earthquakeandfire', 'eqf', 'MS 3497', 'http://calisphere.universityofcalifornia.edu/', 'http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
-    'date': ['1969, April 25', '1969-04-25'],
-    'title': ['Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.'],
-    'identifier': ['http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'MS 3497', 'chs00000479_42a.xml'],
-    'type': ['text', 'still image'],
-    'id': 'UCLA-test_repo_name-test_collection_name-http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'subject': ['Buildings--Earthquake effects--California--San Francisco', 'Earthquakes--California--San Francisco--Personal narratives', 'Fires--California--San Francisco--Personal narratives', 'Refugee camps--California--Oakland', 'San Francisco Earthquake, Calif., 1906--Personal narratives', 'The 1906 San Francisco Earthquake and Fire Digital Collection', 'Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.']
-}
 
 def skipUnlessIntegrationTest(selfobj=None):
     '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
@@ -255,6 +255,16 @@ class TestHarvesterLogSetup(TestCase):
         log_file_dir = log_file_path.rsplit('/', 1)[0]
         self.assertTrue(os.path.isdir(log_file_dir))
 
+@skipUnlessIntegrationTest()
+class TestMainMailIntegration(TestCase):
+    '''Test that the main function emails?'''
+    def setUp(self):
+        '''Need to run fakesmtp server on local host'''
+        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'http://content.cdlib.com/bogus', 'extra_data="scu:objects"']
+
+    def testMainFunctionMail(self):
+        '''This should error out and send mail through error handler'''
+        self.assertRaises(requests.exceptions.ConnectionError, harvester.main)
 
 @skipUnlessIntegrationTest()
 class ScriptFileTestCase(TestCase):
@@ -275,12 +285,6 @@ class FullOAIHarvestTestCase(TestCase):
     this work best.
     NOTE: As of 2013-12-17 there are 126 Santa Clara University Objects
     '''
-    def setUp(self):
-        requests.get = real_requests_get
-
-    def tearDown(self):
-        requests.get = mockRequestsGet
-
     def testFullHarvest(self):
         controller = harvester.HarvestController('email@example.com',
                 'Santa Clara University: Digital Objects', ['UCDL'],
@@ -288,6 +292,23 @@ class FullOAIHarvestTestCase(TestCase):
                 'http://content.cdlib.org/oai', extra_data='scu:objects'
                 )
         controller.harvest()
+
+
+solr_test_doc = {
+        'publisher': ['California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
+'description': ["Describes Rankin's personal experience of the earthquake, his trip that morning into San Francisco, damage to landmark buildings, and creation of a refugee camp on California Field, a football field in Berkeley, which he helped to patrol."],
+    'repository': ['test_repo_name'],
+    'creator': ['Rankin, Ivan S.'],
+    'collection_name': 'test_collection_name', 'format': ['mods'],
+    'campus': ['UCLA'],
+    'contributor': ['Rankin, Ivan S.'],
+    'relation': ['http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx', 'http://bancroft.berkeley.edu/collections/earthquakeandfire', 'eqf', 'MS 3497', 'http://calisphere.universityofcalifornia.edu/', 'http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
+    'date': ['1969, April 25', '1969-04-25'],
+    'title': ['Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.'],
+    'identifier': ['http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'MS 3497', 'chs00000479_42a.xml'],
+    'type': ['text', 'still image'],
+    'id': 'UCLA-test_repo_name-test_collection_name-http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'subject': ['Buildings--Earthquake effects--California--San Francisco', 'Earthquakes--California--San Francisco--Personal narratives', 'Fires--California--San Francisco--Personal narratives', 'Refugee camps--California--Oakland', 'San Francisco Earthquake, Calif., 1906--Personal narratives', 'The 1906 San Francisco Earthquake and Fire Digital Collection', 'Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.']
+}
 
 
 if __name__=='__main__':

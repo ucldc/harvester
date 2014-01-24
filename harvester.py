@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+from email.mime.text import MIMEText
 from sickle import Sickle
 import solr
 import logbook
@@ -141,6 +142,13 @@ def get_log_file_path(collection_name):
     log_file_name = 'harvester-' + collection_name + '-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
     return os.path.join(log_file_dir, log_file_name)
 
+def create_mimetext_msg(mail_from, mail_to, subject, message):
+    msg = MIMEText(message)
+    msg['Subject'] = str(subject)
+    msg['From'] = mail_from
+    msg['To'] = mail_to
+    return msg
+
 def main(log_handler=None, mail_handler=None):
     args = parse_args()
     campus_list = args.campuses.split(',')
@@ -156,12 +164,22 @@ def main(log_handler=None, mail_handler=None):
             msg = ' '.join(('ARGS:', args.user_email, args.collection_name, str(campus_list), str(repository_list), args.harvest_type, args.url_harvest, args.extra_data))
             logger.info(msg)
             #email directly
-            harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', args.collection_name)), msg)
+            mail_handler.deliver(mimetext, args.user_email)
+            harvester = None
+            try:
+                harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+            except Exception, e:
+                logger.error(' '.join(("Exception in harvester init", str(e))))
+                raise e
             logger.info('Start harvesting next')
             try:
                 harvester.harvest()
-                logger.info('Finished harvest')
+                msg = ' '.join(('Finished harvest of', args.collection_name))
+                logger.info(msg)
                 #email directly
+                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', args.collection_name)), msg)
+                mail_handler.deliver(mimetext, args.user_email)
             except Exception, e:
                 logger.error("Error while harvesting:"+str(e))
 
