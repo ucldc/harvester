@@ -117,7 +117,7 @@ class HarvestController(object):
             n += 1
             if n % interval == 0:
                 self.logger.info(' '.join((str(n), 'records harvested')))
-                if n >= 10*interval:
+                if n < 10000 and n >= 10*interval:
                     interval = 10*interval
 
 def parse_args():
