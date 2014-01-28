@@ -221,7 +221,7 @@ class TestMain(TestCase):
         self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
         self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[3])
         self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Finished harvest of Santa Clara University: Digital Objects')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Finished harvest of Santa Clara University: Digital Objects. 128 records harvested.')
 
 
 def skipUnlessIntegrationTest(selfobj=None):

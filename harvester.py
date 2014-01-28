@@ -119,6 +119,7 @@ class HarvestController(object):
                 self.logger.info(' '.join((str(n), 'records harvested')))
                 if n < 10000 and n >= 10*interval:
                     interval = 10*interval
+        return n
 
 def parse_args():
     import argparse
@@ -174,8 +175,8 @@ def main(log_handler=None, mail_handler=None):
                 raise e
             logger.info('Start harvesting next')
             try:
-                harvester.harvest()
-                msg = ' '.join(('Finished harvest of', args.collection_name))
+                num_recs = harvester.harvest()
+                msg = ''.join(('Finished harvest of ', args.collection_name, '. ', str(num_recs), ' records harvested.'))
                 logger.info(msg)
                 #email directly
                 mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', args.collection_name)), msg)
