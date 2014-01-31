@@ -206,7 +206,8 @@ class TestMain(TestCase):
     def testMainFnWithException(self, mock_method):
         harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         self.assertEqual(len(self.test_log_handler.records), 4)
-        self.assertEqual(self.test_log_handler.formatted_records[3], '[ERROR] HarvestMain: Error while harvesting:Boom!')
+        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[3])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
 
     def testMainFn(self):
         with patch('harvester.solr.Solr', autospec=True) as mock:
