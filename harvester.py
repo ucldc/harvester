@@ -183,7 +183,7 @@ def main(log_handler=None, mail_handler=None):
                 mail_handler.deliver(mimetext, args.user_email)
             except Exception, e:
                 import traceback
-                logger.error("Error while harvesting:"+str(traceback.format_exc()))
+                logger.error("Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc()))
 
 if __name__=='__main__':
     main()
