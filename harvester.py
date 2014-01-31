@@ -182,7 +182,8 @@ def main(log_handler=None, mail_handler=None):
                 mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', args.collection_name)), msg)
                 mail_handler.deliver(mimetext, args.user_email)
             except Exception, e:
-                logger.error("Error while harvesting:"+str(e))
+                import traceback
+                logger.error("Error while harvesting:"+str(traceback.format_exc()))
 
 if __name__=='__main__':
     main()
