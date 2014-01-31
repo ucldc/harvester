@@ -157,7 +157,7 @@ def main(log_handler=None, mail_handler=None):
     if not log_handler:
         log_handler = FileHandler(get_log_file_path(args.collection_name))
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR)
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR, subject="Error during harvest of "+args.collection_name)
     with log_handler.applicationbound():
         with mail_handler.applicationbound():
             logger = logbook.Logger('HarvestMain')
