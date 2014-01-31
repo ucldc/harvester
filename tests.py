@@ -202,6 +202,14 @@ class TestMain(TestCase):
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
+    def testMainHarvestController__init__Error(self):
+        '''Test the try-except block in main when HarvestController not created
+        correctly'''
+        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'XXXXXBADINPUT', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
+        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
+        self.assertEqual(len(self.test_log_handler.records), 3)
+        self.assertEqual("[ERROR] HarvestMain: Exception in harvester init Campus value XXXXXBADINPUT in not one of ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']", self.test_log_handler.formatted_records[2])
+
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
         harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
