@@ -48,7 +48,7 @@ class HarvestController(object):
     collection, then retrieves records for the given collection, massages them
     to match the solr schema and then sends to solr for updates.
     '''
-    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
+    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
     harvest_types = { 'OAI': OAIHarvester,
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
@@ -113,8 +113,13 @@ class HarvestController(object):
         for rec in self.harvester:
             #validate record
             solrDoc = self.create_solr_doc(rec)
-            self.solr.add(solrDoc, commit=True)
-            n += 1
+            try:
+                self.solr.add(solrDoc, commit=True)
+                n += 1
+            except solr.core.SolrException, e:
+                if e.httpcode == 400:
+                    continue
+                raise e
             if n % interval == 0:
                 self.logger.info(' '.join((str(n), 'records harvested')))
                 if n < 10000 and n >= 10*interval:
