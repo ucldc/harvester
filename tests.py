@@ -4,6 +4,7 @@ import unittest
 from unittest import TestCase
 import codecs
 import re
+import json
 import solr
 from mock import MagicMock
 from mock import patch
@@ -48,6 +49,40 @@ class TestHarvestOAIController(TestCase):
         self.assertTrue(hasattr(self.controller, 'harvest'))
 
 
+class TestHarvestOACController(TestCase):
+    '''Test the function of an OAC harvester'''
+    class MockOACapi(object):
+        def __init__(self, json):
+            self._json = json
+
+        def json(self):
+            return  json.loads(self._json)
+
+    def mockRequestGet(self, url, **kwargs):
+        if hasattr(self, 'ranGet'):
+            return None
+        with codecs.open('testOAC.json', 'r', 'utf8') as foo:
+            self.ranGet = True
+            return  self.MockOACapi(foo.read())
+
+    def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = self.mockRequestGet
+        self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAC', 'http://oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj/', 'extra_data')
+
+
+    def tearDown(self):
+        requests.get = self.real_requests_get
+
+    def testOACHarvest(self):
+        '''Test the function of the OAC harvest'''
+        self.assertTrue(hasattr(self.controller, 'harvest'))
+        self.controller.solr = MagicMock()
+        mock = self.controller.solr
+        self.controller.harvest()
+        self.assertTrue(mock.add.call_count == 25)
+
+
 class TestHarvestController(TestCase):
     '''Test the harvest controller class'''
     def setUp(self):
@@ -82,8 +117,8 @@ class TestHarvestController(TestCase):
         self.assertTrue(hasattr(self.controller_oai, 'validate_input_dict'))
         d = 'x'
         self.assertRaises(TypeError, self.controller_oai.validate_input_dict, d)
-        d = {'notdc':'x'}
-        self.assertRaises(ValueError, self.controller_oai.validate_input_dict, d)
+        # no longer a requirement, need more than dc - d = {'notdc':'x'}
+        #self.assertRaises(ValueError, self.controller_oai.validate_input_dict, d)
 
     def testSolrIDCreation(self):
         '''Test how the id for the solr index is created'''
@@ -177,7 +212,26 @@ class TestOAIHarvester(TestCase):
         self.assertIsInstance(rec, dict)
         for key, value in rec.items():
             self.assertIn(key, harvester.HarvestController.dc_elements)
-        #print rec
+
+class TestOACHarvester(TestCase):
+    '''Test the OACHarvester
+    '''
+    def setUp(self):
+        self.real_requests_get = requests.get
+        #requests.get = mockRequestsGet
+        self.harvester = harvester.OACHarvester('http://oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj/', 'extra_data')
+        self.test_log_handler = logbook.TestHandler()
+        self.test_log_handler.push_thread()
+
+    def tearDown(self):
+        self.test_log_handler.pop_thread()
+        #requests.get = self.real_requests_get
+
+    def testHarvestIsIter(self):
+        self.assertTrue(hasattr(self.harvester, '__iter__')) 
+        self.assertEqual(self.harvester, self.harvester.__iter__())
+        rec1 = self.harvester.next()
+
 
 class TestMain(TestCase):
     '''Test the main function'''
@@ -208,7 +262,7 @@ class TestMain(TestCase):
         sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'XXXXXBADINPUT', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
         self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         self.assertEqual(len(self.test_log_handler.records), 3)
-        self.assertEqual("[ERROR] HarvestMain: Exception in harvester init Campus value XXXXXBADINPUT in not one of ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']", self.test_log_handler.formatted_records[2])
+        self.assertEqual("[ERROR] HarvestMain: Exception in harvester init Campus value XXXXXBADINPUT in not one of ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']", self.test_log_handler.formatted_records[2])
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):

@@ -4,6 +4,7 @@ import datetime
 from email.mime.text import MIMEText
 from sickle import Sickle
 import solr
+import requests
 import logbook
 from logbook import FileHandler
 
@@ -42,6 +43,42 @@ class OAIHarvester(Harvester):
         rec = sickle_rec.metadata
         return rec
 
+class OACHarvester(Harvester):
+    '''Harvester for oac'''
+    def __init__(self, url_harvest, extra_data):
+        super(OACHarvester, self).__init__(url_harvest, extra_data)
+        self.oac_findaid_ark = self._parse_oac_findaid_ark(url_harvest)
+        self.objset_url_start = 'http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=' + self.oac_findaid_ark
+        self.headers = {'content-type': 'application/json'}
+        self.objset_index = 0
+        self.resp = requests.get(self.objset_url_start, headers=self.headers)
+        self.api_resp = self.resp.json()
+        self.objset_total = self.api_resp['objset_total']
+        self.objset_start = self.api_resp['objset_start']
+        self.objset_end = self.api_resp['objset_end']
+        self.objset = self.api_resp['objset']
+
+    def _parse_oac_findaid_ark(self, url_findaid):
+        return ''.join(('ark:', url_findaid.split('findaid/ark:')[1]))
+
+    def next(self):
+        '''Return the next record'''
+        while self.resp:
+            try:
+                obj = self.objset.pop()
+                return obj['qdc'] #self.objset.pop()
+            except IndexError, e:
+                if self.objset_end == self.objset_total:
+                    self.resp = None
+                    raise StopIteration
+            url_next = ''.join((self.objset_url_start, '&startDoc=', unicode(self.objset_end+1)))
+            self.resp = requests.get(url_next, headers=self.headers)
+            self.api_resp = self.resp.json()
+            #self.objset_total = api_resp['objset_total']
+            self.objset_start = self.api_resp['objset_start']
+            self.objset_end = self.api_resp['objset_end']
+            self.objset = self.api_resp['objset']
+
 
 class HarvestController(object):
     '''Controller for the harvesting. Selects correct harvester for the given 
@@ -50,6 +87,7 @@ class HarvestController(object):
     '''
     campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
     harvest_types = { 'OAI': OAIHarvester,
+            'OAC': OACHarvester,
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
@@ -71,9 +109,9 @@ class HarvestController(object):
         supported'''
         if not isinstance(indata, dict):
             raise TypeError("Input data must be a dictionary")
-        for key, value in indata.items():
-            if key not in self.dc_elements:
-                raise ValueError('Input data must be in DC elements. Problem key is:' + unicode(key))
+###        for key, value in indata.items():
+###            if key not in self.dc_elements:
+###                raise ValueError('Input data must be in DC elements. Problem key is:' + unicode(key))
 
     def create_solr_id(self, identifier):
         '''Create an id that is good for solr. Take campus, repo and collection
@@ -103,6 +141,7 @@ class HarvestController(object):
         sDoc['collection_name'] = self.collection_name
         sDoc['campus'] = self.campuses
         sDoc['repository'] = self.repositories
+        sDoc.pop('entity_count', None) #was added at one point
         return sDoc
 
     def harvest(self):
