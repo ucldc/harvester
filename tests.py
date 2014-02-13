@@ -97,8 +97,7 @@ class TestHarvestController(TestCase):
         requests.get = self.real_requests_get
 
     def testHarvestControllerExists(self):
-        from harvester import HarvestController
-        controller = HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI.xml', 'latimes')
+        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI.xml', 'latimes')
         self.assertTrue(hasattr(controller, 'harvester'))
         self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
         self.assertTrue(hasattr(controller, 'campus_valid'))
@@ -166,6 +165,28 @@ class TestHarvestController(TestCase):
         self.assertTrue(mock.add.call_count == 3)
         #last doc in test doc
         mock.add.assert_called_with(solr_test_doc , commit=True)
+
+    def testNoTitleInRecord(self):
+        '''Test that the process continues if it finds a record with no "title"'''
+        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI-notitle.xml', 'latimes')
+        #this should get to the catch ValueError and process one item
+        controller.solr = MagicMock()
+        mock = controller.solr
+        controller.harvest()
+        self.assertTrue(mock.add.call_count == 1)
+        self.assertEqual(len(self.test_log_handler.records), 2)
+        self.assertTrue('[ERROR] HarvestController: Error for record ' in self.test_log_handler.formatted_records[1])
+        self.assertTrue('ERR: Item must have a title' in self.test_log_handler.formatted_records[1])
+
+#    @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
+    def testHandleKnownSolrExceptions(self):
+        '''Test that the harvest continues if known solr error occurs for
+        record
+        '''
+        self.controller_oai.solr.add = MagicMock(side_effect=solr.core.SolrException(httpcode=500))
+        self.assertRaises(solr.core.SolrException, self.controller_oai.harvest)
+        self.controller_oai.solr.add = MagicMock(side_effect=solr.core.SolrException(httpcode=400))
+        self.controller_oai.harvest() #shouldn't throw, 400 is caught
 
     @unittest.skip('Takes too long to run')
     def testLoggingMoreThan1000(self):
