@@ -151,12 +151,17 @@ class HarvestController(object):
         interval = 100
         for rec in self.harvester:
             #validate record
-            solrDoc = self.create_solr_doc(rec)
+            try:
+            	solrDoc = self.create_solr_doc(rec)
+            except ValueError, e:
+                self.logger.error(' '.join(('Error for record', str(rec), ' ERR:', str(e))))
+                continue
             try:
                 self.solr.add(solrDoc, commit=True)
                 n += 1
             except solr.core.SolrException, e:
                 if e.httpcode == 400:
+                    self.logger.error(' '.join(('Error for record', str(rec), ' ERR:', str(e))))
                     continue
                 raise e
             if n % interval == 0:
