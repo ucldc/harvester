@@ -47,11 +47,11 @@ class OACHarvester(Harvester):
     '''Harvester for oac'''
     def __init__(self, url_harvest, extra_data):
         super(OACHarvester, self).__init__(url_harvest, extra_data)
-        self.oac_findaid_ark = self._parse_oac_findaid_ark(url_harvest)
-        self.objset_url_start = 'http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=' + self.oac_findaid_ark
+        self.url_harvest = url_harvest
+        self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url_harvest)
         self.headers = {'content-type': 'application/json'}
         self.objset_index = 0
-        self.resp = requests.get(self.objset_url_start, headers=self.headers)
+        self.resp = requests.get(self.url_harvest, headers=self.headers)
         self.api_resp = self.resp.json()
         self.objset_total = self.api_resp['objset_total']
         self.objset_start = self.api_resp['objset_start']
@@ -59,7 +59,7 @@ class OACHarvester(Harvester):
         self.objset = self.api_resp['objset']
 
     def _parse_oac_findaid_ark(self, url_findaid):
-        return ''.join(('ark:', url_findaid.split('findaid/ark:')[1]))
+        return ''.join(('ark:', url_findaid.split('ark:')[1]))
 
     def next(self):
         '''Return the next record'''
@@ -71,7 +71,7 @@ class OACHarvester(Harvester):
                 if self.objset_end == self.objset_total:
                     self.resp = None
                     raise StopIteration
-            url_next = ''.join((self.objset_url_start, '&startDoc=', unicode(self.objset_end+1)))
+            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             #self.objset_total = api_resp['objset_total']

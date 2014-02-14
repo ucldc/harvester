@@ -1,0 +1,51 @@
+{"api":{"version":"x-002","license":"All Rights Reserved; Unauthorized use is strictly prohibited; http://www.oac.cdlib.org/terms.html"},"objset_total":28,"objset_start":26,"objset_end":28,"objset":[
+{"qdc":{
+"title":"The Questions for '43!: Stay on the job: Don't slow up the ship!",
+"creator":"Scott, Howard, 1902-1983, artist",
+"subject":["World War, 1939-1945--United States--Posters","Civilian participation: Labor","War work","Patriotism",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
+"description":"lang: Incentive Division, Navy Department: S-7-11M : \"Navy S-7-11M\" on verso",
+"publisher":["The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/","Published in: New York"],
+"contributor":["Scott, Howard, 1902-1983, artist","Lutz & Sheinkman, publisher"],
+"date":{"q":"created","v":"[1941-1945]"},
+"type":{"q":"mods","v":"still image"},
+"format":["1 print (poster);;102 x 77 cm",{"q":"x","v":"mods"}],
+"identifier":["http://ark.cdlib.org/ark:/28722/bk0007t0j00",{"q":"mods","v":"BANC PIC 2005.004:0972--F"}],
+"relation":["http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://calisphere.universityofcalifornia.edu/","http://bancroft.berkeley.edu/"],
+"rights":["Some materials in these collections may be protected by the U.S. Copyright Law (Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of University of California gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.","All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"]
+},
+"courtesy_of":"Bancroft Library, UC Berkeley",
+"files":{"thumbnail":{"src":"http://ark.cdlib.org/ark:/28722/bk0007t0j00/thumbnail","x":158,"y":200},"reference":[{"src":"http://ark.cdlib.org/ark:/28722/bk0007t0j00/FID3","x":633,"y":800},{"src":"http://ark.cdlib.org/ark:/28722/bk0007t0j00/FID4","x":1187,"y":1500}]}
+},
+
+{"qdc":{
+"title":"More...and more...and still more tomorrow",
+"subject":["World War, 1939-1945--United States--Posters","Civilian participation: War production","Industrial mobilization","Labor",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
+"description":"lang: Copyright 1943, Aluminum Company of America",
+"publisher":"The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
+"date":{"q":"created","v":"1943"},
+"type":{"q":"mods","v":"still image"},
+"format":["1 print (poster);;82 x 63 cm",{"q":"x","v":"mods"}],
+"identifier":["http://ark.cdlib.org/ark:/28722/bk0007s9t01",{"q":"mods","v":"BANC PIC 2005.004:0763--F"}],
+"relation":["http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://calisphere.universityofcalifornia.edu/","http://bancroft.berkeley.edu/"],
+"rights":["Some materials in these collections may be protected by the U.S. Copyright Law (Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of University of California gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.","All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"]
+},
+"courtesy_of":"Bancroft Library, UC Berkeley",
+"files":{"thumbnail":{"src":"http://ark.cdlib.org/ark:/28722/bk0007s9t01/thumbnail","x":160,"y":200},"reference":[{"src":"http://ark.cdlib.org/ark:/28722/bk0007s9t01/FID3","x":642,"y":800},{"src":"http://ark.cdlib.org/ark:/28722/bk0007s9t01/FID4","x":1203,"y":1500}]}
+},
+
+{"qdc":{
+"title":"Step on it : Bethlehem Steel Company",
+"subject":["World War, 1939-1945--United States--Posters","Civilian participation: Health and safety","Safety education","Industrial safety",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
+"publisher":"The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
+"date":{"q":"created","v":"[1941-1945]"},
+"type":{"q":"mods","v":"still image"},
+"format":["1 print (poster);;61 x 46 cm",{"q":"x","v":"mods"}],
+"identifier":["http://ark.cdlib.org/ark:/28722/bk0007s7t02",{"q":"mods","v":"BANC PIC 2005.004:0184--D"}],
+"relation":["http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://www.oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj","http://calisphere.universityofcalifornia.edu/","http://bancroft.berkeley.edu/"],
+"rights":["Some materials in these collections may be protected by the U.S. Copyright Law (Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of University of California gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.","All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"]
+},
+"courtesy_of":"Bancroft Library, UC Berkeley",
+"files":{"thumbnail":{"src":"http://ark.cdlib.org/ark:/28722/bk0007s7t02/thumbnail","x":143,"y":200},"reference":[{"src":"http://ark.cdlib.org/ark:/28722/bk0007s7t02/FID3","x":569,"y":800},{"src":"http://ark.cdlib.org/ark:/28722/bk0007s7t02/FID4","x":1065,"y":1500}]}
+}
+]}
+

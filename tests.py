@@ -37,16 +37,22 @@ def mockRequestsGet(filename, **kwargs):
 class TestHarvestOAIController(TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):
+        self.test_log_handler = logbook.TestHandler()
+        self.test_log_handler.push_thread()
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI.xml', 'extra_data')
 
     def tearDown(self):
+        self.test_log_handler.pop_thread()
         requests.get = self.real_requests_get
 
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
+        #with logbook.TestHandler('HarvestController') as log_handler:
+        self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
         self.assertTrue(hasattr(self.controller, 'harvest'))
+        #TODO: fix why logbook.TestHandler not working for the previous logging
+        #self.assertEqual(len(self.test_log_handler.records), 2)
 
 
 class TestHarvestOACController(TestCase):
@@ -61,11 +67,12 @@ class TestHarvestOACController(TestCase):
     def mockRequestGet(self, url, **kwargs):
         if hasattr(self, 'ranGet'):
             return None
-        with codecs.open('testOAC.json', 'r', 'utf8') as foo:
+        with codecs.open(self.testFile, 'r', 'utf8') as foo:
             self.ranGet = True
             return  self.MockOACapi(foo.read())
 
     def setUp(self):
+        self.testFile = 'fixtures/testOAC.json'
         self.real_requests_get = requests.get
         requests.get = self.mockRequestGet
         self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAC', 'http://oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj/', 'extra_data')
@@ -88,7 +95,7 @@ class TestHarvestController(TestCase):
     def setUp(self):
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI.xml', 'extra_data')
+        self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
         self.test_log_handler = logbook.TestHandler()
         self.test_log_handler.push_thread()
 
@@ -97,7 +104,7 @@ class TestHarvestController(TestCase):
         requests.get = self.real_requests_get
 
     def testHarvestControllerExists(self):
-        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI.xml', 'latimes')
+        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'fixtures/testOAI.xml', 'latimes')
         self.assertTrue(hasattr(controller, 'harvester'))
         self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
         self.assertTrue(hasattr(controller, 'campus_valid'))
@@ -130,7 +137,7 @@ class TestHarvestController(TestCase):
         self.assertIn(self.controller_oai.campuses[0], sid)
         self.assertIn(self.controller_oai.repositories[0], sid)
         self.assertEqual(sid, 'UCLA-test_repo_name-test_collection_name-x')
-        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA','UCD'], ['Spec Coll', 'Archive'], 'OAI', 'testOAI.xml', 'latimes')
+        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA','UCD'], ['Spec Coll', 'Archive'], 'OAI', 'fixtures/testOAI.xml', 'latimes')
         sid = controller.create_solr_id(identifier)
         self.assertEqual(sid, 'UCLA-UCD-Spec Coll-Archive-Los Angeles Times Photographic Archive-x')
 
@@ -168,7 +175,7 @@ class TestHarvestController(TestCase):
 
     def testNoTitleInRecord(self):
         '''Test that the process continues if it finds a record with no "title"'''
-        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'testOAI-notitle.xml', 'latimes')
+        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'fixtures/testOAI-notitle.xml', 'latimes')
         #this should get to the catch ValueError and process one item
         controller.solr = MagicMock()
         mock = controller.solr
@@ -178,7 +185,6 @@ class TestHarvestController(TestCase):
         self.assertTrue('[ERROR] HarvestController: Error for record ' in self.test_log_handler.formatted_records[1])
         self.assertTrue('ERR: Item must have a title' in self.test_log_handler.formatted_records[1])
 
-#    @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testHandleKnownSolrExceptions(self):
         '''Test that the harvest continues if known solr error occurs for
         record
@@ -190,7 +196,7 @@ class TestHarvestController(TestCase):
 
     @unittest.skip('Takes too long to run')
     def testLoggingMoreThan1000(self):
-        controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'testOAI-2400-records.xml', 'extra_data')
+        controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI-2400-records.xml', 'extra_data')
         controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 12)
         self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
@@ -212,7 +218,7 @@ class TestOAIHarvester(TestCase):
     def setUp(self):
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        self.harvester = harvester.OAIHarvester('testOAI.xml', 'latimes')
+        self.harvester = harvester.OAIHarvester('fixtures/testOAI.xml', 'latimes')
         self.test_log_handler = logbook.TestHandler()
         self.test_log_handler.push_thread()
 
@@ -237,21 +243,45 @@ class TestOAIHarvester(TestCase):
 class TestOACHarvester(TestCase):
     '''Test the OACHarvester
     '''
+    class MockOACapi(object):
+        def __init__(self, json):
+            self._json = json
+
+        def json(self):
+            return  json.loads(self._json)
+
+    def mockRequestGet(self, url, **kwargs):
+        with codecs.open(self.testFile, 'r', 'utf8') as foo:
+            return  TestOACHarvester.MockOACapi(foo.read())
+
     def setUp(self):
         self.real_requests_get = requests.get
-        #requests.get = mockRequestsGet
-        self.harvester = harvester.OACHarvester('http://oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj/', 'extra_data')
+        requests.get = self.mockRequestGet
+        self.testFile = 'fixtures/testOAC-url_next-0.json'
+        self.harvester = harvester.OACHarvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.test_log_handler = logbook.TestHandler()
         self.test_log_handler.push_thread()
 
     def tearDown(self):
         self.test_log_handler.pop_thread()
-        #requests.get = self.real_requests_get
+        requests.get = self.real_requests_get
+
+    def testParseArk(self):
+        self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url_harvest), 'ark:/13030/hb5d5nb7dj')
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
         self.assertEqual(self.harvester, self.harvester.__iter__())
         rec1 = self.harvester.next()
+
+    def testNextGroupFetch(self):
+        '''Test that the OAC harvester will fetch more records when current
+        response set records are all consumed'''
+        self.testFile = 'fixtures/testOAC-url_next-1.json'
+        records = []
+        for r in self.harvester:
+            records.append(r)
+        self.assertEqual(len(records), 28)
 
 
 class TestMain(TestCase):
@@ -259,7 +289,7 @@ class TestMain(TestCase):
     def setUp(self):
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
+        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'fixtures/testOAI-128-records.xml', 'extra_data="scu:objects"']
         self.test_log_handler = logbook.TestHandler()
         def deliver(msg, email):
             #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
@@ -280,7 +310,7 @@ class TestMain(TestCase):
     def testMainHarvestController__init__Error(self):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
-        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'XXXXXBADINPUT', 'Calisphere', 'OAI', 'testOAI-128-records.xml', 'extra_data="scu:objects"']
+        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'XXXXXBADINPUT', 'Calisphere', 'OAI', 'fixtures/testOAI-128-records.xml', 'extra_data="scu:objects"']
         self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         self.assertEqual(len(self.test_log_handler.records), 3)
         self.assertEqual("[ERROR] HarvestMain: Exception in harvester init Campus value XXXXXBADINPUT in not one of ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']", self.test_log_handler.formatted_records[2])
@@ -301,7 +331,7 @@ class TestMain(TestCase):
         self.assertEqual(mock_method.call_count, 128)
         self.assertEqual(len(self.test_log_handler.records), 6)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com Santa Clara University: Digital Objects [\'UCDL\'] [\'Calisphere\'] OAI testOAI-128-records.xml extra_data="scu:objects"')
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com Santa Clara University: Digital Objects [\'UCDL\'] [\'Calisphere\'] OAI fixtures/testOAI-128-records.xml extra_data="scu:objects"')
         self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
         self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[3])
         self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
