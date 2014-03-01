@@ -272,7 +272,8 @@ class TestOACHarvester(TestCase):
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
         self.assertEqual(self.harvester, self.harvester.__iter__())
-        rec1 = self.harvester.next()
+        rec1 = self.harvester.next_record()
+        objset = self.harvester.next()
 
     def testNextGroupFetch(self):
         '''Test that the OAC harvester will fetch more records when current
@@ -280,9 +281,22 @@ class TestOACHarvester(TestCase):
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         for r in self.harvester:
-            records.append(r)
+            records.extend(r)
         self.assertEqual(len(records), 28)
 
+    def testObjsetFetch(self):
+        '''Test fetching data in whole objsets'''
+        self.assertTrue(hasattr(self.harvester, 'next_objset'))
+        self.assertTrue(hasattr(self.harvester.next_objset, '__call__'))
+        self.testFile = 'fixtures/testOAC-url_next-1.json' #so next resp is next
+        objset = self.harvester.next_objset()
+        self.assertIsNotNone(objset)
+        self.assertIsInstance(objset, list)
+        self.assertTrue(len(objset) == 25)
+        objset2 = self.harvester.next_objset()
+        self.assertTrue(objset != objset2)
+        objset3 = self.harvester.next_objset()
+        self.assertIsNone(objset3)
 
 class TestMain(TestCase):
     '''Test the main function'''

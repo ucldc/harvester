@@ -50,7 +50,7 @@ class OACHarvester(Harvester):
         self.url_harvest = url_harvest
         self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url_harvest)
         self.headers = {'content-type': 'application/json'}
-        self.objset_index = 0
+        self.objset_last = False
         self.resp = requests.get(self.url_harvest, headers=self.headers)
         self.api_resp = self.resp.json()
         self.objset_total = self.api_resp['objset_total']
@@ -62,6 +62,10 @@ class OACHarvester(Harvester):
         return ''.join(('ark:', url_findaid.split('ark:')[1]))
 
     def next(self):
+        '''Point to which function we want as main'''
+        return self.next_objset()
+
+    def next_record(self):
         '''Return the next record'''
         while self.resp:
             try:
@@ -78,6 +82,23 @@ class OACHarvester(Harvester):
             self.objset_start = self.api_resp['objset_start']
             self.objset_end = self.api_resp['objset_end']
             self.objset = self.api_resp['objset']
+
+    def next_objset(self):
+        '''Return records in objset batches. More efficient and makes
+        sense when storing to file in DPLA type ingest'''
+        if self.objset_last:
+            raise StopIteration
+        cur_objset = self.objset
+        if self.objset_end == self.objset_total:
+            self.objset_last = True
+        else:
+            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
+            self.resp = requests.get(url_next, headers=self.headers)
+            self.api_resp = self.resp.json()
+            self.objset_start = self.api_resp['objset_start']
+            self.objset_end = self.api_resp['objset_end']
+            self.objset = self.api_resp['objset']
+        return cur_objset
 
 
 class HarvestController(object):
