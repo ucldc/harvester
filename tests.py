@@ -14,6 +14,7 @@ import requests
 import harvester
 import logbook
 from harvester import get_log_file_path
+from harvester import Collection
 
 class MockResponse(object):
     """Mimics the response object returned by HTTP requests."""
@@ -34,6 +35,23 @@ def mockRequestsGet(filename, **kwargs):
     with codecs.open(filename, 'r', 'utf8') as foo:
         resp = MockResponse(foo.read())
     return resp
+
+class TestApiCollection(TestCase):
+    '''Test that the Collection object is complete from the api
+    '''
+    def setUp(self):
+        self.real_requests_get = requests.get
+        requests.get = mockRequestsGet
+
+    def tearDown(self):
+        requests.get = self.real_requests_get
+
+    def testCollectionAPI(self):
+        c = Collection('collection_api_test_file.json')
+        self.assertEqual(c.name, 'Calisphere - Santa Clara University: Digital Objects')
+        self.assertEqual(c.url_oai, 'http://content.cdlib.org/oai')
+        self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/12/')
+
 
 class TestHarvestOAIController(TestCase):
     '''Test the function of an OAI harvester'''
@@ -98,6 +116,7 @@ class TestHarvestController(TestCase):
         self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
         self.test_log_handler = logbook.TestHandler()
         self.test_log_handler.push_thread()
+        self.objset_test_doc = json.load(open('objset_test_doc.json'))
 
     def tearDown(self):
         self.test_log_handler.pop_thread()
@@ -144,12 +163,12 @@ class TestHarvestController(TestCase):
         '''Test saving objset to file'''
         self.assertTrue(hasattr(self.controller_oai, 'dir_save'))
         self.assertTrue(hasattr(self.controller_oai, 'save_objset'))
-        self.controller_oai.save_objset(objset_test_doc)
+        self.controller_oai.save_objset(self.objset_test_doc)
         #did it save?
         dir_list = os.listdir(self.controller_oai.dir_save)
         self.assertEqual(len(dir_list), 1)
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
-        self.assertEqual(objset_test_doc, objset_saved)
+        self.assertEqual(self.objset_test_doc, objset_saved)
 
     @unittest.skip('Takes too long to run')
     def testLoggingMoreThan1000(self):
@@ -408,155 +427,6 @@ solr_test_doc = {
     'id': 'UCLA-test_repo_name-test_collection_name-http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'subject': ['Buildings--Earthquake effects--California--San Francisco', 'Earthquakes--California--San Francisco--Personal narratives', 'Fires--California--San Francisco--Personal narratives', 'Refugee camps--California--Oakland', 'San Francisco Earthquake, Calif., 1906--Personal narratives', 'The 1906 San Francisco Earthquake and Fire Digital Collection', 'Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.']
 }
 
-objset_test_doc = json.loads('''[
-  {
-    "qdc": {
-      "subject": [
-        "World War, 1914-1918--United States--Posters",
-        "Propaganda (Anti-German, Anti-Japanese, Anti-Italian)",
-        "Uncle Sam (Symbolic character)",
-        {
-          "v": "American war posters from the First World War",
-          "q": "series"
-        }
-      ],
-      "type": {
-        "v": "still image",
-        "q": "mods"
-      },
-      "identifier": [
-        "http://ark.cdlib.org/ark:/28722/bk0007s1g00",
-        {
-          "v": "BANC PIC 2005.001:122--AX",
-          "q": "mods"
-        }
-      ],
-      "contributor": "Perard, Victor Semon, 1870-1957, artist",
-      "publisher": "The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
-      "rights": [
-        "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"
-      ],
-      "description": "lang: Supplement to Electrical Merchandising March 1918; Stamped Edward S. Rogers Collection",
-      "creator": "Perard, Victor Semon, 1870-1957, artist",
-      "format": [
-        "1 print;;30.5 x 22 cm",
-        {
-          "v": "mods",
-          "q": "x"
-        }
-      ],
-      "title": "One Two Three: Now, all together!: Third Liberty Loan",
-      "date": {
-        "v": "1918",
-        "q": "created"
-      },
-      "relation": [
-        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
-        "BANC PIC 2005.001",
-        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
-        "http://calisphere.universityofcalifornia.edu/",
-        "http://bancroft.berkeley.edu/"
-      ]
-    },
-    "courtesy_of": "Bancroft Library, UC Berkeley",
-    "files": {
-      "reference": [
-        {
-          "x": 555,
-          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/FID3",
-          "y": 800
-        },
-        {
-          "x": 1043,
-          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/FID4",
-          "y": 1500
-        }
-      ],
-      "thumbnail": {
-        "x": 140,
-        "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/thumbnail",
-        "y": 200
-      }
-    }
-  },
-  {
-    "qdc": {
-      "subject": [
-        "World War, 1914-1918--United States--Posters",
-        "Military recruiting: General or Miscellaneous",
-        "Merchant marine",
-        {
-          "v": "American war posters from the First World War",
-          "q": "series"
-        }
-      ],
-      "type": {
-        "v": "still image",
-        "q": "mods"
-      },
-      "identifier": [
-        "http://ark.cdlib.org/ark:/28722/bk0007s1p03",
-        {
-          "v": "BANC PIC 2005.001:182--D",
-          "q": "mods"
-        }
-      ],
-      "contributor": [
-        "Daugherty, James Henry, 1889-1974, artist",
-        "Forbes, Boston, publisher"
-      ],
-      "publisher": [
-        "The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
-        "Published in: Boston, Massachusetts"
-      ],
-      "rights": [
-        "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"
-      ],
-      "description": "lang: Issued by publications section, United States Shipping Board Emergency Fleet Corporation, Philadelphia; Stamped Edward S. Rogers Collection",
-      "creator": "Daugherty, James Henry, 1889-1974, artist",
-      "format": [
-        "1 print (poster);;77 x 51 cm",
-        {
-          "v": "mods",
-          "q": "x"
-        }
-      ],
-      "title": "Man THE SHIPS!: Enroll here for The Merchant Marine",
-      "date": {
-        "v": "[1916-1918]",
-        "q": "created"
-      },
-      "relation": [
-        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
-        "BANC PIC 2005.001",
-        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
-        "http://calisphere.universityofcalifornia.edu/",
-        "http://bancroft.berkeley.edu/"
-      ]
-    },
-    "courtesy_of": "Bancroft Library, UC Berkeley",
-    "files": {
-      "reference": [
-        {
-          "x": 520,
-          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/FID3",
-          "y": 800
-        },
-        {
-          "x": 975,
-          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/FID4",
-          "y": 1500
-        }
-      ],
-      "thumbnail": {
-        "x": 130,
-        "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/thumbnail",
-        "y": 200
-      }
-    }
-  }
-  ]
-''')
 
 if __name__=='__main__':
     unittest.main()

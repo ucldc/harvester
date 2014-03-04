@@ -15,6 +15,15 @@ import dplaingestion.couch
 URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 
+class Collection(dict):
+    '''A representation of the avram collection, as presented by the 
+    tastypie api
+    '''
+    def __init__(self, url_api):
+        resp = requests.get(url_api)
+        api_json = json.loads(resp.text)
+        self.__dict__ = api_json
+
 class Harvester(object):
     '''Base class for harvest objects.'''
     def __init__(self, url_harvest, extra_data):

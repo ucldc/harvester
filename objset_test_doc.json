@@ -1,0 +1,148 @@
+[
+  {
+    "qdc": {
+      "subject": [
+        "World War, 1914-1918--United States--Posters",
+        "Propaganda (Anti-German, Anti-Japanese, Anti-Italian)",
+        "Uncle Sam (Symbolic character)",
+        {
+          "v": "American war posters from the First World War",
+          "q": "series"
+        }
+      ],
+      "type": {
+        "v": "still image",
+        "q": "mods"
+      },
+      "identifier": [
+        "http://ark.cdlib.org/ark:/28722/bk0007s1g00",
+        {
+          "v": "BANC PIC 2005.001:122--AX",
+          "q": "mods"
+        }
+      ],
+      "contributor": "Perard, Victor Semon, 1870-1957, artist",
+      "publisher": "The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
+      "rights": [
+        "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"
+      ],
+      "description": "lang: Supplement to Electrical Merchandising March 1918; Stamped Edward S. Rogers Collection",
+      "creator": "Perard, Victor Semon, 1870-1957, artist",
+      "format": [
+        "1 print;;30.5 x 22 cm",
+        {
+          "v": "mods",
+          "q": "x"
+        }
+      ],
+      "title": "One Two Three: Now, all together!: Third Liberty Loan",
+      "date": {
+        "v": "1918",
+        "q": "created"
+      },
+      "relation": [
+        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
+        "BANC PIC 2005.001",
+        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
+        "http://calisphere.universityofcalifornia.edu/",
+        "http://bancroft.berkeley.edu/"
+      ]
+    },
+    "courtesy_of": "Bancroft Library, UC Berkeley",
+    "files": {
+      "reference": [
+        {
+          "x": 555,
+          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/FID3",
+          "y": 800
+        },
+        {
+          "x": 1043,
+          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/FID4",
+          "y": 1500
+        }
+      ],
+      "thumbnail": {
+        "x": 140,
+        "src": "http://ark.cdlib.org/ark:/28722/bk0007s1g00/thumbnail",
+        "y": 200
+      }
+    }
+  },
+  {
+    "qdc": {
+      "subject": [
+        "World War, 1914-1918--United States--Posters",
+        "Military recruiting: General or Miscellaneous",
+        "Merchant marine",
+        {
+          "v": "American war posters from the First World War",
+          "q": "series"
+        }
+      ],
+      "type": {
+        "v": "still image",
+        "q": "mods"
+      },
+      "identifier": [
+        "http://ark.cdlib.org/ark:/28722/bk0007s1p03",
+        {
+          "v": "BANC PIC 2005.001:182--D",
+          "q": "mods"
+        }
+      ],
+      "contributor": [
+        "Daugherty, James Henry, 1889-1974, artist",
+        "Forbes, Boston, publisher"
+      ],
+      "publisher": [
+        "The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
+        "Published in: Boston, Massachusetts"
+      ],
+      "rights": [
+        "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html"
+      ],
+      "description": "lang: Issued by publications section, United States Shipping Board Emergency Fleet Corporation, Philadelphia; Stamped Edward S. Rogers Collection",
+      "creator": "Daugherty, James Henry, 1889-1974, artist",
+      "format": [
+        "1 print (poster);;77 x 51 cm",
+        {
+          "v": "mods",
+          "q": "x"
+        }
+      ],
+      "title": "Man THE SHIPS!: Enroll here for The Merchant Marine",
+      "date": {
+        "v": "[1916-1918]",
+        "q": "created"
+      },
+      "relation": [
+        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
+        "BANC PIC 2005.001",
+        "http://www.oac.cdlib.org/findaid/ark:/13030/hb2000082j",
+        "http://calisphere.universityofcalifornia.edu/",
+        "http://bancroft.berkeley.edu/"
+      ]
+    },
+    "courtesy_of": "Bancroft Library, UC Berkeley",
+    "files": {
+      "reference": [
+        {
+          "x": 520,
+          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/FID3",
+          "y": 800
+        },
+        {
+          "x": 975,
+          "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/FID4",
+          "y": 1500
+        }
+      ],
+      "thumbnail": {
+        "x": 130,
+        "src": "http://ark.cdlib.org/ark:/28722/bk0007s1p03/thumbnail",
+        "y": 200
+      }
+    }
+  }
+]

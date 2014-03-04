@@ -1,0 +1,40 @@
+{
+  "url_was": "",
+  "url_oai": "http://content.cdlib.org/oai",
+  "metadata_standard": "",
+  "metadata_level": "",
+  "hosted": "",
+  "extent": null,
+  "description": "",
+  "collection_type": "",
+  "campus": [
+    {
+      "slug": "UCDL",
+      "resource_uri": "/api/v1/campus/12/",
+      "position": 11,
+      "name": "California Digital Library"
+    }
+  ],
+  "appendix": "Harvest/Crawl",
+  "name": "Calisphere - Santa Clara University: Digital Objects",
+  "oai_set_spec": "scu:objects",
+  "phase_one": false,
+  "repository": [
+    {
+      "resource_uri": "/api/v1/repository/37/",
+      "name": "Calisphere",
+      "campus": [
+        {
+          "slug": "UCDL",
+          "resource_uri": "/api/v1/campus/12/",
+          "position": 11,
+          "name": "California Digital Library"
+        }
+      ]
+    }
+  ],
+  "resource_uri": "/api/v1/collection/197/",
+  "slug": "calisphere-santa-clara-university-digital-objects",
+  "url_local": "",
+  "url_oac": ""
+}
