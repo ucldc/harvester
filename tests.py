@@ -226,6 +226,19 @@ class TestOACHarvester(TestCase):
     def testParseArk(self):
         self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url_harvest), 'ark:/13030/hb5d5nb7dj')
 
+    def testHarvestByRecord(self):
+        '''Test the older by single record interface'''
+        self.testFile = 'fixtures/testOAC-url_next-1.json'
+        records = []
+        r = self.harvester.next_record()
+        try:
+            while True:
+                records.append(r)
+                r = self.harvester.next_record()
+        except StopIteration:
+            pass
+        self.assertEqual(len(records), 28)
+
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
         self.assertEqual(self.harvester, self.harvester.__iter__())

@@ -144,23 +144,6 @@ class HarvestController(object):
         sID = '-'.join((campusStr, repoStr, self.collection_name, identifier[0]))
         return sID
 
-    def create_solr_doc(self, indata):
-        '''Create a document that is compatible with our solr index.
-        Currently it is not auto updated, this code will need to be touched
-        when solr schema changes
-        '''
-        #dc.title required
-        if 'title' not in indata:
-            print "TYPE", type(indata)
-            raise ValueError('Item must have a title')
-        sDoc = indata
-        sDoc['id'] = self.create_solr_id(sDoc['identifier'])
-        sDoc['collection_name'] = self.collection_name
-        sDoc['campus'] = self.campuses
-        sDoc['repository'] = self.repositories
-        sDoc.pop('entity_count', None) #was added at one point
-        return sDoc
-
     def save_objset(self, objset):
         '''Save an object set to disk'''
         filename = os.path.join(self.dir_save, str(uuid.uuid4()))
