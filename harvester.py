@@ -2,11 +2,15 @@ import os
 import sys
 import datetime
 from email.mime.text import MIMEText
+import tempfile
+import uuid
+import json
 from sickle import Sickle
 import solr
 import requests
 import logbook
 from logbook import FileHandler
+import dplaingestion.couch
 
 URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
@@ -124,15 +128,7 @@ class HarvestController(object):
         self.harvester = self.harvest_types.get(harvest_type, None)(url_harvest, extra_data)
         self.solr = solr.Solr(URL_SOLR)
         self.logger = logbook.Logger('HarvestController')
-
-    def validate_input_dict(self, indata):
-        '''Validate the data from the harvester. Currently only DC elements
-        supported'''
-        if not isinstance(indata, dict):
-            raise TypeError("Input data must be a dictionary")
-###        for key, value in indata.items():
-###            if key not in self.dc_elements:
-###                raise ValueError('Input data must be in DC elements. Problem key is:' + unicode(key))
+        self.dir_save = tempfile.mkdtemp('_' + collection_name)
 
     def create_solr_id(self, identifier):
         '''Create an id that is good for solr. Take campus, repo and collection
@@ -153,9 +149,9 @@ class HarvestController(object):
         Currently it is not auto updated, this code will need to be touched
         when solr schema changes
         '''
-        self.validate_input_dict(indata)
         #dc.title required
         if 'title' not in indata:
+            print "TYPE", type(indata)
             raise ValueError('Item must have a title')
         sDoc = indata
         sDoc['id'] = self.create_solr_id(sDoc['identifier'])
@@ -165,28 +161,26 @@ class HarvestController(object):
         sDoc.pop('entity_count', None) #was added at one point
         return sDoc
 
+    def save_objset(self, objset):
+        '''Save an object set to disk'''
+        filename = os.path.join(self.dir_save, str(uuid.uuid4()))
+        with open(filename, 'w') as foo:
+            foo.write(json.dumps(objset))
+
     def harvest(self):
         '''Harvest the collection'''
         self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection_name, str(self.campuses), str(self.repositories), str(self.solr) )))
         n = 0
-        interval = 100
-        for rec in self.harvester:
-            #validate record
-            try:
-            	solrDoc = self.create_solr_doc(rec)
-            except ValueError, e:
-                self.logger.error(' '.join(('Error for record', str(rec), ' ERR:', str(e))))
-                continue
-            try:
-                self.solr.add(solrDoc, commit=True)
+        next_log_n = interval = 100
+        for objset in self.harvester:
+            if isinstance(objset, list):
+                n += len(objset)
+            else:
                 n += 1
-            except solr.core.SolrException, e:
-                if e.httpcode == 400:
-                    self.logger.error(' '.join(('Error for record', str(rec), ' ERR:', str(e))))
-                    continue
-                raise e
-            if n % interval == 0:
+            self.save_objset(objset)
+            if n >= next_log_n:
                 self.logger.info(' '.join((str(n), 'records harvested')))
+                next_log_n += interval
                 if n < 10000 and n >= 10*interval:
                     interval = 10*interval
         return n
