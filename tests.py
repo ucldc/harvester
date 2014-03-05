@@ -48,7 +48,9 @@ class TestApiCollection(TestCase):
 
     def testCollectionAPI(self):
         c = Collection('collection_api_test_file.json')
+        self.assertEqual(c['name'], 'Calisphere - Santa Clara University: Digital Objects')
         self.assertEqual(c.name, 'Calisphere - Santa Clara University: Digital Objects')
+        self.assertEqual(c['url_oai'], 'http://content.cdlib.org/oai')
         self.assertEqual(c.url_oai, 'http://content.cdlib.org/oai')
         self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/12/')
 

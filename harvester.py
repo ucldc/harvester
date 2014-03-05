@@ -22,7 +22,8 @@ class Collection(dict):
     def __init__(self, url_api):
         resp = requests.get(url_api)
         api_json = json.loads(resp.text)
-        self.__dict__ = api_json
+        self.update(api_json)
+        self.__dict__.update(api_json)
 
 class Harvester(object):
     '''Base class for harvest objects.'''
