@@ -12,4 +12,4 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.c
 cd $DIR
 
 . ./venv/bin/activate
-python harvester.py "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+python harvester.py "$1" "$2"
