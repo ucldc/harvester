@@ -349,6 +349,9 @@ class TestMain(TestCase):
             pass
         self.test_log_handler.deliver = deliver
         self.test_log_handler.push_thread()
+        self.dir_test_profile = 'profiles/test'
+        if not os.path.isdir(self.dir_test_profile):
+            os.makedirs(self.dir_test_profile) 
         #self.mail_handler = logbook.TestHandler()
         #self.mail_handler.push_thread()
 
@@ -360,14 +363,24 @@ class TestMain(TestCase):
         for d in dir_list:
             if "Santa" in d:
                 shutil.rmtree(os.path.join('/tmp', d))
+        shutil.rmtree(self.dir_test_profile)
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
+    def testMainCreatesCollectionProfile(self):
+        '''Test that the main function produces a collection profile
+        file for DPLA. The path to this file is needed when creating a 
+        DPLA ingestion document.
+        '''
+        c = Collection('fixtures/collection_api_test.json')
+        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
+        self.assertTrue(os.path.exists(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
+
     def testMainCollection__init__Error(self):
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test_bad_type.json']
         self.mail_handler = MagicMock()
-        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.mail_handler)
+        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.mail_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 0)
         self.mail_handler.deliver.assert_called()
         self.assertEqual(self.mail_handler.deliver.call_count, 1)
@@ -377,29 +390,30 @@ class TestMain(TestCase):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
-        self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
+        self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 3)
         self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[2])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[2])
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
-        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
-        self.assertEqual(len(self.test_log_handler.records), 4)
-        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[3])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
+        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
+        self.assertEqual(len(self.test_log_handler.records), 5)
+        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[4])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
 
     def testMainFn(self):
-        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
+        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
-        self.assertEqual(len(self.test_log_handler.records), 7)
+        self.assertEqual(len(self.test_log_handler.records), 8)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
         self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com fixtures/collection_api_test.json')
-        self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
-        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[3])
-        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestController: 128 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
+        self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Create DPLA profile document')
+        self.assertEqual(self.test_log_handler.formatted_records[3], u'[INFO] HarvestMain: Start harvesting next')
+        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[4])
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestController: 128 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[7], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
 def skipUnlessIntegrationTest(selfobj=None):

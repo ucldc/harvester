@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+import codecs
 from email.mime.text import MIMEText
 import tempfile
 import uuid
@@ -270,7 +271,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg['To'] = mail_to
     return msg
 
-def main(log_handler=None, mail_handler=None):
+def main(log_handler=None, mail_handler=None, dir_profile='profiles'):
     args = parse_args()
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
@@ -298,6 +299,13 @@ def main(log_handler=None, mail_handler=None):
             except Exception, e:
                 logger.error(' '.join(("Exception in harvester init", str(e))))
                 raise e
+            logger.info('Create DPLA profile document')
+
+            profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
+            with codecs.open(profile_path, 'w', 'utf8') as pfoo:
+                pfoo.write(collection.dpla_profile)
+
+
             logger.info('Start harvesting next')
             try:
                 num_recs = harvester.harvest()
