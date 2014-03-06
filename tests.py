@@ -78,6 +78,23 @@ class TestApiCollection(TestCase):
         '''
         self.assertRaises(ValueError,Collection, 'fixtures/collection_api_test_bad_type.json')
 
+    def testCreateProfile(self):
+        '''Test the creation of a DPLA style proflie file'''
+        c = Collection('fixtures/collection_api_test_oac.json')
+        self.assertTrue(hasattr(c, 'dpla_profile'))
+        self.assertTrue(isinstance(c.dpla_profile, str))
+        #print c.dpla_profile
+        j = json.loads(c.dpla_profile)
+        self.assertTrue(j['name'] == 'harry-crosby-collection-black-white-photographs-of')
+        self.assertTrue(j['enrichments_coll'] == [ '/compare_with_schema' ])
+        self.assertTrue('enrichments_item' in j)
+        self.assertTrue(len(j['enrichments_item']) == 31)
+        self.assertTrue('contributor' in j)
+        self.assertTrue(isinstance(j['contributor'], list))
+        self.assertTrue(len(j['contributor']) == 4)
+        self.assertTrue(j['contributor'][1] == {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
+
+
 class TestHarvestOAIController(TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):

@@ -13,6 +13,12 @@
       "resource_uri": "/api/v1/campus/6/",
       "position": 6,
       "name": "UC San Diego"
+    },
+    {
+      "slug": "UCB",
+      "resource_uri": "/api/v1/campus/1/",
+      "position": 0,
+      "name": "UC Berkeley"
     }
   ],
   "appendix": "Harvest/Crawl",
@@ -38,6 +44,17 @@
           "name": "UC Berkeley"
         }
       ]
+    },
+    {
+      "resource_uri": "/api/v1/repository/36/",
+      "name": "UCB Department of Statistics",
+      "slug": "UCB-Department-of-Statistics",
+      "campus": {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley"
+        }
     }
   ],
   "resource_uri": "/api/v1/collection/178/",

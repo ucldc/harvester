@@ -34,6 +34,70 @@ class Collection(dict):
         self.update(api_json)
         self.__dict__.update(api_json)
 
+    def _build_contributor_list(self):
+        '''Build the dpla style contributor list from the campus and
+        repositories
+        This will need review
+        '''
+        clist = []
+        for campus in self.campus:
+            campus_dict = dict(name=campus['slug'])
+            campus_dict['@id'] = campus['resource_uri'] 
+            clist.append(campus_dict)
+        for repository in self.repository:
+            repository_dict = dict(name=repository['slug'])
+            repository_dict['@id'] = repository['resource_uri'] 
+            clist.append(repository_dict)
+        return clist
+
+    @property
+    def dpla_profile_obj(self):
+        '''Return a json string appropriate for creating a dpla ingest profile.
+        First create dictionary that is correct and then serialize'''
+        profile = {}
+        profile['name'] = self.slug
+        profile['contributor'] = self._build_contributor_list()
+        profile['enrichments_coll'] = [ '/compare_with_schema' ] 
+        #TODO: add to avram
+        profile['enrichments_item'] = [
+        '/select-id', 
+        '/oai-to-dpla', 
+        '/shred?prop=sourceResource%2Fcontributor%2CsourceResource%2Fcreator%2CsourceResource%2Fdate', 
+        '/shred?prop=sourceResource%2Flanguage%2CsourceResource%2Fpublisher%2CsourceResource%2Frelation', 
+        '/shred?prop=sourceResource%2Fsubject%2CsourceResource%2Ftype%2CsourceResource%2Fformat', 
+        '/shred?prop=sourceResource%2Fsubject&delim=%3Cbr%3E',
+        '/cleanup_value',
+        '/move_date_values?prop=sourceResource%2Fsubject',
+        '/move_date_values?prop=sourceResource%2Fspatial',
+        '/shred?prop=sourceResource%2Fspatial&delim=--',
+        '/capitalize_value',
+        '/enrich_earliest_date', 
+        '/enrich-subject', 
+        '/enrich_date',
+        '/enrich-type', 
+        '/enrich-format', 
+        '/contentdm_identify_object', 
+        '/enrich_location', 
+        '/scdl_enrich_location', 
+        '/geocode', 
+        '/scdl_geocode_regions',
+        '/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True&remove=True',
+        '/cleanup_language',
+        '/enrich_language',
+        '/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3',
+        '/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True',
+        '/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True',
+        '/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format',
+        '/set_prop?prop=sourceResource%2FstateLocatedIn&value=California',
+        '/enrich_location?prop=sourceResource%2FstateLocatedIn',
+        '/compare_with_schema'
+    ]
+        return profile
+
+    @property
+    def dpla_profile(self):
+        return json.dumps(self.dpla_profile_obj)
+
 class Harvester(object):
     '''Base class for harvest objects.'''
     def __init__(self, url_harvest, extra_data):
