@@ -1,0 +1,47 @@
+{
+  "url_was": "",
+  "url_oai": "",
+  "metadata_standard": "MODS; METS",
+  "metadata_level": "Item",
+  "hosted": "",
+  "extent": null,
+  "description": "Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.",
+  "collection_type": "A",
+  "campus": [
+    {
+      "slug": "UCSD",
+      "resource_uri": "/api/v1/campus/6/",
+      "position": 6,
+      "name": "UC San Diego"
+    }
+  ],
+  "appendix": "Harvest/Crawl",
+  "name": "Harry Crosby Collection",
+  "oai_set_spec": "",
+  "phase_one": false,
+  "repository": [
+    {
+      "resource_uri": "/api/v1/repository/22/",
+      "name": "Mandeville Special Collections Library",
+      "slug": "Mandeville-Special-Collections-Library",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego"
+        },
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley"
+        }
+      ]
+    }
+  ],
+  "resource_uri": "/api/v1/collection/178/",
+  "slug": "harry-crosby-collection-black-white-photographs-of",
+  "url_local": "http://oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
+  "url_oac": "fixtures/testOAC.json"
+}
