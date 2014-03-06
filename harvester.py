@@ -6,13 +6,11 @@ import tempfile
 import uuid
 import json
 from sickle import Sickle
-import solr
 import requests
 import logbook
 from logbook import FileHandler
 import dplaingestion.couch
 
-URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 
 class Collection(dict):
@@ -20,8 +18,19 @@ class Collection(dict):
     tastypie api
     '''
     def __init__(self, url_api):
+        self.url = url_api
         resp = requests.get(url_api)
         api_json = json.loads(resp.text)
+        if api_json['url_oac']:
+            api_json['harvest_type'] = 'OAC'
+            api_json['url_harvest'] = api_json['url_oac']
+            api_json['extra_data'] = ''
+        elif api_json['url_oai']:
+            api_json['harvest_type'] = 'OAI'
+            api_json['url_harvest'] = api_json['url_oai']
+            api_json['extra_data'] = api_json['oai_set_spec']
+        else:
+            raise ValueError('Collection is not an OAC or OAI harvest collection')
         self.update(api_json)
         self.__dict__.update(api_json)
 
@@ -66,11 +75,13 @@ class OACHarvester(Harvester):
         self.headers = {'content-type': 'application/json'}
         self.objset_last = False
         self.resp = requests.get(self.url_harvest, headers=self.headers)
-        self.api_resp = self.resp.json()
-        self.objset_total = self.api_resp['objset_total']
-        self.objset_start = self.api_resp['objset_start']
-        self.objset_end = self.api_resp['objset_end']
-        self.objset = self.api_resp['objset']
+        api_resp = self.resp.json()
+        #for key in api_resp.keys():
+        #    self.__dict__[key] = api_resp[key]
+        self.objset_total = api_resp[u'objset_total']
+        self.objset_start = api_resp['objset_start']
+        self.objset_end = api_resp['objset_end']
+        self.objset = api_resp['objset']
 
     def _parse_oac_findaid_ark(self, url_findaid):
         return ''.join(('ark:', url_findaid.split('ark:')[1]))
@@ -117,8 +128,9 @@ class OACHarvester(Harvester):
 
 class HarvestController(object):
     '''Controller for the harvesting. Selects correct harvester for the given 
-    collection, then retrieves records for the given collection, massages them
-    to match the solr schema and then sends to solr for updates.
+    collection, then retrieves records for the given collection and saves to 
+    disk.
+    TODO: produce profile file
     '''
     campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
     harvest_types = { 'OAI': OAIHarvester,
@@ -126,32 +138,25 @@ class HarvestController(object):
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
-    def __init__(self, user_email, collection_name, campuses, repositories, harvest_type, url_harvest, extra_data):
+    def __init__(self, user_email, collection):
         self.user_email = user_email
-        self.collection_name = collection_name
-        self.campuses = []
-        for campus in campuses:
-            if campus not in self.campus_valid:
-                raise ValueError('Campus value '+campus+' in not one of '+str(self.campus_valid))
-            self.campuses.append(campus)
-        self.repositories = repositories
-        self.harvester = self.harvest_types.get(harvest_type, None)(url_harvest, extra_data)
-        self.solr = solr.Solr(URL_SOLR)
+        self.collection = collection
+        self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
         self.logger = logbook.Logger('HarvestController')
-        self.dir_save = tempfile.mkdtemp('_' + collection_name)
+        self.dir_save = tempfile.mkdtemp('_' + self.collection.name)
 
-    def create_solr_id(self, identifier):
-        '''Create an id that is good for solr. Take campus, repo and collection
-        name to form prefix to individual item id. Ensures unique ids in solr,
+    def create_id(self, identifier):
+        '''Create an id that is good for items. Take campus, repo and collection
+        name to form prefix to individual item id. Ensures unique ids in db,
         in case any local ids are identical.
         May do something smarter when known GUIDs (arks, doi, etc) are in use.
         Takes a list of possible identifiers and creates a string id.
         '''
         if not isinstance(identifier, list):
             raise TypeError('Identifier field should be a list')
-        campusStr = '-'.join(self.campuses)
-        repoStr = '-'.join(self.repositories)
-        sID = '-'.join((campusStr, repoStr, self.collection_name, identifier[0]))
+        campusStr = '-'.join([x['slug'] for x in self.collection.campus])
+        repoStr = '-'.join([x['slug'] for x in self.collection.repository])
+        sID = '-'.join((campusStr, repoStr, self.collection.slug, identifier[0].replace(' ', '-')))
         return sID
 
     def save_objset(self, objset):
@@ -162,7 +167,7 @@ class HarvestController(object):
 
     def harvest(self):
         '''Harvest the collection'''
-        self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection_name, str(self.campuses), str(self.repositories), str(self.solr) )))
+        self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
         n = 0
         next_log_n = interval = 100
         for objset in self.harvester:
@@ -173,31 +178,25 @@ class HarvestController(object):
             self.save_objset(objset)
             if n >= next_log_n:
                 self.logger.info(' '.join((str(n), 'records harvested')))
-                next_log_n += interval
                 if n < 10000 and n >= 10*interval:
                     interval = 10*interval
+                next_log_n += interval
+        self.logger.info(' '.join((str(n), 'records harvested')))
         return n
 
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, nargs='?', help='user email')
-    parser.add_argument('collection_name', type=str, nargs='?',
-            help='name of collection in registry')
-    parser.add_argument('campuses', type=str, nargs='?',
-            help='Comma delimited string of campuses')
-    parser.add_argument('repositories', type=str, nargs='?',
-            help='Comma delimited string of repositories')
-    parser.add_argument('harvest_type', type=str, nargs='?', help='Type of harvest (Only OAI)')
-    parser.add_argument('url_harvest', type=str, nargs='?', help='URL for harvest')
-    parser.add_argument('extra_data', type=str, nargs='?', help='String of extra data required by type of harvest')
+    parser.add_argument('url_api_collection', type=str, nargs='?',
+            help='URL for the collection Django tastypie api resource')
     return parser.parse_args()
 
-def get_log_file_path(collection_name):
+def get_log_file_path(collection_slug):
     '''Get the log file name for the given collection, start time and environment
     '''
     log_file_dir = os.environ.get('DIR_HARVESTER_LOG', os.path.join(os.environ.get('HOME', '.'), 'log'))
-    log_file_name = 'harvester-' + collection_name + '-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
+    log_file_name = 'harvester-' + collection_slug + '-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.log'
     return os.path.join(log_file_dir, log_file_name)
 
 def create_mimetext_msg(mail_from, mail_to, subject, message):
@@ -209,34 +208,39 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 def main(log_handler=None, mail_handler=None):
     args = parse_args()
-    campus_list = args.campuses.split(',')
-    repository_list = args.repositories.split(':-:')
-    if not log_handler:
-        log_handler = FileHandler(get_log_file_path(args.collection_name))
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR, subject="Error during harvest of "+args.collection_name)
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
+    try:
+        collection = Collection(args.url_api_collection)
+    except Exception, e:
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, 'Collection init failed for '+args.url_api_collection, ' '.join(("Exception in Collection", args.url_api_collection, " init", str(e))))
+        mail_handler.deliver(mimetext, args.user_email)
+        raise e
+    mail_handler.subject = "Error during harvest of " + collection.url
+    if not log_handler:
+        log_handler = FileHandler(get_log_file_path(collection.slug))
     with log_handler.applicationbound():
         with mail_handler.applicationbound():
             logger = logbook.Logger('HarvestMain')
             logger.info('Init harvester next')
-            msg = ' '.join(('ARGS:', args.user_email, args.collection_name, str(campus_list), str(repository_list), args.harvest_type, args.url_harvest, args.extra_data))
+            msg = ' '.join(('ARGS:', args.user_email, collection.url))
             logger.info(msg)
             #email directly
-            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', args.collection_name)), msg)
+            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
             mail_handler.deliver(mimetext, args.user_email)
             harvester = None
             try:
-                harvester = HarvestController(args.user_email, args.collection_name, campus_list, repository_list, args.harvest_type, args.url_harvest, args.extra_data)
+                harvester = HarvestController(args.user_email, collection)
             except Exception, e:
                 logger.error(' '.join(("Exception in harvester init", str(e))))
                 raise e
             logger.info('Start harvesting next')
             try:
                 num_recs = harvester.harvest()
-                msg = ''.join(('Finished harvest of ', args.collection_name, '. ', str(num_recs), ' records harvested.'))
+                msg = ''.join(('Finished harvest of ', collection.slug, '. ', str(num_recs), ' records harvested.'))
                 logger.info(msg)
                 #email directly
-                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', args.collection_name)), msg)
+                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
                 mail_handler.deliver(mimetext, args.user_email)
             except Exception, e:
                 import traceback

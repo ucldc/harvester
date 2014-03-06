@@ -6,7 +6,6 @@ import codecs
 import re
 import json
 import shutil
-import solr
 from mock import MagicMock
 from mock import patch
 from mock import call, ANY
@@ -23,6 +22,12 @@ class MockResponse(object):
         # the server's response data encoded as unicode.
         self.text = text
         self.status_code = 200
+
+    def json(self):
+        try:
+           return json.loads(text)
+        except:
+           return {}
 
     def raise_for_status(self):
         pass
@@ -46,14 +51,32 @@ class TestApiCollection(TestCase):
     def tearDown(self):
         requests.get = self.real_requests_get
 
-    def testCollectionAPI(self):
-        c = Collection('collection_api_test_file.json')
+    def testOAICollectionAPI(self):
+        c = Collection('fixtures/collection_api_test.json')
+        self.assertEqual(c['harvest_type'], 'OAI')
+        self.assertEqual(c.harvest_type, 'OAI')
         self.assertEqual(c['name'], 'Calisphere - Santa Clara University: Digital Objects')
         self.assertEqual(c.name, 'Calisphere - Santa Clara University: Digital Objects')
-        self.assertEqual(c['url_oai'], 'http://content.cdlib.org/oai')
-        self.assertEqual(c.url_oai, 'http://content.cdlib.org/oai')
+        self.assertEqual(c['url_oai'], 'fixtures/testOAI-128-records.xml')
+        self.assertEqual(c.url_oai, 'fixtures/testOAI-128-records.xml')
         self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/12/')
+        self.assertEqual(c.campus[0]['slug'], 'UCDL')
 
+    def testOACApiCollection(self):
+        c = Collection('fixtures/collection_api_test_oac.json')
+        self.assertEqual(c['harvest_type'], 'OAC')
+        self.assertEqual(c.harvest_type, 'OAC')
+        self.assertEqual(c['name'], 'Harry Crosby Collection')
+        self.assertEqual(c.name, 'Harry Crosby Collection')
+        self.assertEqual(c['url_oac'], 'fixtures/testOAC.json')
+        self.assertEqual(c.url_oac, 'fixtures/testOAC.json')
+        self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/6/')
+        self.assertEqual(c.campus[0]['slug'], 'UCSD')
+
+    def testWrongTypeCollection(self):
+        '''Test a collection that is not OAI or OAC
+        '''
+        self.assertRaises(ValueError,Collection, 'fixtures/collection_api_test_bad_type.json')
 
 class TestHarvestOAIController(TestCase):
     '''Test the function of an OAI harvester'''
@@ -71,14 +94,15 @@ class TestHarvestOAIController(TestCase):
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
         #with logbook.TestHandler('HarvestController') as log_handler:
-        self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
+        collection = Collection('fixtures/collection_api_test.json')
+        self.controller = harvester.HarvestController('email@example.com', collection)
         self.assertTrue(hasattr(self.controller, 'harvest'))
         #TODO: fix why logbook.TestHandler not working for the previous logging
         #self.assertEqual(len(self.test_log_handler.records), 2)
 
 
 class TestHarvestOACController(TestCase):
-    '''Test the function of an OAC harvester'''
+    '''Test the function of an OAC harvesterController'''
     class MockOACapi(object):
         def __init__(self, json):
             self._json = json
@@ -86,28 +110,34 @@ class TestHarvestOACController(TestCase):
         def json(self):
             return  json.loads(self._json)
 
-    def mockRequestGet(self, url, **kwargs):
-        if hasattr(self, 'ranGet'):
-            return None
+    def mockRequestsGet(self, url, **kwargs):
         with codecs.open(self.testFile, 'r', 'utf8') as foo:
-            self.ranGet = True
-            return  self.MockOACapi(foo.read())
+            return  TestOACHarvester.MockOACapi(foo.read())
 
-    def setUp(self):
-        self.testFile = 'fixtures/testOAC.json'
+    @patch('harvester.OACHarvester._parse_oac_findaid_ark', return_value='ark:/13030/tf2v19n928/', autospec=True)
+    def setUp(self, mock_method):
+        self.test_log_handler = logbook.TestHandler()
+        self.test_log_handler.push_thread()
         self.real_requests_get = requests.get
-        requests.get = self.mockRequestGet
-        self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAC', 'http://oac.cdlib.org/findaid/ark:/13030/hb5d5nb7dj/', 'extra_data')
-
+        requests.get = mockRequestsGet
+        self.collection = Collection('fixtures/collection_api_test_oac.json')
+        self.testFile = 'fixtures/testOAC-url_next-0.json'
+        requests.get = self.mockRequestsGet
+        self.controller = harvester.HarvestController('email@example.com', self.collection)
 
     def tearDown(self):
+        self.test_log_handler.pop_thread()
         requests.get = self.real_requests_get
         shutil.rmtree(self.controller.dir_save)
 
     def testOACHarvest(self):
         '''Test the function of the OAC harvest'''
         self.assertTrue(hasattr(self.controller, 'harvest'))
-
+        self.testFile = 'fixtures/testOAC-url_next-1.json'
+        self.controller.harvest()
+        self.assertEqual(len(self.test_log_handler.records), 2)
+        self.assertTrue('fixtures/collection_api' in self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 28 records harvested')
 
 
 class TestHarvestController(TestCase):
@@ -115,7 +145,8 @@ class TestHarvestController(TestCase):
     def setUp(self):
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
+        self.collection = Collection('fixtures/collection_api_test.json')
+        self.controller_oai = harvester.HarvestController('email@example.com', self.collection)
         self.test_log_handler = logbook.TestHandler()
         self.test_log_handler.push_thread()
         self.objset_test_doc = json.load(open('objset_test_doc.json'))
@@ -126,7 +157,8 @@ class TestHarvestController(TestCase):
         shutil.rmtree(self.controller_oai.dir_save)
 
     def testHarvestControllerExists(self):
-        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA'], ['UCLA yLibrary Special Collections, Charles E. Young Research Library'], 'OAI', 'fixtures/testOAI.xml', 'latimes')
+        collection = Collection('fixtures/collection_api_test.json')
+        controller = harvester.HarvestController('email@example.com', collection) 
         self.assertTrue(hasattr(controller, 'harvester'))
         self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
         self.assertTrue(hasattr(controller, 'campus_valid'))
@@ -136,24 +168,24 @@ class TestHarvestController(TestCase):
 
     def testOAIHarvesterType(self):
         '''Check the correct object returned for type of harvest'''
-        self.assertRaises(ValueError, harvester.HarvestController, 'email@example.com', 'test_collection_name', ['campuses'], ['test_repo_name'], 'OAI', 'url_harvest', 'extra_data')
         self.assertIsInstance(self.controller_oai.harvester, harvester.OAIHarvester)
-        self.assertTrue(self.controller_oai.campuses == ['UCLA'])
+        self.assertTrue(self.controller_oai.collection.campus[0]['slug'] == 'UCDL')
 
-    def testSolrIDCreation(self):
-        '''Test how the id for the solr index is created'''
-        self.assertTrue(hasattr(self.controller_oai, 'create_solr_id'))
+    def testIDCreation(self):
+        '''Test how the id for the index is created'''
+        self.assertTrue(hasattr(self.controller_oai, 'create_id'))
         identifier = 'x'
-        self.assertRaises(TypeError, self.controller_oai.create_solr_id, identifier)
+        self.assertRaises(TypeError, self.controller_oai.create_id, identifier)
         identifier = ['x',]
-        sid = self.controller_oai.create_solr_id(identifier)
-        self.assertIn(self.controller_oai.collection_name, sid)
-        self.assertIn(self.controller_oai.campuses[0], sid)
-        self.assertIn(self.controller_oai.repositories[0], sid)
-        self.assertEqual(sid, 'UCLA-test_repo_name-test_collection_name-x')
-        controller = harvester.HarvestController('email@example.com', 'Los Angeles Times Photographic Archive', ['UCLA','UCD'], ['Spec Coll', 'Archive'], 'OAI', 'fixtures/testOAI.xml', 'latimes')
-        sid = controller.create_solr_id(identifier)
-        self.assertEqual(sid, 'UCLA-UCD-Spec Coll-Archive-Los Angeles Times Photographic Archive-x')
+        sid = self.controller_oai.create_id(identifier)
+        self.assertIn(self.controller_oai.collection.slug, sid)
+        self.assertIn(self.controller_oai.collection.campus[0]['slug'], sid)
+        self.assertIn(self.controller_oai.collection.repository[0]['slug'], sid)
+        self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
+        collection = Collection('fixtures/collection_api_test.json')
+        controller = harvester.HarvestController('email@example.com', collection)
+        sid = controller.create_id(identifier)
+        self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         shutil.rmtree(controller.dir_save)
 
     def testNoTitleInRecord(self):
@@ -172,20 +204,20 @@ class TestHarvestController(TestCase):
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         self.assertEqual(self.objset_test_doc, objset_saved)
 
-    @unittest.skip('Takes too long to run')
     def testLoggingMoreThan1000(self):
-        controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI-2400-records.xml', 'extra_data')
+        collection = Collection('fixtures/collection_api_big_test.json')
+        controller = harvester.HarvestController('email@example.com', collection)
         controller.harvest()
-        self.assertEqual(len(self.test_log_handler.records), 12)
+        self.assertEqual(len(self.test_log_handler.records), 13)
         self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
+        shutil.rmtree(controller.dir_save)
         self.assertEqual(self.test_log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
-        print len(self.test_log_handler.records), self.test_log_handler.formatted_records
+        self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
 
 class TestHarvesterClass(TestCase):
     '''Test the abstract Harvester class'''
     def testClassExists(self):
-        self.assertTrue(hasattr(harvester, 'URL_SOLR'))
         h = harvester.Harvester
         h = h('url_harvest', 'extra_data')
 
@@ -228,13 +260,13 @@ class TestOACHarvester(TestCase):
         def json(self):
             return  json.loads(self._json)
 
-    def mockRequestGet(self, url, **kwargs):
+    def mockRequestsGet(self, url, **kwargs):
         with codecs.open(self.testFile, 'r', 'utf8') as foo:
             return  TestOACHarvester.MockOACapi(foo.read())
 
     def setUp(self):
         self.real_requests_get = requests.get
-        requests.get = self.mockRequestGet
+        requests.get = self.mockRequestsGet
         self.testFile = 'fixtures/testOAC-url_next-0.json'
         self.harvester = harvester.OACHarvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.test_log_handler = logbook.TestHandler()
@@ -293,7 +325,7 @@ class TestMain(TestCase):
     def setUp(self):
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
-        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'fixtures/testOAI-128-records.xml', 'extra_data="scu:objects"']
+        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
         self.test_log_handler = logbook.TestHandler()
         def deliver(msg, email):
             #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
@@ -315,14 +347,23 @@ class TestMain(TestCase):
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
-    def testMainHarvestController__init__Error(self):
+    def testMainCollection__init__Error(self):
+        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test_bad_type.json']
+        self.mail_handler = MagicMock()
+        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.mail_handler)
+        self.assertEqual(len(self.test_log_handler.records), 0)
+        self.mail_handler.deliver.assert_called()
+        self.assertEqual(self.mail_handler.deliver.call_count, 1)
+
+    @patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
+    def testMainHarvestController__init__Error(self, mock_method):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
-        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'XXXXXBADINPUT', 'Calisphere', 'OAI', 'fixtures/testOAI-128-records.xml', 'extra_data="scu:objects"']
-        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
+        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
+        self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         self.assertEqual(len(self.test_log_handler.records), 3)
-        self.assertEqual("[ERROR] HarvestMain: Exception in harvester init Campus value XXXXXBADINPUT in not one of ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']", self.test_log_handler.formatted_records[2])
-        
+        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[2])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[2])
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
@@ -334,13 +375,14 @@ class TestMain(TestCase):
     def testMainFn(self):
         harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler)
         #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
-        self.assertEqual(len(self.test_log_handler.records), 6)
+        self.assertEqual(len(self.test_log_handler.records), 7)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com Santa Clara University: Digital Objects [\'UCDL\'] [\'Calisphere\'] OAI fixtures/testOAI-128-records.xml extra_data="scu:objects"')
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com fixtures/collection_api_test.json')
         self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Start harvesting next')
         self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[3])
         self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Finished harvest of Santa Clara University: Digital Objects. 128 records harvested.')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestController: 128 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
 def skipUnlessIntegrationTest(selfobj=None):
@@ -362,8 +404,8 @@ class TestLogFileName(TestCase):
             os.environ['DIR_HARVESTER_LOG'] = self.old_dir
 
     def testLogName(self):
-        n = get_log_file_path('test_collection_name')
-        self.assertTrue(re.match('test/log/dir/harvester-test_collection_name-\d{8}-\d{6}.log', n))
+        n = get_log_file_path('test_collection_slug')
+        self.assertTrue(re.match('test/log/dir/harvester-test_collection_slug-\d{8}-\d{6}.log', n))
         
 
 @skipUnlessIntegrationTest()
@@ -379,7 +421,7 @@ class TestMainMailIntegration(TestCase):
     '''Test that the main function emails?'''
     def setUp(self):
         '''Need to run fakesmtp server on local host'''
-        sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'http://content.cdlib.com/bogus', 'extra_data="scu:objects"']
+        sys.argv = ['thisexe', 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/' ]
 
     def testMainFunctionMail(self):
         '''This should error out and send mail through error handler'''
@@ -397,37 +439,12 @@ class ScriptFileTestCase(TestCase):
 
 @skipUnlessIntegrationTest()
 class FullOAIHarvestTestCase(TestCase):
-    '''Test that the full integration with sickle and solr work. 
-    The scu:objects content.cdlib.org OAI set work well for full integration
-    test with the solr instance.
-    Should use appstrap to create local solr loaded with known docs to make
-    this work best.
-    NOTE: As of 2013-12-17 there are 126 Santa Clara University Objects
-    '''
     def testFullHarvest(self):
+        collection = Collection('https://registry-dev.cdlib.org/api/v1/collection/197/')
         controller = harvester.HarvestController('email@example.com',
-                'Santa Clara University: Digital Objects', ['UCDL'],
-                ['Calisphere'], 'OAI',
-                'http://content.cdlib.org/oai', extra_data='scu:objects'
+               collection 
                 )
         controller.harvest()
-
-
-solr_test_doc = {
-        'publisher': ['California Historical Society, North Baker Research Library, 678 Mission Street, San Francisco, CA 94105-4014; http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
-'description': ["Describes Rankin's personal experience of the earthquake, his trip that morning into San Francisco, damage to landmark buildings, and creation of a refugee camp on California Field, a football field in Berkeley, which he helped to patrol."],
-    'repository': ['test_repo_name'],
-    'creator': ['Rankin, Ivan S.'],
-    'collection_name': 'test_collection_name', 'format': ['mods'],
-    'campus': ['UCLA'],
-    'contributor': ['Rankin, Ivan S.'],
-    'relation': ['http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx', 'http://bancroft.berkeley.edu/collections/earthquakeandfire', 'eqf', 'MS 3497', 'http://calisphere.universityofcalifornia.edu/', 'http://www.californiahistoricalsociety.org/collections/northbaker_research.html'],
-    'date': ['1969, April 25', '1969-04-25'],
-    'title': ['Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.'],
-    'identifier': ['http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'MS 3497', 'chs00000479_42a.xml'],
-    'type': ['text', 'still image'],
-    'id': 'UCLA-test_repo_name-test_collection_name-http://ark.cdlib.org/ark:/13030/hb367nb2vx', 'subject': ['Buildings--Earthquake effects--California--San Francisco', 'Earthquakes--California--San Francisco--Personal narratives', 'Fires--California--San Francisco--Personal narratives', 'Refugee camps--California--Oakland', 'San Francisco Earthquake, Calif., 1906--Personal narratives', 'The 1906 San Francisco Earthquake and Fire Digital Collection', 'Recollections of the earthquake and fire in San Francisco, April 18, 19, 20 and 21, 1906.']
-}
 
 
 if __name__=='__main__':
