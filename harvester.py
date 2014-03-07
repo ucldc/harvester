@@ -10,7 +10,7 @@ from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
-import dplaingestion.couch
+from dplaingestion.couch import Couch
 
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 
