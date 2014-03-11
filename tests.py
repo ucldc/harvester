@@ -34,21 +34,35 @@ def mockRequestsGet(filename, **kwargs):
         resp = MockResponse(foo.read())
     return resp
 
-class TestHarvestOAIController(TestCase):
+class LogOverrideMixin(object):
+    '''Mixin to use logbook test_handler for logging'''
+    def setUp(self):
+        '''Use test_handler'''
+        super(LogOverrideMixin, self).setUp()
+        self.test_log_handler = logbook.TestHandler()
+        def deliver(msg, email):
+            #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
+            pass
+        self.test_log_handler.deliver = deliver
+        self.test_log_handler.push_thread()
+
+    def tearDown(self):
+        self.test_log_handler.pop_thread()
+
+
+class TestHarvestOAIController(LogOverrideMixin, TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):
-        self.test_log_handler = logbook.TestHandler()
-        self.test_log_handler.push_thread()
+        super(TestHarvestOAIController, self).setUp()
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
 
     def tearDown(self):
-        self.test_log_handler.pop_thread()
+        super(TestHarvestOAIController, self).tearDown()
         requests.get = self.real_requests_get
 
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
-        #with logbook.TestHandler('HarvestController') as log_handler:
         self.controller = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
         self.assertTrue(hasattr(self.controller, 'harvest'))
         #TODO: fix why logbook.TestHandler not working for the previous logging
@@ -90,17 +104,16 @@ class TestHarvestOACController(TestCase):
         self.assertTrue(mock.add.call_count == 25)
 
 
-class TestHarvestController(TestCase):
+class TestHarvestController(LogOverrideMixin, TestCase):
     '''Test the harvest controller class'''
     def setUp(self):
+        super(TestHarvestController, self).setUp()
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
         self.controller_oai = harvester.HarvestController('email@example.com', 'test_collection_name', ['UCLA'], ['test_repo_name'], 'OAI', 'fixtures/testOAI.xml', 'extra_data')
-        self.test_log_handler = logbook.TestHandler()
-        self.test_log_handler.push_thread()
 
     def tearDown(self):
-        self.test_log_handler.pop_thread()
+        super(TestHarvestController, self).tearDown()
         requests.get = self.real_requests_get
 
     def testHarvestControllerExists(self):
@@ -212,18 +225,17 @@ class TestHarvesterClass(TestCase):
         h = h('url_harvest', 'extra_data')
 
 
-class TestOAIHarvester(TestCase):
+class TestOAIHarvester(LogOverrideMixin, TestCase):
     '''Test the OAIHarvester
     '''
     def setUp(self):
+        super(TestOAIHarvester, self).setUp()
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
         self.harvester = harvester.OAIHarvester('fixtures/testOAI.xml', 'latimes')
-        self.test_log_handler = logbook.TestHandler()
-        self.test_log_handler.push_thread()
 
     def tearDown(self):
-        self.test_log_handler.pop_thread()
+        super(TestOAIHarvester, self).tearDown()
         requests.get = self.real_requests_get
 
     def testHarvestIsIter(self):
@@ -240,7 +252,7 @@ class TestOAIHarvester(TestCase):
         for key, value in rec.items():
             self.assertIn(key, harvester.HarvestController.dc_elements)
 
-class TestOACHarvester(TestCase):
+class TestOACHarvester(LogOverrideMixin, TestCase):
     '''Test the OACHarvester
     '''
     class MockOACapi(object):
@@ -255,15 +267,14 @@ class TestOACHarvester(TestCase):
             return  TestOACHarvester.MockOACapi(foo.read())
 
     def setUp(self):
+        super(TestOACHarvester, self).setUp()
         self.real_requests_get = requests.get
         requests.get = self.mockRequestGet
         self.testFile = 'fixtures/testOAC-url_next-0.json'
         self.harvester = harvester.OACHarvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
-        self.test_log_handler = logbook.TestHandler()
-        self.test_log_handler.push_thread()
 
     def tearDown(self):
-        self.test_log_handler.pop_thread()
+        super(TestOACHarvester, self).tearDown()
         requests.get = self.real_requests_get
 
     def testParseArk(self):
@@ -284,25 +295,17 @@ class TestOACHarvester(TestCase):
         self.assertEqual(len(records), 28)
 
 
-class TestMain(TestCase):
+class TestMain(LogOverrideMixin, TestCase):
     '''Test the main function'''
     def setUp(self):
+        super(TestMain, self).setUp()
         self.real_requests_get = requests.get
         requests.get = mockRequestsGet
         sys.argv = ['thisexe', 'email@example.com', 'Santa Clara University: Digital Objects', 'UCDL', 'Calisphere', 'OAI', 'fixtures/testOAI-128-records.xml', 'extra_data="scu:objects"']
-        self.test_log_handler = logbook.TestHandler()
-        def deliver(msg, email):
-            #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
-            pass
-        self.test_log_handler.deliver = deliver
-        self.test_log_handler.push_thread()
-        #self.mail_handler = logbook.TestHandler()
-        #self.mail_handler.push_thread()
 
     def tearDown(self):
+        super(TestMain, self).tearDown()
         requests.get = self.real_requests_get
-        #self.mail_handler.pop_thread()
-        self.test_log_handler.pop_thread()
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
