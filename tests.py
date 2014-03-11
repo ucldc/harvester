@@ -6,6 +6,7 @@ import codecs
 import re
 import json
 import shutil
+import tempfile
 from mock import MagicMock
 from mock import patch
 from mock import call, ANY
@@ -98,6 +99,24 @@ class LogOverrideMixin(object):
 
     def tearDown(self):
         self.test_log_handler.pop_thread()
+
+
+class ConfigFileOverrideMixin(object):
+    '''Create temporary config and profile files for use by the DPLA couch
+    module when creating the ingest doc.
+    Returns names of 2 tempfiles for use as config and profile.'''
+    def setUp_config(self, collection):
+        f, self.config_file = tempfile.mkstemp()
+        with open(self.config_file, 'w') as f:
+            f.write(CONFIG_FILE_DPLA)
+        f, self.profile_file = tempfile.mkstemp()
+        with open(self.profile_file, 'w') as f:
+            f.write(collection.dpla_profile)
+        return self.config_file, self.profile_file
+
+    def tearDown_config(self):
+        os.remove(self.config_file)
+        os.remove(self.profile_file)
 
 
 class TestApiCollection(TestCase):
@@ -220,16 +239,18 @@ class TestHarvestOAIController(MockRequestsGetMixin, LogOverrideMixin, TestCase)
         #self.assertEqual(len(self.test_log_handler.records), 2)
 
 
-class TestHarvestController(MockRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the harvest controller class'''
     def setUp(self):
         super(TestHarvestController, self).setUp()
         self.collection = Collection('fixtures/collection_api_test.json')
-        self.controller_oai = harvester.HarvestController('email@example.com', self.collection)
+        config_file, profile_file = self.setUp_config(self.collection) 
+        self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_file, config_file=config_file)
         self.objset_test_doc = json.load(open('objset_test_doc.json'))
 
     def tearDown(self):
         super(TestHarvestController, self).tearDown()
+        self.tearDown_config()
         shutil.rmtree(self.controller_oai.dir_save)
 
     def testHarvestControllerExists(self):
@@ -263,6 +284,13 @@ class TestHarvestController(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         sid = controller.create_id(identifier)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         shutil.rmtree(controller.dir_save)
+
+    @patch('dplaingestion.couch.Couch')
+    def testCreatIngestDoc(self, mock_couch):
+        '''Test the creation of the DPLA style ingest document in couch'''
+        self.assertTrue(hasattr(self.controller_oai, 'ingest_doc_id'))
+        self.assertTrue(hasattr(self.controller_oai, 'create_ingest_doc'))
+        ingest_doc_id = self.controller_oai.create_ingest_doc()
 
     def testNoTitleInRecord(self):
         '''Test that the process continues if it finds a record with no "title"
@@ -422,9 +450,9 @@ class TestMain(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         correctly'''
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
         self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
-        self.assertEqual(len(self.test_log_handler.records), 3)
-        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[2])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[2])
+        self.assertEqual(len(self.test_log_handler.records), 4)
+        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[3])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
@@ -508,6 +536,16 @@ class FullOAIHarvestTestCase(TestCase):
                 )
         controller.harvest()
 
+
+CONFIG_FILE_DPLA = '''
+[Akara]
+Port=8889
+
+[CouchDb]
+URL=http://127.0.0.1:5984/
+Username=mark
+Password=mark
+'''
 
 if __name__=='__main__':
     unittest.main()

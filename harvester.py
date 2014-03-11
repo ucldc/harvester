@@ -10,7 +10,7 @@ from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
-from dplaingestion.couch import Couch
+import dplaingestion.couch 
 
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 
@@ -203,12 +203,15 @@ class HarvestController(object):
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
-    def __init__(self, user_email, collection):
+    def __init__(self, user_email, collection, profile_path=None, config_file=None):
         self.user_email = user_email
         self.collection = collection
+        self.profile_path = profile_path
+        self.config_file = config_file
         self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.name)
+        self.ingest_doc_id = None
 
     def create_id(self, identifier):
         '''Create an id that is good for items. Take campus, repo and collection
@@ -229,6 +232,10 @@ class HarvestController(object):
         filename = os.path.join(self.dir_save, str(uuid.uuid4()))
         with open(filename, 'w') as foo:
             foo.write(json.dumps(objset))
+
+    def create_ingest_doc(self):
+        '''Create the DPLA style ingest doc in couch for this harvest session'''
+        couch = dplaingestion.couch.Couch(config_file=self.config_file)
 
     def harvest(self):
         '''Harvest the collection'''
@@ -293,19 +300,17 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles'):
             #email directly
             mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
             mail_handler.deliver(mimetext, args.user_email)
-            harvester = None
-            try:
-                harvester = HarvestController(args.user_email, collection)
-            except Exception, e:
-                logger.error(' '.join(("Exception in harvester init", str(e))))
-                raise e
             logger.info('Create DPLA profile document')
 
             profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
             with codecs.open(profile_path, 'w', 'utf8') as pfoo:
                 pfoo.write(collection.dpla_profile)
-
-
+            harvester = None
+            try:
+                harvester = HarvestController(args.user_email, collection, profile_path=profile_path)
+            except Exception, e:
+                logger.error(' '.join(("Exception in harvester init", str(e))))
+                raise e
             logger.info('Start harvesting next')
             try:
                 num_recs = harvester.harvest()
