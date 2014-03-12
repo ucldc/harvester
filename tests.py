@@ -15,6 +15,14 @@ import harvester
 import logbook
 from harvester import get_log_file_path
 from harvester import Collection
+from dplaingestion.couch import Couch
+
+def skipUnlessIntegrationTest(selfobj=None):
+    '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
+    '''
+    if os.environ.get('RUN_INTEGRATION_TESTS', False):
+        return lambda func: func
+    return unittest.skip('RUN_INTEGRATION_TESTS not set. Skipping integration tests.')
 
 class MockResponse(object):
     """Mimics the response object returned by HTTP requests."""
@@ -296,9 +304,9 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertTrue(hasattr(self.controller_oai, 'create_ingest_doc'))
         self.assertTrue(hasattr(self.controller_oai, 'config_dpla'))
         ingest_doc_id = self.controller_oai.create_ingest_doc()
-        mock_couch.assert_called_with(config_file=self.config_file)
+        mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='dashboard', dpla_db_name='UCLDC')
 
-    def testCreatIngestDoc(self):
+    def testCreateIngestDoc(self):
         '''Test the creation of the DPLA style ingest document in couch'''
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
@@ -334,6 +342,35 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertEqual(self.test_log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
+
+class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCase):
+    def setUp(self):
+        super(TestCouchIntegration, self).setUp()
+        self.collection = Collection('fixtures/collection_api_test.json')
+        config_file, profile_path = self.setUp_config(self.collection) 
+        self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
+        self.remove_log_dir = False
+        if not os.path.isdir('logs'):
+            os.makedirs('logs')
+            self.remove_log_dir = True
+
+    def tearDown(self):
+        super(TestCouchIntegration, self).tearDown()
+        couch = Couch(config_file=self.config_file,
+                dpla_db_name = 'UCLDC',
+                dashboard_db_name = 'dashboard'
+            )
+        couch._delete_documents(couch.dpla_db, [self.ingest_doc_id])
+        self.tearDown_config()
+        if self.remove_log_dir:
+            shutil.rmtree('logs')
+
+
+    @skipUnlessIntegrationTest()
+    def testCouchDocIntegration(self):
+        '''Test the couch document creation in a test environment'''
+        self.ingest_doc_id = self.controller_oai.create_ingest_doc()
+        print "DOCID", self.ingest_doc_id
 
 class TestHarvesterClass(TestCase):
     '''Test the abstract Harvester class'''
@@ -494,13 +531,6 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         self.assertEqual(self.test_log_handler.formatted_records[7], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
-def skipUnlessIntegrationTest(selfobj=None):
-    '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
-    '''
-    if os.environ.get('RUN_INTEGRATION_TESTS', False):
-        return lambda func: func
-    return unittest.skip('RUN_INTEGRATION_TESTS not set. Skipping integration tests.')
-
 class TestLogFileName(TestCase):
     '''Test the log file name function'''
     def setUp(self):
@@ -547,11 +577,19 @@ class ScriptFileTestCase(TestCase):
         self.assertTrue(os.path.exists(path_script))
 
 @skipUnlessIntegrationTest()
-class FullOAIHarvestTestCase(TestCase):
+class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
+    def setUp(self):
+        self.collection = Collection('https://registry-dev.cdlib.org/api/v1/collection/197/')
+        self.setUp_config(self.collection)
+
+    def tearDown(self):
+        self.tearDown_config()
+
     def testFullHarvest(self):
-        collection = Collection('https://registry-dev.cdlib.org/api/v1/collection/197/')
         controller = harvester.HarvestController('email@example.com',
-               collection 
+               self.collection,
+               config_file=self.config_file,
+               profile_path=self.profile_path
                 )
         controller.harvest()
 

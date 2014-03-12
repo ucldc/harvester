@@ -238,7 +238,10 @@ class HarvestController(object):
 
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session'''
-        couch = dplaingestion.couch.Couch(config_file=self.config_file)
+        couch = dplaingestion.couch.Couch(config_file=self.config_file,
+                dpla_db_name = 'UCLDC',
+                dashboard_db_name = 'dashboard'
+            )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
         self.ingest_doc_id = couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
         return self.ingest_doc_id
