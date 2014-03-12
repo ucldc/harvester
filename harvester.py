@@ -211,6 +211,13 @@ class HarvestController(object):
         self.config_file = config_file
         self.config_dpla = ConfigParser.ConfigParser()
         self.config_dpla.readfp(open(config_file))
+        self.couch_db_name = self.config_dpla.get("CouchDb", "DPLADatabase")
+        if not self.couch_db_name:
+            self.couch_db_name = 'ucldc'
+        self.couch_dashboard_name = self.config_dpla.get("CouchDb", "DashboardDatabase")
+        if not self.couch_dashboard_name:
+            self.couch_dashboard_name = 'dashboard'
+
         self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.name)
@@ -239,8 +246,8 @@ class HarvestController(object):
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session'''
         couch = dplaingestion.couch.Couch(config_file=self.config_file,
-                dpla_db_name = 'UCLDC',
-                dashboard_db_name = 'dashboard'
+                dpla_db_name = self.couch_db_name,
+                dashboard_db_name = self.couch_dashboard_name
             )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
         self.ingest_doc_id = couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)

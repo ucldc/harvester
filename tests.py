@@ -298,13 +298,13 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         shutil.rmtree(controller.dir_save)
 
     @patch('dplaingestion.couch.Couch')
-    def testCreatIngestCouch(self, mock_couch):
+    def testCreateIngestCouch(self, mock_couch):
         '''Test the integration of the DPLA couch lib'''
         self.assertTrue(hasattr(self.controller_oai, 'ingest_doc_id'))
         self.assertTrue(hasattr(self.controller_oai, 'create_ingest_doc'))
         self.assertTrue(hasattr(self.controller_oai, 'config_dpla'))
         ingest_doc_id = self.controller_oai.create_ingest_doc()
-        mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='dashboard', dpla_db_name='UCLDC')
+        mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='test-dashboard', dpla_db_name='test-ucldc')
 
     def testCreateIngestDoc(self):
         '''Test the creation of the DPLA style ingest document in couch'''
@@ -357,10 +357,10 @@ class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCa
     def tearDown(self):
         super(TestCouchIntegration, self).tearDown()
         couch = Couch(config_file=self.config_file,
-                dpla_db_name = 'UCLDC',
-                dashboard_db_name = 'dashboard'
+                dpla_db_name = 'test-ucldc',
+                dashboard_db_name = 'test-dashboard'
             )
-        couch._delete_documents(couch.dpla_db, [self.ingest_doc_id])
+        del couch.server['test-ucldc']
         self.tearDown_config()
         if self.remove_log_dir:
             shutil.rmtree('logs')
@@ -580,6 +580,7 @@ class ScriptFileTestCase(TestCase):
 class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
     def setUp(self):
         self.collection = Collection('https://registry-dev.cdlib.org/api/v1/collection/197/')
+        self.collection = Collection('http://localhost:8000/api/v1/collection/197/')
         self.setUp_config(self.collection)
 
     def tearDown(self):
@@ -602,6 +603,8 @@ Port=8889
 URL=http://127.0.0.1:5984/
 Username=mark
 Password=mark
+DPLADatabase=test-ucldc
+DashboardDatabase=test-dashboard
 '''
 
 if __name__=='__main__':
