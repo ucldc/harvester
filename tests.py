@@ -677,7 +677,7 @@ Port=8889
 URL=http://127.0.0.1:5984/
 Username=mark
 Password=mark
-DPLADatabase='''+ TEST_COUCH_DB + '''
+ItemDatabase='''+ TEST_COUCH_DB + '''
 DashboardDatabase='''+ TEST_COUCH_DASHBOARD
 
 if __name__=='__main__':

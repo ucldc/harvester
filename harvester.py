@@ -211,7 +211,7 @@ class HarvestController(object):
         self.config_file = config_file
         self.config_dpla = ConfigParser.ConfigParser()
         self.config_dpla.readfp(open(config_file))
-        self.couch_db_name = self.config_dpla.get("CouchDb", "DPLADatabase")
+        self.couch_db_name = self.config_dpla.get("CouchDb", "ItemDatabase")
         if not self.couch_db_name:
             self.couch_db_name = 'ucldc'
         self.couch_dashboard_name = self.config_dpla.get("CouchDb", "DashboardDatabase")
@@ -336,7 +336,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg['To'] = mail_to
     return msg
 
-def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file=None):
+def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini'):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of records.
     '''
