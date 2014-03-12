@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 import tempfile
 import uuid
 import json
+import ConfigParser
 from sickle import Sickle
 import requests
 import logbook
@@ -203,11 +204,13 @@ class HarvestController(object):
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
-    def __init__(self, user_email, collection, profile_path=None, config_file=None):
+    def __init__(self, user_email, collection, profile_path=None, config_file='akara.ini'):
         self.user_email = user_email
         self.collection = collection
         self.profile_path = profile_path
         self.config_file = config_file
+        self.config_dpla = ConfigParser.ConfigParser()
+        self.config_dpla.readfp(open(config_file))
         self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.name)
@@ -236,6 +239,9 @@ class HarvestController(object):
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session'''
         couch = dplaingestion.couch.Couch(config_file=self.config_file)
+        uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
+        self.ingest_doc_id = couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
+        return self.ingest_doc_id
 
     def harvest(self):
         '''Harvest the collection'''
@@ -278,7 +284,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg['To'] = mail_to
     return msg
 
-def main(log_handler=None, mail_handler=None, dir_profile='profiles'):
+def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file=None):
     args = parse_args()
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
@@ -301,13 +307,13 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles'):
             mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
             mail_handler.deliver(mimetext, args.user_email)
             logger.info('Create DPLA profile document')
-
-            profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
+            if not profile_path:
+                profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
             with codecs.open(profile_path, 'w', 'utf8') as pfoo:
                 pfoo.write(collection.dpla_profile)
             harvester = None
             try:
-                harvester = HarvestController(args.user_email, collection, profile_path=profile_path)
+                harvester = HarvestController(args.user_email, collection, profile_path=profile_path, config_file=config_file)
             except Exception, e:
                 logger.error(' '.join(("Exception in harvester init", str(e))))
                 raise e
