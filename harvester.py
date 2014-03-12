@@ -220,7 +220,7 @@ class HarvestController(object):
 
         self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
         self.logger = logbook.Logger('HarvestController')
-        self.dir_save = tempfile.mkdtemp('_' + self.collection.name)
+        self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
 
     def create_id(self, identifier):
@@ -295,6 +295,10 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     return msg
 
 def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file=None):
+    '''Executes a harvest with given parameters.
+    Returns the ingest_doc_id, directory harvest saved to and number of records.
+    '''
+    num_recs = -1
     args = parse_args()
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
@@ -321,12 +325,16 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
                 profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
             with codecs.open(profile_path, 'w', 'utf8') as pfoo:
                 pfoo.write(collection.dpla_profile)
+            logger.info('DPLA profile document : '+profile_path)
             harvester = None
             try:
                 harvester = HarvestController(args.user_email, collection, profile_path=profile_path, config_file=config_file)
             except Exception, e:
                 logger.error(' '.join(("Exception in harvester init", str(e))))
                 raise e
+            logger.info('Create ingest doc in couch')
+            ingest_doc_id = harvester.create_ingest_doc()
+            logger.info('Ingest DOC ID: '+ ingest_doc_id)
             logger.info('Start harvesting next')
             try:
                 num_recs = harvester.harvest()
@@ -338,6 +346,7 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
             except Exception, e:
                 import traceback
                 logger.error("Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc()))
+    return ingest_doc_id, num_recs, harvester.dir_save
 
 if __name__=='__main__':
     main()

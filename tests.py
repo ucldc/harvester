@@ -181,29 +181,6 @@ class TestApiCollection(TestCase):
         self.assertTrue(j['contributor'][1] == {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
 
 
-class TestHarvestOAIController(TestCase):
-    '''Test the function of an OAI harvester'''
-    def setUp(self):
-        self.test_log_handler = logbook.TestHandler()
-        self.test_log_handler.push_thread()
-        self.real_requests_get = requests.get
-        requests.get = mockRequestsGet
-
-    def tearDown(self):
-        self.test_log_handler.pop_thread()
-        requests.get = self.real_requests_get
-        shutil.rmtree(self.controller.dir_save)
-
-    def testOAIHarvest(self):
-        '''Test the function of the OAI harvest'''
-        #with logbook.TestHandler('HarvestController') as log_handler:
-        collection = Collection('fixtures/collection_api_test.json')
-        self.controller = harvester.HarvestController('email@example.com', collection)
-        self.assertTrue(hasattr(self.controller, 'harvest'))
-        #TODO: fix why logbook.TestHandler not working for the previous logging
-        #self.assertEqual(len(self.test_log_handler.records), 2)
-
-
 
 class TestHarvestOACController(ConfigFileOverrideMixin, MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
@@ -239,6 +216,7 @@ class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, Lo
 
     def tearDown(self):
         super(TestHarvestOAIController, self).tearDown()
+        shutil.rmtree(self.controller.dir_save)
 
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
@@ -465,6 +443,7 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
     def setUp(self):
         super(TestMain, self).setUp()
         self.dir_test_profile = '/tmp/profiles/test'
+        self.dir_save = None
         if not os.path.isdir(self.dir_test_profile):
             os.makedirs(self.dir_test_profile)
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json' ]
@@ -474,11 +453,9 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
     def tearDown(self):
         super(TestMain, self).tearDown()
         self.tearDown_config()
-        dir_list = os.listdir('/tmp')
-        for d in dir_list:
-            if "Santa" in d:
-                shutil.rmtree(os.path.join('/tmp', d))
-        #shutil.rmtree(self.dir_test_profile)
+        if self.dir_save:
+            shutil.rmtree(self.dir_save)
+        os.removedirs(self.dir_test_profile)
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
@@ -489,8 +466,13 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         DPLA ingestion document.
         '''
         c = Collection('fixtures/collection_api_test.json')
-        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
-        self.assertTrue(os.path.exists(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
+        with patch('dplaingestion.couch.Couch') as mock_couch:
+            instance = mock_couch.return_value
+            instance._create_ingestion_document.return_value = 'test-id'
+            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
+        self.assertTrue(ingest_doc_id=='test-id')
+        self.assertTrue(num == 128)
+        self.assertTrue(os.path.exists(os.path.join(self.profile_path)))
 
     def testMainCollection__init__Error(self):
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test_bad_type.json']
@@ -506,29 +488,40 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         correctly'''
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
         self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
-        self.assertEqual(len(self.test_log_handler.records), 4)
-        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[3])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
+        self.assertEqual(len(self.test_log_handler.records), 5)
+        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[4])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
+        c = Collection('fixtures/collection_api_test.json')
+        os.remove(os.path.abspath(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
 
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
-        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
-        self.assertEqual(len(self.test_log_handler.records), 5)
-        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[4])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
+        with patch('dplaingestion.couch.Couch') as mock_couch:
+            instance = mock_couch.return_value
+            instance._create_ingestion_document.return_value = 'test-id'
+            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, profile_path=self.profile_path, config_file=self.config_file)
+        self.assertEqual(len(self.test_log_handler.records), 8)
+        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[7])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[7])
 
     def testMainFn(self):
-        harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
+        with patch('dplaingestion.couch.Couch') as mock_couch:
+            instance = mock_couch.return_value
+            instance._create_ingestion_document.return_value = 'test-id'
+            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
         #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
-        self.assertEqual(len(self.test_log_handler.records), 8)
+        self.assertEqual(len(self.test_log_handler.records), 11)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
         self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com fixtures/collection_api_test.json')
         self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Create DPLA profile document')
-        self.assertEqual(self.test_log_handler.formatted_records[3], u'[INFO] HarvestMain: Start harvesting next')
-        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[4])
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestController: 128 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[7], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
+        self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[3])
+        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Create ingest doc in couch')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Ingest DOC ID: test-id')
+        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestMain: Start harvesting next')
+        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[7])
+        self.assertEqual(self.test_log_handler.formatted_records[8], u'[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[9], u'[INFO] HarvestController: 128 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[10], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
 class TestLogFileName(TestCase):
