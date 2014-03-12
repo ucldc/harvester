@@ -17,6 +17,10 @@ from harvester import get_log_file_path
 from harvester import Collection
 from dplaingestion.couch import Couch
 
+#NOTE: these are used in integration test runs
+TEST_COUCH_DB = 'test-ucldc'
+TEST_COUCH_DASHBOARD = 'test-dashboard'
+
 def skipUnlessIntegrationTest(selfobj=None):
     '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
     '''
@@ -275,11 +279,25 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         shutil.rmtree(controller.dir_save)
 
-    def testIngestDocUpdate(self):
+    def testUpdateIngestDoc(self):
         '''Test that the update to the ingest doc in couch is called correctly
         '''
         self.assertTrue(hasattr(self.controller_oai, 'update_ingest_doc'))
-
+        self.assertRaises(TypeError, self.controller_oai.update_ingest_doc)
+        self.assertRaises(ValueError, self.controller_oai.update_ingest_doc, 'error')
+        with patch('dplaingestion.couch.Couch') as mock_couch:
+            instance = mock_couch.return_value
+            instance._create_ingestion_document.return_value = 'test-id'
+            foo = {}
+            with patch.dict(foo, {'test-id':'test-ingest-doc'}):
+                instance.dashboard_db = foo
+                self.controller_oai.update_ingest_doc('error', error_msg="BOOM!")
+            call_args = unicode(instance.update_ingestion_doc.call_args)
+            self.assertIn('test-ingest-doc', call_args)
+            self.assertIn("fetch_process/error='BOOM!'", call_args)
+            self.assertIn("fetch_process/end_time", call_args)
+            self.assertIn("fetch_process/total_items=0", call_args)
+            self.assertIn("fetch_process/total_collections=None", call_args)
 
     @patch('dplaingestion.couch.Couch')
     def testCreateIngestCouch(self, mock_couch):
@@ -288,7 +306,7 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertTrue(hasattr(self.controller_oai, 'create_ingest_doc'))
         self.assertTrue(hasattr(self.controller_oai, 'config_dpla'))
         ingest_doc_id = self.controller_oai.create_ingest_doc()
-        mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='test-dashboard', dpla_db_name='test-ucldc')
+        mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name=TEST_COUCH_DASHBOARD, dpla_db_name=TEST_COUCH_DB)
 
     def testUpdateFailInCreateIngestDoc(self):
         '''Test the failure of the update to the ingest doc'''
@@ -352,6 +370,7 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
 
+@skipUnlessIntegrationTest()
 class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCase):
     def setUp(self):
         super(TestCouchIntegration, self).setUp()
@@ -366,19 +385,19 @@ class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCa
     def tearDown(self):
         super(TestCouchIntegration, self).tearDown()
         couch = Couch(config_file=self.config_file,
-                dpla_db_name = 'test-ucldc',
-                dashboard_db_name = 'test-dashboard'
+                dpla_db_name = TEST_COUCH_DB,
+                dashboard_db_name = TEST_COUCH_DASHBOARD
             )
-        del couch.server['test-ucldc']
+        #del couch.server[TEST_COUCH_DB]
         self.tearDown_config()
         if self.remove_log_dir:
             shutil.rmtree('logs')
 
 
-    @skipUnlessIntegrationTest()
     def testCouchDocIntegration(self):
         '''Test the couch document creation in a test environment'''
         self.ingest_doc_id = self.controller_oai.create_ingest_doc()
+        self.controller_oai.update_ingest_doc('error', error_msg='This is an error')
         print "DOCID", self.ingest_doc_id
 
 class TestHarvesterClass(TestCase):
@@ -609,14 +628,15 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
     def tearDown(self):
         self.tearDown_config()
+        shutil.rmtree(self.controller.dir_save)
 
     def testFullHarvest(self):
-        controller = harvester.HarvestController('email@example.com',
+        self.controller = harvester.HarvestController('email@example.com',
                self.collection,
                config_file=self.config_file,
                profile_path=self.profile_path
                 )
-        controller.harvest()
+        self.controller.harvest()
 
 
 CONFIG_FILE_DPLA = '''
@@ -627,9 +647,8 @@ Port=8889
 URL=http://127.0.0.1:5984/
 Username=mark
 Password=mark
-DPLADatabase=test-ucldc
-DashboardDatabase=test-dashboard
-'''
+DPLADatabase='''+ TEST_COUCH_DB + '''
+DashboardDatabase='''+ TEST_COUCH_DASHBOARD
 
 if __name__=='__main__':
     unittest.main()

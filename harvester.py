@@ -222,6 +222,9 @@ class HarvestController(object):
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
+        self.ingestion_doc = None
+        self.couch = None
+        self.num_records = 0
 
     def create_id(self, identifier):
         '''Create an id that is good for items. Take campus, repo and collection
@@ -246,13 +249,13 @@ class HarvestController(object):
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session.
         Update with the current information. Status is running'''
-        couch = dplaingestion.couch.Couch(config_file=self.config_file,
+        self.couch = dplaingestion.couch.Couch(config_file=self.config_file,
                 dpla_db_name = self.couch_db_name,
                 dashboard_db_name = self.couch_dashboard_name
             )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
-        self.ingest_doc_id = couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
-        ingestion_doc = couch.dashboard_db[self.ingest_doc_id]
+        self.ingest_doc_id = self.couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
+        self.ingestion_doc = self.couch.dashboard_db[self.ingest_doc_id]
         kwargs = {
             "fetch_process/status": "running",
             "fetch_process/data_dir": self.dir_save,
@@ -263,35 +266,53 @@ class HarvestController(object):
             "fetch_process/total_collections": None
         }
         try:
-            couch.update_ingestion_doc(ingestion_doc, **kwargs)
+            self.couch.update_ingestion_doc(self.ingestion_doc, **kwargs)
         except Exception, e:
             self.logger.error("Error updating ingestion doc %s in %s" %
-                         (ingestion_doc["_id"], __name__))
+                         (self.ingestion_doc["_id"], __name__))
             raise e
         return self.ingest_doc_id
 
-    def update_ingest_doc(self):
+    def update_ingest_doc(self, status, error_msg=None, items=None, num_coll=None):
         '''Update the ingest doc with status'''
-        pass
+        if not items:
+            items = self.num_records
+        if status == 'error' and not error_msg:
+            raise ValueError('If status is error please add an error_msg')
+        kwargs = {
+            "fetch_process/status": status,
+            "fetch_process/error": error_msg,
+            "fetch_process/end_time": datetime.datetime.now().isoformat(),
+            "fetch_process/total_items": items,
+            "fetch_process/total_collections": num_coll
+        }
+        if not self.ingestion_doc:
+            self.create_ingest_doc()
+        try:
+            self.couch.update_ingestion_doc(self.ingestion_doc, **kwargs)
+        except Exception, e:
+            self.logger.error("Error updating ingestion doc %s in %s" %
+                     (self.ingestion_doc["_id"], __name__))
+            raise e
 
     def harvest(self):
         '''Harvest the collection'''
         self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
-        n = 0
+        self.num_records = 0
         next_log_n = interval = 100
         for objset in self.harvester:
             if isinstance(objset, list):
-                n += len(objset)
+                self.num_records += len(objset)
             else:
-                n += 1
+                self.num_records += 1
             self.save_objset(objset)
-            if n >= next_log_n:
-                self.logger.info(' '.join((str(n), 'records harvested')))
-                if n < 10000 and n >= 10*interval:
+            if self.num_records >= next_log_n:
+                self.logger.info(' '.join((str(self.num_records), 'records harvested')))
+                if self.num_records  < 10000 and self.num_records  >= 10*interval:
                     interval = 10*interval
                 next_log_n += interval
-        self.logger.info(' '.join((str(n), 'records harvested')))
-        return n
+        self.logger.info(' '.join((str(self.num_records), 'records harvested')))
+        return self.num_records 
 
 def parse_args():
     import argparse
@@ -360,13 +381,16 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
             try:
                 num_recs = harvester.harvest()
                 msg = ''.join(('Finished harvest of ', collection.slug, '. ', str(num_recs), ' records harvested.'))
+                harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
                 logger.info(msg)
                 #email directly
                 mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
                 mail_handler.deliver(mimetext, args.user_email)
             except Exception, e:
                 import traceback
-                logger.error("Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc()))
+                error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
+                logger.error(error_msg)
+                harvester.update_ingest_doc('error', error_msg=error_msg, items=num_recs)
     return ingest_doc_id, num_recs, harvester.dir_save
 
 if __name__=='__main__':
