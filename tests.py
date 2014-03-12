@@ -275,6 +275,12 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         shutil.rmtree(controller.dir_save)
 
+    def testIngestDocUpdate(self):
+        '''Test that the update to the ingest doc in couch is called correctly
+        '''
+        self.assertTrue(hasattr(self.controller_oai, 'update_ingest_doc'))
+
+
     @patch('dplaingestion.couch.Couch')
     def testCreateIngestCouch(self, mock_couch):
         '''Test the integration of the DPLA couch lib'''
@@ -285,14 +291,31 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='test-dashboard', dpla_db_name='test-ucldc')
 
     def testCreateIngestDoc(self):
-        '''Test the creation of the DPLA style ingest document in couch'''
+        '''Test the creation of the DPLA style ingest document in couch.
+        This will call _create_ingestion_document, dashboard_db and update_ingestion_doc'''
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id = self.controller_oai.create_ingest_doc()
+            instance.update_ingestion_doc.return_value = None
+            foo = {}
+            with patch.dict(foo, {'test-id':'test-ingest-doc'}):
+                instance.dashboard_db = foo
+                ingest_doc_id = self.controller_oai.create_ingest_doc()
             self.assertIsNotNone(ingest_doc_id)
             self.assertTrue(ingest_doc_id == 'test-id')
             instance._create_ingestion_document.assert_called_with(self.collection.slug, 'http://localhost:8889', self.profile_path)
+            instance.update_ingestion_doc.assert_called()
+            self.assertTrue(instance.update_ingestion_doc.call_count == 1)
+            call_args = unicode(instance.update_ingestion_doc.call_args)
+            self.assertIn('test-ingest-doc', call_args)
+            self.assertIn("fetch_process/data_dir=u'/tmp/", call_args)
+            self.assertIn("santa-clara-university-digital-objects", call_args)
+            self.assertIn("fetch_process/end_time=None", call_args)
+            self.assertIn("fetch_process/status='running'", call_args)
+            self.assertIn("fetch_process/total_collections=None", call_args)
+            self.assertIn("fetch_process/start_time=", call_args)
+            self.assertIn("fetch_process/error=None", call_args)
+            self.assertIn("fetch_process/total_items=None", call_args)
 
     def testNoTitleInRecord(self):
         '''Test that the process continues if it finds a record with no "title"

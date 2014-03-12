@@ -244,14 +244,35 @@ class HarvestController(object):
             foo.write(json.dumps(objset))
 
     def create_ingest_doc(self):
-        '''Create the DPLA style ingest doc in couch for this harvest session'''
+        '''Create the DPLA style ingest doc in couch for this harvest session.
+        Update with the current information. Status is running'''
         couch = dplaingestion.couch.Couch(config_file=self.config_file,
                 dpla_db_name = self.couch_db_name,
                 dashboard_db_name = self.couch_dashboard_name
             )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
         self.ingest_doc_id = couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
+        ingestion_doc = couch.dashboard_db[self.ingest_doc_id]
+        kwargs = {
+            "fetch_process/status": "running",
+            "fetch_process/data_dir": self.dir_save,
+            "fetch_process/start_time": datetime.datetime.now().isoformat(),
+            "fetch_process/end_time": None,
+            "fetch_process/error": None,
+            "fetch_process/total_items": None,
+            "fetch_process/total_collections": None
+        }
+        try:
+            couch.update_ingestion_doc(ingestion_doc, **kwargs)
+        except:
+            self.logger.error("Error updating ingestion doc %s in %s" %
+                         (ingestion_doc["_id"], __name__))
+            return -1
         return self.ingest_doc_id
+
+    def update_ingest_doc(self):
+        '''Update the ingest doc with status'''
+        pass
 
     def harvest(self):
         '''Harvest the collection'''
