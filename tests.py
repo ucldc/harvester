@@ -384,12 +384,14 @@ class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCa
 
     def tearDown(self):
         super(TestCouchIntegration, self).tearDown()
-        couch = Couch(config_file=self.config_file,
-                dpla_db_name = TEST_COUCH_DB,
-                dashboard_db_name = TEST_COUCH_DASHBOARD
-            )
-        #del couch.server[TEST_COUCH_DB]
-        self.tearDown_config()
+###        couch = Couch(config_file=self.config_file,
+###                dpla_db_name = TEST_COUCH_DB,
+###                dashboard_db_name = TEST_COUCH_DASHBOARD
+###            )
+###        db = couch.server[TEST_COUCH_DASHBOARD]
+###        doc = db.get(self.ingest_doc_id)
+###        db.delete(doc)
+###        self.tearDown_config()
         if self.remove_log_dir:
             shutil.rmtree('logs')
 
@@ -398,7 +400,6 @@ class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCa
         '''Test the couch document creation in a test environment'''
         self.ingest_doc_id = self.controller_oai.create_ingest_doc()
         self.controller_oai.update_ingest_doc('error', error_msg='This is an error')
-        print "DOCID", self.ingest_doc_id
 
 class TestHarvesterClass(TestCase):
     '''Test the abstract Harvester class'''
@@ -496,8 +497,10 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         self.dir_save = None
         if not os.path.isdir(self.dir_test_profile):
             os.makedirs(self.dir_test_profile)
-        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json' ]
-        self.collection = Collection('fixtures/collection_api_test.json')
+        self.user_email = 'email@example.com'
+        self.url_api_collection = 'fixtures/collection_api_test.json'
+        sys.argv = ['thisexe', self.user_email, self.url_api_collection]
+        self.collection = Collection(self.url_api_collection)
         self.setUp_config(self.collection)
 
     def tearDown(self):
@@ -519,15 +522,29 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
+            ingest_doc_id, num, self.dir_save = harvester.main(
+                    self.user_email,
+                    self.url_api_collection,
+                    log_handler=self.test_log_handler,
+                    mail_handler=self.test_log_handler,
+                    dir_profile=self.dir_test_profile,
+                    profile_path=self.profile_path,
+                    config_file=self.config_file)
         self.assertTrue(ingest_doc_id=='test-id')
         self.assertTrue(num == 128)
         self.assertTrue(os.path.exists(os.path.join(self.profile_path)))
 
-    def testMainCollection__init__Error(self):
-        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test_bad_type.json']
+    @patch('dplaingestion.couch.Couch')
+    def testMainCollection__init__Error(self, mock_couch):
         self.mail_handler = MagicMock()
-        self.assertRaises(ValueError, harvester.main, log_handler=self.test_log_handler, mail_handler=self.mail_handler, dir_profile=self.dir_test_profile)
+        self.assertRaises(ValueError, harvester.main,
+                                    self.user_email,
+                                    'fixtures/collection_api_test_bad_type.json',
+                                    log_handler=self.test_log_handler,
+                                    mail_handler=self.mail_handler,
+                                    dir_profile=self.dir_test_profile,
+                                    config_file=self.config_file
+                         )
         self.assertEqual(len(self.test_log_handler.records), 0)
         self.mail_handler.deliver.assert_called()
         self.assertEqual(self.mail_handler.deliver.call_count, 1)
@@ -537,7 +554,7 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         '''Test the try-except block in main when HarvestController not created
         correctly'''
         sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
-        self.assertRaises(Exception, harvester.main, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
+        self.assertRaises(Exception, harvester.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 5)
         self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[4])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
@@ -549,7 +566,13 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, profile_path=self.profile_path, config_file=self.config_file)
+            ingest_doc_id, num, self.dir_save = harvester.main(
+                    self.user_email,
+                    self.url_api_collection,
+                    log_handler=self.test_log_handler,
+                    mail_handler=self.test_log_handler,
+                    profile_path=self.profile_path,
+                    config_file=self.config_file)
         self.assertEqual(len(self.test_log_handler.records), 8)
         self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[7])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[7])
@@ -558,7 +581,14 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile, profile_path=self.profile_path, config_file=self.config_file)
+            ingest_doc_id, num, self.dir_save = harvester.main(
+                    self.user_email,
+                    self.url_api_collection,
+                    log_handler=self.test_log_handler,
+                    mail_handler=self.test_log_handler,
+                    dir_profile=self.dir_test_profile,
+                    profile_path=self.profile_path,
+                    config_file=self.config_file)
         #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
         self.assertEqual(len(self.test_log_handler.records), 11)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
@@ -607,7 +637,7 @@ class TestMainMailIntegration(TestCase):
 
     def testMainFunctionMail(self):
         '''This should error out and send mail through error handler'''
-        self.assertRaises(requests.exceptions.ConnectionError, harvester.main)
+        self.assertRaises(requests.exceptions.ConnectionError, harvester.main, 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/')
 
 @skipUnlessIntegrationTest()
 class ScriptFileTestCase(TestCase):

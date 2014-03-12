@@ -336,19 +336,18 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg['To'] = mail_to
     return msg
 
-def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file=None):
+def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file=None):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of records.
     '''
     num_recs = -1
-    args = parse_args()
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
     try:
-        collection = Collection(args.url_api_collection)
+        collection = Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, 'Collection init failed for '+args.url_api_collection, ' '.join(("Exception in Collection", args.url_api_collection, " init", str(e))))
-        mail_handler.deliver(mimetext, args.user_email)
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for '+url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
+        mail_handler.deliver(mimetext, user_email)
         raise e
     mail_handler.subject = "Error during harvest of " + collection.url
     if not log_handler:
@@ -357,11 +356,11 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
         with mail_handler.applicationbound():
             logger = logbook.Logger('HarvestMain')
             logger.info('Init harvester next')
-            msg = ' '.join(('ARGS:', args.user_email, collection.url))
+            msg = ' '.join(('ARGS:', user_email, collection.url))
             logger.info(msg)
             #email directly
-            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
-            mail_handler.deliver(mimetext, args.user_email)
+            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
+            mail_handler.deliver(mimetext, user_email)
             logger.info('Create DPLA profile document')
             if not profile_path:
                 profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
@@ -370,9 +369,9 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
             logger.info('DPLA profile document : '+profile_path)
             harvester = None
             try:
-                harvester = HarvestController(args.user_email, collection, profile_path=profile_path, config_file=config_file)
+                harvester = HarvestController(user_email, collection, profile_path=profile_path, config_file=config_file)
             except Exception, e:
-                logger.error(' '.join(("Exception in harvester init", str(e))))
+                logger.error(' '.join(("Exception in harvester init", unicode(e))))
                 raise e
             logger.info('Create ingest doc in couch')
             ingest_doc_id = harvester.create_ingest_doc()
@@ -384,8 +383,8 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
                 harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
                 logger.info(msg)
                 #email directly
-                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
-                mail_handler.deliver(mimetext, args.user_email)
+                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
+                mail_handler.deliver(mimetext, user_email)
             except Exception, e:
                 import traceback
                 error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
@@ -394,4 +393,5 @@ def main(log_handler=None, mail_handler=None, dir_profile='profiles', profile_pa
     return ingest_doc_id, num_recs, harvester.dir_save
 
 if __name__=='__main__':
-    main()
+    args = parse_args()
+    main(args.user_email, args.url_api_collection)
