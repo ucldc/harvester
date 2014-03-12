@@ -290,6 +290,14 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         ingest_doc_id = self.controller_oai.create_ingest_doc()
         mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name='test-dashboard', dpla_db_name='test-ucldc')
 
+    def testUpdateFailInCreateIngestDoc(self):
+        '''Test the failure of the update to the ingest doc'''
+        with patch('dplaingestion.couch.Couch') as mock_couch:
+            instance = mock_couch.return_value
+            instance._create_ingestion_document.return_value = 'test-id'
+            instance.update_ingestion_doc.side_effect = Exception('Boom!')
+            self.assertRaises(Exception,  self.controller_oai.create_ingest_doc)
+
     def testCreateIngestDoc(self):
         '''Test the creation of the DPLA style ingest document in couch.
         This will call _create_ingestion_document, dashboard_db and update_ingestion_doc'''

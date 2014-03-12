@@ -264,10 +264,10 @@ class HarvestController(object):
         }
         try:
             couch.update_ingestion_doc(ingestion_doc, **kwargs)
-        except:
+        except Exception, e:
             self.logger.error("Error updating ingestion doc %s in %s" %
                          (ingestion_doc["_id"], __name__))
-            return -1
+            raise e
         return self.ingest_doc_id
 
     def update_ingest_doc(self):
