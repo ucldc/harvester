@@ -23,7 +23,6 @@
   ],
   "appendix": "Harvest/Crawl",
   "name": "Harry Crosby Collection",
-  "oai_set_spec": "",
   "phase_one": false,
   "repository": [
     {
@@ -60,5 +59,8 @@
   "resource_uri": "/api/v1/collection/178/",
   "slug": "harry-crosby-collection-black-white-photographs-of",
   "url_local": "http://oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
-  "url_oac": "fixtures/testOAC.json"
+  "url_oac": "fixtures/testOAC.json",
+  "url_harvest": "fixtures/testOAC.json",
+  "harvest_type": "OAC",
+  "harvest_extra_data": ""
 }

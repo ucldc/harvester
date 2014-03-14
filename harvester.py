@@ -23,15 +23,8 @@ class Collection(dict):
         self.url = url_api
         resp = requests.get(url_api)
         api_json = json.loads(resp.text)
-        if api_json['url_oac']:
-            api_json['harvest_type'] = 'OAC'
-            api_json['url_harvest'] = api_json['url_oac']
-            api_json['extra_data'] = ''
-        elif api_json['url_oai']:
-            api_json['harvest_type'] = 'OAI'
-            api_json['url_harvest'] = api_json['url_oai']
-            api_json['extra_data'] = api_json['oai_set_spec']
-        else:
+        valid_harvest_types = ( 'OAI', 'OAC')
+        if not(api_json['harvest_type'] in valid_harvest_types):
             raise ValueError('Collection is not an OAC or OAI harvest collection')
         self.update(api_json)
         self.__dict__.update(api_json)
@@ -61,6 +54,11 @@ class Collection(dict):
         profile['contributor'] = self._build_contributor_list()
         profile['enrichments_coll'] = [ '/compare_with_schema' ] 
         #TODO: add to avram
+        profile['thresholds'] = {
+                "added": 5000,
+                "changed": 1000,
+                "deleted": 1000
+                },
         profile['enrichments_item'] = [
         '/select-id', 
         '/oai-to-dpla', 
@@ -218,7 +216,7 @@ class HarvestController(object):
         if not self.couch_dashboard_name:
             self.couch_dashboard_name = 'dashboard'
 
-        self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.extra_data)
+        self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.harvest_extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
@@ -254,7 +252,7 @@ class HarvestController(object):
                 dashboard_db_name = self.couch_dashboard_name
             )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
-        self.ingest_doc_id = self.couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path)
+        self.ingest_doc_id = self.couch._create_ingestion_document(self.collection.slug, uri_base, self.profile_path, self.collection.dpla_profile_obj['thresholds'])
         self.ingestion_doc = self.couch.dashboard_db[self.ingest_doc_id]
         kwargs = {
             "fetch_process/status": "running",
@@ -371,7 +369,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
             try:
                 harvester = HarvestController(user_email, collection, profile_path=profile_path, config_file=config_file)
             except Exception, e:
-                logger.error(' '.join(("Exception in harvester init", unicode(e))))
+                import traceback
+                error_msg = "Exception in harvester init: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
+                #logger.error(' '.join(("Exception in harvester init", unicode(e))))
+                logger.error(error_msg)
                 raise e
             logger.info('Create ingest doc in couch')
             ingest_doc_id = harvester.create_ingest_doc()

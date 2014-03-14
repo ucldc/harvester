@@ -329,7 +329,7 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
                 ingest_doc_id = self.controller_oai.create_ingest_doc()
             self.assertIsNotNone(ingest_doc_id)
             self.assertTrue(ingest_doc_id == 'test-id')
-            instance._create_ingestion_document.assert_called_with(self.collection.slug, 'http://localhost:8889', self.profile_path)
+            instance._create_ingestion_document.assert_called_with(self.collection.slug, 'http://localhost:8889', self.profile_path, self.collection.dpla_profile_obj['thresholds'])
             instance.update_ingestion_doc.assert_called()
             self.assertTrue(instance.update_ingestion_doc.call_count == 1)
             call_args = unicode(instance.update_ingestion_doc.call_args)

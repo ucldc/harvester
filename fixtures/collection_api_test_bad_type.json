@@ -17,11 +17,13 @@
   ],
   "appendix": "Nuxeo DAMS",
   "name": "UCSC Map Collections",
-  "oai_set_spec": "",
   "phase_one": false,
   "repository": [],
   "resource_uri": "/api/v1/collection/131/",
   "slug": "ucsc-map-collections-local-and-historical-maps-san",
   "url_local": "http://digitalcollections.ucsc.edu/cdm/landingpage/collection/p15130coll3",
+  "url_harvest": "",
+  "harvest_type": "X",
+  "harvest_extra_data": "",
   "url_oac": ""
 }

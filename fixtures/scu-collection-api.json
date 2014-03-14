@@ -17,7 +17,6 @@
   ],
   "appendix": "Harvest/Crawl",
   "name": "Calisphere - Santa Clara University: Digital Objects",
-  "oai_set_spec": "scu:objects",
   "phase_one": false,
   "repository": [
     {
@@ -36,5 +35,9 @@
   "resource_uri": "/api/v1/collection/197/",
   "slug": "calisphere-santa-clara-university-digital-objects",
   "url_local": "",
+  "url_harvest": "http://content.cdlib.org/oai",
+  "metadata_standard": "",
+  "harvest_type": "OAI",
+  "harvest_extra_data": "scu:objects",
   "url_oac": ""
 }
