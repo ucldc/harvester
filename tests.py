@@ -430,8 +430,7 @@ class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         '''
         rec = self.harvester.next()
         self.assertIsInstance(rec, dict)
-        for key, value in rec.items():
-            self.assertIn(key, harvester.HarvestController.dc_elements)
+        self.assertIn('handle', rec)
 
 class TestOACHarvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OACHarvester
@@ -446,6 +445,14 @@ class TestOACHarvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
 
     def testParseArk(self):
         self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url_harvest), 'ark:/13030/hb5d5nb7dj')
+
+    def testOACHarvesterReturnedData(self):
+        '''test that the data returned by the OAI harvester is a proper dc
+        dictionary
+        '''
+        rec = self.harvester.next()[0]
+        self.assertIsInstance(rec, dict)
+        self.assertIn('handle', rec)
 
     def testHarvestByRecord(self):
         '''Test the older by single record interface'''

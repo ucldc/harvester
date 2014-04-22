@@ -98,6 +98,7 @@ class Collection(dict):
     def dpla_profile(self):
         return json.dumps(self.dpla_profile_obj)
 
+#TODO: Each harvester must pick correct field for creating a "handle"
 class Harvester(object):
     '''Base class for harvest objects.'''
     def __init__(self, url_harvest, extra_data):
@@ -128,8 +129,10 @@ class OAIHarvester(Harvester):
         '''
         sickle_rec = self.records.next()
         rec = sickle_rec.metadata
+        rec['handle'] = sickle_rec.header.identifier
         return rec
 
+#TODO: handle is qdc['identifier']
 class OACHarvester(Harvester):
     '''Harvester for oac'''
     def __init__(self, url_harvest, extra_data):
@@ -146,6 +149,15 @@ class OACHarvester(Harvester):
         self.objset_start = api_resp['objset_start']
         self.objset_end = api_resp['objset_end']
         self.objset = api_resp['objset']
+        n_objset = []
+        for rec in self.objset:
+            rec_orig = rec
+            rec = rec['qdc']
+            rec['handle'] = rec['identifier']
+            rec['files'] = rec_orig['files']
+            n_objset.append(rec)
+        self.objset = n_objset
+
 
     def _parse_oac_findaid_ark(self, url_findaid):
         return ''.join(('ark:', url_findaid.split('ark:')[1]))
@@ -158,8 +170,9 @@ class OACHarvester(Harvester):
         '''Return the next record'''
         while self.resp:
             try:
-                obj = self.objset.pop()
-                return obj['qdc'] #self.objset.pop()
+                rec = self.objset.pop()
+                rec['handle'] = rec['identifier']
+                return rec
             except IndexError, e:
                 if self.objset_end == self.objset_total:
                     self.resp = None
@@ -171,6 +184,14 @@ class OACHarvester(Harvester):
             self.objset_start = self.api_resp['objset_start']
             self.objset_end = self.api_resp['objset_end']
             self.objset = self.api_resp['objset']
+            n_objset = []
+            for rec in self.objset:
+                rec_orig = rec
+                rec = rec['qdc']
+                rec['handle'] = rec['identifier']
+                rec['files'] = rec_orig['files']
+                n_objset.append(rec)
+            self.objset = n_objset
 
     def next_objset(self):
         '''Return records in objset batches. More efficient and makes
@@ -187,6 +208,14 @@ class OACHarvester(Harvester):
             self.objset_start = self.api_resp['objset_start']
             self.objset_end = self.api_resp['objset_end']
             self.objset = self.api_resp['objset']
+            n_objset = []
+            for rec in self.objset:
+                rec_orig = rec
+                rec = rec['qdc']
+                rec['handle'] = rec['identifier']
+                rec['files'] = rec_orig['files']
+                n_objset.append(rec)
+            self.objset = n_objset
         return cur_objset
 
 
