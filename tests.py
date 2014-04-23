@@ -84,7 +84,7 @@ class MockOACRequestsGetMixin(object):
         if getattr(self, 'ranGet', False):
             return None
         with codecs.open(self.testFile, 'r', 'utf8') as foo:
-            return  TestOACHarvester.MockOACapi(foo.read())
+            return  TestOAC_JSON_Harvester.MockOACapi(foo.read())
 
     def setUp(self):
         '''Use mockOACRequestsGet'''
@@ -153,9 +153,9 @@ class TestApiCollection(TestCase):
         self.assertEqual(c.campus[0]['slug'], 'UCDL')
 
     def testOACApiCollection(self):
-        c = Collection('fixtures/collection_api_test_oac.json')
-        self.assertEqual(c['harvest_type'], 'OAC')
-        self.assertEqual(c.harvest_type, 'OAC')
+        c = Collection('fixtures/collection_api_test_oac_json.json')
+        self.assertEqual(c['harvest_type'], 'OAJ')
+        self.assertEqual(c.harvest_type, 'OAJ')
         self.assertEqual(c['name'], 'Harry Crosby Collection')
         self.assertEqual(c.name, 'Harry Crosby Collection')
         self.assertEqual(c['url_oac'], 'fixtures/testOAC.json')
@@ -170,7 +170,7 @@ class TestApiCollection(TestCase):
 
     def testCreateProfile(self):
         '''Test the creation of a DPLA style proflie file'''
-        c = Collection('fixtures/collection_api_test_oac.json')
+        c = Collection('fixtures/collection_api_test_oac_json.json')
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertTrue(isinstance(c.dpla_profile, str))
         #print c.dpla_profile
@@ -186,23 +186,23 @@ class TestApiCollection(TestCase):
 
 
 
-class TestHarvestOACController(ConfigFileOverrideMixin, MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
-    @patch('harvester.OACHarvester._parse_oac_findaid_ark', return_value='ark:/13030/tf2v19n928/', autospec=True)
+    @patch('harvester.OAC_JSON_Harvester._parse_oac_findaid_ark', return_value='ark:/13030/tf2v19n928/', autospec=True)
     def setUp(self, mock_method):
-        super(TestHarvestOACController, self).setUp()
-        self.testFile = 'fixtures/collection_api_test_oac.json'
-        self.collection = Collection('fixtures/collection_api_test_oac.json')
+        super(TestHarvestOAC_JSON_Controller, self).setUp()
+        self.testFile = 'fixtures/collection_api_test_oac_json.json'
+        self.collection = Collection('fixtures/collection_api_test_oac_json.json')
         self.setUp_config(self.collection)
         self.testFile = 'fixtures/testOAC-url_next-0.json'
         self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
     def tearDown(self):
-        super(TestHarvestOACController, self).tearDown()
+        super(TestHarvestOAC_JSON_Controller, self).tearDown()
         self.tearDown_config()
         shutil.rmtree(self.controller.dir_save)
 
-    def testOACHarvest(self):
+    def testOAC_JSON_Harvest(self):
         '''Test the function of the OAC harvest'''
         self.assertTrue(hasattr(self.controller, 'harvest'))
         self.testFile = 'fixtures/testOAC-url_next-1.json'
@@ -433,20 +433,32 @@ class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         self.assertIn('handle', rec)
 
 class TestOACHarvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
-    '''Test the OACHarvester
+    '''Test the OAC XML harvester
+    '''
+    def setUp(self):
+        self.testFile = 'fixtures/testOAC-url_next-0.xml'
+        super(TestOAC_JSON_Harvester, self).setUp()
+        self.harvester = harvester.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+
+    def tearDown(self):
+        super(TestOAC_JSON_Harvester, self).tearDown()
+
+
+class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+    '''Test the OAC_JSON_Harvester
     '''
     def setUp(self):
         self.testFile = 'fixtures/testOAC-url_next-0.json'
-        super(TestOACHarvester, self).setUp()
-        self.harvester = harvester.OACHarvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        super(TestOAC_JSON_Harvester, self).setUp()
+        self.harvester = harvester.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
     def tearDown(self):
-        super(TestOACHarvester, self).tearDown()
+        super(TestOAC_JSON_Harvester, self).tearDown()
 
     def testParseArk(self):
-        self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url_harvest), 'ark:/13030/hb5d5nb7dj')
+        self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url), 'ark:/13030/hb5d5nb7dj')
 
-    def testOACHarvesterReturnedData(self):
+    def testOAC_JSON_HarvesterReturnedData(self):
         '''test that the data returned by the OAI harvester is a proper dc
         dictionary
         '''
