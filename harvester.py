@@ -23,8 +23,7 @@ class Collection(dict):
         self.url = url_api
         resp = requests.get(url_api)
         api_json = json.loads(resp.text)
-        valid_harvest_types = ( 'OAI', 'OAC')
-        if not(api_json['harvest_type'] in valid_harvest_types):
+        if not(api_json['harvest_type'] in HARVEST_TYPES):
             raise ValueError('Collection is not an OAC or OAI harvest collection')
         self.update(api_json)
         self.__dict__.update(api_json)
@@ -117,7 +116,7 @@ class OAIHarvester(Harvester):
     def __init__(self, url_harvest, extra_data):
         super(OAIHarvester, self).__init__(url_harvest, extra_data)
         #TODO: check extra_data?
-        self.oai_client = Sickle(url_harvest)
+        self.oai_client = Sickle(self.url)
         self.records = self.oai_client.ListRecords(set=extra_data, metadataPrefix='oai_dc')
 
     def next(self):
@@ -133,15 +132,14 @@ class OAIHarvester(Harvester):
         return rec
 
 #TODO: handle is qdc['identifier']
-class OACHarvester(Harvester):
+class OAC_JSON_Harvester(Harvester):
     '''Harvester for oac'''
     def __init__(self, url_harvest, extra_data):
-        super(OACHarvester, self).__init__(url_harvest, extra_data)
-        self.url_harvest = url_harvest
-        self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url_harvest)
+        super(OAC_JSON_Harvester, self).__init__(url_harvest, extra_data)
+        self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url)
         self.headers = {'content-type': 'application/json'}
         self.objset_last = False
-        self.resp = requests.get(self.url_harvest, headers=self.headers)
+        self.resp = requests.get(self.url, headers=self.headers)
         api_resp = self.resp.json()
         #for key in api_resp.keys():
         #    self.__dict__[key] = api_resp[key]
@@ -177,7 +175,7 @@ class OACHarvester(Harvester):
                 if self.objset_end == self.objset_total:
                     self.resp = None
                     raise StopIteration
-            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
+            url_next = ''.join((self.url, '&startDoc=', unicode(self.objset_end+1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             #self.objset_total = api_resp['objset_total']
@@ -202,7 +200,7 @@ class OACHarvester(Harvester):
         if self.objset_end == self.objset_total:
             self.objset_last = True
         else:
-            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
+            url_next = ''.join((self.url, '&startDoc=', unicode(self.objset_end+1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             self.objset_start = self.api_resp['objset_start']
@@ -219,6 +217,10 @@ class OACHarvester(Harvester):
         return cur_objset
 
 
+HARVEST_TYPES = { 'OAI': OAIHarvester,
+            'OAJ': OAC_JSON_Harvester,
+        }
+
 class HarvestController(object):
     '''Controller for the harvesting. Selects correct harvester for the given 
     collection, then retrieves records for the given collection and saves to 
@@ -226,9 +228,6 @@ class HarvestController(object):
     TODO: produce profile file
     '''
     campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
-    harvest_types = { 'OAI': OAIHarvester,
-            'OAC': OACHarvester,
-        }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
     def __init__(self, user_email, collection, profile_path=None, config_file='akara.ini'):
@@ -245,7 +244,7 @@ class HarvestController(object):
         if not self.couch_dashboard_name:
             self.couch_dashboard_name = 'dashboard'
 
-        self.harvester = self.harvest_types.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.harvest_extra_data)
+        self.harvester = HARVEST_TYPES.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.harvest_extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
