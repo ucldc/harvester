@@ -23,7 +23,7 @@ class Collection(dict):
         self.url = url_api
         resp = requests.get(url_api)
         api_json = json.loads(resp.text)
-        valid_harvest_types = ( 'OAI', 'OAC', 'OAJ')
+        valid_harvest_types = ( 'OAI', 'OAC')
         if not(api_json['harvest_type'] in valid_harvest_types):
             raise ValueError('Collection is not an OAC or OAI harvest collection')
         self.update(api_json)
@@ -117,7 +117,7 @@ class OAIHarvester(Harvester):
     def __init__(self, url_harvest, extra_data):
         super(OAIHarvester, self).__init__(url_harvest, extra_data)
         #TODO: check extra_data?
-        self.oai_client = Sickle(self.url)
+        self.oai_client = Sickle(url_harvest)
         self.records = self.oai_client.ListRecords(set=extra_data, metadataPrefix='oai_dc')
 
     def next(self):
@@ -132,21 +132,16 @@ class OAIHarvester(Harvester):
         rec['handle'] = sickle_rec.header.identifier
         return rec
 
-class OAC_XML_Harvester(Harvester):
-    '''Harvester for oac through the xml interface.
-    '''
-
-class OAC_JSON_Harvester(Harvester):
-    '''Harvester for oac through the JSON interface.
-    This is being deprecated due to issues with json from the xtf xslt
-    is quite brittle.
-    '''
+#TODO: handle is qdc['identifier']
+class OACHarvester(Harvester):
+    '''Harvester for oac'''
     def __init__(self, url_harvest, extra_data):
-        super(OAC_JSON_Harvester, self).__init__(url_harvest, extra_data)
-        self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url)
+        super(OACHarvester, self).__init__(url_harvest, extra_data)
+        self.url_harvest = url_harvest
+        self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url_harvest)
         self.headers = {'content-type': 'application/json'}
         self.objset_last = False
-        self.resp = requests.get(self.url, headers=self.headers)
+        self.resp = requests.get(self.url_harvest, headers=self.headers)
         api_resp = self.resp.json()
         #for key in api_resp.keys():
         #    self.__dict__[key] = api_resp[key]
@@ -182,7 +177,7 @@ class OAC_JSON_Harvester(Harvester):
                 if self.objset_end == self.objset_total:
                     self.resp = None
                     raise StopIteration
-            url_next = ''.join((self.url, '&startDoc=', unicode(self.objset_end+1)))
+            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             #self.objset_total = api_resp['objset_total']
@@ -207,7 +202,7 @@ class OAC_JSON_Harvester(Harvester):
         if self.objset_end == self.objset_total:
             self.objset_last = True
         else:
-            url_next = ''.join((self.url, '&startDoc=', unicode(self.objset_end+1)))
+            url_next = ''.join((self.url_harvest, '&startDoc=', unicode(self.objset_end+1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             self.objset_start = self.api_resp['objset_start']
@@ -232,8 +227,7 @@ class HarvestController(object):
     '''
     campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD', 'UCSF', 'UCDL']
     harvest_types = { 'OAI': OAIHarvester,
-            'OAJ': OAC_JSON_Harvester,
-            #'OAC': OAC_Harvester,
+            'OAC': OACHarvester,
         }
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
