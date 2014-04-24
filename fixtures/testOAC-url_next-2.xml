@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.079" totalDocs="24" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="docsPerPage" value="10">
+         <token value="10" isWord="yes">
+    </token>
+      </param>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/hb8779p2cx">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/hb8779p2cx" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+      <param name="group" value="text">
+         <token value="text" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index" termLimit="1000" workLimit="20000000" style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl" startDoc="1" maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes" sortDocsBy="relevance" select="*|text#1-10"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/hb8779p2cx</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="24">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="13" startDoc="0" endDoc="0"/>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="11" startDoc="1" endDoc="10">
+         <docHit rank="1" path="cdl:13030/00/hb8r29p300/hb8r29p300.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Journal of progress: A Bulletin of Events Relating to the Rebuilding of San Francisco: Vol. 1 No. 22</title>
+               <subject>Buildings--Repair and reconstruction</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Journal of progress; a bulletin of events telling of the rebuilding of San Francisco.</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <date q="created">October 13, 1906</date>
+               <date q="created">1906-10-13</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb8r29p300</identifier>
+               <identifier q="mods">fF869.S3J9: v.1: no.22</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>fF869.S3J9</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <sort-title>journal of progress a bulletin of events relating to the rebuilding of san francisco vol 1 no 22</sort-title>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8718</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <format q="x">mods</format>
+               <thumbnail X="128" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="2" path="cdl:13030/05/hb809nb605/hb809nb605.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Journal of progress: A Bulletin of Events Telling of the Rebuilding of San Francisco: Vol. 1 No. 38</title>
+               <subject>Buildings--Repair and reconstruction</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Journal of progress; a bulletin of events telling of the rebuilding of San Francisco.</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <date q="created">February 2, 1907</date>
+               <date q="created">1907-02-02</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb809nb605</identifier>
+               <identifier q="mods">fF869.S3J9: v.1: no.38</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>fF869.S3J9</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <sort-title>journal of progress a bulletin of events telling of the rebuilding of san francisco vol 1 no 38</sort-title>
+               <year>1907</year>
+               <iso-start-date>1907:00:00</iso-start-date>
+               <iso-end-date>1907:00:00</iso-end-date>
+               <sort-year>1907</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8734</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <format q="x">mods</format>
+               <thumbnail X="123" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="3" path="cdl:13030/08/hb90001008/hb90001008.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Signs of the Times: Earthquake Reflections.</title>
+               <subject>Earthquakes--California--San Francisco</subject>
+               <subject>Fires--California--San Francisco</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject>Seventh-Day Adventists--Periodicals</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <date q="created">May 9, 1906</date>
+               <date q="created">1906-05-09</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb90001008</identifier>
+               <identifier q="mods">F850.S47 v. 32, No. 19 [291-292]</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <sort-title>signs of the times earthquake reflections</sort-title>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Seventh-Day Adventists</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8742</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <format q="x">mods</format>
+               <thumbnail X="92" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="4" path="cdl:13030/09/hb8w101009/hb8w101009.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Hotel St. Francis, San Francisco, California.</title>
+               <creator>Hotel St. Francis (San Francisco, Calif.)</creator>
+               <subject>Hotel St. Francis (San Francisco, Calif.)</subject>
+               <subject>Hotels--California--San Francisco</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <publisher>Published in: [San Francisco, CA : The Hotel, 1905?]</publisher>
+               <contributor>Hotel St. Francis (San Francisco, Calif.)</contributor>
+               <date q="created">[1905?]</date>
+               <date q="created">1905</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Advertisements</type>
+               <format>[32] p. : ill. ; 18cm</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb8w101009</identifier>
+               <identifier q="mods">F869 S3 .7.S103</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Description and travel</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <sort-title>hotel st francis san francisco california</sort-title>
+               <sort-creator>Francisco</sort-creator>
+               <year>1905</year>
+               <iso-start-date>1905:00:00</iso-start-date>
+               <iso-end-date>1905:00:00</iso-end-date>
+               <sort-year>1905</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Advertisements</facet-type>
+               <facet-subject>Hotel St. Francis (San Francisco, Calif.)</facet-subject>
+               <facet-subject>Hotels</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Description and travel</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8661</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <thumbnail X="114" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="5" path="cdl:13030/0b/hb0k40040b/hb0k40040b.xml" score="100" totalHits="0">
+            <meta>
+               <title>Memories of Atherton: Atherton, Calif.: oral history transcript: Memories of Atherton: Atherton, Calif.: oral history transcript</title>
+               <creator>Merrill, Phyllis Moulton</creator>
+               <subject>Peninsula School (Menlo Park, Calif.)</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <description>Part of: Memories of Atherton: Atherton, Calif.: oral history transcript, BANC MSS 73/57 c, The Bancroft Library, University of California, Berkeley.</description>
+               <description>Experiences during the 1906 earthquake in Atherton, California.</description>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <contributor>Merrill, Phyllis Moulton</contributor>
+               <date q="created">1971</date>
+               <date q="created">1971</date>
+               <type>text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Oral histories</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb0k40040b</identifier>
+               <identifier q="mods">BANC MSS 73/57 c: chapter 1</identifier>
+               <identifier q="mods">brk00002739_34a.xml</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <coverage q="spatial">Atherton (Calif.)--History--Sources</coverage>
+               <keywords>Memories of Atherton: Atherton, Calif.: oral history transcript: Memories of Atherton: Atherton, Calif.: oral history transcript
+Merrill, Phyllis Moulton
+
+            Peninsula School (Menlo Park, Calif.)
+          
+The 1906 San Francisco Earthquake and Fire Digital Collection
+Part of: Memories of Atherton: Atherton, Calif.: oral history transcript, BANC MSS 73/57 c, The Bancroft Library, University of California, Berkeley.
+Experiences during the 1906 earthquake in Atherton, California.
+The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/
+Merrill, Phyllis Moulton
+1971
+1971
+text
+text
+Oral histories
+http://ark.cdlib.org/ark:/13030/hb0k40040b
+BANC MSS 73/57 c: chapter 1
+brk00002739_34a.xml
+http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx
+http://bancroft.berkeley.edu/collections/earthquakeandfire
+eqf
+http://calisphere.universityofcalifornia.edu/
+http://bancroft.berkeley.edu/
+Atherton (Calif.)--History--Sources</keywords>
+               <sort-title>memories of atherton atherton calif oral history transcript memories of atherton atherton calif oral history transcript</sort-title>
+               <sort-publisher>bancroft library university of california berkeley ca 947206000 httpbancroftberkeleyedu</sort-publisher>
+               <year>1971</year>
+               <year>1971</year>
+               <iso-start-date>1971:00:00</iso-start-date>
+               <iso-end-date>1971:00:00</iso-end-date>
+               <sort-year>1971</sort-year>
+               <iso-start-date>1971:00:00</iso-start-date>
+               <iso-end-date>1971:00:00</iso-end-date>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-title>M-O</facet-title>
+               <facet-creator>M-O</facet-creator>
+               <facet-subject>Peninsula School (Menlo Park, Calif.)</facet-subject>
+               <facet-subject>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-subject>
+               <facet-description>Part of: Memories of Atherton: Atherton, Calif.: oral history transcript, BANC MSS 73/57 c, The Bancroft Library, University of California, Berkeley.</facet-description>
+               <facet-description>Experiences during the 1906 earthquake in Atherton, California.</facet-description>
+               <facet-publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</facet-publisher>
+               <facet-contributor>Merrill, Phyllis Moulton</facet-contributor>
+               <facet-decade>1970s</facet-decade>
+               <facet-decade>1970s</facet-decade>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Oral histories</facet-type>
+               <facet-identifier>http://ark.cdlib.org/ark:/13030/hb0k40040b</facet-identifier>
+               <facet-identifier>BANC MSS 73/57 c: chapter 1</facet-identifier>
+               <facet-identifier>brk00002739_34a.xml</facet-identifier>
+               <facet-relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</facet-relation>
+               <facet-relation>eqf</facet-relation>
+               <facet-relation>http://calisphere.universityofcalifornia.edu/</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/</facet-relation>
+               <facet-coverage>Atherton (Calif.)--History--Sources</facet-coverage>
+               <dateStamp>2006-04-10</dateStamp>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8127</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <format q="x">mods</format>
+            </meta>
+         </docHit>
+         <docHit rank="6" path="cdl:13030/0b/hb5k40070b/hb5k40070b.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>The Great Fire of 1906 (series I-XII)</title>
+               <subject>Earthquakes--California--San Francisco</subject>
+               <subject>Fires--California--San Francisco</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <date q="created">April 24, 1926-July 10, 1926</date>
+               <date q="created">1926-04-24</date>
+               <date q="created">1926-07-10</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb5k40070b</identifier>
+               <identifier q="mods">fF850.A8: v.98-99 no. [various]</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <sort-title>great fire of 1906 series ixii</sort-title>
+               <year>1926 1910</year>
+               <iso-start-date>1926 1910:00:00</iso-start-date>
+               <iso-end-date>1926 1910:00:00</iso-end-date>
+               <sort-year>1926</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1920s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8835</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <format q="x">mods</format>
+               <thumbnail X="111" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="7" path="cdl:13030/0f/hb1v19n80f/hb1v19n80f.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>The Pacific monthly: June 1906</title>
+               <subject>Earthquakes--California--San Francisco--Personal narratives</subject>
+               <subject>Faults (Geology)--California</subject>
+               <subject>Fires--California--San Francisco</subject>
+               <subject>Geology--California</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject>Stanford University</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb1v19n80f</identifier>
+               <identifier q="mods">F850 .P19: june</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <rights>Copyright has not been assigned to The Bancroft Library.  All requests for permission to publish or quote from manuscripts must be submitted in writing to the Head of Public Services for forwarding. Permission for publication is given on behalf of The Bancroft Library as the owner of the physical items and is not intended to include or imply permission of the copyright holder, which must also be obtained by the reader.</rights>
+               <rights>University of California Regents</rights>
+               <rights>The Bancroft Library, University of California, Berkeley, CA 94720</rights>
+               <sort-title>pacific monthly june 1906</sort-title>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Faults (Geology)</facet-subject>
+               <facet-subject>Fires</facet-subject>
+               <facet-subject>Geology</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Stanford University</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8765</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="750" Y="634" src="/ark:/13030/hb1v19n80f/FID85"/>
+               <reference-image X="1500" Y="1269" src="/ark:/13030/hb1v19n80f/FID127"/>
+               <format q="x">mods</format>
+               <thumbnail X="155" Y="155"/>
+            </meta>
+         </docHit>
+         <docHit rank="8" path="cdl:13030/0g/hb9j49p40g/hb9j49p40g.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Journal of progress: A Bulletin of Events Relating to the Rebuilding of San Francisco: Vol. 1 No. 28</title>
+               <subject>Buildings--Repair and reconstruction</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Journal of progress; a bulletin of events telling of the rebuilding of San Francisco.</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <date q="created">November 24, 1906</date>
+               <date q="created">1906-11-24</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Periodicals</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb9j49p40g</identifier>
+               <identifier q="mods">fF869.S3J9: v.1: no.28</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>fF869.S3J9</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <sort-title>journal of progress a bulletin of events relating to the rebuilding of san francisco vol 1 no 28</sort-title>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Periodicals</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8724</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <format q="x">mods</format>
+               <thumbnail X="124" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="9" path="cdl:13030/0m/hb6779p20m/hb6779p20m.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Kate Bigelow Montague papers: Letter from Robert B. Bigelow, Berkeley, 17 June 1906 [image]</title>
+               <creator>Montague, Kate Bigelow, 1885-1984</creator>
+               <subject>Bigelow family</subject>
+               <subject>Buildings--Earthquake effects</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Personal narratives</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <description>Letter from Kate Bigelow Montague's brother, Robert B. Bigelow, Berkeley, 17 June 1906, describing his arrival in Berkeley, impressions of San Francisco after the earthquake and fire, difficulty finding lodgings, and of Berkeley, which he describes as "the ideal place to live."</description>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <contributor>Montague, Kate Bigelow, 1885-1984</contributor>
+               <date q="created">June 19, 1906</date>
+               <date q="created">1906-06-19</date>
+               <type>facsimile text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Letters</type>
+               <format>6 pp. (selection)</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb6779p20m</identifier>
+               <identifier q="mods">BANC MSS 92/2 c 1:35</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <coverage q="spatial">Berkeley (Calif.)</coverage>
+               <sort-title>kate bigelow montague papers letter from robert b bigelow berkeley 17 june 1906 image</sort-title>
+               <sort-creator>Montague</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Letters</facet-type>
+               <facet-subject>Bigelow family</facet-subject>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>Berkeley (Calif.)</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8136</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <thumbnail X="102" Y="170"/>
+            </meta>
+         </docHit>
+         <docHit rank="10" path="cdl:13030/0m/hb9w10100m/hb9w10100m.xml" score="100" totalHits="0">
+            <meta>
+               <title>San Francisco's horror of earthquake and fire: terrible devastation and heart-rending scenes:</title>
+               <creator>Wilson, James Russel</creator>
+               <subject>Earthquakes--California--San Francisco</subject>
+               <subject>Fires--California--San Francisco</subject>
+               <subject>San Francisco Earthquake, Calif., 1906</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <contributor>Wilson, James Russel</contributor>
+               <contributor>Memorial Pub. Co.</contributor>
+               <date q="created">c1906</date>
+               <date q="created">1906</date>
+               <type>text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Ephemera</type>
+               <type q="genreform">Photographs</type>
+               <format>416 p. : ill. ; 24 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb9w10100m</identifier>
+               <identifier q="mods">F869.S3 W8</identifier>
+               <identifier q="mods">brk00009752_34a.xml</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <keywords>San Francisco's horror of earthquake and fire: terrible devastation and heart-rending scenes:
+Wilson, James Russel
+Earthquakes--California--San Francisco
+Fires--California--San Francisco
+San Francisco Earthquake, Calif., 1906
+The 1906 San Francisco Earthquake and Fire Digital Collection
+The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/
+Wilson, James Russel
+Memorial Pub. Co.
+c1906
+1906
+text
+text
+Ephemera
+Photographs
+416 p. : ill. ; 24 cm.
+http://ark.cdlib.org/ark:/13030/hb9w10100m
+F869.S3 W8
+brk00009752_34a.xml
+http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx
+http://bancroft.berkeley.edu/collections/earthquakeandfire
+eqf
+http://calisphere.universityofcalifornia.edu/
+http://bancroft.berkeley.edu/</keywords>
+               <sort-title>san franciscos horror of earthquake and fire terrible devastation and heartrending scenes</sort-title>
+               <sort-publisher>bancroft library university of california berkeley ca 947206000 httpbancroftberkeleyedu</sort-publisher>
+               <year>1906</year>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-title>S-V</facet-title>
+               <facet-creator>W-Z</facet-creator>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-subject>
+               <facet-publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</facet-publisher>
+               <facet-contributor>Wilson, James Russel</facet-contributor>
+               <facet-contributor>Memorial Pub. Co.</facet-contributor>
+               <facet-decade>1900s</facet-decade>
+               <facet-decade>1900s</facet-decade>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Ephemera</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-format>416 p. : ill. ; 24 cm.</facet-format>
+               <facet-identifier>http://ark.cdlib.org/ark:/13030/hb9w10100m</facet-identifier>
+               <facet-identifier>F869.S3 W8</facet-identifier>
+               <facet-identifier>brk00009752_34a.xml</facet-identifier>
+               <facet-relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</facet-relation>
+               <facet-relation>eqf</facet-relation>
+               <facet-relation>http://calisphere.universityofcalifornia.edu/</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/</facet-relation>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <dateStamp>2007-01-28</dateStamp>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8668</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+            </meta>
+         </docHit>
+      </group>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+   </facet>
+</crossQueryResult>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.045" totalDocs="24" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="docsPerPage" value="10">
+         <token value="10" isWord="yes">
+    </token>
+      </param>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/hb8779p2cx">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/hb8779p2cx" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+      <param name="group" value="image">
+         <token value="image" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index" termLimit="1000" workLimit="20000000" style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl" startDoc="1" maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes" sortDocsBy="relevance" select="*|image#1-10"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/hb8779p2cx</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="24">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="13" startDoc="11" endDoc="13">
+         <docHit rank="11" path="cdl:13030/09/hb0w100409/hb0w100409.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[St. Dominic's Church. Steiner St. at Bush.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Buildings--Earthquake effects--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 450]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>20 x 17 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb0w100409</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 2:132</identifier>
+               <identifier q="mods">csl00008478_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0301</coverage>
+               <sort-title>st dominics church steiner st at bush</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0301</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7169</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="570" Y="750" src="/ark:/13030/hb0w100409/FID3"/>
+               <reference-image X="1143" Y="1500" src="/ark:/13030/hb0w100409/FID4"/>
+               <thumbnail X="94" Y="125"/>
+            </meta>
+         </docHit>
+         <docHit rank="12" path="cdl:13030/09/hb75800909/hb75800909.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Ruins, interior of Palace Hotel.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Fires (damage)--Photographs</subject>
+               <subject>Palace Hotel (San Francisco, Calif.)--Pictorial works</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 335]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>21 x 16 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb75800909</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 2:021</identifier>
+               <identifier q="mods">csl00008362_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0112</coverage>
+               <sort-title>ruins interior of palace hotel</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires (damage)</facet-subject>
+               <facet-subject>Palace Hotel (San Francisco, Calif.)</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0112</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7055</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="541" Y="750" src="/ark:/13030/hb75800909/FID3"/>
+               <reference-image X="1087" Y="1500" src="/ark:/13030/hb75800909/FID4"/>
+               <thumbnail X="90" Y="125"/>
+            </meta>
+         </docHit>
+         <docHit rank="13" path="cdl:13030/0b/hb9c60100b/hb9c60100b.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Earthquake damage to Napa and Sonoma Wine Co. Tenth and Howard Sts.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Buildings--Earthquake effects--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 52]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>12 x 16 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb9c60100b</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 1:025b</identifier>
+               <identifier q="mods">csl00007945_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">South of Market District (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0204</coverage>
+               <sort-title>earthquake damage to napa and sonoma wine co tenth and howard sts</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>South of Market District (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0204</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::6775</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="672" src="/ark:/13030/hb9c60100b/FID3"/>
+               <reference-image X="1500" Y="1341" src="/ark:/13030/hb9c60100b/FID4"/>
+               <thumbnail X="125" Y="110"/>
+            </meta>
+         </docHit>
+      </group>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="919" startDoc="0" endDoc="0"/>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+   </facet>
+</crossQueryResult>

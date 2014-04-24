@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.079" totalDocs="24" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="docsPerPage" value="10">
+         <token value="10" isWord="yes">
+    </token>
+      </param>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/hb8779p2cx">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/hb8779p2cx" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+      <param name="group" value="text">
+         <token value="text" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index" termLimit="1000" workLimit="20000000" style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl" startDoc="1" maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes" sortDocsBy="relevance" select="*|text#1-10"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/hb8779p2cx</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="24">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="13" startDoc="0" endDoc="0"/>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="11" startDoc="10" endDoc="11">
+           <docHit rank="11" path="cdl:13030/0p/hb309nb20p/hb309nb20p.xml" score="100" totalHits="0">
+            <meta>
+               <title>Come walk with me in my beautiful garden of memory: The 1906 Earthquake and Fire</title>
+               <creator>Stark, Irene Jensen</creator>
+               <subject>Earthquakes--California--San Francisco--Personal narratives</subject>
+               <subject>Fires--California--San Francisco--Personal narratives</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Personal narratives</subject>
+               <subject>Women--California</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <description>Part of: Come walk with me in my beautiful garden of memory, BANC MSS 81/48 c, The Bancroft Library, University of California, Berkeley.</description>
+               <description>Reminiscences of life in San Francisco, primarily in the Mission District, with information on her family, childhood, the 1906 earthquake and fire, education,</description>
+               <description>excursions, Danish heritage and customs, employment as an office worker</description>
+               <description>and a clipping re Stark from the San Francisco Examiner (Sept. 24, 1980)</description>
+               <publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</publisher>
+               <contributor>Stark, Irene Jensen</contributor>
+               <date q="created">1979-1980</date>
+               <date q="created">1979</date>
+               <date q="created">1980</date>
+               <type>text</type>
+               <type q="mods">text</type>
+               <type q="genreform">Autobiographies</type>
+               <format>[4], 143 leaves ; 28 cm</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb309nb20p</identifier>
+               <identifier q="mods">BANC MSS 81/48 c: pp. 16-22</identifier>
+               <identifier q="mods">brk00002779_34a.xml</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Description and travel</coverage>
+               <keywords>Come walk with me in my beautiful garden of memory: The 1906 Earthquake and Fire
+Stark, Irene Jensen
+Earthquakes--California--San Francisco--Personal narratives
+Fires--California--San Francisco--Personal narratives
+San Francisco Earthquake, Calif., 1906--Personal narratives
+Women--California
+The 1906 San Francisco Earthquake and Fire Digital Collection
+Part of: Come walk with me in my beautiful garden of memory, BANC MSS 81/48 c, The Bancroft Library, University of California, Berkeley.
+Reminiscences of life in San Francisco, primarily in the Mission District, with information on her family, childhood, the 1906 earthquake and fire, education,
+excursions, Danish heritage and customs, employment as an office worker
+and a clipping re Stark from the San Francisco Examiner (Sept. 24, 1980)
+The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/
+Stark, Irene Jensen
+1979-1980
+1979
+1980
+text
+text
+Autobiographies
+[4], 143 leaves ; 28 cm
+http://ark.cdlib.org/ark:/13030/hb309nb20p
+BANC MSS 81/48 c: pp. 16-22
+brk00002779_34a.xml
+http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx
+http://bancroft.berkeley.edu/collections/earthquakeandfire
+eqf
+http://calisphere.universityofcalifornia.edu/
+http://bancroft.berkeley.edu/
+San Francisco (Calif.)--Description and travel</keywords>
+               <sort-title>come walk with me in my beautiful garden of memory the 1906 earthquake and fire</sort-title>
+               <sort-publisher>bancroft library university of california berkeley ca 947206000 httpbancroftberkeleyedu</sort-publisher>
+               <year>1979 1980</year>
+               <year>1979</year>
+               <year>1980</year>
+               <iso-start-date>1979 1980 :00:00</iso-start-date>
+               <iso-end-date>1979 1980 :00:00</iso-end-date>
+               <sort-year>1979</sort-year>
+               <iso-start-date>1979:00:00</iso-start-date>
+               <iso-end-date>1979:00:00</iso-end-date>
+               <iso-start-date>1980:00:00</iso-start-date>
+               <iso-end-date>1980:00:00</iso-end-date>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-title>A-C</facet-title>
+               <facet-creator>S-V</facet-creator>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Women</facet-subject>
+               <facet-subject>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-subject>
+               <facet-description>Part of: Come walk with me in my beautiful garden of memory, BANC MSS 81/48 c, The Bancroft Library, University of California, Berkeley.</facet-description>
+               <facet-description>Reminiscences of life in San Francisco, primarily in the Mission District, with information on her family, childhood, the 1906 earthquake and fire, education,</facet-description>
+               <facet-description>excursions, Danish heritage and customs, employment as an office worker</facet-description>
+               <facet-description>and a clipping re Stark from the San Francisco Examiner (Sept. 24, 1980)</facet-description>
+               <facet-publisher>The Bancroft Library, University of California, Berkeley, CA 94720-6000; http://bancroft.berkeley.edu/</facet-publisher>
+               <facet-contributor>Stark, Irene Jensen</facet-contributor>
+               <facet-decade>1970s</facet-decade>
+               <facet-decade>1980s</facet-decade>
+               <facet-decade>1970s</facet-decade>
+               <facet-decade>1980s</facet-decade>
+               <facet-type-tab>text</facet-type-tab>
+               <oac4-tab>Items::text</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>text</facet-type>
+               <facet-type>Autobiographies</facet-type>
+               <facet-format>[4], 143 leaves ; 28 cm</facet-format>
+               <facet-identifier>http://ark.cdlib.org/ark:/13030/hb309nb20p</facet-identifier>
+               <facet-identifier>BANC MSS 81/48 c: pp. 16-22</facet-identifier>
+               <facet-identifier>brk00002779_34a.xml</facet-identifier>
+               <facet-relation>http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</facet-relation>
+               <facet-relation>eqf</facet-relation>
+               <facet-relation>http://calisphere.universityofcalifornia.edu/</facet-relation>
+               <facet-relation>http://bancroft.berkeley.edu/</facet-relation>
+               <facet-coverage>San Francisco (Calif.)--Description and travel</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <dateStamp>2006-04-10</dateStamp>
+               <facet-collection-order>ark:/13030/hb8779p2cx::8133</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+            </meta>
+         </docHit>
+      </group>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+   </facet>
+</crossQueryResult>

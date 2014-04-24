@@ -7,6 +7,8 @@ import tempfile
 import uuid
 import json
 import ConfigParser
+from collections import defaultdict
+from xml.etree import ElementTree as ET
 from sickle import Sickle
 import requests
 import logbook
@@ -108,6 +110,9 @@ class Harvester(object):
         return self
 
     def next(self):
+        '''This returns a set of json objects.
+        Set can be only one json object.
+        '''
         raise NotImplementedError
 
 
@@ -131,9 +136,95 @@ class OAIHarvester(Harvester):
         rec['handle'] = sickle_rec.header.identifier
         return rec
 
+class BunchDict(dict):
+    def __init__(self, **kwds):
+        dict.__init__(self, kwds)
+        self.__dict__ = self
+
+class OAC_XML_Harvester(Harvester):
+    '''Harvester for the OAC
+    The results are returned in 3 groups, image, text and website.
+    Image and text are the ones we care about.
+    '''
+    def __init__(self, url_harvest, extra_data, docsPerPage=100):
+        super(OAC_XML_Harvester, self).__init__(url_harvest, extra_data)
+        self.docsPerPage = docsPerPage
+        self.url = self.url + '&docsPerPage=' + str(self.docsPerPage)
+        self.currentDoc = 0
+        self.currentGroup = ('image', 0)
+        #this will be used to track counts for the 3 groups
+        self.groups = dict(
+                image = BunchDict(),
+                text = BunchDict(),
+                website = BunchDict()
+            )
+        resp = requests.get(self.url)
+        crossQueryResult = ET.fromstring(resp.text)
+        facet_type_tab = crossQueryResult.find('facet')
+        #set total number of hits across the 3 groups
+        self.totalDocs = int(facet_type_tab.attrib['totalDocs'])
+        if self.totalDocs <= 0:
+            raise ValueError(self.url + ' yields no results')
+        self.totalGroups = int(facet_type_tab.attrib['totalGroups'])
+        self._update_groups(facet_type_tab.findall('group'))
+        #set initial group to image, if there are any
+        for key, hitgroup in self.groups.items():
+            hitgroup.end = 0
+            hitgroup.currentDoc = 1
+        if self.groups['image'].start != 0:
+            self.currentGroup = 'image'
+        elif self.groups['text'].start != 0:
+            self.currentGroup = 'text'
+        else:
+            self.currentGroup = None
+
+    def _docHits_to_objset(self, docHits):
+        '''Transform the ElementTree docHits into a python object list
+        ready to be jsonfied
+        '''
+        objset = []
+        for d in docHits:
+            obj = defaultdict(list)
+            meta = d.find('meta')
+            for t in meta:
+                obj[t.tag].append(t.text)
+            objset.append(obj)
+        return objset
+
+    def _update_groups(self, group_elements):
+        '''Update the internal data structure with the count from
+        the current ElementTree results for the search groups
+        '''
+        for g in group_elements:
+            v = g.attrib['value']
+            self.groups[v].total = int(g.attrib['totalDocs'])
+            self.groups[v].start = int(g.attrib['startDoc'])
+            self.groups[v].end = int(g.attrib['endDoc'])
+
+    def next(self):
+        '''Get the next page of search results
+        '''
+        if self.currentDoc >= self.totalDocs:
+            raise StopIteration
+        if self.currentGroup == 'image':
+            if self.groups['image']['end'] == self.groups['image']['total']:
+                self.currentGroup = 'text'
+                if self.groups['text']['total'] == 0:
+                    raise StopIteration
+        self._url_current =  ''.join((self.url, '&startDoc=', str(self.groups[self.currentGroup]['currentDoc']), '&group=', self.currentGroup))
+        resp = requests.get(self._url_current)
+        crossQueryResult = ET.fromstring(resp.text)
+        facet_type_tab = crossQueryResult.find('facet')
+        self._update_groups(facet_type_tab.findall('group'))
+        objset = self._docHits_to_objset(facet_type_tab.findall('./group/docHit'))
+        self.currentDoc += len(objset)
+        self.groups[self.currentGroup]['currentDoc'] += len(objset)
+        return objset
+
 #TODO: handle is qdc['identifier']
 class OAC_JSON_Harvester(Harvester):
-    '''Harvester for oac'''
+    '''Harvester for oac, using the JSON objset interface
+    This is being deprecated in favor of the xml interface'''
     def __init__(self, url_harvest, extra_data):
         super(OAC_JSON_Harvester, self).__init__(url_harvest, extra_data)
         self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url)
@@ -219,6 +310,7 @@ class OAC_JSON_Harvester(Harvester):
 
 HARVEST_TYPES = { 'OAI': OAIHarvester,
             'OAJ': OAC_JSON_Harvester,
+            'OAC': OAC_XML_Harvester,
         }
 
 class HarvestController(object):

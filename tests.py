@@ -96,6 +96,43 @@ class MockOACRequestsGetMixin(object):
         super(MockOACRequestsGetMixin, self).tearDown()
         requests.get = self.real_requests_get
 
+class Mock_for_testFetchMixedContent_Mixin(object):
+    '''Mixin to use to in test of mixed content fetching'''
+    def __init__(self, *args, **kwargs):
+        super(Mock_for_testFetchMixedContent_Mixin, self).__init__(*args, **kwargs)
+        self.times_run = 0
+
+    class MockOACapi(object):
+        def __init__(self, text):
+            self._text = text
+
+        @property
+        def text(self):
+            return self._text
+
+    def mockOACRequestsGet(self, url, **kwargs):
+        self.times_run += 1
+        if self.times_run <= 2:
+            #first time initializes data, but does not return it
+            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-0.xml', 'r', 'utf8').read())
+        elif self.times_run == 3:
+            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-1.xml', 'r', 'utf8').read())
+        elif self.times_run == 4:
+            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-2.xml', 'r', 'utf8').read())
+        elif self.times_run == 5:
+            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-3.xml', 'r', 'utf8').read())
+        else:
+            return None
+
+    def setUp(self):
+        '''Use mockOACRequestsGet'''
+        super(Mock_for_testFetchMixedContent_Mixin, self).setUp()
+        self.real_requests_get = requests.get
+        requests.get = self.mockOACRequestsGet
+
+    def tearDown(self):
+        super(Mock_for_testFetchMixedContent_Mixin, self).tearDown()
+        requests.get = self.real_requests_get
 
 class LogOverrideMixin(object):
     '''Mixin to use logbook test_handler for logging'''
@@ -431,6 +468,61 @@ class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
+class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+    '''Test the OAC_XML_Harvester
+    '''
+    def setUp(self):
+        self.testFile = 'fixtures/testOAC-url_next-0.xml'
+        super(TestOAC_XML_Harvester, self).setUp()
+        self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+
+    def tearDown(self):
+        super(TestOAC_XML_Harvester, self).tearDown()
+
+    def testFetchOnePage(self):
+        '''Test fetching one "page" of results where no return trips are
+        necessary
+        '''
+        self.assertTrue(hasattr(self.harvester, 'totalDocs'))
+        self.assertTrue(hasattr(self.harvester, 'totalGroups'))
+        self.assertTrue(hasattr(self.harvester, 'groups'))
+        self.assertEqual(type(self.harvester.totalDocs), int)
+        self.assertEqual(self.harvester.totalDocs, 24)
+        self.assertEqual(self.harvester.groups['image']['total'], 13)
+        self.assertEqual(self.harvester.groups['image']['start'], 1)
+        self.assertEqual(self.harvester.groups['image']['end'], 0)
+        self.assertEqual(self.harvester.groups['text']['total'], 11)
+        self.assertEqual(self.harvester.groups['text']['start'], 0)
+        self.assertEqual(self.harvester.groups['text']['end'], 0)
+        recs = self.harvester.next()
+        self.assertEqual(self.harvester.groups['image']['end'], 10)
+        self.assertEqual(len(recs), 10)
+
+class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin,  LogOverrideMixin, TestCase):
+    def testFetchMixedContent(self):
+        '''This interface gets tricky when image & text data are in the
+        collection.
+        My test Mock object will return an xml with 10 images
+        then with 3 images
+        then 10 texts
+        then 1 text then quit 
+        '''
+        oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        first_set = oac_harvester.next()
+        self.assertEqual(len(first_set), 10)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image')
+        second_set = oac_harvester.next()
+        self.assertEqual(len(second_set), 3)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image')
+        third_set = oac_harvester.next()
+        self.assertEqual(len(third_set), 10)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
+        fourth_set = oac_harvester.next()
+        self.assertEqual(len(fourth_set), 1)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
+        self.assertRaises(StopIteration, oac_harvester.next)
+
+
 class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAC_JSON_Harvester
     '''
@@ -656,9 +748,29 @@ class ScriptFileTestCase(TestCase):
         self.assertTrue(os.path.exists(path_script))
 
 @skipUnlessIntegrationTest()
+class FullOACHarvestTestCase(ConfigFileOverrideMixin, TestCase):
+    def setUp(self):
+        self.collection = Collection('http://localhost:8000/api/v1/collection/200/')
+        self.setUp_config(self.collection)
+
+    def tearDown(self):
+        self.tearDown_config()
+        #shutil.rmtree(self.controller.dir_save)
+
+    def testFullOACHarvest(self):
+        self.assertIsNotNone(self.collection)
+        self.controller = harvester.HarvestController('email@example.com',
+               self.collection,
+               config_file=self.config_file,
+               profile_path=self.profile_path
+                )
+        n = self.controller.harvest()
+        self.assertEqual(n, 26)
+
+
+@skipUnlessIntegrationTest()
 class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
     def setUp(self):
-        self.collection = Collection('https://registry-dev.cdlib.org/api/v1/collection/197/')
         self.collection = Collection('http://localhost:8000/api/v1/collection/197/')
         self.setUp_config(self.collection)
 
@@ -666,13 +778,16 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
         self.tearDown_config()
         shutil.rmtree(self.controller.dir_save)
 
-    def testFullHarvest(self):
+    def testFullOAIHarvest(self):
+        self.assertIsNotNone(self.collection)
         self.controller = harvester.HarvestController('email@example.com',
                self.collection,
                config_file=self.config_file,
                profile_path=self.profile_path
                 )
-        self.controller.harvest()
+        n = self.controller.harvest()
+        self.assertEqual(n, 128)
+
 
 
 CONFIG_FILE_DPLA = '''
