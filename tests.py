@@ -491,6 +491,8 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertEqual(obj['handle'][1], '[15]')
         self.assertEqual(obj['handle'][2], 'brk00000755_7a.tif')
         self.assertEqual(obj['relation'][0], 'http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134')
+        self.assertIsNone(obj.get('google_analytics_tracking_code'))
+        self.assertIsInstance(obj['reference-image'][0], dict)
 
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are
@@ -499,7 +501,7 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertTrue(hasattr(self.harvester, 'totalDocs'))
         self.assertTrue(hasattr(self.harvester, 'totalGroups'))
         self.assertTrue(hasattr(self.harvester, 'groups'))
-        self.assertEqual(type(self.harvester.totalDocs), int)
+        self.assertIsInstance(self.harvester.totalDocs, int)
         self.assertEqual(self.harvester.totalDocs, 24)
         self.assertEqual(self.harvester.groups['image']['total'], 13)
         self.assertEqual(self.harvester.groups['image']['start'], 1)

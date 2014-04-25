@@ -197,13 +197,20 @@ class OAC_XML_Harvester(Harvester):
             obj = defaultdict(list)
             meta = d.find('meta')
             for t in meta:
-                text=''
-                if len(list(t)) > 0:
+                if t.tag == 'google_analytics_tracking_code':
+                    continue
+                data=''
+                if t.tag == 'reference-image':
+                    #ref image & thumbnail have data in attribs
+                    # return as dicts
+                    data = {}
+                elif len(list(t)) > 0:
+                    #<snippet> tag breaks up text for findaid <relation>
                     for innertext in t.itertext():
-                        text = ''.join((text, innertext.strip()))
+                        data = ''.join((data, innertext.strip()))
                 else:
-                    text = t.text
-                obj[t.tag].append(text)
+                    data = t.text
+                obj[t.tag].append(data)
                 if t.tag == 'identifier':
                     obj['handle'].append(t.text)
             objset.append(obj)
