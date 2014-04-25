@@ -490,6 +490,7 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertEqual(obj['handle'][0], 'http://ark.cdlib.org/ark:/13030/kt40000501')
         self.assertEqual(obj['handle'][1], '[15]')
         self.assertEqual(obj['handle'][2], 'brk00000755_7a.tif')
+        self.assertEqual(obj['relation'][0], 'http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134')
 
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are

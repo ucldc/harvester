@@ -183,9 +183,11 @@ class OAC_XML_Harvester(Harvester):
         '''Transform the ElementTree docHits into a python object list
         ready to be jsonfied
 
-        TODO: add the "handle" piece of data.
+        Any elements with sub-elements (just seem to be the snippets in the 
+        relation field for the findaid ark) the innertext of the element + 
+        subelements becomes the value of the output.
+
         TODO: better normalize the data, don't make them all lists
-        TODO: fix problem with snippet subtag
         TODO: parse reference image and thumbnails for useful info
         TODO: add calculated thumbnail URL
         TODO: add calculated image URLs
@@ -195,7 +197,13 @@ class OAC_XML_Harvester(Harvester):
             obj = defaultdict(list)
             meta = d.find('meta')
             for t in meta:
-                obj[t.tag].append(t.text)
+                text=''
+                if len(list(t)) > 0:
+                    for innertext in t.itertext():
+                        text = ''.join((text, innertext.strip()))
+                else:
+                    text = t.text
+                obj[t.tag].append(text)
                 if t.tag == 'identifier':
                     obj['handle'].append(t.text)
             objset.append(obj)
