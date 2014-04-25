@@ -16,6 +16,7 @@ from logbook import FileHandler
 import dplaingestion.couch 
 
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
+CONTENT_SERVER = 'http://content.cdlib.org/'
 
 class Collection(dict):
     '''A representation of the avram collection, as presented by the 
@@ -54,46 +55,12 @@ class Collection(dict):
         profile['name'] = self.slug
         profile['contributor'] = self._build_contributor_list()
         profile['enrichments_coll'] = [ '/compare_with_schema' ] 
-        #TODO: add to avram
         profile['thresholds'] = {
                 "added": 5000,
                 "changed": 1000,
                 "deleted": 1000
                 },
         profile['enrichments_item'] = self.enrichments_item
-        '''
-        '/oai-to-dpla', 
-        '/shred?prop=sourceResource%2Fcontributor%2CsourceResource%2Fcreator%2CsourceResource%2Fdate', 
-        '/shred?prop=sourceResource%2Flanguage%2CsourceResource%2Fpublisher%2CsourceResource%2Frelation', 
-        '/shred?prop=sourceResource%2Fsubject%2CsourceResource%2Ftype%2CsourceResource%2Fformat', 
-        '/shred?prop=sourceResource%2Fsubject&delim=%3Cbr%3E',
-        '/cleanup_value',
-        '/move_date_values?prop=sourceResource%2Fsubject',
-        '/move_date_values?prop=sourceResource%2Fspatial',
-        '/shred?prop=sourceResource%2Fspatial&delim=--',
-        '/capitalize_value',
-        '/enrich_earliest_date', 
-        '/enrich-subject', 
-        '/enrich_date',
-        '/enrich-type', 
-        '/enrich-format', 
-        '/contentdm_identify_object', 
-        '/enrich_location', 
-        '/scdl_enrich_location', 
-        '/geocode', 
-        '/scdl_geocode_regions',
-        '/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True&remove=True',
-        '/cleanup_language',
-        '/enrich_language',
-        '/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3',
-        '/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True',
-        '/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True',
-        '/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format',
-        '/set_prop?prop=sourceResource%2FstateLocatedIn&value=California',
-        '/enrich_location?prop=sourceResource%2FstateLocatedIn',
-        '/compare_with_schema'
-    ]
-    '''
         return profile
 
     @property
@@ -179,6 +146,16 @@ class OAC_XML_Harvester(Harvester):
         else:
             self.currentGroup = None
 
+    def _get_doc_ark(self, docHit):
+        '''Return the object's ark from the xml etree docHit'''
+        ids = docHit.find('meta').findall('identifier')
+        ark = None
+        for i in ids:
+            split = i.text.split('ark:')
+            if len(split) > 1:
+                ark = ''.join(('ark:', split[1]))
+        return ark
+
     def _docHits_to_objset(self, docHits):
         '''Transform the ElementTree docHits into a python object list
         ready to be jsonfied
@@ -187,15 +164,12 @@ class OAC_XML_Harvester(Harvester):
         relation field for the findaid ark) the innertext of the element + 
         subelements becomes the value of the output.
 
-        TODO: better normalize the data, don't make them all lists
-        TODO: parse reference image and thumbnails for useful info
-        TODO: add calculated thumbnail URL
-        TODO: add calculated image URLs
         '''
         objset = []
         for d in docHits:
             obj = defaultdict(list)
             meta = d.find('meta')
+            ark = self._get_doc_ark(d)
             for t in meta:
                 if t.tag == 'google_analytics_tracking_code':
                     continue
@@ -203,7 +177,15 @@ class OAC_XML_Harvester(Harvester):
                 if t.tag == 'reference-image':
                     #ref image & thumbnail have data in attribs
                     # return as dicts
-                    data = {}
+                    data = { 'X': int(t.attrib['X']),
+                            'Y': int(t.attrib['Y']),
+                            'src': ''.join((CONTENT_SERVER, t.attrib['src'])).replace('//','/').replace('/', '//', 1)
+                            }
+                elif t.tag == 'thumbnail':
+                    data = {'X': int(t.attrib['X']),
+                            'Y': int(t.attrib['Y']),
+                            'src': ''.join((CONTENT_SERVER, '/', ark, '/thumbnail')).replace('//','/').replace('/', '//', 1)
+                            }
                 elif len(list(t)) > 0:
                     #<snippet> tag breaks up text for findaid <relation>
                     for innertext in t.itertext():
@@ -213,6 +195,9 @@ class OAC_XML_Harvester(Harvester):
                 obj[t.tag].append(data)
                 if t.tag == 'identifier':
                     obj['handle'].append(t.text)
+            for key, value in obj.items():
+                if len(value) == 1:
+                    obj[key] = value[0] # de list non-duplicate  tags
             objset.append(obj)
         return objset
 
