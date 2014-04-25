@@ -510,6 +510,18 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertEqual('http://content.cdlib.org/ark:/13030/kt40000501/thumbnail', obj['thumbnail']['src'])
         self.assertIsInstance(obj['publisher'], str)
 
+    def testDocHitsToObjsetBadImageData(self):
+        '''Check when the X & Y for thumbnail or reference image is not an 
+        integer. Text have value of "" for X & Y'''
+        docHits = ET.parse(open('fixtures/docHit-blank-image-sizes.xml')).getroot()
+        objset = self.harvester._docHits_to_objset([docHits])
+        obj = objset[0]
+        self.assertEqual(0, obj['reference-image'][0]['X'])
+        self.assertEqual(0, obj['reference-image'][0]['Y'])
+        self.assertEqual(0, obj['thumbnail']['X'])
+        self.assertEqual(0, obj['thumbnail']['Y'])
+
+
 
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are

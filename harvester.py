@@ -73,6 +73,7 @@ class Harvester(object):
     def __init__(self, url_harvest, extra_data):
         self.url = url_harvest
         self.extra_data = extra_data
+        self.logger = logbook.Logger('HarvesterBaseClass')
 
     def __iter__(self):
         return self
@@ -116,6 +117,7 @@ class OAC_XML_Harvester(Harvester):
     '''
     def __init__(self, url_harvest, extra_data, docsPerPage=100):
         super(OAC_XML_Harvester, self).__init__(url_harvest, extra_data)
+        self.logger = logbook.Logger('HarvesterOACXML')
         self.docsPerPage = docsPerPage
         self.url = self.url + '&docsPerPage=' + str(self.docsPerPage)
         self.currentDoc = 0
@@ -177,13 +179,29 @@ class OAC_XML_Harvester(Harvester):
                 if t.tag == 'reference-image':
                     #ref image & thumbnail have data in attribs
                     # return as dicts
-                    data = { 'X': int(t.attrib['X']),
-                            'Y': int(t.attrib['Y']),
+                    try:
+                        x = int(t.attrib['X'])
+                    except ValueError:
+                        x = 0
+                    try:
+                        y = int(t.attrib['Y'])
+                    except ValueError:
+                        y = 0
+                    data = { 'X': x,
+                            'Y': y,
                             'src': ''.join((CONTENT_SERVER, t.attrib['src'])).replace('//','/').replace('/', '//', 1)
                             }
                 elif t.tag == 'thumbnail':
-                    data = {'X': int(t.attrib['X']),
-                            'Y': int(t.attrib['Y']),
+                    try:
+                        x = int(t.attrib['X'])
+                    except ValueError:
+                        x = 0
+                    try:
+                        y = int(t.attrib['Y'])
+                    except ValueError:
+                        y = 0
+                    data = {'X': x,
+                            'Y': y,
                             'src': ''.join((CONTENT_SERVER, '/', ark, '/thumbnail')).replace('//','/').replace('/', '//', 1)
                             }
                 elif len(list(t)) > 0:
@@ -222,6 +240,7 @@ class OAC_XML_Harvester(Harvester):
                 if self.groups['text']['total'] == 0:
                     raise StopIteration
         self._url_current =  ''.join((self.url, '&startDoc=', str(self.groups[self.currentGroup]['currentDoc']), '&group=', self.currentGroup))
+        self.logger.debug(''.join(('===== Current URL-->', self._url_current)))
         resp = requests.get(self._url_current)
         crossQueryResult = ET.fromstring(resp.text)
         facet_type_tab = crossQueryResult.find('facet')
@@ -229,6 +248,7 @@ class OAC_XML_Harvester(Harvester):
         objset = self._docHits_to_objset(facet_type_tab.findall('./group/docHit'))
         self.currentDoc += len(objset)
         self.groups[self.currentGroup]['currentDoc'] += len(objset)
+        self.logger.debug('++++++++++++++ curDoc'+str(self.currentDoc))
         return objset
 
 #TODO: handle is qdc['identifier']
@@ -428,7 +448,9 @@ class HarvestController(object):
         self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
         self.num_records = 0
         next_log_n = interval = 100
+        n = 0
         for objset in self.harvester:
+            n += 1
             if isinstance(objset, list):
                 self.num_records += len(objset)
             else:
@@ -439,7 +461,9 @@ class HarvestController(object):
                 if self.num_records  < 10000 and self.num_records  >= 10*interval:
                     interval = 10*interval
                 next_log_n += interval
-        self.logger.info(' '.join((str(self.num_records), 'records harvested')))
+
+        msg = ' '.join((str(self.num_records), 'records harvested'))
+        self.logger.info(msg)
         return self.num_records 
 
 def parse_args():
