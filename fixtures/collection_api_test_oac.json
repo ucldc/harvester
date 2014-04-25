@@ -61,6 +61,6 @@
   "url_local": "http://oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
   "url_oac": "fixtures/testOAC.json",
   "url_harvest": "fixtures/testOAC.json",
-  "harvest_type": "OAC",
+  "harvest_type": "OAJ",
   "harvest_extra_data": ""
 }
