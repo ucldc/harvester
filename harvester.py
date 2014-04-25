@@ -60,8 +60,8 @@ class Collection(dict):
                 "changed": 1000,
                 "deleted": 1000
                 },
-        profile['enrichments_item'] = [
-        '/select-id', 
+        profile['enrichments_item'] = self.enrichments_item
+        '''
         '/oai-to-dpla', 
         '/shred?prop=sourceResource%2Fcontributor%2CsourceResource%2Fcreator%2CsourceResource%2Fdate', 
         '/shred?prop=sourceResource%2Flanguage%2CsourceResource%2Fpublisher%2CsourceResource%2Frelation', 
@@ -93,6 +93,7 @@ class Collection(dict):
         '/enrich_location?prop=sourceResource%2FstateLocatedIn',
         '/compare_with_schema'
     ]
+    '''
         return profile
 
     @property
@@ -181,6 +182,13 @@ class OAC_XML_Harvester(Harvester):
     def _docHits_to_objset(self, docHits):
         '''Transform the ElementTree docHits into a python object list
         ready to be jsonfied
+
+        TODO: add the "handle" piece of data.
+        TODO: better normalize the data, don't make them all lists
+        TODO: fix problem with snippet subtag
+        TODO: parse reference image and thumbnails for useful info
+        TODO: add calculated thumbnail URL
+        TODO: add calculated image URLs
         '''
         objset = []
         for d in docHits:
@@ -188,6 +196,8 @@ class OAC_XML_Harvester(Harvester):
             meta = d.find('meta')
             for t in meta:
                 obj[t.tag].append(t.text)
+                if t.tag == 'identifier':
+                    obj['handle'].append(t.text)
             objset.append(obj)
         return objset
 

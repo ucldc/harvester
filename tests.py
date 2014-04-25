@@ -10,6 +10,7 @@ import tempfile
 from mock import MagicMock
 from mock import patch
 from mock import call, ANY
+from xml.etree import ElementTree as ET
 import requests
 import harvester
 import logbook
@@ -190,7 +191,7 @@ class TestApiCollection(TestCase):
         self.assertEqual(c.campus[0]['slug'], 'UCDL')
 
     def testOACApiCollection(self):
-        c = Collection('fixtures/collection_api_test_oac_json.json')
+        c = Collection('fixtures/collection_api_test_oac.json')
         self.assertEqual(c['harvest_type'], 'OAJ')
         self.assertEqual(c.harvest_type, 'OAJ')
         self.assertEqual(c['name'], 'Harry Crosby Collection')
@@ -207,7 +208,7 @@ class TestApiCollection(TestCase):
 
     def testCreateProfile(self):
         '''Test the creation of a DPLA style proflie file'''
-        c = Collection('fixtures/collection_api_test_oac_json.json')
+        c = Collection('fixtures/collection_api_test_oac.json')
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertTrue(isinstance(c.dpla_profile, str))
         #print c.dpla_profile
@@ -228,8 +229,8 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGet
     @patch('harvester.OAC_JSON_Harvester._parse_oac_findaid_ark', return_value='ark:/13030/tf2v19n928/', autospec=True)
     def setUp(self, mock_method):
         super(TestHarvestOAC_JSON_Controller, self).setUp()
-        self.testFile = 'fixtures/collection_api_test_oac_json.json'
-        self.collection = Collection('fixtures/collection_api_test_oac_json.json')
+        self.testFile = 'fixtures/collection_api_test_oac.json'
+        self.collection = Collection('fixtures/collection_api_test_oac.json')
         self.setUp_config(self.collection)
         self.testFile = 'fixtures/testOAC-url_next-0.json'
         self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
@@ -478,6 +479,17 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
 
     def tearDown(self):
         super(TestOAC_XML_Harvester, self).tearDown()
+
+    def testDocHitsToObjset(self):
+        '''Check that the _docHits_to_objset to function returns expected
+        object for a given input'''
+        docHits = ET.parse(open('fixtures/docHit.xml')).getroot()
+        objset = self.harvester._docHits_to_objset([docHits])
+        obj = objset[0]
+        self.assertIsNotNone(obj.get('handle'))
+        self.assertEqual(obj['handle'][0], 'http://ark.cdlib.org/ark:/13030/kt40000501')
+        self.assertEqual(obj['handle'][1], '[15]')
+        self.assertEqual(obj['handle'][2], 'brk00000755_7a.tif')
 
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are
