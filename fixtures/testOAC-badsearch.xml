@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.087" totalDocs="0" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="docsPerPage" value="10">
+         <token value="10" isWord="yes">
+    </token>
+      </param>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/tf0c600===134">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/tf0c600" isWord="yes">
+    </token>
+         <token value="=" isWord="yes">
+    </token>
+         <token value="=" isWord="yes">
+    </token>
+         <token value="=" isWord="yes">
+    </token>
+         <token value="134" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index"
+          termLimit="1000"
+          workLimit="20000000"
+          style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl"
+          startDoc="1"
+          maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes"
+             sortDocsBy="relevance"
+             select="*|*[nonEmpty][1]#1-10"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/tf0c600</term>
+               <term>=</term>
+               <term>=</term>
+               <term>=</term>
+               <term>134</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="0">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0"
+             endDoc="0"/>
+   </facet>
+</crossQueryResult>

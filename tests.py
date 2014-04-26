@@ -97,6 +97,40 @@ class MockOACRequestsGetMixin(object):
         super(MockOACRequestsGetMixin, self).tearDown()
         requests.get = self.real_requests_get
 
+class Mock_for_testFetchTextOnlyContent_Mixin(object):
+    '''Mixin to use to in test of text only content fetching'''
+    def __init__(self, *args, **kwargs):
+        super(Mock_for_testFetchTextOnlyContent_Mixin, self).__init__(*args, **kwargs)
+        self.times_run = 0
+
+    class MockOACapi(object):
+        def __init__(self, text):
+            self._text = text
+
+        @property
+        def text(self):
+            return self._text
+
+    def mockOACRequestsGet(self, url, **kwargs):
+        self.times_run += 1
+        if self.times_run <= 2:
+            #first time initializes data, but does not return it
+            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results.xml', 'r', 'utf8').read())
+        elif self.times_run == 3:
+            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results-1.xml', 'r', 'utf8').read())
+        else:
+            return None
+
+    def setUp(self):
+        '''Use mockOACRequestsGet'''
+        super(Mock_for_testFetchTextOnlyContent_Mixin, self).setUp()
+        self.real_requests_get = requests.get
+        requests.get = self.mockOACRequestsGet
+
+    def tearDown(self):
+        super(Mock_for_testFetchTextOnlyContent_Mixin, self).tearDown()
+        requests.get = self.real_requests_get
+
 class Mock_for_testFetchMixedContent_Mixin(object):
     '''Mixin to use to in test of mixed content fetching'''
     def __init__(self, *args, **kwargs):
@@ -486,6 +520,19 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
     def tearDown(self):
         super(TestOAC_XML_Harvester, self).tearDown()
 
+    def testBadOACSearch(self):
+        self.testFile = 'fixtures/testOAC-badsearch.xml'
+        self.assertRaises(ValueError, harvester.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+    def testOnlyTextResults(self):
+        '''Test when only texts are in result'''
+        self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
+        h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.assertEqual(h.totalDocs, 11)
+        recs = self.harvester.next()
+        self.assertEqual(self.harvester.groups['text']['end'], 10)
+        self.assertEqual(len(recs), 10)
+
+
     def testDocHitsToObjset(self):
         '''Check that the _docHits_to_objset to function returns expected
         object for a given input'''
@@ -547,6 +594,19 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         recs = self.harvester.next()
         self.assertEqual(self.harvester.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
+
+class TestOAC_XML_Harvester_text_content(Mock_for_testFetchTextOnlyContent_Mixin,  LogOverrideMixin, TestCase):
+    '''Test when results only contain texts'''
+    def testFetchTextOnlyContent(self):
+        oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        first_set = oac_harvester.next()
+        self.assertEqual(len(first_set), 10)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
+        second_set = oac_harvester.next()
+        self.assertEqual(len(second_set), 1)
+        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
+        self.assertRaises(StopIteration, oac_harvester.next)
+
 
 class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin,  LogOverrideMixin, TestCase):
     def testFetchMixedContent(self):
