@@ -210,18 +210,24 @@ class TestApiCollection(TestCase):
         '''Test the creation of a DPLA style proflie file'''
         c = Collection('fixtures/collection_api_test_oac.json')
         self.assertTrue(hasattr(c, 'dpla_profile'))
-        self.assertTrue(isinstance(c.dpla_profile, str))
-        #print c.dpla_profile
+        self.assertIsInstance(c.dpla_profile, str)
         j = json.loads(c.dpla_profile)
-        self.assertTrue(j['name'] == 'harry-crosby-collection-black-white-photographs-of')
-        self.assertTrue(j['enrichments_coll'] == [ '/compare_with_schema' ])
+        self.assertEqual(j['name'], 'harry-crosby-collection-black-white-photographs-of')
+        self.assertEqual(j['enrichments_coll'], [ '/compare_with_schema' ])
         self.assertTrue('enrichments_item' in j)
-        self.assertTrue(len(j['enrichments_item']) == 30)
-        self.assertTrue('contributor' in j)
-        self.assertTrue(isinstance(j['contributor'], list))
-        self.assertTrue(len(j['contributor']) == 4)
-        self.assertTrue(j['contributor'][1] == {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
-
+        self.assertIsInstance(j['enrichments_item'], list)
+        self.assertEqual(len(j['enrichments_item']), 30)
+        self.assertIn('contributor', j)
+        self.assertIsInstance(j['contributor'], list)
+        self.assertEqual(len(j['contributor']) , 4)
+        self.assertEqual(j['contributor'][1] , {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
+        self.assertTrue(hasattr(c, 'dpla_profile_obj'))
+        self.assertIsInstance(c.dpla_profile_obj, dict)
+        self.assertIsInstance(c.dpla_profile_obj['enrichments_item'], list)
+        e = c.dpla_profile_obj['enrichments_item']
+        self.assertEqual(e[0], '/oai-to-dpla')
+        #self.assertEqual(e[1], '/shred?prop=sourceResource%2Fcontributor%2CsourceResource%2Fcreator%2CsourceResource%2Fdate')
+        self.assertEqual(e[1], '/shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date')
 
 
 class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
@@ -297,7 +303,7 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
     def testOAIHarvesterType(self):
         '''Check the correct object returned for type of harvest'''
         self.assertIsInstance(self.controller_oai.harvester, harvester.OAIHarvester)
-        self.assertTrue(self.controller_oai.collection.campus[0]['slug'] == 'UCDL')
+        self.assertEqual(self.controller_oai.collection.campus[0]['slug'], 'UCDL')
 
     def testIDCreation(self):
         '''Test how the id for the index is created'''
@@ -365,10 +371,10 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
                 instance.dashboard_db = foo
                 ingest_doc_id = self.controller_oai.create_ingest_doc()
             self.assertIsNotNone(ingest_doc_id)
-            self.assertTrue(ingest_doc_id == 'test-id')
+            self.assertEqual(ingest_doc_id, 'test-id')
             instance._create_ingestion_document.assert_called_with(self.collection.slug, 'http://localhost:8889', self.profile_path, self.collection.dpla_profile_obj['thresholds'])
             instance.update_ingestion_doc.assert_called()
-            self.assertTrue(instance.update_ingestion_doc.call_count == 1)
+            self.assertEqual(instance.update_ingestion_doc.call_count, 1)
             call_args = unicode(instance.update_ingestion_doc.call_args)
             self.assertIn('test-ingest-doc', call_args)
             self.assertIn("fetch_process/data_dir=u'/tmp/", call_args)
@@ -626,7 +632,7 @@ class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase
         objset = self.harvester.next_objset()
         self.assertIsNotNone(objset)
         self.assertIsInstance(objset, list)
-        self.assertTrue(len(objset) == 25)
+        self.assertEqual(len(objset), 25)
         objset2 = self.harvester.next_objset()
         self.assertTrue(objset != objset2)
         self.assertRaises(StopIteration, self.harvester.next_objset)
@@ -672,8 +678,8 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
                     dir_profile=self.dir_test_profile,
                     profile_path=self.profile_path,
                     config_file=self.config_file)
-        self.assertTrue(ingest_doc_id=='test-id')
-        self.assertTrue(num == 128)
+        self.assertEqual(ingest_doc_id, 'test-id')
+        self.assertEqual(num, 128)
         self.assertTrue(os.path.exists(os.path.join(self.profile_path)))
 
     @patch('dplaingestion.couch.Couch')

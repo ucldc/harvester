@@ -60,7 +60,7 @@ class Collection(dict):
                 "changed": 1000,
                 "deleted": 1000
                 },
-        profile['enrichments_item'] = self.enrichments_item
+        profile['enrichments_item'] = [ s.strip() for s in self.enrichments_item.split(',')]
         return profile
 
     @property
