@@ -51,6 +51,8 @@ class Collection(dict):
     def dpla_profile_obj(self):
         '''Return a json string appropriate for creating a dpla ingest profile.
         First create dictionary that is correct and then serialize'''
+        if not self.enrichments_item:
+            raise Exception("NO ITEM ENRICHMENTS FOR COLLECTION. ENRICHING WILL FAIL!")
         profile = {}
         profile['name'] = self.slug
         profile['contributor'] = self._build_contributor_list()
@@ -59,7 +61,7 @@ class Collection(dict):
                 "added": 5000,
                 "changed": 1000,
                 "deleted": 1000
-                },
+                }
         profile['enrichments_item'] = [ s.strip() for s in self.enrichments_item.split(',')]
         return profile
 
