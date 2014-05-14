@@ -52,7 +52,7 @@ class Collection(dict):
         '''Return a json string appropriate for creating a dpla ingest profile.
         First create dictionary that is correct and then serialize'''
         if not self.enrichments_item:
-            raise Exception("NO ITEM ENRICHMENTS FOR COLLECTION. ENRICHING WILL FAIL!")
+            raise ValueError("NO ITEM ENRICHMENTS FOR COLLECTION. ENRICHING WILL FAIL!")
         profile = {}
         profile['name'] = self.slug
         profile['contributor'] = self._build_contributor_list()
@@ -122,6 +122,7 @@ class OAC_XML_Harvester(Harvester):
         self.logger = logbook.Logger('HarvesterOACXML')
         self.docsPerPage = docsPerPage
         self.url = self.url + '&docsPerPage=' + str(self.docsPerPage)
+        self._url_current = self.url
         self.currentDoc = 0
         self.currentGroup = ('image', 0)
         #this will be used to track counts for the 3 groups
@@ -130,9 +131,7 @@ class OAC_XML_Harvester(Harvester):
                 text = BunchDict(),
                 website = BunchDict()
             )
-        resp = requests.get(self.url)
-        crossQueryResult = ET.fromstring(resp.text)
-        facet_type_tab = crossQueryResult.find('facet')
+        facet_type_tab = self._get_next_result_set()
         #set total number of hits across the 3 groups
         self.totalDocs = int(facet_type_tab.attrib['totalDocs'])
         if self.totalDocs <= 0:
@@ -231,6 +230,14 @@ class OAC_XML_Harvester(Harvester):
             self.groups[v].start = int(g.attrib['startDoc'])
             self.groups[v].end = int(g.attrib['endDoc'])
 
+    def _get_next_result_set(self):
+        '''get the next result set
+        Return the facet element, only one were interested in'''
+        resp = requests.get(self._url_current)
+        resp.encoding = 'utf-8' #thinks it's ISO-8859-1
+        crossQueryResult = ET.fromstring(resp.text.encode('utf-8'))
+        return crossQueryResult.find('facet')
+
     def next(self):
         '''Get the next page of search results
         '''
@@ -243,9 +250,7 @@ class OAC_XML_Harvester(Harvester):
                     raise StopIteration
         self._url_current =  ''.join((self.url, '&startDoc=', str(self.groups[self.currentGroup]['currentDoc']), '&group=', self.currentGroup))
         self.logger.debug(''.join(('===== Current URL-->', self._url_current)))
-        resp = requests.get(self._url_current)
-        crossQueryResult = ET.fromstring(resp.text)
-        facet_type_tab = crossQueryResult.find('facet')
+        facet_type_tab = self._get_next_result_set()
         self._update_groups(facet_type_tab.findall('group'))
         objset = self._docHits_to_objset(facet_type_tab.findall('./group/docHit'))
         self.currentDoc += len(objset)

@@ -532,6 +532,15 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertEqual(self.harvester.groups['text']['end'], 10)
         self.assertEqual(len(recs), 10)
 
+    def testUTF8ResultsContent(self):
+        self.testFile = 'fixtures/testOAC-utf8-content.xml'
+        h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.assertEqual(h.totalDocs, 25)
+        self.assertEqual(h.currentDoc, 0)
+        objset = h.next()
+        self.assertEqual(h.totalDocs, 25)
+        self.assertEqual(h.currentDoc, 25)
+        self.assertEqual(len(objset), 25)
 
     def testDocHitsToObjset(self):
         '''Check that the _docHits_to_objset to function returns expected
@@ -756,6 +765,11 @@ class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, 
         self.assertEqual(len(self.test_log_handler.records), 0)
         self.mail_handler.deliver.assert_called()
         self.assertEqual(self.mail_handler.deliver.call_count, 1)
+
+    def testCollectionNoEnrichItems(self):
+        c = Collection('fixtures/collection_api_no_enrich_item.json')
+        with self.assertRaises(ValueError):
+            c.dpla_profile_obj
 
     @patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
     def testMainHarvestController__init__Error(self, mock_method):
