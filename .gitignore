@@ -2,6 +2,8 @@
 
 workspace
 venv
+logs
+akara.ini
 
 # C extensions
 *.so
