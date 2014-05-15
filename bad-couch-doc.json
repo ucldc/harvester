@@ -1,0 +1,173 @@
+{
+  "id": "401e928bb6ca1407d047f5dcd00594ae",
+  "originalRecord": {
+    "facet-onlineItems": "Items online",
+    "identifier": "http://ark.cdlib.org/ark:/13030/kt009nb6cq",
+    "dateStamp": "2006-03-23",
+    "reference-image": {
+      "src": "http://content.cdlib.org/ark:/13030/kt009nb6cq/hi-res",
+      "X": 449,
+      "Y": 300
+    },
+    "thumbnail": {
+      "src": "http://content.cdlib.org/ark:/13030/kt009nb6cq/thumbnail",
+      "X": 200,
+      "Y": 134
+    },
+    "type": [
+      "Image",
+      "still image",
+      "graphic"
+    ],
+    "oac4-tab": "Items::image",
+    "iso-end-date": "1993:00:00",
+    "facet-coverage": "Albany Library -- California.",
+    "facet-type": [
+      "still image",
+      "graphic"
+    ],
+    "title": "Construction of Albany Library -- 6.",
+    "facet-oac-tab": "digital item",
+    "relation-from": "http://www.oac.cdlib.org/findaid/ark:/13030/kt1r29p4qh|Albany Library Historical Photograph Collection",
+    "relation": [
+      "http://www.oac.cdlib.org/findaid/ark:/13030/kt1r29p4qh",
+      "ark:/13030/kt9r29p9nc",
+      "http://www.aclibrary.org/branches/alb/albanyhome.asp",
+      "http://calisphere.universityofcalifornia.edu/"
+    ],
+    "year": "1993",
+    "sort-title": "construction of albany library  6",
+    "subject": [
+      "Albany Library\n                   -- California.",
+      "Albany Library Historical Photograph Collection",
+      "Albany Library Local History Collection."
+    ],
+    "sort-year": "1993",
+    "facet-institution": "Albany Library",
+    "handle": "http://ark.cdlib.org/ark:/13030/kt009nb6cq",
+    "description": [
+      "The steel frame of the new library building, May 1993.",
+      "Donation Date: January 1994.",
+      "Donor: Richard Russo.",
+      "Folder: Albany Library No. 20.",
+      "APL_020.TIF."
+    ],
+    "format": [
+      "1 Photograph: Color; 10 x 15 cm.",
+      "jp2",
+      "mods"
+    ],
+    "institution-doublelist": "A::Albany Library",
+    "coverage": "\n                     Albany Library\n                   -- California.",
+    "date": "1993 (issued)",
+    "publisher": [
+      "Albany Library",
+      "Albany, CA : [s.n.]"
+    ],
+    "language": "eng",
+    "rights": "Unless otherwise noted, all photographs in the collection are the property of the Albany Library. Neither the original photographs nor the digital images in the catalog may be reproduced, published, or used on the Internet without the expressed, written permission of either the Albany Library or the copyright holder. The credit line, \"Courtesy of the Albany Library Historical Collection\" should accompany any such use.",
+    "iso-start-date": "1993:00:00",
+    "institution-url": "http://www.aclibrary.org/branches/alb/albanyhome.asp",
+    "facet-collection-order": "ark:/13030/kt1r29p4qh::-1",
+    "facet-collection-title": "Albany Library Historical Photograph Collection",
+    "facet-decade": "1990s",
+    "facet-subject": "Albany Library",
+    "facet-type-tab": "image"
+  },
+  "dataProvider": [
+    "Albany Library",
+    "Albany, CA : [s.n.]"
+  ],
+  "ingestType": "item",
+  "_id": "albany-library-historical-photograph-collection--http://ark.cdlib.org/ark:/13030/kt009nb6cq",
+  "_rev": "2-72e319b3f544253384bff4f023046bc6",
+  "@id": "http://dp.la/api/items/401e928bb6ca1407d047f5dcd00594ae",
+  "ingestDate": "2014-05-14T19:16:32.137328",
+  "ingestionSequence": 2,
+  "isShownAt": "http://ark.cdlib.org/ark:/13030/kt009nb6cq",
+  "sourceResource": {
+    "subject": [
+      {
+        "name": "Albany Library--California"
+      },
+      {
+        "name": "Albany Library Historical Photograph Collection"
+      },
+      {
+        "name": "Albany Library Local History Collection"
+      }
+    ],
+    "type": "image",
+    "date": "1993 (issued)",
+    "spatial": [
+      {
+        "name": "Albany Library"
+      },
+      {
+        "name": "California."
+      }
+    ],
+    "publisher": [
+      "Albany Library",
+      "Albany, CA : [s.n.]"
+    ],
+    "rights": "Unless otherwise noted, all photographs in the collection are the property of the Albany Library. Neither the original photographs nor the digital images in the catalog may be reproduced, published, or used on the Internet without the expressed, written permission of either the Albany Library or the copyright holder. The credit line, \"Courtesy of the Albany Library Historical Collection\" should accompany any such use.",
+    "description": [
+      "The steel frame of the new library building, May 1993.",
+      "Donation Date: January 1994.",
+      "Donor: Richard Russo.",
+      "Folder: Albany Library No. 20.",
+      "APL_020.TIF."
+    ],
+    "language": [
+      {
+        "iso639_3": "eng",
+        "name": "English"
+      }
+    ],
+    "format": [
+      "1 Photograph: Color; 10 x 15 cm.",
+      "jp2",
+      "mods"
+    ],
+    "title": "Construction of Albany Library--6",
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "relation": [
+      "http://www.oac.cdlib.org/findaid/ark:/13030/kt1r29p4qh",
+      "ark:/13030/kt9r29p9nc",
+      "http://www.aclibrary.org/branches/alb/albanyhome.asp",
+      "http://calisphere.universityofcalifornia.edu/"
+    ]
+  },
+  "@context": {
+    "LCSH": "http://id.loc.gov/authorities/subjects",
+    "provider": "edm:provider",
+    "originalRecord": "dpla:originalRecord",
+    "edm": "http://www.europeana.eu/schemas/edm/",
+    "collection": "dpla:aggregation",
+    "dpla": "http://dp.la/terms/",
+    "object": "edm:object",
+    "name": "xsd:string",
+    "hasView": "edm:hasView",
+    "@vocab": "http://purl.org/dc/terms/",
+    "begin": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeStart"
+    },
+    "end": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeEnd"
+    },
+    "state": "dpla:state",
+    "aggregatedDigitalResource": "dpla:aggregatedDigitalResource",
+    "coordinates": "dpla:coordinates",
+    "isShownAt": "edm:isShownAt",
+    "stateLocatedIn": "dpla:stateLocatedIn",
+    "sourceResource": "edm:sourceResource",
+    "dataProvider": "edm:dataProvider"
+  }
+}
