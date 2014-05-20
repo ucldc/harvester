@@ -450,18 +450,31 @@ class HarvestController(object):
                      (self.ingestion_doc["_id"], __name__))
             raise e
 
+    def _add_registry_data(self, obj):
+        '''Add the registry based data to the harvested object.
+        '''
+        obj['collection'] = {'@id': self.collection.url, 'name': self.collection.name}
+        obj['campus'] = []
+        for c in self.collection.get('campus', []):
+            obj['campus'].append({'@id':c['resource_uri'], 'name':c['name']})
+        obj['repository'] = []
+        for r in self.collection['repository']:
+            obj['repository'].append({'@id':r['resource_uri'], 'name':r['name']})
+        return obj
+
     def harvest(self):
         '''Harvest the collection'''
         self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
         self.num_records = 0
         next_log_n = interval = 100
-        n = 0
         for objset in self.harvester:
-            n += 1
             if isinstance(objset, list):
                 self.num_records += len(objset)
+                for obj in objset:
+                    self._add_registry_data(obj)
             else:
                 self.num_records += 1
+                self._add_registry_data(objset)
             self.save_objset(objset)
             if self.num_records >= next_log_n:
                 self.logger.info(' '.join((str(self.num_records), 'records harvested')))

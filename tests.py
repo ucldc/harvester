@@ -290,6 +290,23 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGet
         self.assertTrue('fixtures/collection_api' in self.test_log_handler.formatted_records[0])
         self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 28 records harvested')
 
+    def testObjectsHaveRegistryData(self):
+        #test OAC objsets
+        self.testFile = 'fixtures/testOAC-url_next-1.json'
+        self.ranGet = False
+        self.controller.harvest()
+        dir_list = os.listdir(self.controller.dir_save)
+        self.assertEqual(len(dir_list), 2)
+        objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
+        obj = objset_saved[2]
+        self.assertIn('collection', obj)
+        self.assertEqual(obj['collection'], {'@id':'fixtures/collection_api_test_oac.json', 'name':'Harry Crosby Collection'})
+        self.assertIn('campus', obj)
+        self.assertEqual(obj['campus'], [{u'@id': u'/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'/api/v1/campus/1/', u'name': u'UC Berkeley'}])
+        self.assertIn('repository', obj)
+        self.assertEqual(obj['repository'], [{u'@id': u'/api/v1/repository/22/',
+   u'name': u'Mandeville Special Collections Library'}, {u'@id': u'/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
+
 
 class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAI harvester'''
@@ -446,6 +463,34 @@ class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOv
         self.assertEqual(self.test_log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
+
+    def testAddRegistryData(self):
+        '''Unittest the _add_registry_data function'''
+        obj = {'id':'fakey', 'otherdata':'test'}
+        self.assertNotIn('collection', obj)
+        objnew = self.controller_oai._add_registry_data(obj)
+        self.assertIn('collection', obj)
+        self.assertEqual(obj['collection']['@id'], 'fixtures/collection_api_test.json')
+        self.assertIn('campus', obj)
+        self.assertIn('repository', obj)
+        #need to test one without campus
+
+    def testObjectsHaveRegistryData(self):
+        '''Test that the registry data is being attached to objects from
+        the harvest controller'''
+        self.controller_oai.harvest()
+        dir_list = os.listdir(self.controller_oai.dir_save)
+        self.assertEqual(len(dir_list), 128)
+        obj_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        self.assertIn('collection', obj_saved)
+        self.assertEqual(obj_saved['collection'], {'@id':'fixtures/collection_api_test.json',
+            'name':'Calisphere - Santa Clara University: Digital Objects'})
+        self.assertIn('campus', obj_saved)
+        self.assertEqual(obj_saved['campus'], [{'@id':'/api/v1/campus/12/',
+            'name':'California Digital Library'}])
+        self.assertIn('repository', obj_saved)
+        self.assertEqual(obj_saved['repository'], [{'@id':'/api/v1/repository/37/',
+            'name':'Calisphere'}])
 
 @skipUnlessIntegrationTest()
 class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCase):
