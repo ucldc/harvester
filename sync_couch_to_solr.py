@@ -1,4 +1,4 @@
-import os
+import os, sys
 import urllib
 import requests
 import solr
@@ -10,8 +10,18 @@ def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index'''
     solr_doc = {}
     solr_doc['id'] = doc['_id']
+    collection = doc['originalRecord']['collection']
+    solr_doc['collection_name'] = collection['name']
+    solr_doc['campus'] = []
+    solr_doc['repository'] = []
+    campuses = doc['originalRecord']['campus']
+    for c in campuses:
+        solr_doc['campus'].append(c['name'])
+    repositories = doc['originalRecord']['repository']
+    for r in repositories:
+        solr_doc['repository'].append(r['name'])
     for k, value in doc['sourceResource'].items():
-        if k not in ('subject', 'stateLocatedIn', 'spatial'):
+        if k not in ('subject', 'stateLocatedIn', 'spatial', 'collection'):
             solr_doc[k] = value
         if k == 'subject':
             for s in doc.get('subject', []):
@@ -39,7 +49,7 @@ if __name__=='__main__':
     resp=requests.get('http://localhost:5984/ucldc/_all_docs')
     j=resp.json()
     rows=j['rows']
-    print "DOCS", len(rows)
+    print "DOCS TO GRAB", len(rows)
     #update or create new solr doc for each couchdb doc
     for row in rows:
         if not '_design' in row['id']:
