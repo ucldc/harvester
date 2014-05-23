@@ -464,7 +464,8 @@ class HarvestController(object):
                 'name':c['name']})
         obj['repository'] = []
         for r in self.collection['repository']:
-            obj['repository'].append({'@id':r['resource_uri'], 'name':r['name']})
+            obj['repository'].append({'@id':''.join((base_url, r['resource_uri'])),
+                'name':r['name']})
         return obj
 
     def harvest(self):

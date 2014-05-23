@@ -483,6 +483,7 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertIn('repository', obj)
         #need to test one without campus
         self.assertEqual(obj['campus'][0]['@id'], 'https://registry.cdlib.org/api/v1/campus/1/')
+        self.assertEqual(obj['repository'][0]['@id'], 'https://registry.cdlib.org/api/v1/repository/4/')
 
     def testObjectsHaveRegistryData(self):
         '''Test that the registry data is being attached to objects from
