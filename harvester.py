@@ -9,6 +9,7 @@ import json
 import ConfigParser
 from collections import defaultdict
 from xml.etree import ElementTree as ET
+import urlparse
 from sickle import Sickle
 import requests
 import logbook
@@ -453,10 +454,14 @@ class HarvestController(object):
     def _add_registry_data(self, obj):
         '''Add the registry based data to the harvested object.
         '''
+        #get base registry URL
+        url_tuple = urlparse.urlparse(self.collection.url)
+        base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
         obj['collection'] = {'@id': self.collection.url, 'name': self.collection.name}
         obj['campus'] = []
         for c in self.collection.get('campus', []):
-            obj['campus'].append({'@id':c['resource_uri'], 'name':c['name']})
+            obj['campus'].append({'@id':''.join((base_url, c['resource_uri'])), 
+                'name':c['name']})
         obj['repository'] = []
         for r in self.collection['repository']:
             obj['repository'].append({'@id':r['resource_uri'], 'name':r['name']})

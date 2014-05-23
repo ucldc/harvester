@@ -3,8 +3,6 @@ argparse==1.2.1
 lxml==3.3.0beta1
 requests==2.1.0
 solrpy==0.9.6
-#for testing
-mock==1.0.1
 wsgiref==0.1.2
 logbook
 git+https://github.com/zepheira/amara.git#egg=amara
