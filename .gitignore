@@ -1,5 +1,6 @@
 *.py[cod]
 
+profiles
 workspace
 venv
 logs

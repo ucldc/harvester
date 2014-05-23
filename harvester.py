@@ -94,6 +94,7 @@ class OAIHarvester(Harvester):
         super(OAIHarvester, self).__init__(url_harvest, extra_data)
         #TODO: check extra_data?
         self.oai_client = Sickle(self.url)
+        print "URL", self.url
         self.records = self.oai_client.ListRecords(set=extra_data, metadataPrefix='oai_dc')
 
     def next(self):

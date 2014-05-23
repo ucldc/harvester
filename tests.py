@@ -15,6 +15,7 @@ import requests
 import harvester
 import logbook
 import vcr
+import httpretty
 from harvester import get_log_file_path
 from harvester import Collection
 from dplaingestion.couch import Couch
@@ -346,7 +347,7 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         shutil.rmtree(self.controller_oai.dir_save)
 
     def testHarvestControllerExists(self):
-        collection = Collection('fixtures/collection_api_test.json')
+        collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
         controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
         self.assertTrue(hasattr(controller, 'harvester'))
         self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
@@ -564,20 +565,25 @@ class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
-class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
+#class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Harvester
     '''
+    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/tf0c600134.yaml')
     def setUp(self):
-        self.testFile = 'fixtures/testOAC-url_next-0.xml'
+        #self.testFile = 'fixtures/testOAC-url_next-0.xml'
         super(TestOAC_XML_Harvester, self).setUp()
-        self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
 
     def tearDown(self):
         super(TestOAC_XML_Harvester, self).tearDown()
 
+    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testBadOACSearch.yaml')
     def testBadOACSearch(self):
         self.testFile = 'fixtures/testOAC-badsearch.xml'
-        self.assertRaises(ValueError, harvester.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.assertRaises(ValueError, harvester.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
+
+    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testOnlyTextResults.yaml')
     def testOnlyTextResults(self):
         '''Test when only texts are in result'''
         self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
@@ -587,6 +593,7 @@ class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase)
         self.assertEqual(self.harvester.groups['text']['end'], 10)
         self.assertEqual(len(recs), 10)
 
+    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testUTF8ResultsContent.yaml')
     def testUTF8ResultsContent(self):
         self.testFile = 'fixtures/testOAC-utf8-content.xml'
         h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')

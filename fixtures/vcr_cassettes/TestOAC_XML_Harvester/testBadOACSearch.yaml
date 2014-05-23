@@ -1,0 +1,37 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate, compress']
+      User-Agent: [python-requests/2.1.0 CPython/2.7.5+ Linux/3.13.0-24-generic]
+    method: GET
+    uri: http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx&docsPerPage=100
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAKxWO2/bMBDe8ysIdgsgU4oRtDAkByjadOngNgk6BBko6SwrlkiVpBwJ6I8vST2t
+        2oHjVBPvwfu+O/KO8m+qPEM7EDLlLMDezMUIWMTjlCUBfri/dT7hm+WFHwku5Y8SRP0TZJkp9Nus
+        79McAuzOPNfDSHFFsy88klqDkVRUKC1ZAVjcLpcXCCG/oILmoDSqlY1K8FJBJxmFBVhRIUGggqpN
+        gKWqMyADEzJyIVGZjuVZJTNM+uhkL3yDjxg17GPNeAViRRPAaEezUus8t2Xa+iu+BTY2olT+4iIO
+        cA2y9fSJ9RogLchBSJtID6aZHwczxveBCcio0ofb41GxXRBv7s5dsgmv42sWfoyfHafS33EeetMJ
+        PP7ZtiDDLsZP3DTldg6w45wBbEvwvmqvaQSqL7WqC3AUDY/X1Xicld8Z6Rkib8uuXQ+d2nQl0jOD
+        yYUE2UyNZ7qjCy6SWRRnaTir1Nq0n5rdNQ4alMVQrWwT2yUeKCIdO/+e5qmyneWOTS9cbFvTldt8
+        Y7NtowNjQdgJdctFTpVqR8NEZ8fDXqhuWnljdU6rbqD15ZEFZFm0gWiLZJkkIE1zmQlyrxMx+4ep
+        Yy8DWqeQxe3NcPobgSQX6pseS4X8XAfYHpEpVJSVMXzNC1U3xuakRpwMW27J2o26vWFHWQRTH62P
+        dOEu/1w+Ms5sxKdH7+mD55gBNpCkLB7fmH2x1XQ59LNk38XeNJ39Uk8JfZvM6rB92tmvOptuPOTg
+        kwnlsTwIfvMcNOtXT8I+XF2155OHrA+cGIeuldLcPheCsq058mbLXRl2UdwTn0NyOLyCSnXRr/57
+        9BcIZap6+vM3Auyf1hTNJ7a8+peBTP8Zln8BAAD//wIMALGlhx9tCAAA
+    headers:
+      cache-control: [public]
+      content-encoding: [gzip]
+      content-type: [text/xml]
+      date: ['Fri, 23 May 2014 20:38:26 GMT']
+      expires: ['Sat, 06 May 1995 12:00:00 GMT']
+      server: [Apache-Coyote/1.1]
+      set-cookie: [JSESSIONID=BD1B65C52EDB5F12308ACF99AD0D63C5; Path=/xtf; HttpOnly]
+      transfer-encoding: [chunked]
+      vary: ['Accept-Encoding,User-Agent']
+      via: [1.1 voro.cdlib.org]
+    status: {code: 200, message: OK}
+version: 1
