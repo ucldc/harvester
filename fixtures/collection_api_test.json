@@ -37,7 +37,7 @@
   "slug": "calisphere-santa-clara-university-digital-objects",
 
   "url_local": "http://www.oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
-  "url_harvest": "fixtures/testOAI-128-records.xml",
+  "url_harvest": "http://content.cdlib.org/oai",
   "harvest_type": "OAI",
   "harvest_extra_data": "scu:objects",
   "url_oac": "",

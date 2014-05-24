@@ -333,10 +333,17 @@ class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, Lo
 class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
 #class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the harvest controller class'''
+    @httpretty.activate
     def setUp(self):
         super(TestHarvestController, self).setUp()
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
         #self.collection = Collection('fixtures/collection_api_test.json')
-        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
+        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         config_file, profile_path = self.setUp_config(self.collection) 
         self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
         self.objset_test_doc = json.load(open('objset_test_doc.json'))
@@ -468,10 +475,18 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
 
-    @vcr.use_cassette('fixtures/vcr_cassettes/registry_collection-23065.yaml')
+    #@vcr.use_cassette('fixtures/vcr_cassettes/registry_collection-23065.yaml')
+    @httpretty.activate
     def testAddRegistryData(self):
         '''Unittest the _add_registry_data function'''
-        collection = Collection('https://registry.cdlib.org/api/v1/collection/23065/')
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
+
+        collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         self.tearDown_config() # remove ones setup in setUp
         self.setUp_config(collection)
         controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
@@ -479,12 +494,12 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertNotIn('collection', obj)
         objnew = controller._add_registry_data(obj)
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection']['@id'], 'https://registry.cdlib.org/api/v1/collection/23065/')
+        self.assertEqual(obj['collection']['@id'], 'https://registry.cdlib.org/api/v1/collection/197/')
         self.assertIn('campus', obj)
         self.assertIn('repository', obj)
         #need to test one without campus
-        self.assertEqual(obj['campus'][0]['@id'], 'https://registry.cdlib.org/api/v1/campus/1/')
-        self.assertEqual(obj['repository'][0]['@id'], 'https://registry.cdlib.org/api/v1/repository/4/')
+        self.assertEqual(obj['campus'][0]['@id'], 'https://registry.cdlib.org/api/v1/campus/12/')
+        self.assertEqual(obj['repository'][0]['@id'], 'https://registry.cdlib.org/api/v1/repository/37/')
 
     def testObjectsHaveRegistryData(self):
         '''Test that the registry data is being attached to objects from
