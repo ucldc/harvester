@@ -896,6 +896,7 @@ class TestOAC_JSON_Harvester(LogOverrideMixin, TestCase):
 class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
 #class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
+    @httpretty.activate
     def setUp(self):
         super(TestMain, self).setUp()
         self.dir_test_profile = '/tmp/profiles/test'
@@ -903,7 +904,10 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         if not os.path.isdir(self.dir_test_profile):
             os.makedirs(self.dir_test_profile)
         self.user_email = 'email@example.com'
-        self.url_api_collection = 'fixtures/collection_api_test.json'
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        self.url_api_collection = "https://registry.cdlib.org/api/v1/collection/197/"
         sys.argv = ['thisexe', self.user_email, self.url_api_collection]
         self.collection = Collection(self.url_api_collection)
         self.setUp_config(self.collection)
@@ -918,12 +922,19 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
 
+    @httpretty.activate
     def testMainCreatesCollectionProfile(self):
         '''Test that the main function produces a collection profile
         file for DPLA. The path to this file is needed when creating a 
         DPLA ingestion document.
         '''
-        c = Collection('fixtures/collection_api_test.json')
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
+        c = Collection("https://registry.cdlib.org/api/v1/collection/197/")
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -954,25 +965,43 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.mail_handler.deliver.assert_called()
         self.assertEqual(self.mail_handler.deliver.call_count, 1)
 
+    @httpretty.activate
     def testCollectionNoEnrichItems(self):
-        c = Collection('fixtures/collection_api_no_enrich_item.json')
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/36/",
+                body=open('./fixtures/collection_api_no_enrich_item.json').read())
+        c = Collection("https://registry.cdlib.org/api/v1/collection/36/")
         with self.assertRaises(ValueError):
             c.dpla_profile_obj
 
+    @httpretty.activate
     @patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
     def testMainHarvestController__init__Error(self, mock_method):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
-        sys.argv = ['thisexe', 'email@example.com', 'fixtures/collection_api_test.json']
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
+        sys.argv = ['thisexe', 'email@example.com', 'https://registry.cdlib.org/api/v1/collection/197/']
         self.assertRaises(Exception, harvester.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 5)
         self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[4])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
-        c = Collection('fixtures/collection_api_test.json')
+        c = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         os.remove(os.path.abspath(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
 
+    @httpretty.activate
     @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -987,7 +1016,14 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[7])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[7])
 
+    @httpretty.activate
     def testMainFn(self):
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-128-records.xml').read())
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -1002,7 +1038,7 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
         self.assertEqual(len(self.test_log_handler.records), 11)
         self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com fixtures/collection_api_test.json')
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com https://registry.cdlib.org/api/v1/collection/197/')
         self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Create DPLA profile document')
         self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[3])
         self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Create ingest doc in couch')
