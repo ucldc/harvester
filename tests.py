@@ -14,7 +14,6 @@ from xml.etree import ElementTree as ET
 import requests
 import harvester
 import logbook
-import vcr
 import httpretty
 from harvester import get_log_file_path
 from harvester import Collection
@@ -262,19 +261,23 @@ class TestApiCollection(TestCase):
         self.assertIsInstance(c.dpla_profile_obj['enrichments_item'], list)
         e = c.dpla_profile_obj['enrichments_item']
         self.assertEqual(e[0], '/oai-to-dpla')
-        #self.assertEqual(e[1], '/shred?prop=sourceResource%2Fcontributor%2CsourceResource%2Fcreator%2CsourceResource%2Fdate')
         self.assertEqual(e[1], '/shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date')
 
 
-class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
-    @patch('harvester.OAC_JSON_Harvester._parse_oac_findaid_ark', return_value='ark:/13030/tf2v19n928/', autospec=True)
-    def setUp(self, mock_method):
+    @httpretty.activate
+    def setUp(self):
         super(TestHarvestOAC_JSON_Controller, self).setUp()
-        self.testFile = 'fixtures/collection_api_test_oac.json'
-        self.collection = Collection('fixtures/collection_api_test_oac.json')
+        #self.testFile = 'fixtures/collection_api_test_oac.json'
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/178/",
+                body=open('./fixtures/collection_api_test_oac.json').read())
+        httpretty.register_uri(httpretty.GET,
+            'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open('./fixtures/testOAC.json').read())
+        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
         self.setUp_config(self.collection)
-        self.testFile = 'fixtures/testOAC-url_next-0.json'
         self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
     def tearDown(self):
@@ -282,18 +285,27 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGet
         self.tearDown_config()
         shutil.rmtree(self.controller.dir_save)
 
+    @httpretty.activate
     def testOAC_JSON_Harvest(self):
         '''Test the function of the OAC harvest'''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
         self.assertTrue(hasattr(self.controller, 'harvest'))
-        self.testFile = 'fixtures/testOAC-url_next-1.json'
-        self.ranGet = False
         self.controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 2)
-        self.assertTrue('fixtures/collection_api' in self.test_log_handler.formatted_records[0])
+        self.assertTrue('UCB Department of Statistics' in self.test_log_handler.formatted_records[0])
         self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 28 records harvested')
 
+    @httpretty.activate
     def testObjectsHaveRegistryData(self):
         #test OAC objsets
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open('./fixtures/testOAC-url_next-0.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928&startDoc=26',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         self.ranGet = False
         self.controller.harvest()
@@ -302,12 +314,12 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, MockOACRequestsGet
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'], {'@id':'fixtures/collection_api_test_oac.json', 'name':'Harry Crosby Collection'})
+        self.assertEqual(obj['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/178/', 'name':'Harry Crosby Collection'})
         self.assertIn('campus', obj)
-        self.assertEqual(obj['campus'], [{u'@id': u'/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'/api/v1/campus/1/', u'name': u'UC Berkeley'}])
+        self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
         self.assertIn('repository', obj)
-        self.assertEqual(obj['repository'], [{u'@id': u'/api/v1/repository/22/',
-   u'name': u'Mandeville Special Collections Library'}, {u'@id': u'/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
+        self.assertEqual(obj['repository'], [{u'@id': u'https://registry.cdlib.org/api/v1/repository/22/',
+            u'name': u'Mandeville Special Collections Library'}, {u'@id': u'https://registry.cdlib.org/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
 
 
 class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
@@ -487,7 +499,6 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
         self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
 
-    #@vcr.use_cassette('fixtures/vcr_cassettes/registry_collection-23065.yaml')
     @httpretty.activate
     def testAddRegistryData(self):
         '''Unittest the _add_registry_data function'''
@@ -596,8 +607,11 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
 #class TestOAC_XML_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Harvester
     '''
-    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/tf0c600134.yaml')
+    @httpretty.activate
     def setUp(self):
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
+                body=open('./fixtures/testOAC-url_next-0.xml').read())
         #self.testFile = 'fixtures/testOAC-url_next-0.xml'
         super(TestOAC_XML_Harvester, self).setUp()
         self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
@@ -605,24 +619,33 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
     def tearDown(self):
         super(TestOAC_XML_Harvester, self).tearDown()
 
-    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testBadOACSearch.yaml')
+    @httpretty.activate
     def testBadOACSearch(self):
-        self.testFile = 'fixtures/testOAC-badsearch.xml'
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx',
+                body=open('./fixtures/testOAC-badsearch.xml').read())
+        #self.testFile = 'fixtures/testOAC-badsearch.xml'
         self.assertRaises(ValueError, harvester.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
 
-    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testOnlyTextResults.yaml')
+    @httpretty.activate
     def testOnlyTextResults(self):
         '''Test when only texts are in result'''
-        self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
+        #self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
         h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 11)
         recs = self.harvester.next()
         self.assertEqual(self.harvester.groups['text']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-    @vcr.use_cassette('fixtures/vcr_cassettes/TestOAC_XML_Harvester/testUTF8ResultsContent.yaml')
+    @httpretty.activate
     def testUTF8ResultsContent(self):
-        self.testFile = 'fixtures/testOAC-utf8-content.xml'
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-utf8-content.xml').read())
+        #self.testFile = 'fixtures/testOAC-utf8-content.xml'
         h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 0)
@@ -672,12 +695,14 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
         self.assertEqual(0, obj['thumbnail']['X'])
         self.assertEqual(0, obj['thumbnail']['Y'])
 
-
-
+    @httpretty.activate
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are
         necessary
         '''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-url_next-0.xml').read())
         self.assertTrue(hasattr(self.harvester, 'totalDocs'))
         self.assertTrue(hasattr(self.harvester, 'totalGroups'))
         self.assertTrue(hasattr(self.harvester, 'groups'))
