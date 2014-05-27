@@ -322,7 +322,7 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, LogOverrideMixin, 
             u'name': u'Mandeville Special Collections Library'}, {u'@id': u'https://registry.cdlib.org/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
 
 
-class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestHarvestOAIController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):
         super(TestHarvestOAIController, self).setUp()
@@ -331,9 +331,17 @@ class TestHarvestOAIController(ConfigFileOverrideMixin, MockRequestsGetMixin, Lo
         super(TestHarvestOAIController, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
+    @httpretty.activate
     def testOAIHarvest(self):
         '''Test the function of the OAI harvest'''
-        self.collection = Collection('fixtures/collection_api_test.json')
+        httpretty.register_uri(httpretty.GET,
+                'http://registry.cdlib.org/api/v1/collection/',
+                body=open('./fixtures/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open('./fixtures/testOAC-url_next-0.xml').read())
+#  h"url_harvest": "http://content.cdlib.org/oai",
+        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
         self.setUp_config(self.collection)
         self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertTrue(hasattr(self.controller, 'harvest'))
