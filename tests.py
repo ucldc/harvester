@@ -742,13 +742,22 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
         self.assertEqual(len(recs), 10)
 
 class TestOAC_XML_Harvester_text_content(LogOverrideMixin, TestCase):
-#class TestOAC_XML_Harvester_text_content(Mock_for_testFetchTextOnlyContent_Mixin,  LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
+    @httpretty.activate
     def testFetchTextOnlyContent(self):
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10',
+                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=1&group=text',
+                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
         oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
         first_set = oac_harvester.next()
         self.assertEqual(len(first_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=11&group=text',
+                body=open('./fixtures/testOAC-noimages-in-results-1.xml').read())
         second_set = oac_harvester.next()
         self.assertEqual(len(second_set), 1)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
@@ -756,21 +765,6 @@ class TestOAC_XML_Harvester_text_content(LogOverrideMixin, TestCase):
 
 
 class TestOAC_XML_Harvester_mixed_content(LogOverrideMixin, TestCase):
-#class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin,  LogOverrideMixin, TestCase):
-###    def mockOACRequestsGet(self, url, **kwargs):
-###        self.times_run += 1
-###        if self.times_run <= 2:
-###            #first time initializes data, but does not return it
-###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-0.xml', 'r', 'utf8').read())
-###        elif self.times_run == 3:
-###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-1.xml', 'r', 'utf8').read())
-###        elif self.times_run == 4:
-###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-2.xml', 'r', 'utf8').read())
-###        elif self.times_run == 5:
-###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-3.xml', 'r', 'utf8').read())
-###        else:
-###            return None
-###
     @httpretty.activate
     def testFetchMixedContent(self):
         '''This interface gets tricky when image & text data are in the
