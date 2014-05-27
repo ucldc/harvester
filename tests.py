@@ -588,13 +588,15 @@ class TestHarvesterClass(TestCase):
 
 
 class TestOAIHarvester(LogOverrideMixin, TestCase):
-#class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAIHarvester
     '''
+    @httpretty.activate
     def setUp(self):
         super(TestOAIHarvester, self).setUp()
-        self.harvester = harvester.OAIHarvester('fixtures/testOAI.xml', 'latimes')
-##        self.harvester = harvester.OAIHarvester('fixtures/collection_api_test.json', 'latimes')
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
+                body=open('./fixtures/testOAI.xml').read())
+        self.harvester = harvester.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
 
     def tearDown(self):
         super(TestOAIHarvester, self).tearDown()
