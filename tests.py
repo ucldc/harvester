@@ -30,146 +30,146 @@ def skipUnlessIntegrationTest(selfobj=None):
         return lambda func: func
     return unittest.skip('RUN_INTEGRATION_TESTS not set. Skipping integration tests.')
 
-class MockResponse(object):
-    """Mimics the response object returned by HTTP requests."""
-    def __init__(self, text):
-        # request's response object carry an attribute 'text' which contains
-        # the server's response data encoded as unicode.
-        self.text = text
-        self.status_code = 200
-
-    def json(self):
-        try:
-           return json.loads(text)
-        except:
-           return {}
-
-    def raise_for_status(self):
-        pass
-
-
-def mockRequestsGet(filename, **kwargs):
-    '''Replaces requests.get for testing the sickle interface on semi-real
-    data
-    '''
-    with codecs.open(filename, 'r', 'utf8') as foo:
-        resp = MockResponse(foo.read())
-    return resp
-
-class MockRequestsGetMixin(object):
-    '''Mixin to use mockRequestsGet file grabber'''
-    def setUp(self):
-        '''Use file base request mock'''
-        super(MockRequestsGetMixin, self).setUp()
-        self.real_requests_get = requests.get
-        requests.get = mockRequestsGet
-
-    def tearDown(self):
-        super(MockRequestsGetMixin, self).tearDown()
-        requests.get = self.real_requests_get
-
-
-class MockOACRequestsGetMixin(object):
-    '''Mixin to use to Mock OAC requests'''
-    class MockOACapi(object):
-        def __init__(self, json):
-            self._json = json
-
-        @property
-        def text(self):
-            return self._json
-
-        def json(self):
-            return  json.loads(self._json)
-
-    def mockOACRequestsGet(self, url, **kwargs):
-        if getattr(self, 'ranGet', False):
-            return None
-        with codecs.open(self.testFile, 'r', 'utf8') as foo:
-            return  TestOAC_JSON_Harvester.MockOACapi(foo.read())
-
-    def setUp(self):
-        '''Use mockOACRequestsGet'''
-        super(MockOACRequestsGetMixin, self).setUp()
-        self.real_requests_get = requests.get
-        requests.get = self.mockOACRequestsGet
-
-    def tearDown(self):
-        super(MockOACRequestsGetMixin, self).tearDown()
-        requests.get = self.real_requests_get
-
-class Mock_for_testFetchTextOnlyContent_Mixin(object):
-    '''Mixin to use to in test of text only content fetching'''
-    def __init__(self, *args, **kwargs):
-        super(Mock_for_testFetchTextOnlyContent_Mixin, self).__init__(*args, **kwargs)
-        self.times_run = 0
-
-    class MockOACapi(object):
-        def __init__(self, text):
-            self._text = text
-
-        @property
-        def text(self):
-            return self._text
-
-    def mockOACRequestsGet(self, url, **kwargs):
-        self.times_run += 1
-        if self.times_run <= 2:
-            #first time initializes data, but does not return it
-            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results.xml', 'r', 'utf8').read())
-        elif self.times_run == 3:
-            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results-1.xml', 'r', 'utf8').read())
-        else:
-            return None
-
-    def setUp(self):
-        '''Use mockOACRequestsGet'''
-        super(Mock_for_testFetchTextOnlyContent_Mixin, self).setUp()
-        self.real_requests_get = requests.get
-        requests.get = self.mockOACRequestsGet
-
-    def tearDown(self):
-        super(Mock_for_testFetchTextOnlyContent_Mixin, self).tearDown()
-        requests.get = self.real_requests_get
-
-class Mock_for_testFetchMixedContent_Mixin(object):
-    '''Mixin to use to in test of mixed content fetching'''
-    def __init__(self, *args, **kwargs):
-        super(Mock_for_testFetchMixedContent_Mixin, self).__init__(*args, **kwargs)
-        self.times_run = 0
-
-    class MockOACapi(object):
-        def __init__(self, text):
-            self._text = text
-
-        @property
-        def text(self):
-            return self._text
-
-    def mockOACRequestsGet(self, url, **kwargs):
-        self.times_run += 1
-        if self.times_run <= 2:
-            #first time initializes data, but does not return it
-            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-0.xml', 'r', 'utf8').read())
-        elif self.times_run == 3:
-            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-1.xml', 'r', 'utf8').read())
-        elif self.times_run == 4:
-            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-2.xml', 'r', 'utf8').read())
-        elif self.times_run == 5:
-            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-3.xml', 'r', 'utf8').read())
-        else:
-            return None
-
-    def setUp(self):
-        '''Use mockOACRequestsGet'''
-        super(Mock_for_testFetchMixedContent_Mixin, self).setUp()
-        self.real_requests_get = requests.get
-        requests.get = self.mockOACRequestsGet
-
-    def tearDown(self):
-        super(Mock_for_testFetchMixedContent_Mixin, self).tearDown()
-        requests.get = self.real_requests_get
-
+###class MockResponse(object):
+###    """Mimics the response object returned by HTTP requests."""
+###    def __init__(self, text):
+###        # request's response object carry an attribute 'text' which contains
+###        # the server's response data encoded as unicode.
+###        self.text = text
+###        self.status_code = 200
+###
+###    def json(self):
+###        try:
+###           return json.loads(text)
+###        except:
+###           return {}
+###
+###    def raise_for_status(self):
+###        pass
+###
+###
+###def mockRequestsGet(filename, **kwargs):
+###    '''Replaces requests.get for testing the sickle interface on semi-real
+###    data
+###    '''
+###    with codecs.open(filename, 'r', 'utf8') as foo:
+###        resp = MockResponse(foo.read())
+###    return resp
+###
+###class MockRequestsGetMixin(object):
+###    '''Mixin to use mockRequestsGet file grabber'''
+###    def setUp(self):
+###        '''Use file base request mock'''
+###        super(MockRequestsGetMixin, self).setUp()
+###        self.real_requests_get = requests.get
+###        requests.get = mockRequestsGet
+###
+###    def tearDown(self):
+###        super(MockRequestsGetMixin, self).tearDown()
+###        requests.get = self.real_requests_get
+###
+###
+###class MockOACRequestsGetMixin(object):
+###    '''Mixin to use to Mock OAC requests'''
+###    class MockOACapi(object):
+###        def __init__(self, json):
+###            self._json = json
+###
+###        @property
+###        def text(self):
+###            return self._json
+###
+###        def json(self):
+###            return  json.loads(self._json)
+###
+###    def mockOACRequestsGet(self, url, **kwargs):
+###        if getattr(self, 'ranGet', False):
+###            return None
+###        with codecs.open(self.testFile, 'r', 'utf8') as foo:
+###            return  TestOAC_JSON_Harvester.MockOACapi(foo.read())
+###
+###    def setUp(self):
+###        '''Use mockOACRequestsGet'''
+###        super(MockOACRequestsGetMixin, self).setUp()
+###        self.real_requests_get = requests.get
+###        requests.get = self.mockOACRequestsGet
+###
+###    def tearDown(self):
+###        super(MockOACRequestsGetMixin, self).tearDown()
+###        requests.get = self.real_requests_get
+###
+###class Mock_for_testFetchTextOnlyContent_Mixin(object):
+###    '''Mixin to use to in test of text only content fetching'''
+###    def __init__(self, *args, **kwargs):
+###        super(Mock_for_testFetchTextOnlyContent_Mixin, self).__init__(*args, **kwargs)
+###        self.times_run = 0
+###
+###    class MockOACapi(object):
+###        def __init__(self, text):
+###            self._text = text
+###
+###        @property
+###        def text(self):
+###            return self._text
+###
+###    def mockOACRequestsGet(self, url, **kwargs):
+###        self.times_run += 1
+###        if self.times_run <= 2:
+###            #first time initializes data, but does not return it
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results.xml', 'r', 'utf8').read())
+###        elif self.times_run == 3:
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-noimages-in-results-1.xml', 'r', 'utf8').read())
+###        else:
+###            return None
+###
+###    def setUp(self):
+###        '''Use mockOACRequestsGet'''
+###        super(Mock_for_testFetchTextOnlyContent_Mixin, self).setUp()
+###        self.real_requests_get = requests.get
+###        requests.get = self.mockOACRequestsGet
+###
+###    def tearDown(self):
+###        super(Mock_for_testFetchTextOnlyContent_Mixin, self).tearDown()
+###        requests.get = self.real_requests_get
+###
+###class Mock_for_testFetchMixedContent_Mixin(object):
+###    '''Mixin to use to in test of mixed content fetching'''
+###    def __init__(self, *args, **kwargs):
+###        super(Mock_for_testFetchMixedContent_Mixin, self).__init__(*args, **kwargs)
+###        self.times_run = 0
+###
+###    class MockOACapi(object):
+###        def __init__(self, text):
+###            self._text = text
+###
+###        @property
+###        def text(self):
+###            return self._text
+###
+###    def mockOACRequestsGet(self, url, **kwargs):
+###        self.times_run += 1
+###        if self.times_run <= 2:
+###            #first time initializes data, but does not return it
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-0.xml', 'r', 'utf8').read())
+###        elif self.times_run == 3:
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-1.xml', 'r', 'utf8').read())
+###        elif self.times_run == 4:
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-2.xml', 'r', 'utf8').read())
+###        elif self.times_run == 5:
+###            return self.MockOACapi(codecs.open('fixtures/testOAC-url_next-3.xml', 'r', 'utf8').read())
+###        else:
+###            return None
+###
+###    def setUp(self):
+###        '''Use mockOACRequestsGet'''
+###        super(Mock_for_testFetchMixedContent_Mixin, self).setUp()
+###        self.real_requests_get = requests.get
+###        requests.get = self.mockOACRequestsGet
+###
+###    def tearDown(self):
+###        super(Mock_for_testFetchMixedContent_Mixin, self).tearDown()
+###        requests.get = self.real_requests_get
+###
 class LogOverrideMixin(object):
     '''Mixin to use logbook test_handler for logging'''
     def setUp(self):
@@ -207,12 +207,12 @@ class ConfigFileOverrideMixin(object):
 class TestApiCollection(TestCase):
     '''Test that the Collection object is complete from the api
     '''
-    def setUp(self):
-        self.real_requests_get = requests.get
-        requests.get = mockRequestsGet
-
-    def tearDown(self):
-        requests.get = self.real_requests_get
+###    def setUp(self):
+###        self.real_requests_get = requests.get
+###        requests.get = mockRequestsGet
+###
+###    def tearDown(self):
+###        requests.get = self.real_requests_get
 
     def testOAICollectionAPI(self):
         c = Collection('fixtures/collection_api_test.json')
@@ -351,7 +351,6 @@ class TestHarvestOAIController(ConfigFileOverrideMixin, LogOverrideMixin, TestCa
 
 
 class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
-#class TestHarvestController(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the harvest controller class'''
     @httpretty.activate
     def setUp(self):
@@ -550,7 +549,8 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
             'name':'Calisphere'}])
 
 @skipUnlessIntegrationTest()
-class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCase):
+class TestCouchIntegration(ConfigFileOverrideMixin, TestCase):
+#class TestCouchIntegration(ConfigFileOverrideMixin, MockRequestsGetMixin, TestCase):
     def setUp(self):
         super(TestCouchIntegration, self).setUp()
         self.collection = Collection('fixtures/collection_api_test.json')
@@ -587,7 +587,8 @@ class TestHarvesterClass(TestCase):
         h = h('url_harvest', 'extra_data')
 
 
-class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestOAIHarvester(LogOverrideMixin, TestCase):
+#class TestOAIHarvester(MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAIHarvester
     '''
     def setUp(self):
@@ -726,7 +727,8 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
         self.assertEqual(self.harvester.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-class TestOAC_XML_Harvester_text_content(Mock_for_testFetchTextOnlyContent_Mixin,  LogOverrideMixin, TestCase):
+class TestOAC_XML_Harvester_text_content(LogOverrideMixin, TestCase):
+#class TestOAC_XML_Harvester_text_content(Mock_for_testFetchTextOnlyContent_Mixin,  LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
     def testFetchTextOnlyContent(self):
         oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
@@ -739,7 +741,8 @@ class TestOAC_XML_Harvester_text_content(Mock_for_testFetchTextOnlyContent_Mixin
         self.assertRaises(StopIteration, oac_harvester.next)
 
 
-class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin,  LogOverrideMixin, TestCase):
+class TestOAC_XML_Harvester_mixed_content(LogOverrideMixin, TestCase):
+#class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin,  LogOverrideMixin, TestCase):
     def testFetchMixedContent(self):
         '''This interface gets tricky when image & text data are in the
         collection.
@@ -764,11 +767,15 @@ class TestOAC_XML_Harvester_mixed_content(Mock_for_testFetchMixedContent_Mixin, 
         self.assertRaises(StopIteration, oac_harvester.next)
 
 
-class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestOAC_JSON_Harvester(LogOverrideMixin, TestCase):
+#class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the OAC_JSON_Harvester
     '''
+    @httpretty.activate
     def setUp(self):
-        self.testFile = 'fixtures/testOAC-url_next-0.json'
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-url_next-0.json').read())
         super(TestOAC_JSON_Harvester, self).setUp()
         self.harvester = harvester.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
@@ -786,8 +793,15 @@ class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
+    @httpretty.activate
     def testHarvestByRecord(self):
         '''Test the older by single record interface'''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-url_next-0.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         r = self.harvester.next_record()
@@ -805,9 +819,16 @@ class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase
         rec1 = self.harvester.next_record()
         objset = self.harvester.next()
 
+    @httpretty.activate
     def testNextGroupFetch(self):
         '''Test that the OAC harvester will fetch more records when current
         response set records are all consumed'''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-url_next-0.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         self.ranGet = False
@@ -815,11 +836,17 @@ class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase
             records.extend(r)
         self.assertEqual(len(records), 28)
 
+    @httpretty.activate
     def testObjsetFetch(self):
         '''Test fetching data in whole objsets'''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open('./fixtures/testOAC-url_next-0.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
         self.assertTrue(hasattr(self.harvester, 'next_objset'))
         self.assertTrue(hasattr(self.harvester.next_objset, '__call__'))
-        self.testFile = 'fixtures/testOAC-url_next-1.json' #so next resp is next
         objset = self.harvester.next_objset()
         self.assertIsNotNone(objset)
         self.assertIsInstance(objset, list)
@@ -828,7 +855,8 @@ class TestOAC_JSON_Harvester(MockOACRequestsGetMixin, LogOverrideMixin, TestCase
         self.assertTrue(objset != objset2)
         self.assertRaises(StopIteration, self.harvester.next_objset)
 
-class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
+class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+#class TestMain(ConfigFileOverrideMixin, MockRequestsGetMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
     def setUp(self):
         super(TestMain, self).setUp()
