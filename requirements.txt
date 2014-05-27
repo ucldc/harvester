@@ -8,4 +8,5 @@ logbook
 git+https://github.com/zepheira/amara.git#egg=amara
 git+https://github.com/zepheira/akara.git#egg=akara
 git+https://github.com/mredar/DPLA-ingestion.git@ucldc#egg=dplaingestion
+python-dateutil
 couchdb
