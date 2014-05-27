@@ -214,8 +214,12 @@ class TestApiCollection(TestCase):
 ###    def tearDown(self):
 ###        requests.get = self.real_requests_get
 
+    @httpretty.activate
     def testOAICollectionAPI(self):
-        c = Collection('fixtures/collection_api_test.json')
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/197',
+                body=open('./fixtures/collection_api_test.json').read())
+        c = Collection('https://registry.cdlib.org/api/v1/collection/197')
         self.assertEqual(c['harvest_type'], 'OAI')
         self.assertEqual(c.harvest_type, 'OAI')
         self.assertEqual(c['name'], 'Calisphere - Santa Clara University: Digital Objects')
@@ -225,8 +229,12 @@ class TestApiCollection(TestCase):
         self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/12/')
         self.assertEqual(c.campus[0]['slug'], 'UCDL')
 
+    @httpretty.activate
     def testOACApiCollection(self):
-        c = Collection('fixtures/collection_api_test_oac.json')
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/178',
+                body=open('./fixtures/collection_api_test_oac.json').read())
+        c = Collection('https://registry.cdlib.org/api/v1/collection/178')
         self.assertEqual(c['harvest_type'], 'OAJ')
         self.assertEqual(c.harvest_type, 'OAJ')
         self.assertEqual(c['name'], 'Harry Crosby Collection')
@@ -241,9 +249,13 @@ class TestApiCollection(TestCase):
         '''
         self.assertRaises(ValueError,Collection, 'fixtures/collection_api_test_bad_type.json')
 
+    @httpretty.activate
     def testCreateProfile(self):
         '''Test the creation of a DPLA style proflie file'''
-        c = Collection('fixtures/collection_api_test_oac.json')
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/178',
+                body=open('./fixtures/collection_api_test_oac.json').read())
+        c = Collection('https://registry.cdlib.org/api/v1/collection/178')
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertIsInstance(c.dpla_profile, str)
         j = json.loads(c.dpla_profile)
