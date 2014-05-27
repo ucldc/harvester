@@ -367,8 +367,12 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertIsInstance(self.controller_oai.harvester, harvester.OAIHarvester)
         self.assertEqual(self.controller_oai.collection.campus[0]['slug'], 'UCDL')
 
+    @httpretty.activate
     def testIDCreation(self):
         '''Test how the id for the index is created'''
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test.json').read())
         self.assertTrue(hasattr(self.controller_oai, 'create_id'))
         identifier = 'x'
         self.assertRaises(TypeError, self.controller_oai.create_id, identifier)
@@ -378,7 +382,8 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertIn(self.controller_oai.collection.campus[0]['slug'], sid)
         self.assertIn(self.controller_oai.collection.repository[0]['slug'], sid)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
-        collection = Collection('fixtures/collection_api_test.json')
+        collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
+        #collection = Collection('fixtures/collection_api_test.json')
         controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         sid = controller.create_id(identifier)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
@@ -464,8 +469,15 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         self.assertEqual(self.objset_test_doc, objset_saved)
 
+    @httpretty.activate
     def testLoggingMoreThan1000(self):
-        collection = Collection('fixtures/collection_api_big_test.json')
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/198/",
+                body=open('./fixtures/collection_api_big_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open('./fixtures/testOAI-2400-records.xml').read())
+        collection = Collection('https://registry.cdlib.org/api/v1/collection/198/')
         controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 13)
@@ -509,13 +521,13 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.assertEqual(len(dir_list), 128)
         obj_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'], {'@id':'fixtures/collection_api_test.json',
+        self.assertEqual(obj_saved['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/197/',
             'name':'Calisphere - Santa Clara University: Digital Objects'})
         self.assertIn('campus', obj_saved)
-        self.assertEqual(obj_saved['campus'], [{'@id':'/api/v1/campus/12/',
+        self.assertEqual(obj_saved['campus'], [{'@id':'https://registry.cdlib.org/api/v1/campus/12/',
             'name':'California Digital Library'}])
         self.assertIn('repository', obj_saved)
-        self.assertEqual(obj_saved['repository'], [{'@id':'/api/v1/repository/37/',
+        self.assertEqual(obj_saved['repository'], [{'@id':'https://registry.cdlib.org/api/v1/repository/37/',
             'name':'Calisphere'}])
 
 @skipUnlessIntegrationTest()
