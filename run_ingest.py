@@ -29,14 +29,17 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
-    parser.add_argument('user_email', type=str, nargs='?', help='user email')
-    parser.add_argument('url_api_collection', type=str, nargs='?',
+    parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
     return parser
 
 def main(argv):
     parser = def_args()
     args = parser.parse_args(argv[1:])
+    if not args.user_email or not args.url_api_collection:
+        parser.print_help()
+        sys.exit(27)
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
     try:
