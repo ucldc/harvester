@@ -19,6 +19,7 @@ from harvester import get_log_file_path
 from collection_registry_client import Registry, Collection
 #from harvester import Collection
 from dplaingestion.couch import Couch
+import run_ingest
 
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
@@ -1075,6 +1076,32 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
         n = self.controller.harvest()
         self.assertEqual(n, 128)
 
+class TestRunIngest(LogOverrideMixin, TestCase):
+    '''Test the run_ingest script. Wraps harvesting with rest of DPLA
+    ingest process.
+    '''
+    @httpretty.activate
+    @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
+    @patch('dplaingestion.scripts.save_records.main', return_value=0)
+    @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
+    @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
+    @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
+    @patch('dplaingestion.couch.Couch')
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich):
+        mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
+        mail_handler = MagicMock()
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/178/',
+                body=open('./fixtures/collection_api_test_oac.json').read())
+        httpretty.register_uri(httpretty.GET,
+            'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open('./fixtures/testOAC-url_next-1.json').read())
+                #body=open('./fixtures/testOAC.json').read())
+        run_ingest.main('mark.redar@ucop.edu',
+                'https://registry.cdlib.org/api/v1/collection/178/',
+                mail_handler=mail_handler)
+        mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
+        mock_enrich.assert_called_with([None, 'test-id'])
 
 
 CONFIG_FILE_DPLA = '''

@@ -34,61 +34,74 @@ def def_args():
             help='URL for the collection Django tastypie api resource')
     return parser
 
-def main(argv):
-    parser = def_args()
-    args = parser.parse_args(argv[1:])
-    if not args.user_email or not args.url_api_collection:
-        parser.print_help()
-        sys.exit(27)
-    print "EMAIL", args.user_email, " URI: ", args.url_api_collection
-    mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, args.user_email, level=logbook.ERROR) 
+def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini'):
+    logger = logbook.Logger('run_ingest')
+    if not mail_handler:
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
     try:
-        collection = harvester.Collection(args.url_api_collection)
+        collection = harvester.Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, args.user_email, 'Collection init failed for ' + args.url_api_collection, ' '.join(("Exception in Collection", args.url_api_collection, " init", str(e))))
-        mail_handler.deliver(mimetext, args.user_email)
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for ' + url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
+        mail_handler.deliver(mimetext, user_email)
         raise e
-    log_handler = logbook.FileHandler(harvester.get_log_file_path(collection.slug))
-    log_handler = logbook.StderrHandler(level='DEBUG')
+    if not log_handler:
+        #log_handler = logbook.FileHandler(harvester.get_log_file_path(collection.slug))
+        log_handler = logbook.StderrHandler(level='DEBUG')
 
     ingest_doc_id, num_recs, dir_save = harvester.main(
-                        args.user_email,
-                        args.url_api_collection,
+                        user_email,
+                        url_api_collection,
                         log_handler=log_handler,
                         mail_handler=mail_handler
             )
 
-    print "INGEST DOC ID:", ingest_doc_id
-    print 'HARVESTED ', num_recs, ' RECORDS'
-    print 'IN DIR:', dir_save
+    logger.info( "INGEST DOC ID:{0}".format(ingest_doc_id))
+    logger.info('HARVESTED {0} RECORDS'.format(num_recs))
+    logger.info('IN DIR:{0}'.format(dir_save))
     resp = enrich_records.main([None, ingest_doc_id])
     if not resp == 0:
-        print "Error enriching records"
+        logger.error("Error enriching records")
         sys.exit(1)
+    logger.info('Enriched records')
 
-    print "ENRICHED RECS"
     resp = save_records.main([None, ingest_doc_id])
     if not resp == 0:
-        print "Error saving records ", str(resp)
+        logger.error("Error saving records {0}".format(str(resp)))
         sys.exit(1)
+    logger.info("SAVED RECS")
 
-    print "SAVED RECS"
     resp = remove_deleted_records.main([None, ingest_doc_id]) 
     if not resp == 0:
-        print "Error deleting records"
+        logger.error( "Error deleting records")
         sys.exit(1)
 
     resp = check_ingestion_counts.main([None, ingest_doc_id])
     if not resp == 0:
-        print "Error checking counts"
+        logger.error( "Error checking counts")
         sys.exit(1)
 
     resp = dashboard_cleanup.main([None, ingest_doc_id])
     if not resp == 0:
-        print "Error cleaning up dashboard"
+        logger.error( "Error cleaning up dashboard")
         sys.exit(1)
 
-    print "Ingestion complete!"
+    logger.info("Ingestion complete for {0}!".format(url_api_collection))
+    mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection ingest complete for {0}'.format(url_api_collection), 'Completed harvest for {0}'.format(url_api_collection))
+    mail_handler.deliver(mimetext, user_email)
+
+def def_args():
+    import argparse
+    parser = argparse.ArgumentParser(description='Harvest a collection')
+    parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('url_api_collection', type=str,
+            help='URL for the collection Django tastypie api resource')
+    return parser
 
 if __name__ == '__main__':
-    main(sys.argv)
+    parser = def_args()
+    args = parser.parse_args(sys.argv[1:])
+    if not args.user_email or not args.url_api_collection:
+        parser.print_help()
+        sys.exit(27)
+    print "EMAIL", args.user_email, " URI: ", args.url_api_collection
+    main(args.user_email, args.url_api_collection)
