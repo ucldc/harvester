@@ -16,7 +16,8 @@ import harvester
 import logbook
 import httpretty
 from harvester import get_log_file_path
-from harvester import Collection
+from collection_registry_client import Registry, Collection
+#from harvester import Collection
 from dplaingestion.couch import Couch
 
 #NOTE: these are used in integration test runs
@@ -63,6 +64,60 @@ class ConfigFileOverrideMixin(object):
         os.remove(self.config_file)
         os.remove(self.profile_path)
 
+class TestRegistryApi(TestCase):
+    '''Test that the registry api works for our purposes'''
+    @httpretty.activate
+    def setUp(self):
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/',
+                body='''{"campus": {"list_endpoint": "/api/v1/campus/", "schema": "/api/v1/campus/schema/"}, "collection": {"list_endpoint": "/api/v1/collection/", "schema": "/api/v1/collection/schema/"}, "repository": {"list_endpoint": "/api/v1/repository/", "schema": "/api/v1/repository/schema/"}}''')
+        self.registry = Registry()
+
+    def testRegistryListEndpoints(self):
+        self.assertEqual(set(self.registry.endpoints.keys()), set(['collection', 'repository', 'campus'])) #use set so order independent
+        self.assertRaises(ValueError, self.registry.resource_iter, 'x')
+
+    @httpretty.activate
+    def testResourceIteratorOnePage(self):
+        '''Test when less than one page worth of objects fetched'''
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/campus/',
+                body=open('./fixtures/registry_api_campus.json').read())
+        l = []
+        for c in self.registry.resource_iter('campus'):
+            l.append(c)
+        self.assertEqual(len(l), 10)
+        self.assertEqual(l[0]['slug'], 'UCB')
+
+    @httpretty.activate
+    def testResourceIteratoreMultiPage(self):
+        '''Test when less than one page worth of objects fetched'''
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/repository/?limit=20&offset=20',
+                body=open('./fixtures/registry_api_repository-page-2.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/repository/',
+                body=open('./fixtures/registry_api_repository.json').read())
+
+        riter = self.registry.resource_iter('repository')
+        self.assertEqual(riter.url, 'https://registry.cdlib.org/api/v1/repository/')
+        self.assertEqual(riter.path_next, '/api/v1/repository/?limit=20&offset=20')
+        r = ''
+        for x in range(0,38):
+            r = riter.next()
+        self.assertFalse(isinstance(r, Collection))
+        self.assertEqual(r['resource_uri'], '/api/v1/repository/42/')
+        self.assertEqual(riter.url, 'https://registry.cdlib.org/api/v1/repository/?limit=20&offset=20')
+        self.assertEqual(riter.path_next, None)
+        self.assertRaises(StopIteration, riter.next)
+
+    def testResourceIteratorReturnsCollection(self):
+        '''Test that the resource iterator returns a Collection object
+        for library collection resources'''
+        riter = self.registry.resource_iter('collection')
+        c = riter.next()
+        self.assertTrue(isinstance(c, Collection))
+
 
 class TestApiCollection(TestCase):
     '''Test that the Collection object is complete from the api
@@ -96,11 +151,6 @@ class TestApiCollection(TestCase):
         self.assertEqual(c.url_oac, 'fixtures/testOAC.json')
         self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/6/')
         self.assertEqual(c.campus[0]['slug'], 'UCSD')
-
-    def testWrongTypeCollection(self):
-        '''Test a collection that is not OAI or OAC
-        '''
-        self.assertRaises(ValueError,Collection, 'fixtures/collection_api_test_bad_type.json')
 
     @httpretty.activate
     def testCreateProfile(self):
@@ -821,7 +871,7 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.mail_handler = MagicMock()
         self.assertRaises(ValueError, harvester.main,
                                     self.user_email,
-                                    'fixtures/collection_api_test_bad_type.json',
+                                    'this-is-a-bad-url',
                                     log_handler=self.test_log_handler,
                                     mail_handler=self.mail_handler,
                                     dir_profile=self.dir_test_profile,
@@ -830,6 +880,29 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertEqual(len(self.test_log_handler.records), 0)
         self.mail_handler.deliver.assert_called()
         self.assertEqual(self.mail_handler.deliver.call_count, 1)
+
+
+
+    @httpretty.activate
+    @patch('dplaingestion.couch.Couch')
+    def testMainCollectionWrongType(self, mock_couch):
+        '''Test what happens with wrong type of harvest'''
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/197/",
+                body=open('./fixtures/collection_api_test_bad_type.json').read())
+        self.mail_handler = MagicMock()
+        self.assertRaises(ValueError, harvester.main,
+                    self.user_email,
+                    "https://registry.cdlib.org/api/v1/collection/197/",
+                                    log_handler=self.test_log_handler,
+                                    mail_handler=self.mail_handler,
+                                    dir_profile=self.dir_test_profile,
+                                    config_file=self.config_file
+                         )
+        self.assertEqual(len(self.test_log_handler.records), 0)
+        self.mail_handler.deliver.assert_called()
+        self.assertEqual(self.mail_handler.deliver.call_count, 1)
+
 
     @httpretty.activate
     def testCollectionNoEnrichItems(self):

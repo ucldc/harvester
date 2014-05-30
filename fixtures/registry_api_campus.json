@@ -1,0 +1,81 @@
+{
+  "objects": [
+    {
+      "slug": "UCB",
+      "resource_uri": "/api/v1/campus/1/",
+      "position": 0,
+      "name": "UC Berkeley",
+      "ark": "ark:/13030/tf0p3009mq"
+    },
+    {
+      "slug": "UCD",
+      "resource_uri": "/api/v1/campus/2/",
+      "position": 1,
+      "name": "UC Davis",
+      "ark": "ark:/13030/tf6p3013t7"
+    },
+    {
+      "slug": "UCI",
+      "resource_uri": "/api/v1/campus/3/",
+      "position": 2,
+      "name": "UC Irvine",
+      "ark": "ark:/13030/tf3f59p4sv"
+    },
+    {
+      "slug": "UCM",
+      "resource_uri": "/api/v1/campus/4/",
+      "position": 4,
+      "name": "UC Merced",
+      "ark": "ark:/13030/c8668fhk"
+    },
+    {
+      "slug": "UCR",
+      "resource_uri": "/api/v1/campus/5/",
+      "position": 5,
+      "name": "UC Riverside",
+      "ark": "ark:/13030/tf1n39p20p"
+    },
+    {
+      "slug": "UCSD",
+      "resource_uri": "/api/v1/campus/6/",
+      "position": 6,
+      "name": "UC San Diego",
+      "ark": "ark:/13030/tf5j49p47v"
+    },
+    {
+      "slug": "UCSF",
+      "resource_uri": "/api/v1/campus/7/",
+      "position": 7,
+      "name": "UC San Francisco",
+      "ark": "ark:/13030/tf3x0nb742"
+    },
+    {
+      "slug": "UCSB",
+      "resource_uri": "/api/v1/campus/8/",
+      "position": 8,
+      "name": "UC Santa Barbara",
+      "ark": "ark:/13030/tf7779p82v"
+    },
+    {
+      "slug": "UCSC",
+      "resource_uri": "/api/v1/campus/9/",
+      "position": 9,
+      "name": "UC Santa Cruz",
+      "ark": "ark:/13030/kt3r29q08x"
+    },
+    {
+      "slug": "UCLA",
+      "resource_uri": "/api/v1/campus/10/",
+      "position": 3,
+      "name": "UCLA",
+      "ark": "ark:/13030/tf8z09p95s"
+    }
+  ],
+  "meta": {
+    "total_count": 10,
+    "previous": null,
+    "offset": 0,
+    "next": null,
+    "limit": 20
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "objects": [
+    {
+      "slug": "bancroft-library",
+      "resource_uri": "/api/v1/repository/4/",
+      "name": "Bancroft Library",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/tf7r29p8s0"
+    },
+    {
+      "slug": "berkeley-art-museumpacific-film-archive",
+      "resource_uri": "/api/v1/repository/5/",
+      "name": "Berkeley Art Museum/Pacific Film Archive",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/tf2580094t"
+    },
+    {
+      "slug": "environmental-design-archives",
+      "resource_uri": "/api/v1/repository/6/",
+      "name": "Environmental Design Archives",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/tf5j49p46b"
+    },
+    {
+      "slug": "ethnic-studies-library",
+      "resource_uri": "/api/v1/repository/7/",
+      "name": "Ethnic Studies Library",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/kt4b69n6wx"
+    },
+    {
+      "slug": "hearst-phoebe-a-museum-of-anthropology",
+      "resource_uri": "/api/v1/repository/8/",
+      "name": "Hearst (Phoebe A.) Museum of Anthropology",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/tf5580115v"
+    },
+    {
+      "slug": "institute-for-research-on-labor-and-employment-li",
+      "resource_uri": "/api/v1/repository/9/",
+      "name": "Institute for Research on Labor and Employment Library",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/kt496nd7vj"
+    },
+    {
+      "slug": "museum-of-vertebrate-zoology",
+      "resource_uri": "/api/v1/repository/10/",
+      "name": "Museum of Vertebrate Zoology",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/c8dj5g7k"
+    },
+    {
+      "slug": "university-archives",
+      "resource_uri": "/api/v1/repository/11/",
+      "name": "University Archives",
+      "campus": [
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley",
+          "ark": "ark:/13030/tf0p3009mq"
+        }
+      ],
+      "ark": "ark:/13030/tf6x0nb9j5"
+    },
+    {
+      "slug": "special-collections",
+      "resource_uri": "/api/v1/repository/12/",
+      "name": "Special Collections",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "ark": "ark:/13030/tf1489p250"
+    },
+    {
+      "slug": "university-archives",
+      "resource_uri": "/api/v1/repository/13/",
+      "name": "University Archives",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "ark": "ark:/13030/kt3z09r97h"
+    },
+    {
+      "slug": "critical-theory-archive",
+      "resource_uri": "/api/v1/repository/14/",
+      "name": "Critical Theory Archive",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "ark": "ark:/13030/kt1m3nb11c"
+    },
+    {
+      "slug": "southeast-asian-archive",
+      "resource_uri": "/api/v1/repository/15/",
+      "name": "Southeast Asian Archive",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "ark": "ark:/13030/tf529010fv"
+    },
+    {
+      "slug": "special-collections",
+      "resource_uri": "/api/v1/repository/16/",
+      "name": "Special Collections",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "ark": "ark:/13030/tf1p3008cx"
+    },
+    {
+      "slug": "university-archives",
+      "resource_uri": "/api/v1/repository/17/",
+      "name": "University Archives",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "ark": "ark:/13030/kt3v19n8bk"
+    },
+    {
+      "slug": "library-and-special-collections",
+      "resource_uri": "/api/v1/repository/18/",
+      "name": "Library and Special Collections",
+      "campus": [
+        {
+          "slug": "UCM",
+          "resource_uri": "/api/v1/campus/4/",
+          "position": 4,
+          "name": "UC Merced",
+          "ark": "ark:/13030/c8668fhk"
+        }
+      ],
+      "ark": "ark:/13030/kt6n39q2pc"
+    },
+    {
+      "slug": "california-museum-of-photography",
+      "resource_uri": "/api/v1/repository/19/",
+      "name": "California Museum of Photography",
+      "campus": [
+        {
+          "slug": "UCR",
+          "resource_uri": "/api/v1/campus/5/",
+          "position": 5,
+          "name": "UC Riverside",
+          "ark": "ark:/13030/tf1n39p20p"
+        }
+      ],
+      "ark": "ark:/13030/tf1870105s"
+    },
+    {
+      "slug": "special-collections-and-archives",
+      "resource_uri": "/api/v1/repository/20/",
+      "name": "Special Collections and Archives",
+      "campus": [
+        {
+          "slug": "UCR",
+          "resource_uri": "/api/v1/campus/5/",
+          "position": 5,
+          "name": "UC Riverside",
+          "ark": "ark:/13030/tf1n39p20p"
+        }
+      ],
+      "ark": "ark:/13030/tf6t1nc14w"
+    },
+    {
+      "slug": "water-resources-collections-and-archives",
+      "resource_uri": "/api/v1/repository/21/",
+      "name": "Water Resources Collections and Archives",
+      "campus": [
+        {
+          "slug": "UCR",
+          "resource_uri": "/api/v1/campus/5/",
+          "position": 5,
+          "name": "UC Riverside",
+          "ark": "ark:/13030/tf1n39p20p"
+        }
+      ],
+      "ark": "ark:/13030/tf009nb42r"
+    },
+    {
+      "slug": "mandeville-special-collections-library",
+      "resource_uri": "/api/v1/repository/22/",
+      "name": "Mandeville Special Collections Library",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego",
+          "ark": "ark:/13030/tf5j49p47v"
+        }
+      ],
+      "ark": "ark:/13030/tf5r29p653"
+    },
+    {
+      "slug": "research-data-curation-program",
+      "resource_uri": "/api/v1/repository/23/",
+      "name": "Research Data Curation Program",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego",
+          "ark": "ark:/13030/tf5j49p47v"
+        }
+      ],
+      "ark": "ark:/13030/c8hx1b4s"
+    }
+  ],
+  "meta": {
+    "total_count": 138,
+    "previous": null,
+    "offset": 0,
+    "next": "/api/v1/repository/?limit=20&offset=20",
+    "limit": 20
+  }
+}

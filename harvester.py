@@ -14,61 +14,12 @@ from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
+from collection_registry_client import Collection
 import dplaingestion.couch 
 
 EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
 CONTENT_SERVER = 'http://content.cdlib.org/'
 
-class Collection(dict):
-    '''A representation of the avram collection, as presented by the 
-    tastypie api
-    '''
-    def __init__(self, url_api):
-        self.url = url_api
-        resp = requests.get(url_api)
-        api_json = json.loads(resp.text)
-        if not(api_json['harvest_type'] in HARVEST_TYPES):
-            raise ValueError('Collection is not an OAC or OAI harvest collection')
-        self.update(api_json)
-        self.__dict__.update(api_json)
-
-    def _build_contributor_list(self):
-        '''Build the dpla style contributor list from the campus and
-        repositories
-        This will need review
-        '''
-        clist = []
-        for campus in self.campus:
-            campus_dict = dict(name=campus['slug'])
-            campus_dict['@id'] = campus['resource_uri'] 
-            clist.append(campus_dict)
-        for repository in self.repository:
-            repository_dict = dict(name=repository['slug'])
-            repository_dict['@id'] = repository['resource_uri'] 
-            clist.append(repository_dict)
-        return clist
-
-    @property
-    def dpla_profile_obj(self):
-        '''Return a json string appropriate for creating a dpla ingest profile.
-        First create dictionary that is correct and then serialize'''
-        if not self.enrichments_item:
-            raise ValueError("NO ITEM ENRICHMENTS FOR COLLECTION. ENRICHING WILL FAIL!")
-        profile = {}
-        profile['name'] = self.slug
-        profile['contributor'] = self._build_contributor_list()
-        profile['enrichments_coll'] = [ '/compare_with_schema' ] 
-        profile['thresholds'] = {
-                "added": 5000,
-                "changed": 1000,
-                "deleted": 1000
-                }
-        profile['enrichments_item'] = [ s.strip() for s in self.enrichments_item.split(',')]
-        return profile
-
-    @property
-    def dpla_profile(self):
-        return json.dumps(self.dpla_profile_obj)
 
 #TODO: Each harvester must pick correct field for creating a "handle"
 class Harvester(object):
@@ -527,6 +478,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for '+url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
         mail_handler.deliver(mimetext, user_email)
         raise e
+    if not(collection['harvest_type'] in HARVEST_TYPES):
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Wrong Collection Type {0}'.format(collection['harvest_type']), 'Collection {0} wrong type {1} for harvesting.'.format(url_api_collection, collection['harvest_type']))
+        mail_handler.deliver(mimetext, user_email)
+        raise ValueError('Collection is not an OAC or OAI harvest collection')
     mail_handler.subject = "Error during harvest of " + collection.url
     if not log_handler:
         log_handler = FileHandler(get_log_file_path(collection.slug))
