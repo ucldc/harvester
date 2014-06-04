@@ -6,6 +6,7 @@ python:
 install: 
   - "pip install -r requirements.txt --use-mirrors"
   - "pip install -r test-requirements.txt --use-mirrors"
+  - "cp akara.ini.tmpl akara.ini"
 
 # command to run tests
 script: python tests.py
