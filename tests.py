@@ -16,10 +16,10 @@ import harvester
 import logbook
 import httpretty
 from harvester import get_log_file_path
-from collection_registry_client import Registry, Collection
+from harvester.collection_registry_client import Registry, Collection
 #from harvester import Collection
 from dplaingestion.couch import Couch
-import run_ingest
+import harvester.run_ingest as run_ingest
 
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
