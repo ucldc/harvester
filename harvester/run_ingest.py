@@ -89,14 +89,6 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection ingest complete for {0}'.format(url_api_collection), 'Completed harvest for {0}'.format(url_api_collection))
     mail_handler.deliver(mimetext, user_email)
 
-def def_args():
-    import argparse
-    parser = argparse.ArgumentParser(description='Harvest a collection')
-    parser.add_argument('user_email', type=str, help='user email')
-    parser.add_argument('url_api_collection', type=str,
-            help='URL for the collection Django tastypie api resource')
-    return parser
-
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])

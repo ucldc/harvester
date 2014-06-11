@@ -65,7 +65,7 @@ class ConfigFileOverrideMixin(object):
         os.remove(self.config_file)
         os.remove(self.profile_path)
 
-class TestRegistryApi(TestCase):
+class RegistryApiTestCase(TestCase):
     '''Test that the registry api works for our purposes'''
     @httpretty.activate
     def setUp(self):
@@ -120,7 +120,7 @@ class TestRegistryApi(TestCase):
         self.assertTrue(isinstance(c, Collection))
 
 
-class TestApiCollection(TestCase):
+class ApiCollectionTestCase(TestCase):
     '''Test that the Collection object is complete from the api
     '''
     @httpretty.activate
@@ -180,11 +180,11 @@ class TestApiCollection(TestCase):
         self.assertEqual(e[1], '/shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date')
 
 
-class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
     @httpretty.activate
     def setUp(self):
-        super(TestHarvestOAC_JSON_Controller, self).setUp()
+        super(HarvestOAC_JSON_ControllerTestCase, self).setUp()
         #self.testFile = 'fixtures/collection_api_test_oac.json'
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/178/",
@@ -197,7 +197,7 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, LogOverrideMixin, 
         self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
     def tearDown(self):
-        super(TestHarvestOAC_JSON_Controller, self).tearDown()
+        super(HarvestOAC_JSON_ControllerTestCase, self).tearDown()
         self.tearDown_config()
         shutil.rmtree(self.controller.dir_save)
 
@@ -238,13 +238,13 @@ class TestHarvestOAC_JSON_Controller(ConfigFileOverrideMixin, LogOverrideMixin, 
             u'name': u'Mandeville Special Collections Library'}, {u'@id': u'https://registry.cdlib.org/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
 
 
-class TestHarvestOAIController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAI harvester'''
     def setUp(self):
-        super(TestHarvestOAIController, self).setUp()
+        super(HarvestOAIControllerTestCase, self).setUp()
 
     def tearDown(self):
-        super(TestHarvestOAIController, self).tearDown()
+        super(HarvestOAIControllerTestCase, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
@@ -265,11 +265,11 @@ class TestHarvestOAIController(ConfigFileOverrideMixin, LogOverrideMixin, TestCa
         self.tearDown_config()
 
 
-class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the harvest controller class'''
     @httpretty.activate
     def setUp(self):
-        super(TestHarvestController, self).setUp()
+        super(HarvestControllerTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
                 body=open('./fixtures/collection_api_test.json').read())
@@ -283,7 +283,7 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
         self.objset_test_doc = json.load(open('objset_test_doc.json'))
 
     def tearDown(self):
-        super(TestHarvestController, self).tearDown()
+        super(HarvestControllerTestCase, self).tearDown()
         self.tearDown_config()
         shutil.rmtree(self.controller_oai.dir_save)
 
@@ -474,9 +474,9 @@ class TestHarvestController(ConfigFileOverrideMixin, LogOverrideMixin, TestCase)
             'name':'Calisphere'}])
 
 @skipUnlessIntegrationTest()
-class TestCouchIntegration(ConfigFileOverrideMixin, TestCase):
+class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
     def setUp(self):
-        super(TestCouchIntegration, self).setUp()
+        super(CouchIntegrationTestCase, self).setUp()
         self.collection = Collection('fixtures/collection_api_test.json')
         config_file, profile_path = self.setUp_config(self.collection) 
         self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
@@ -486,7 +486,7 @@ class TestCouchIntegration(ConfigFileOverrideMixin, TestCase):
             self.remove_log_dir = True
 
     def tearDown(self):
-        super(TestCouchIntegration, self).tearDown()
+        super(CouchIntegrationTestCase, self).tearDown()
 ###        couch = Couch(config_file=self.config_file,
 ###                dpla_db_name = TEST_COUCH_DB,
 ###                dashboard_db_name = TEST_COUCH_DASHBOARD
@@ -504,26 +504,26 @@ class TestCouchIntegration(ConfigFileOverrideMixin, TestCase):
         self.ingest_doc_id = self.controller_oai.create_ingest_doc()
         self.controller_oai.update_ingest_doc('error', error_msg='This is an error')
 
-class TestHarvesterClass(TestCase):
+class HarvesterClassTestCase(TestCase):
     '''Test the abstract Harvester class'''
     def testClassExists(self):
         h = harvester.Harvester
         h = h('url_harvest', 'extra_data')
 
 
-class TestOAIHarvester(LogOverrideMixin, TestCase):
+class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the OAIHarvester
     '''
     @httpretty.activate
     def setUp(self):
-        super(TestOAIHarvester, self).setUp()
+        super(OAIHarvesterTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
                 'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
                 body=open('./fixtures/testOAI.xml').read())
         self.harvester = harvester.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
 
     def tearDown(self):
-        super(TestOAIHarvester, self).tearDown()
+        super(OAIHarvesterTestCase, self).tearDown()
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
@@ -538,7 +538,7 @@ class TestOAIHarvester(LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
-class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
+class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Harvester
     '''
     @httpretty.activate
@@ -547,11 +547,11 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
                 body=open('./fixtures/testOAC-url_next-0.xml').read())
         #self.testFile = 'fixtures/testOAC-url_next-0.xml'
-        super(TestOAC_XML_Harvester, self).setUp()
+        super(OAC_XML_HarvesterTestCase, self).setUp()
         self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
 
     def tearDown(self):
-        super(TestOAC_XML_Harvester, self).tearDown()
+        super(OAC_XML_HarvesterTestCase, self).tearDown()
 
     @httpretty.activate
     def testBadOACSearch(self):
@@ -652,7 +652,7 @@ class TestOAC_XML_Harvester(LogOverrideMixin, TestCase):
         self.assertEqual(self.harvester.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-class TestOAC_XML_Harvester_text_content(LogOverrideMixin, TestCase):
+class OAC_XML_Harvester_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
     @httpretty.activate
     def testFetchTextOnlyContent(self):
@@ -675,7 +675,7 @@ class TestOAC_XML_Harvester_text_content(LogOverrideMixin, TestCase):
         self.assertRaises(StopIteration, oac_harvester.next)
 
 
-class TestOAC_XML_Harvester_mixed_content(LogOverrideMixin, TestCase):
+class OAC_XML_Harvester_mixed_contentTestCase(LogOverrideMixin, TestCase):
     @httpretty.activate
     def testFetchMixedContent(self):
         '''This interface gets tricky when image & text data are in the
@@ -716,7 +716,7 @@ class TestOAC_XML_Harvester_mixed_content(LogOverrideMixin, TestCase):
         self.assertRaises(StopIteration, oac_harvester.next)
 
 
-class TestOAC_JSON_Harvester(LogOverrideMixin, TestCase):
+class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_JSON_Harvester
     '''
     @httpretty.activate
@@ -724,11 +724,11 @@ class TestOAC_JSON_Harvester(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open('./fixtures/testOAC-url_next-0.json').read())
-        super(TestOAC_JSON_Harvester, self).setUp()
+        super(OAC_JSON_HarvesterTestCase, self).setUp()
         self.harvester = harvester.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
     def tearDown(self):
-        super(TestOAC_JSON_Harvester, self).tearDown()
+        super(OAC_JSON_HarvesterTestCase, self).tearDown()
 
     def testParseArk(self):
         self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url), 'ark:/13030/hb5d5nb7dj')
@@ -811,11 +811,11 @@ class TestOAC_JSON_Harvester(LogOverrideMixin, TestCase):
         self.assertTrue(objset != objset2)
         self.assertRaises(StopIteration, self.harvester.next_objset)
 
-class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
     @httpretty.activate
     def setUp(self):
-        super(TestMain, self).setUp()
+        super(MainTestCase, self).setUp()
         self.dir_test_profile = '/tmp/profiles/test'
         self.dir_save = None
         if not os.path.isdir(self.dir_test_profile):
@@ -830,7 +830,7 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.setUp_config(self.collection)
 
     def tearDown(self):
-        super(TestMain, self).tearDown()
+        super(MainTestCase, self).tearDown()
         self.tearDown_config()
         if self.dir_save:
             shutil.rmtree(self.dir_save)
@@ -990,7 +990,7 @@ class TestMain(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertEqual(self.test_log_handler.formatted_records[10], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
-class TestLogFileName(TestCase):
+class LogFileNameTestCase(TestCase):
     '''Test the log file name function'''
     def setUp(self):
         self.old_dir = os.environ.get('DIR_HARVESTER_LOG')
@@ -1007,7 +1007,7 @@ class TestLogFileName(TestCase):
         
 
 @skipUnlessIntegrationTest()
-class TestHarvesterLogSetup(TestCase):
+class HarvesterLogSetupTestCase(TestCase):
     '''Test that the log gets setup and run'''
     def testLogDirExists(self):
         log_file_path = harvester.get_log_file_path('x')
@@ -1015,7 +1015,7 @@ class TestHarvesterLogSetup(TestCase):
         self.assertTrue(os.path.isdir(log_file_dir))
 
 @skipUnlessIntegrationTest()
-class TestMainMailIntegration(TestCase):
+class MainMailIntegrationTestCase(TestCase):
     '''Test that the main function emails?'''
     def setUp(self):
         '''Need to run fakesmtp server on local host'''
@@ -1076,7 +1076,7 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
         n = self.controller.harvest()
         self.assertEqual(n, 128)
 
-class TestRunIngest(LogOverrideMixin, TestCase):
+class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
     '''
