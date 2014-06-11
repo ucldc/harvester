@@ -4,7 +4,7 @@ import requests
 import solr
 from solr import SolrException
 
-URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collection/')
+URL_SOLR = os.environ.get('URL_SOLR', 'http://10.0.1.13:8080/solr/dc-collection/')
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index'''

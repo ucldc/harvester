@@ -10,3 +10,4 @@ git+https://github.com/zepheira/akara.git#egg=akara
 git+https://github.com/mredar/DPLA-ingestion.git@ucldc#egg=dplaingestion
 python-dateutil
 couchdb
+rq
