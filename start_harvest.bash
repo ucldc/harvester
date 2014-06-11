@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# script to start from avram when collection selected for harvesting
+# start_harvest.bash <user-email> <url-to-collection-registry-api>
+
 if [[ -n "$DEBUG" ]]; then 
   set -x
 fi
@@ -11,5 +15,5 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.com/questions/59895
 cd $DIR
 
-. ./venv/bin/activate
-python harvester.py "$1" "$2"
+. ./bin/activate
+python queue_harvest.py "$1" "$2"

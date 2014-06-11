@@ -4,9 +4,12 @@ lxml==3.3.0beta1
 requests==2.1.0
 solrpy==0.9.6
 wsgiref==0.1.2
-logbook
+Logbook==0.6.0
 git+https://github.com/zepheira/amara.git#egg=amara
 git+https://github.com/zepheira/akara.git#egg=akara
 git+https://github.com/mredar/DPLA-ingestion.git@ucldc#egg=dplaingestion
-python-dateutil
-couchdb
+python-dateutil==2.2
+CouchDB==0.9
+redis==2.10.1
+rq==0.4.6
+boto==2.29.1
