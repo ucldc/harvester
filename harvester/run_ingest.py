@@ -16,7 +16,7 @@ from dplaingestion.scripts import check_ingestion_counts
 import logbook
 import harvester
 
-EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL', 'example@example.com')
+EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
 
 def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg = MIMEText(message)
