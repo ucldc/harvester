@@ -1032,7 +1032,7 @@ class ScriptFileTestCase(TestCase):
     '''
     def testScriptFileExists(self):
         '''Test that the ScriptFile exists'''
-        path_script = os.environ.get('HARVEST_SCRIPT', os.path.join(os.environ['HOME'], 'code/ucldc_harvester/start_harvest.bash'))
+        path_script = os.environ.get('HARVEST_SCRIPT', os.path.join(os.environ['HOME'], 'code/harvester/start_harvest.bash'))
         self.assertTrue(os.path.exists(path_script))
 
 @skipUnlessIntegrationTest()
