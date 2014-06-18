@@ -1,0 +1,257 @@
+{
+  "objects": [
+    {
+      "slug": "university-archives",
+      "resource_uri": "/api/v1/repository/24/",
+      "name": "University Archives",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego",
+          "ark": "ark:/13030/tf5j49p47v"
+        }
+      ],
+      "ark": "ark:/13030/kt6q2nc792"
+    },
+    {
+      "slug": "special-collections",
+      "resource_uri": "/api/v1/repository/25/",
+      "name": "Special Collections",
+      "campus": [
+        {
+          "slug": "UCSF",
+          "resource_uri": "/api/v1/campus/7/",
+          "position": 7,
+          "name": "UC San Francisco",
+          "ark": "ark:/13030/tf3x0nb742"
+        }
+      ],
+      "ark": "ark:/13030/tf0h4nb4sw"
+    },
+    {
+      "slug": "tobacco-control-archives",
+      "resource_uri": "/api/v1/repository/26/",
+      "name": "Tobacco Control Archives",
+      "campus": [
+        {
+          "slug": "UCSF",
+          "resource_uri": "/api/v1/campus/7/",
+          "position": 7,
+          "name": "UC San Francisco",
+          "ark": "ark:/13030/tf3x0nb742"
+        }
+      ],
+      "ark": "ark:/13030/tf4f59p5sn"
+    },
+    {
+      "slug": "architecture-and-design-collection-art-design-and",
+      "resource_uri": "/api/v1/repository/27/",
+      "name": "Architecture and Design Collection, Art, Design and Architecture Museum",
+      "campus": [
+        {
+          "slug": "UCSB",
+          "resource_uri": "/api/v1/campus/8/",
+          "position": 8,
+          "name": "UC Santa Barbara",
+          "ark": "ark:/13030/tf7779p82v"
+        }
+      ],
+      "ark": "ark:/13030/kt8779s1dn"
+    },
+    {
+      "slug": "cheadle-center-for-biodiversity-and-ecological-re",
+      "resource_uri": "/api/v1/repository/28/",
+      "name": "Cheadle Center for Biodiversity and Ecological Restoration",
+      "campus": [
+        {
+          "slug": "UCSB",
+          "resource_uri": "/api/v1/campus/8/",
+          "position": 8,
+          "name": "UC Santa Barbara",
+          "ark": "ark:/13030/tf7779p82v"
+        }
+      ],
+      "ark": "ark:/13030/kt9v19r2dx"
+    },
+    {
+      "slug": "special-collections",
+      "resource_uri": "/api/v1/repository/29/",
+      "name": "Special Collections",
+      "campus": [
+        {
+          "slug": "UCSB",
+          "resource_uri": "/api/v1/campus/8/",
+          "position": 8,
+          "name": "UC Santa Barbara",
+          "ark": "ark:/13030/tf7779p82v"
+        }
+      ],
+      "ark": "ark:/13030/kt2j49q7f8"
+    },
+    {
+      "slug": "special-collections-and-archives",
+      "resource_uri": "/api/v1/repository/30/",
+      "name": "Special Collections and Archives",
+      "campus": [
+        {
+          "slug": "UCSC",
+          "resource_uri": "/api/v1/campus/9/",
+          "position": 9,
+          "name": "UC Santa Cruz",
+          "ark": "ark:/13030/kt3r29q08x"
+        }
+      ],
+      "ark": "ark:/13030/tf5h4nb7td"
+    },
+    {
+      "slug": "fowler-museum-of-cultural-history",
+      "resource_uri": "/api/v1/repository/31/",
+      "name": "Fowler Museum of Cultural History",
+      "campus": [
+        {
+          "slug": "UCLA",
+          "resource_uri": "/api/v1/campus/10/",
+          "position": 3,
+          "name": "UCLA",
+          "ark": "ark:/13030/tf8z09p95s"
+        }
+      ],
+      "ark": "ark:/13030/tf0h4nb4rc"
+    },
+    {
+      "slug": "grunwald-center-for-the-graphic-arts",
+      "resource_uri": "/api/v1/repository/32/",
+      "name": "Grunwald Center for the Graphic Arts",
+      "campus": [
+        {
+          "slug": "UCLA",
+          "resource_uri": "/api/v1/campus/10/",
+          "position": 3,
+          "name": "UCLA",
+          "ark": "ark:/13030/tf8z09p95s"
+        }
+      ],
+      "ark": "ark:/13030/tf987013v2"
+    },
+    {
+      "slug": "library-special-collections-center-for-oral-histo",
+      "resource_uri": "/api/v1/repository/33/",
+      "name": "Library Special Collections, Center for Oral History Research",
+      "campus": [
+        {
+          "slug": "UCLA",
+          "resource_uri": "/api/v1/campus/10/",
+          "position": 3,
+          "name": "UCLA",
+          "ark": "ark:/13030/tf8z09p95s"
+        }
+      ],
+      "ark": "ark:/13030/kt109nd96s"
+    },
+    {
+      "slug": "ylibrary-special-collections-charles-e-young-rese",
+      "resource_uri": "/api/v1/repository/34/",
+      "name": "Library Special Collections, Charles E. Young Research Library",
+      "campus": [
+        {
+          "slug": "UCLA",
+          "resource_uri": "/api/v1/campus/10/",
+          "position": 3,
+          "name": "UCLA",
+          "ark": "ark:/13030/tf8z09p95s"
+        }
+      ],
+      "ark": "ark:/13030/tf129008pn"
+    },
+    {
+      "slug": "plibrary-special-collections-performing-arts",
+      "resource_uri": "/api/v1/repository/35/",
+      "name": "pLibrary Special Collections, Performing Arts",
+      "campus": [
+        {
+          "slug": "UCLA",
+          "resource_uri": "/api/v1/campus/10/",
+          "position": 3,
+          "name": "UCLA",
+          "ark": "ark:/13030/tf8z09p95s"
+        }
+      ],
+      "ark": "ark:/13030/kt4199r6d2"
+    },
+    {
+      "slug": "ucb-department-of-statistics",
+      "resource_uri": "/api/v1/repository/36/",
+      "name": "UCB Department of Statistics",
+      "campus": [],
+      "ark": ""
+    },
+    {
+      "slug": "map-imagery-laboratory",
+      "resource_uri": "/api/v1/repository/37/",
+      "name": "Map & Imagery Laboratory",
+      "campus": [
+        {
+          "slug": "UCSB",
+          "resource_uri": "/api/v1/campus/8/",
+          "position": 8,
+          "name": "UC Santa Barbara",
+          "ark": "ark:/13030/tf7779p82v"
+        }
+      ],
+      "ark": ""
+    },
+    {
+      "slug": "visual-resources",
+      "resource_uri": "/api/v1/repository/39/",
+      "name": "Visual Resources ",
+      "campus": [
+        {
+          "slug": "UCSC",
+          "resource_uri": "/api/v1/campus/9/",
+          "position": 9,
+          "name": "UC Santa Cruz",
+          "ark": "ark:/13030/kt3r29q08x"
+        }
+      ],
+      "ark": ""
+    },
+    {
+      "slug": "maps-and-aerial-imagery",
+      "resource_uri": "/api/v1/repository/40/",
+      "name": "Maps and Aerial Imagery",
+      "campus": [
+        {
+          "slug": "UCSC",
+          "resource_uri": "/api/v1/campus/9/",
+          "position": 9,
+          "name": "UC Santa Cruz",
+          "ark": "ark:/13030/kt3r29q08x"
+        }
+      ],
+      "ark": ""
+    },
+    {
+      "slug": "agua-caliente-cultural-museum",
+      "resource_uri": "/api/v1/repository/41/",
+      "name": "Agua Caliente Cultural Museum",
+      "campus": [],
+      "ark": "ark:/13030/kt4c6034tc"
+    },
+    {
+      "slug": "albany-library",
+      "resource_uri": "/api/v1/repository/42/",
+      "name": "Albany Library",
+      "campus": [],
+      "ark": "ark:/13030/kt9r29p9nc"
+    }
+  ],
+  "meta": {
+    "total_count": 38,
+    "previous": "/api/v1/repository/?limit=20&offset=0",
+    "offset": 20,
+    "next": null,
+    "limit": 20
+  }
+}

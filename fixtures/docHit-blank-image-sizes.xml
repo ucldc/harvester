@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docHit rank="1" path="cdl:13030/01/kt40000501/kt40000501.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>[Untitled watercolor of people at camp housing]</title>
+               <subject q="series">Yoshiko Uchida Papers</subject>
+               <subject q="series">Japanese American Relocation Digital Archive</subject>
+               <publisher>The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/</publisher>
+               <date q="created">7/21/42</date>
+               <type q="mods">still image</type>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt40000501</identifier>
+               <identifier q="mods">[15]</identifier>
+               <identifier q="mods">brk00000755_7a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/tf0c600134</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/jarda.html</relation>
+               <relation>hb158005k9</relation>
+               <relation>BANC MSS 86/97 c</relation>
+               <relation>
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/tf0c600134</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://bancroft.berkeley.edu/</relation>
+               <rights>Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <rights>The Bancroft Library--assigned</rights>
+               <rights>All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html</rights>
+               <rights>The Bancroft Library University of California Berkeley, CA 94720-6000</rights>
+               <sort-title>untitled watercolor of people at camp housing</sort-title>
+               <year>1942</year>
+               <iso-start-date>1942:00:00</iso-start-date>
+               <iso-end-date>1942:00:00</iso-end-date>
+               <sort-year>1942</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134|Yoshiko Uchida Papers</relation-from>
+               <facet-collection-title>Yoshiko Uchida Papers</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <jardaBrowse>Yoshiko Uchida</jardaBrowse>
+               <facet-jardaBrowse>Yoshiko Uchida</facet-jardaBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/tf0c600134::25</facet-collection-order>
+               <institution-url>http://bancroft.berkeley.edu/</institution-url>
+               <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+               <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+               <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+               <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+               <dateStamp>2013-10-22</dateStamp>
+               <reference-image X="" Y="" src="/ark:/13030/kt40000501/FID3"/>
+               <reference-image X="" Y="" src="/ark:/13030/kt40000501/FID4"/>
+               <format q="x">mods</format>
+               <thumbnail X="" Y=""/>
+            </meta>
+         </docHit>

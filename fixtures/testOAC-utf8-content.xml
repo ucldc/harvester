@@ -1,0 +1,1614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.038" totalDocs="25" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/kt0s2017hn">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/kt0s2017hn" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index"
+          termLimit="1000"
+          workLimit="20000000"
+          style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl"
+          startDoc="1"
+          maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes"
+             sortDocsBy="relevance"
+             select="*|*[nonEmpty][1]#1-25"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/kt0s2017hn</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="25">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="25" startDoc="1"
+             endDoc="25">
+         <docHit rank="1" path="cdl:13030/0d/kt2h4nd10d/kt2h4nd10d.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Okimoto House</title>
+               <subject>Houses</subject>
+               <subject>Main streets</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Okimoto House, 7 D Street, Marysville, Calif. 1869. It is a two story brick home with front facing west. "A" frame roof, rectangular shape building. Two wood carved cornices supporting eaves at corners. Wooden carving between middle of eaves at the peak of roofline. Three double hung windows with arched frames on front side second story. Small front porch with balustrade of carved wood surrounding it on second floor. First floor has two double hung windows and door on south side. Transom above door. Three wooden squared poles supporting second floor porch. Approximatly three foot fence covered by ivy along front with many trees on south side.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1869</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 3 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt2h4nd10d</identifier>
+               <identifier q="local">YCL_109</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>okimoto house</sort-title>
+               <year>1869</year>
+               <iso-start-date>1869:00:00</iso-start-date>
+               <iso-end-date>1869:00:00</iso-end-date>
+               <sort-year>1869</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Houses</facet-subject>
+               <facet-subject>Main streets</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1860s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="821" Y="1021" src="/ark:/13030/kt2h4nd10d/d3e5921"/>
+               <thumbnail X="96" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="2" path="cdl:13030/0j/kt6b69r00j/kt6b69r00j.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>D Street</title>
+               <subject>Main streets</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>D Street Marysville</description>
+               <publisher>Yuba County Library</publisher>
+               <date>unknown</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 2 3/4</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt6b69r00j</identifier>
+               <identifier q="local">YCL_105</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>d street</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Main streets</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="715" src="/ark:/13030/kt6b69r00j/d3e5668"/>
+               <thumbnail X="158" Y="111"/>
+            </meta>
+         </docHit>
+         <docHit rank="3" path="cdl:13030/0m/kt5q2nd30m/kt5q2nd30m.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>First World Series Radio Broadcast</title>
+               <subject>World series (Baseball)</subject>
+               <subject>Radio broadcasting</subject>
+               <subject>Main streets</subject>
+               <subject>People</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>First Broadcast of World Series Game (1925) to be heard in Marysville; J.C. Harris N. W. corner of C and 3rd Street.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1925</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 9 1/2 X 7 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt5q2nd30m</identifier>
+               <identifier q="local">YCL_112</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>first world series radio broadcast</sort-title>
+               <year>1925</year>
+               <iso-start-date>1925:00:00</iso-start-date>
+               <iso-end-date>1925:00:00</iso-end-date>
+               <sort-year>1925</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>World series (Baseball)</facet-subject>
+               <facet-subject>Radio broadcasting</facet-subject>
+               <facet-subject>Main streets</facet-subject>
+               <facet-subject>People</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <azBrowse>Radio</azBrowse>
+               <facet-azBrowse>Radio</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1920s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="881" src="/ark:/13030/kt5q2nd30m/d3e7487"/>
+               <thumbnail X="139" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="4" path="cdl:13030/0r/kt4w10260r/kt4w10260r.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Bok Kai Parade</title>
+               <subject>Parades &amp; processions</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Reputed to be the oldest continually held parade in California. The celebration is held on the second day of the second month of the Chinese lunar year</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 2 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt4w10260r</identifier>
+               <identifier q="local">YCL_158</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>bok kai parade</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Parades ﹠ processions</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="1022" Y="730" src="/ark:/13030/kt4w10260r/d3e6609"/>
+               <thumbnail X="159" Y="114"/>
+            </meta>
+         </docHit>
+         <docHit rank="5" path="cdl:13030/0r/kt8r29r20r/kt8r29r20r.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Hanging of Ah Ben 1879</title>
+               <subject>Hangings</subject>
+               <subject>Law enforcement</subject>
+               <subject>Homicides</subject>
+               <subject>Sheriffs</subject>
+               <subject>Ah Ben</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>The hanging of Ah Ben, a Chinese immigrant, who murdered John McDaniel, owner of the Marysville Race Track, on the night of November 30, 1878. The hanging took place on Friday, March 14, 1879. Sheriff Hank L. McCoy appears on the right and Deputy Ike N. Aldrich on the left.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1879</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 7 1/2 X 9 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt8r29r20r</identifier>
+               <identifier q="local">YCL_021</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>hanging of ah ben 1879</sort-title>
+               <year>1879</year>
+               <iso-start-date>1879:00:00</iso-start-date>
+               <iso-end-date>1879:00:00</iso-end-date>
+               <sort-year>1879</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Hangings</facet-subject>
+               <facet-subject>Law enforcement</facet-subject>
+               <facet-subject>Homicides</facet-subject>
+               <facet-subject>Sheriffs</facet-subject>
+               <facet-subject>Ah Ben</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1870s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="889" Y="1021" src="/ark:/13030/kt8r29r20r/d3e1010"/>
+               <thumbnail X="104" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="6" path="cdl:13030/0r/kt9w10290r/kt9w10290r.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Mama's Place</title>
+               <subject>Restaurants</subject>
+               <subject>Buildings</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Mama's Place, Restaurant; 105 C Street, Marysville. Two story brick building (1855) connected to buildings on both sides, on north by one story building and on south by two sory. Commercial Italianate Venacular style noticed on top section and very similar to building on south side. Three windows on second floor front, one on north side. First floor has door in center with large display windows. Flanking it on south side is door leading to upstairs.</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 3 1/2 X 4 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt9w10290r</identifier>
+               <identifier q="local">YCL_051</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>mamas place</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Restaurants</facet-subject>
+               <facet-subject>Buildings</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="905" Y="1022" src="/ark:/13030/kt9w10290r/d3e2893"/>
+               <thumbnail X="106" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="7" path="cdl:13030/0t/kt8x0nd50t/kt8x0nd50t.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Golden Eagle Hotel Bar</title>
+               <subject>Bars</subject>
+               <subject>Business people</subject>
+               <subject>Hotels</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Bar inside Golden Eagle Hotel, owned by Bernhard Mehl and his brother Charles. Bernhard is 3rd from right. 4th from right might be his brother Charles.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1882</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 8 1/2 X 10</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt8x0nd50t</identifier>
+               <identifier q="local">ycl_086</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>golden eagle hotel bar</sort-title>
+               <year>1882</year>
+               <iso-start-date>1882:00:00</iso-start-date>
+               <iso-end-date>1882:00:00</iso-end-date>
+               <sort-year>1882</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Bars</facet-subject>
+               <facet-subject>Business people</facet-subject>
+               <facet-subject>Hotels</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1880s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1021" Y="837" src="/ark:/13030/kt8x0nd50t/d3e11775"/>
+               <thumbnail X="146" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="8" path="cdl:13030/0w/kt6q2nd50w/kt6q2nd50w.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Marysville Fire Department 1915</title>
+               <subject>Fire fighters</subject>
+               <subject>Fire engines &amp; equipment</subject>
+               <subject>Fire stations</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Marysville Fire Department, 1915 at 310 3rd Street, Back Row - William Booth, Francis Heenan, Clyde Cunningham, Leo Haggerty, Claude Wear, Jack Barrett. Front Row - Art Lynn, William Reilly, Thomas Norman, William Norman, Clyde Taylor, Horses - Jack and Nig</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1915</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 9 3/4 X 7</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt6q2nd50w</identifier>
+               <identifier q="local">ycl_083</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>marysville fire department 1915</sort-title>
+               <year>1915</year>
+               <iso-start-date>1915:00:00</iso-start-date>
+               <iso-end-date>1915:00:00</iso-end-date>
+               <sort-year>1915</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Fire fighters</facet-subject>
+               <facet-subject>Fire engines ﹠ equipment</facet-subject>
+               <facet-subject>Fire stations</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1910s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="1023" Y="876" src="/ark:/13030/kt6q2nd50w/d3e5099"/>
+               <thumbnail X="140" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="9" path="cdl:13030/0x/kt9n39r10x/kt9n39r10x.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Elks Home</title>
+               <subject>Buildings</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Elks Home, D street between 1st and 2nd Street.</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 7 1/2 X 9 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt9n39r10x</identifier>
+               <identifier q="local">YCL_193</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>elks home</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="879" Y="1021" src="/ark:/13030/kt9n39r10x/d3e11337"/>
+               <thumbnail X="103" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="10" path="cdl:13030/0z/kt4c60270z/kt4c60270z.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Parks Bar Railroad Construction</title>
+               <subject>Railroad construction &amp; maintenance</subject>
+               <subject>Railroads</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Railroad Construction at Parks Bar, California</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 5 1/2 X 3</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt4c60270z</identifier>
+               <identifier q="local">YCL_072</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Parks Bar, Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>parks bar railroad construction</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Railroad construction ﹠ maintenance</facet-subject>
+               <facet-subject>Railroads</facet-subject>
+               <facet-coverage>Parks Bar, Yuba County (Calif.)</facet-coverage>
+               <azBrowse>Railroad</azBrowse>
+               <facet-azBrowse>Railroad</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1022" Y="713" src="/ark:/13030/kt4c60270z/d3e4341"/>
+               <thumbnail X="158" Y="111"/>
+            </meta>
+         </docHit>
+         <docHit rank="11" path="cdl:13030/14/kt5q2nd314/kt5q2nd314.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Palermo Church depicted in fruit</title>
+               <creator>Knight &amp; Perkins</creator>
+               <subject>Fairs</subject>
+               <subject>Buildings</subject>
+               <subject>Citrus fruit</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Palermo Church made from Citrus fruit for the State Citrus Fair in Marysville in January 1891.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1891 January</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 7</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt5q2nd314</identifier>
+               <identifier q="local">YCL_125</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>palermo church depicted in fruit</sort-title>
+               <sort-creator>Perkins</sort-creator>
+               <year>1891</year>
+               <iso-start-date>1891:00:00</iso-start-date>
+               <iso-end-date>1891:00:00</iso-end-date>
+               <sort-year>1891</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Fairs</facet-subject>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>Citrus fruit</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1890s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="656" Y="1022" src="/ark:/13030/kt5q2nd314/d3e8309"/>
+               <thumbnail X="77" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="12" path="cdl:13030/16/kt8c602816/kt8c602816.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Browns Valley</title>
+               <subject>Mining</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Mining operation in Browns Valley</description>
+               <publisher>Yuba County Library</publisher>
+               <date>unknown</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 9 1/4 X 7 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt8c602816</identifier>
+               <identifier q="local">YCL_143</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Browns Valley (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>browns valley</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Mining</facet-subject>
+               <facet-coverage>Browns Valley (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1021" Y="892" src="/ark:/13030/kt8c602816/d3e9446"/>
+               <thumbnail X="137" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="13" path="cdl:13030/18/kt8r29r218/kt8r29r218.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Streetcar on D Street</title>
+               <subject>Street railroads</subject>
+               <subject>Main streets</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Streetcar on D Street, looking north from 2nd Street, Western Hotel,  N.W. corner 2nd and  D Streets, Presbyterian Church, S.E. corner 5th and D Streets</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 8 1/2 X 10</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt8r29r218</identifier>
+               <identifier q="local">YCL_073</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>streetcar on d street</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Street railroads</facet-subject>
+               <facet-subject>Main streets</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1022" Y="884" src="/ark:/13030/kt8r29r218/d3e4403"/>
+               <thumbnail X="138" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="14" path="cdl:13030/18/kt9w102918/kt9w102918.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Gold Dredger Feather River</title>
+               <subject>Gold dredging</subject>
+               <subject>Rivers</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Gold dredging on the Feather River near Marysville, Calif.</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Postcards</type>
+               <format>1 print, 5 1/2 X 3 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt9w102918</identifier>
+               <identifier q="local">YCL_071</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>gold dredger feather river</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Postcards</facet-type>
+               <facet-subject>Gold dredging</facet-subject>
+               <facet-subject>Rivers</facet-subject>
+               <facet-coverage>Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="753" src="/ark:/13030/kt9w102918/d3e4279"/>
+               <thumbnail X="158" Y="117"/>
+            </meta>
+         </docHit>
+         <docHit rank="15" path="cdl:13030/1b/kt0290231b/kt0290231b.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>1950 Flood</title>
+               <subject>Floods</subject>
+               <subject>Aerial photographs</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Aerial Photograph taken Nov. 21/22, 1950. Flood occured Nov. 18/25, 1950.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1950 November 21</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 9 3/4 X 7 3/4</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt0290231b</identifier>
+               <identifier q="local">YCL_016</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>1950 flood</sort-title>
+               <year>1950</year>
+               <iso-start-date>1950:00:00</iso-start-date>
+               <iso-end-date>1950:00:00</iso-end-date>
+               <sort-year>1950</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Floods</facet-subject>
+               <facet-subject>Aerial photographs</facet-subject>
+               <facet-coverage>Yuba County (Calif.)</facet-coverage>
+               <azBrowse>Flood</azBrowse>
+               <facet-azBrowse>Flood</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1950s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="872" src="/ark:/13030/kt0290231b/d3e695"/>
+               <thumbnail X="140" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="16" path="cdl:13030/1b/kt5489q91b/kt5489q91b.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Chinese Bamboo Flute Player</title>
+               <subject>Chinese Culture</subject>
+               <subject>Musical instruments</subject>
+               <subject>Hom, Koon Foo</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Tom Koon Foo (circa 1900). Though the details on the back on the photo describe a flute, it is more likely that this is, in fact, an opium pipe.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1900</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 6 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt5489q91b</identifier>
+               <identifier q="local">YCL_108</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>chinese bamboo flute player</sort-title>
+               <year>1900</year>
+               <iso-start-date>1900:00:00</iso-start-date>
+               <iso-end-date>1900:00:00</iso-end-date>
+               <sort-year>1900</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Chinese Culture</facet-subject>
+               <facet-subject>Musical instruments</facet-subject>
+               <facet-subject>Hom, Koon Foo</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="813" Y="1022" src="/ark:/13030/kt5489q91b/d3e5858"/>
+               <thumbnail X="95" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="17" path="cdl:13030/1b/kt609nd41b/kt609nd41b.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Julia Morgan's Heffman House</title>
+               <subject>Houses</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Heffman House, 725 F Street, Marysville, Calif.; built by Julia Morgan in the 1930s. This is an attractive two story stucco home. The portico which was built by the present owner has a broken pediment which echoes the broken pediment adorning the chimney. Doric columns support the roof of the portico. The window endremements are simple molding. The roof is jerkinhead with dormer windows. A plaque removed from the fireplace by the present owner which was presented to the original owner by Julia Morgan has been discarded.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>1930</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 5 3/4 X 3 3/4</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt609nd41b</identifier>
+               <identifier q="local">YCL_046</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>julia morgans heffman house</sort-title>
+               <year>1930</year>
+               <iso-start-date>1930:00:00</iso-start-date>
+               <iso-end-date>1930:00:00</iso-end-date>
+               <sort-year>1930</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Houses</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1930s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="791" src="/ark:/13030/kt609nd41b/d3e2580"/>
+               <thumbnail X="155" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="18" path="cdl:13030/1c/kt6j49r01c/kt6j49r01c.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Stage Coach</title>
+               <subject>Stagecoaches</subject>
+               <subject>Transportation</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>stage coach</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Postcards</type>
+               <format>1 print, 5 1/2 X 3 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt6j49r01c</identifier>
+               <identifier q="local">YCL_054</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>stage coach</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Postcards</facet-type>
+               <facet-subject>Stagecoaches</facet-subject>
+               <facet-subject>Transportation</facet-subject>
+               <facet-coverage>Yuba County (Calif.)</facet-coverage>
+               <azBrowse>Transportation</azBrowse>
+               <facet-azBrowse>Transportation</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="733" src="/ark:/13030/kt6j49r01c/d3e3080"/>
+               <thumbnail X="158" Y="114"/>
+            </meta>
+         </docHit>
+         <docHit rank="19" path="cdl:13030/1c/kt7t1nd51c/kt7t1nd51c.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Charles Covillaud Sr.</title>
+               <creator>Woods Photographic Art Gallery, Marysville, Cal. 1879</creator>
+               <subject>People</subject>
+               <subject>Charles Covillaud Sr.</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 X 6</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt7t1nd51c</identifier>
+               <identifier q="local">YCL_162</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>charles covillaud sr</sort-title>
+               <sort-creator>Gallery</sort-creator>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>People</facet-subject>
+               <facet-subject>Charles Covillaud Sr.</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="787" Y="1021" src="/ark:/13030/kt7t1nd51c/d3e6860"/>
+               <thumbnail X="92" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="20" path="cdl:13030/1d/kt6q2nd51d/kt6q2nd51d.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Stephen Johnson Field</title>
+               <subject>Supreme Court justices</subject>
+               <subject>Judges</subject>
+               <subject>Stephen Johnson Field</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Stephen Johnson Field, Justice, Supreme Court, born Nov. 4th, 1816.</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 X 6 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt6q2nd51d</identifier>
+               <identifier q="local">YCL_170</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>stephen johnson field</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Supreme Court justices</facet-subject>
+               <facet-subject>Judges</facet-subject>
+               <facet-subject>Stephen Johnson Field</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="761" Y="1021" src="/ark:/13030/kt6q2nd51d/d3e7362"/>
+               <thumbnail X="89" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="21" path="cdl:13030/1f/kt8g50301f/kt8g50301f.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Harris Saddlery</title>
+               <subject>Saddlery</subject>
+               <subject>Business people</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>J.C. Harris Saddlery, corner of 3rd and C Street</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 5 1/2 X 4</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt8g50301f</identifier>
+               <identifier q="local">YCL_172</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>harris saddlery</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Saddlery</facet-subject>
+               <facet-subject>Business people</facet-subject>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-07</dateStamp>
+               <reference-image X="1021" Y="801" src="/ark:/13030/kt8g50301f/d3e9952"/>
+               <thumbnail X="153" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="22" path="cdl:13030/1g/kt4c60271g/kt4c60271g.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>D Street Parade</title>
+               <subject>Parades &amp; processions</subject>
+               <subject>Main streets</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>1915 3rd and D Streets, looking south on D. Rideout Bank on corner of 3rd and D Streets, Western Hotel down the street (building with flag pole, flag on top of dome)</description>
+               <publisher>Yuba County Library</publisher>
+               <date>May 1915</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>9 1/2 X 7 3/4</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt4c60271g</identifier>
+               <identifier q="local">YCL_074</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>d street parade</sort-title>
+               <year>1915</year>
+               <iso-start-date>1915:00:00</iso-start-date>
+               <iso-end-date>1915:00:00</iso-end-date>
+               <sort-year>1915</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Parades ﹠ processions</facet-subject>
+               <facet-subject>Main streets</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1910s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="875" src="/ark:/13030/kt4c60271g/d3e4466"/>
+               <thumbnail X="140" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="23" path="cdl:13030/1r/kt7z09r31r/kt7z09r31r.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Fire Alarm on Main Street Marysville</title>
+               <subject>Fire engines &amp; equipment</subject>
+               <subject>Main streets</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Steamer on the run, showing chemical wagon and engine # 5 during an alarm at 4th and D Streets. Marysville Fire Department heading north. Right to left - Old Water Bldg, Chemical Wagon # 1, Steamer # 4 or # 5.</description>
+               <publisher>Yuba County Library</publisher>
+               <date>circa 1850's</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 4 1/2 X 3 1/2</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt7z09r31r</identifier>
+               <identifier q="local">YCL_025</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>fire alarm on main street marysville</sort-title>
+               <year>1850</year>
+               <iso-start-date>1850:00:00</iso-start-date>
+               <iso-end-date>1850:00:00</iso-end-date>
+               <sort-year>1850</sort-year>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Fire engines ﹠ equipment</facet-subject>
+               <facet-subject>Main streets</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1850s</facet-decade>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1023" Y="896" src="/ark:/13030/kt7z09r31r/d3e1265"/>
+               <thumbnail X="136" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="24" path="cdl:13030/1t/kt0c60221t/kt0c60221t.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Dekker-Jewett Bank Building</title>
+               <subject>Buildings</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>212 D Street, Marysville (between 2nd + 3rd Street) west side (now Mervyn's block), was Decker-Jewett Bank, demolished in 1977, listed in National Register of Historic Places.</description>
+               <publisher>Yuba County Library</publisher>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 2 1/2 X 5</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt0c60221t</identifier>
+               <identifier q="local">YCL_151</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>dekkerjewett bank building</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="95" Y="200" src="/ark:/13030/kt0c60221t/d3e6109"/>
+               <thumbnail X="57" Y="120"/>
+            </meta>
+         </docHit>
+         <docHit rank="25" path="cdl:13030/1x/kt2h4nd11x/kt2h4nd11x.mets.xml" score="100"
+                 totalHits="0">
+            <meta>
+               <title>Ramirez House</title>
+               <subject>Houses</subject>
+               <subject q="series">Yuba County History: Visual Archive</subject>
+               <description>Residence of J.M. Ramirez on Cortez Square, N. 5th Street facing Cortez Square (now Courthouse)</description>
+               <publisher>Yuba County Library</publisher>
+               <date>unknown</date>
+               <type>image</type>
+               <type q="dc">image</type>
+               <type q="dc">Photographs</type>
+               <format>1 print, 8 X 7</format>
+               <format q="x">jp2</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt2h4nd11x</identifier>
+               <identifier q="local">YCL_129</identifier>
+               <identifier q="local">ark:/13030/kt9489q7ft</identifier>
+               <identifier q="local">http://www.co.yuba.ca.us/content/departments/library/</identifier>
+               <language>eng</language>
+               <relation>
+                  <snippet rank="1" score="100">http://ark.cdlib.org/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">
+                  <snippet rank="2" score="100">http://www.oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/kt0s2017hn</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation q="ispartof">ark:/13030/kt9489q7ft</relation>
+               <relation q="ispartof">http://www.co.yuba.ca.us/content/departments/library/</relation>
+               <relation>http://oac.cdlib.org/</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <coverage>Marysville (Calif.); Yuba County (Calif.)</coverage>
+               <rights>unknown</rights>
+               <rights>Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law ( Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.The public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.</rights>
+               <sort-title>ramirez house</sort-title>
+               <relation-from q="collection">http://www.oac.cdlib.org/findaid/ark:/13030/kt0s2017hn|Yuba County History: Visual Archive</relation-from>
+               <facet-collection-title>Yuba County History: Visual Archive</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Houses</facet-subject>
+               <facet-coverage>Marysville (Calif.); Yuba County (Calif.)</facet-coverage>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-collection-order>ark:/13030/kt0s2017hn::-1</facet-collection-order>
+               <institution-url>http://library.yuba.org/</institution-url>
+               <institution-doublelist>Y::Yuba County Library</institution-doublelist>
+               <facet-institution>Yuba County Library</facet-institution>
+               <dateStamp>2007-02-08</dateStamp>
+               <reference-image X="1022" Y="876" src="/ark:/13030/kt2h4nd11x/d3e8564"/>
+               <thumbnail X="139" Y="120"/>
+            </meta>
+         </docHit>
+      </group>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0"
+             endDoc="0"/>
+   </facet>
+</crossQueryResult>

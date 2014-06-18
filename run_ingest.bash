@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-
-# script to start from avram when collection selected for harvesting
-# start_harvest.bash <user-email> <url-to-collection-registry-api>
-
 if [[ -n "$DEBUG" ]]; then 
   set -x
 fi
@@ -15,5 +11,16 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.com/questions/59895
 cd $DIR
 
+if [ -f ./bin/activate ]; then
 . ./bin/activate
-python harvester/queue_harvest.py "$1" "$2"
+else
+    echo <<%%%
+NO ./bin/activate. You need to run
+
+"virtualenv ."
+. ./bin/activate
+pip install -r requirements.txt
+%%%
+    exit 13;
+fi
+python run_ingest.py "$1" "$2"

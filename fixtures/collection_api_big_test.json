@@ -1,0 +1,45 @@
+{
+  "url_was": "",
+  "url_oai": "fixtures/testOAI-2400-records.xml",
+  "metadata_standard": "",
+  "metadata_level": "",
+  "hosted": "",
+  "extent": null,
+  "description": "",
+  "collection_type": "",
+  "campus": [
+    {
+      "slug": "UCDL",
+      "resource_uri": "/api/v1/campus/12/",
+      "position": 11,
+      "name": "California Digital Library"
+    }
+  ],
+  "appendix": "Harvest/Crawl",
+  "name": "Calisphere - Santa Clara University: Digital Objects",
+  "phase_one": false,
+  "repository": [
+    {
+      "resource_uri": "/api/v1/repository/37/",
+      "name": "Calisphere",
+      "slug": "Calisphere",
+      "campus": [
+        {
+          "slug": "UCDL",
+          "resource_uri": "/api/v1/campus/12/",
+          "position": 11,
+          "name": "California Digital Library"
+        }
+      ]
+    }
+  ],
+  "resource_uri": "/api/v1/collection/197/",
+  "slug": "calisphere-santa-clara-university-digital-objects",
+
+  "url_local": "http://www.oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
+  "url_harvest": "http://content.cdlib.org/oai",
+  "harvest_type": "OAI",
+  "harvest_extra_data": "scu:objects",
+  "url_oac": "",
+  "enrichments_item": "/oai-to-dpla,\r\n /shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date,\r\n /shred?prop=sourceResource/language%2CsourceResource/publisher%2CsourceResource/relation,\r\n /shred?prop=sourceResource/subject%2CsourceResource/type%2CsourceResource/format,\r\n /shred?prop=sourceResource/subject&delim=<br>,\r\n /cleanup_value,\r\n /move_date_values?prop=sourceResource/subject,\r\n /move_date_values?prop=sourceResource/spatial,\r\n /shred?prop=sourceResource/spatial&delim=--,\r\n /capitalize_value,\r\n /enrich_earliest_date,\r\n /enrich-subject,\r\n /enrich_date,\r\n /enrich-type,\r\n /enrich-format,\r\n /contentdm_identify_object,\r\n /enrich_location,\r\n /scdl_enrich_location,\r\n /geocode,\r\n /scdl_geocode_regions,\r\n /copy_prop?prop=sourceResource/publisher&to_prop=dataProvider&create=True&remove=True,\r\n /cleanup_language,\r\n /enrich_language,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/name&substitution=iso639_3,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/iso639_3&substitution=iso639_3&inverse=True,\r\n /copy_prop?prop=provider/name&to_prop=dataProvider&create=True&no_overwrite=True,\r\n /lookup?prop=sourceResource/format&target=sourceResource/format&substitution=scdl_fix_format,\r\n /set_prop?prop=sourceResource/stateLocatedIn&value=California,\r\n /enrich_location?prop=sourceResource/stateLocatedIn,\r\n /compare_with_schema"
+}

@@ -4,7 +4,10 @@ python:
 
 # command to install dependencies
 install: 
-  - "pip install -r requirements.txt --use-mirrors"
+  - "python setup.py install"
+  - "pip install -r test-requirements.txt --use-mirrors"
+  - "cp akara.ini.tmpl akara.ini"
+  - "mkdir profiles"
 
 # command to run tests
 script: python tests.py

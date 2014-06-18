@@ -1,0 +1,30 @@
+{
+  "url_was": "",
+  "url_oai": "",
+  "metadata_standard": "DC",
+  "metadata_level": "Item",
+  "hosted": "Hosted in CONTENTdm",
+  "extent": "214748364800",
+  "description": "Local and historical maps, Sanborn maps",
+  "collection_type": "C",
+  "campus": [
+    {
+      "slug": "UCSC",
+      "resource_uri": "/api/v1/campus/9/",
+      "position": 9,
+      "name": "UC Santa Cruz"
+    }
+  ],
+  "appendix": "Nuxeo DAMS",
+  "name": "UCSC Map Collections",
+  "phase_one": false,
+  "repository": [],
+  "resource_uri": "/api/v1/collection/131/",
+  "slug": "ucsc-map-collections-local-and-historical-maps-san",
+  "url_local": "http://digitalcollections.ucsc.edu/cdm/landingpage/collection/p15130coll3",
+  "url_harvest": "",
+  "harvest_type": "X",
+  "harvest_extra_data": "",
+  "url_oac": "",
+  "enrichments_item": "/oai-to-dpla,\r\n /shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date,\r\n /shred?prop=sourceResource/language%2CsourceResource/publisher%2CsourceResource/relation,\r\n /shred?prop=sourceResource/subject%2CsourceResource/type%2CsourceResource/format,\r\n /shred?prop=sourceResource/subject&delim=<br>,\r\n /cleanup_value,\r\n /move_date_values?prop=sourceResource/subject,\r\n /move_date_values?prop=sourceResource/spatial,\r\n /shred?prop=sourceResource/spatial&delim=--,\r\n /capitalize_value,\r\n /enrich_earliest_date,\r\n /enrich-subject,\r\n /enrich_date,\r\n /enrich-type,\r\n /enrich-format,\r\n /contentdm_identify_object,\r\n /enrich_location,\r\n /scdl_enrich_location,\r\n /geocode,\r\n /scdl_geocode_regions,\r\n /copy_prop?prop=sourceResource/publisher&to_prop=dataProvider&create=True&remove=True,\r\n /cleanup_language,\r\n /enrich_language,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/name&substitution=iso639_3,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/iso639_3&substitution=iso639_3&inverse=True,\r\n /copy_prop?prop=provider/name&to_prop=dataProvider&create=True&no_overwrite=True,\r\n /lookup?prop=sourceResource/format&target=sourceResource/format&substitution=scdl_fix_format,\r\n /set_prop?prop=sourceResource/stateLocatedIn&value=California,\r\n /enrich_location?prop=sourceResource/stateLocatedIn,\r\n /compare_with_schema"
+}

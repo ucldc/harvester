@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossQueryResult queryTime="0.045" totalDocs="24" startDoc="0" endDoc="0">
+   <parameters>
+      <route>
+         <queryParser path="style/crossQuery/queryParser/cui/queryParser.xsl"/>
+      </route>
+      <param name="docsPerPage" value="10">
+         <token value="10" isWord="yes">
+    </token>
+      </param>
+      <param name="style" value="cui">
+         <token value="cui" isWord="yes">
+    </token>
+      </param>
+      <param name="relation" value="ark:/13030/hb8779p2cx">
+         <token value="ark" isWord="yes">
+    </token>
+         <token value=":/" isWord="no">
+    </token>
+         <token value="13030/hb8779p2cx" isWord="yes">
+    </token>
+      </param>
+      <param name="facet" value="type-tab">
+         <token value="type" isWord="yes">
+    </token>
+         <token value="-" isWord="no">
+    </token>
+         <token value="tab" isWord="yes">
+    </token>
+      </param>
+      <param name="group" value="image">
+         <token value="image" isWord="yes">
+    </token>
+      </param>
+   </parameters>
+   <query xmlns:session="java:org.cdlib.xtf.xslt.Session" indexPath="index" termLimit="1000" workLimit="20000000" style="style/crossQuery/resultFormatter/cui/resultFormatter.xsl" startDoc="1" maxDocs="0">
+      <spellcheck suggestionsPerTerm="1"/>
+      <facet field="facet-type-tab" sortGroupsBy="value" includeEmptyGroups="yes" sortDocsBy="relevance" select="*|image#1-10"/>
+      <and>
+         <and>
+            <and field="relation">
+               <term>ark</term>
+               <term>13030/hb8779p2cx</term>
+            </and>
+         </and>
+      </and>
+   </query>
+   <facet field="facet-type-tab" totalGroups="3" totalDocs="24">
+      <group value="image" rank="1" totalSubGroups="0" totalDocs="13" startDoc="1" endDoc="10">
+         <docHit rank="1" path="cdl:13030/00/hb4w100700/hb4w100700.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Y.M.C.A. [Young Men's Christian Association] Bldg. [Ellis and Mason Sts.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Buildings--Earthquake effects--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 34]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>10 x 13 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb4w100700</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 1:017a</identifier>
+               <identifier q="mods">csl00007927_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0106</coverage>
+               <sort-title>ymca young mens christian association bldg ellis and mason sts</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0106</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::6757</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="711" src="/ark:/13030/hb4w100700/FID3"/>
+               <reference-image X="1500" Y="1425" src="/ark:/13030/hb4w100700/FID4"/>
+               <thumbnail X="125" Y="117"/>
+            </meta>
+         </docHit>
+         <docHit rank="2" path="cdl:13030/01/hb738nb501/hb738nb501.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>No. 73. Rear of S.V.W.W. [i.e. Spring Valley Water Works] Building.</title>
+               <creator>Waters, R.J.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Fires (damage)--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 433]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Waters, R.J.</contributor>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>16 x 19 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb738nb501</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 2:115</identifier>
+               <identifier q="mods">csl00008461_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0105</coverage>
+               <sort-title>no 73 rear of svww ie spring valley water works building</sort-title>
+               <sort-creator>Waters</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires (damage)</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0105</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7152</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="675" src="/ark:/13030/hb738nb501/FID3"/>
+               <reference-image X="1500" Y="1350" src="/ark:/13030/hb738nb501/FID4"/>
+               <thumbnail X="125" Y="112"/>
+            </meta>
+         </docHit>
+         <docHit rank="3" path="cdl:13030/02/hb3x0nb302/hb3x0nb302.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Camp 16, Jefferson Square. [Refugee cottages.]</title>
+               <creator>Weidner, Charles</creator>
+               <subject>Disaster relief--Photographs</subject>
+               <subject>Disaster victims--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Emergency housing--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 679]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Weidner, Charles</contributor>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>16 x 25 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb3x0nb302</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 4:053</identifier>
+               <identifier q="mods">csl00008993_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">Jefferson Square (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0405</coverage>
+               <sort-title>camp 16 jefferson square refugee cottages</sort-title>
+               <sort-creator>Weidner</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Disaster relief</facet-subject>
+               <facet-subject>Disaster victims</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Emergency housing</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>Jefferson Square (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0405</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7391</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="520" src="/ark:/13030/hb3x0nb302/FID3"/>
+               <reference-image X="1500" Y="1043" src="/ark:/13030/hb3x0nb302/FID4"/>
+               <thumbnail X="125" Y="86"/>
+            </meta>
+         </docHit>
+         <docHit rank="4" path="cdl:13030/04/hb2c600504/hb2c600504.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Street scene in front of The Emporium department store. Market St. between Fourth and Fifth Sts.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Fires (damage)--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject>Streets--Photographs</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 837]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>13 x 10 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb2c600504</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 4:133a</identifier>
+               <identifier q="mods">csl00009151_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">Market Street (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0112</coverage>
+               <sort-title>street scene in front of the emporium department store market st between fourth and fifth sts</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires (damage)</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Streets</facet-subject>
+               <facet-coverage>Market Street (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0112</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7548</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="527" Y="750" src="/ark:/13030/hb2c600504/FID3"/>
+               <reference-image X="1058" Y="1500" src="/ark:/13030/hb2c600504/FID4"/>
+               <thumbnail X="86" Y="125"/>
+            </meta>
+         </docHit>
+         <docHit rank="5" path="cdl:13030/04/hb896nb604/hb896nb604.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Panoramic view of city from atop Fairmont Hotel. View looking east from Nob Hill towar Chinatown, the wholesale district, and Yerba Buena Island in the distance. St. Mary's Church on California St., right; Ferry Building in distance, right.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Fires (damage)--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 343]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Cityscapes--California--San Francisco</type>
+               <type q="genreform">Photographs</type>
+               <format>16 x 21 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb896nb604</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 2:029</identifier>
+               <identifier q="mods">csl00008370_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">California Street (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">Chinatown (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">Financial District (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">Nob Hill (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A1103</coverage>
+               <sort-title>panoramic view of city from atop fairmont hotel view looking east from nob hill towar chinatown the wholesale district and yerba buena island in the distance st marys church on california st right ferry building in distance right</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Cityscapes--California--San Francisco</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires (damage)</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>California Street (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>Chinatown (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>Financial District (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>Nob Hill (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A1103</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7063</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="654" src="/ark:/13030/hb896nb604/FID3"/>
+               <reference-image X="1500" Y="1305" src="/ark:/13030/hb896nb604/FID4"/>
+               <thumbnail X="125" Y="108"/>
+            </meta>
+         </docHit>
+         <docHit rank="6" path="cdl:13030/04/hb9n39p404/hb9n39p404.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Crowd watching fire. From Lafayette Square.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Crowds--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>Fires (burning)--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 582]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>17 x 22 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb9n39p404</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 3:119</identifier>
+               <identifier q="mods">csl00008757_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">Lafayette Park (San Francisco, Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0301</coverage>
+               <sort-title>crowd watching fire from lafayette square</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Crowds</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>Fires (burning)</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>Lafayette Park (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0301</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7298</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="633" src="/ark:/13030/hb9n39p404/FID3"/>
+               <reference-image X="1500" Y="1268" src="/ark:/13030/hb9n39p404/FID4"/>
+               <thumbnail X="125" Y="105"/>
+            </meta>
+         </docHit>
+         <docHit rank="7" path="cdl:13030/05/hb0j49n805/hb0j49n805.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Studebaker Building damaged from earthquake.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Buildings--Earthquake effects--Photographs</subject>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 422]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>21 x 16 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb0j49n805</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 2:104</identifier>
+               <identifier q="mods">csl00008450_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">South of Market District (San Francisco, Calif.)--Pictorial works</coverage>
+               <sort-title>studebaker building damaged from earthquake</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Buildings</facet-subject>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>South of Market District (San Francisco, Calif.)--Pictorial works</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7141</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="529" Y="750" src="/ark:/13030/hb0j49n805/FID3"/>
+               <reference-image X="1056" Y="1500" src="/ark:/13030/hb0j49n805/FID4"/>
+               <thumbnail X="87" Y="125"/>
+            </meta>
+         </docHit>
+         <docHit rank="8" path="cdl:13030/05/hb68700805/hb68700805.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>Home cooking. ["Frankfurterhof" street kitchen.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject>Street Kitchens--Photographs</subject>
+               <subject>Tents--Photographs</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 635]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>9 x 15 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb68700805</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 4:017b</identifier>
+               <identifier q="mods">csl00008948_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A1104</coverage>
+               <sort-title>home cooking frankfurterhof street kitchen</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Street Kitchens</facet-subject>
+               <facet-subject>Tents</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A1104</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7350</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="605" src="/ark:/13030/hb68700805/FID3"/>
+               <reference-image X="1500" Y="1208" src="/ark:/13030/hb68700805/FID4"/>
+               <thumbnail X="125" Y="99"/>
+            </meta>
+         </docHit>
+         <docHit rank="9" path="cdl:13030/06/hb1199n806/hb1199n806.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>[Fissure along street. Folsom St.?]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject>Streets--Photographs</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 484]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>22 x 16 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb1199n806</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 3:033</identifier>
+               <identifier q="mods">csl00008661_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A0204</coverage>
+               <sort-title>fissure along street folsom st</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Streets</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A0204</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::7203</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="529" Y="750" src="/ark:/13030/hb1199n806/FID3"/>
+               <reference-image X="1056" Y="1500" src="/ark:/13030/hb1199n806/FID4"/>
+               <thumbnail X="87" Y="125"/>
+            </meta>
+         </docHit>
+         <docHit rank="10" path="cdl:13030/08/hb3b69n908/hb3b69n908.mets.xml" score="100" totalHits="0">
+            <meta>
+               <title>["Hoffman Cafe" street kitchen. Unidentified location.]</title>
+               <creator>Bear Photo Co.</creator>
+               <subject>Earthquakes--California--San Francisco--Photographs</subject>
+               <subject>San Francisco Earthquake, Calif., 1906--Pictorial works</subject>
+               <subject>Street Kitchens--Photographs</subject>
+               <subject q="series">The 1906 San Francisco Earthquake and Fire Digital Collection</subject>
+               <subject q="series">Bear Photo Co. San Francisco Earthquake &amp; Fire</subject>
+               <description>[Bear Photo Co. no. 142]</description>
+               <publisher>California State Library, Stanley Mosk Library and Courts Building, 914 Capitol Mall, Sacramento, CA 95814, http://www.library.ca.gov/</publisher>
+               <contributor>Bear Photo Co.</contributor>
+               <date q="created">1906</date>
+               <date q="created">1906</date>
+               <type>image</type>
+               <type q="mods">still image</type>
+               <type q="genreform">Photographs</type>
+               <format>12 x 18 cm.</format>
+               <format q="x">mods</format>
+               <identifier>http://ark.cdlib.org/ark:/13030/hb3b69n908</identifier>
+               <identifier q="mods">F869.S3.S24794 Vol. 1:062a</identifier>
+               <identifier q="mods">csl00008035_40a.tif</identifier>
+               <relation>
+                  <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+                        <term>ark</term>:/<term>13030/hb8779p2cx</term>
+                     </hit>
+                  </snippet>
+               </relation>
+               <relation>http://bancroft.berkeley.edu/collections/earthquakeandfire</relation>
+               <relation>eqf</relation>
+               <relation>F869.S3.S24794</relation>
+               <relation>http://calisphere.universityofcalifornia.edu/</relation>
+               <relation>http://www.library.ca.gov/</relation>
+               <coverage q="spatial">San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</coverage>
+               <coverage q="spatial">San Francisco (Calif.)--Pictorial works</coverage>
+               <coverage q="spatial">A1104</coverage>
+               <sort-title>hoffman cafe street kitchen unidentified location</sort-title>
+               <sort-creator>Co.</sort-creator>
+               <year>1906</year>
+               <iso-start-date>1906:00:00</iso-start-date>
+               <iso-end-date>1906:00:00</iso-end-date>
+               <sort-year>1906</sort-year>
+               <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/hb8779p2cx|The 1906 San Francisco Earthquake and Fire Digital Collection</relation-from>
+               <facet-collection-title>The 1906 San Francisco Earthquake and Fire Digital Collection</facet-collection-title>
+               <facet-type-tab>image</facet-type-tab>
+               <oac4-tab>Items::image</oac4-tab>
+               <facet-oac-tab>digital item</facet-oac-tab>
+               <facet-type>still image</facet-type>
+               <facet-type>Photographs</facet-type>
+               <facet-subject>Earthquakes</facet-subject>
+               <facet-subject>San Francisco Earthquake, Calif., 1906</facet-subject>
+               <facet-subject>Street Kitchens</facet-subject>
+               <facet-coverage>San Francisco (Calif.)--Earthquake and fire, 1906--Pictorial works</facet-coverage>
+               <facet-coverage>San Francisco (Calif.)--Pictorial works</facet-coverage>
+               <facet-coverage>A1104</facet-coverage>
+               <azBrowse>1906 earthquake</azBrowse>
+               <facet-azBrowse>1906 earthquake</facet-azBrowse>
+               <facet-onlineItems>Items online</facet-onlineItems>
+               <facet-decade>1900s</facet-decade>
+               <facet-collection-order>ark:/13030/hb8779p2cx::6863</facet-collection-order>
+               <institution-url>http://www.library.ca.gov/</institution-url>
+               <institution-doublelist>C::California State Library</institution-doublelist>
+               <facet-institution>California State Library</facet-institution>
+               <dateStamp>2006-06-24</dateStamp>
+               <reference-image X="750" Y="605" src="/ark:/13030/hb3b69n908/FID3"/>
+               <reference-image X="1500" Y="1216" src="/ark:/13030/hb3b69n908/FID4"/>
+               <thumbnail X="125" Y="99"/>
+            </meta>
+         </docHit>
+      </group>
+      <group value="text" rank="2" totalSubGroups="0" totalDocs="11" startDoc="0" endDoc="0"/>
+      <group value="website" rank="3" totalSubGroups="0" totalDocs="0" startDoc="0" endDoc="0"/>
+   </facet>
+</crossQueryResult>
