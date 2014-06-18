@@ -16,4 +16,4 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.c
 cd $DIR
 
 . ./bin/activate
-python queue_harvest.py "$1" "$2"
+python harvester/queue_harvest.py "$1" "$2"

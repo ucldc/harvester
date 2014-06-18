@@ -17,7 +17,7 @@ from logbook import FileHandler
 from collection_registry_client import Collection
 import dplaingestion.couch 
 
-EMAIL_RETURN_ADDRESS = 'mark.redar@ucop.edu'
+EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
 
 
