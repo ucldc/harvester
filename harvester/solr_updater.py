@@ -10,24 +10,35 @@ from couchdb.client import Server, Database, Document
 URL_SOLR = os.environ.get('URL_SOLR', 'http://10.0.1.13:8080/solr/dc-collection/')
 URL_COUCHDB = os.environ.get('URL_COUCHDB', 'http://localhost:5984')
 COUCHDB_DB =os.environ.get('COUCHDB_DB', 'ucldc')
-
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
+
+DPLA_COUCHDOC_TO_SOLR_MAPPING = {
+        'id' : lambda d: {'id': d['_id']},
+        'collection' : lambda d: { 'collection' : d['originalRecord']['collection']},
+        'collection_name' : lambda d: { 'collection_name' : d['originalRecord']['collection']['name']},
+        'campus' : lambda d: { 'campus' : [ c.name for c in d['originalRecord']['campus']] },
+        'repository' : lambda d: { 'repository' : [ r.name for r in d['originalRecord']['repository']]},
+
+}
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
     how to make schema aware mapping?'''
     solr_doc = {}
-    solr_doc['id'] = doc['_id']
-    collection = doc['originalRecord']['collection']
-    solr_doc['collection_name'] = collection['name']
-    solr_doc['campus'] = []
-    solr_doc['repository'] = []
-    campuses = doc['originalRecord']['campus']
-    for c in campuses:
-        solr_doc['campus'].append(c['name'])
-    repositories = doc['originalRecord']['repository']
-    for r in repositories:
-        solr_doc['repository'].append(r['name'])
+    for p in doc.keys():
+        if p in DPLA_COUCHDOC_TO_SOLR_MAPPING:
+            solr_doc.update(DPLA_COUCHDOC_TO_SOLR_MAPPING[p](doc))
+    #solr_doc['id'] = doc['_id']
+    #collection = doc['originalRecord']['collection']
+    #solr_doc['collection_name'] = collection['name']
+    #solr_doc['campus'] = []
+    #solr_doc['repository'] = []
+    #campuses = doc['originalRecord']['campus']
+    #for c in campuses:
+    #    solr_doc['campus'].append(c['name'])
+    #repositories = doc['originalRecord']['repository']
+    #for r in repositories:
+    #    solr_doc['repository'].append(r['name'])
     for k, value in doc['sourceResource'].items():
         if k not in ('subject', 'stateLocatedIn', 'spatial', 'collection'):
             solr_doc[k] = value
@@ -79,18 +90,19 @@ if __name__=='__main__':
     last_seq = int(changes['last_seq'])
     results = changes['results']
     n = 0
-    changed_ids = defaultdict(int)
+###    changed_ids = defaultdict(int)
+###    for row in results:
+###        n += 1
+###        changed_ids[row['id']] += 1
+###        if (n % 10000) == 0:
+###            print row['id'], row['changes']
+###    ##TODO: set_couchdb_last_seq(last_seq)
+
+###    print("CHANGED IDS:{0} RESULTS: {1}".format(len(changed_ids),len(results))) 
+    solr_db = Solr(URL_SOLR)
     for row in results:
         n += 1
-        changed_ids[row['id']] += 1
-        if (n % 1000) == 0:
-            print row['id'], row['changes']
-    ##TODO: set_couchdb_last_seq(last_seq)
-
-    print "CHANGED IDS:", len(changed_ids)
-    solr_db = Solr(URL_SOLR)
-    for i in changed_ids:
-        doc = db.get(i)
+        doc = db.get(row['id'])
         solr_doc = push_couch_doc_to_solr(doc, solr_db=solr_db)
         break
     print d

@@ -17,6 +17,7 @@ import logbook
 import httpretty
 from harvester import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
+
 #from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
@@ -1103,6 +1104,10 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
 
+class SolrUpdaterTestCase(TestCase):
+    '''Test the solr update from couchdb changes feed'''
+    def testExists(self):
+        pass
 
 CONFIG_FILE_DPLA = '''
 [Akara]
