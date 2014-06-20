@@ -50,9 +50,8 @@ def map_couch_to_solr_doc(doc):
                     doc['subject'].append(s['name'])
     return solr_doc
 
-def push_couch_doc_to_solr(doc, solr_db):
-    '''Map and push one couch doc to solr'''
-    solr_doc = map_couch_to_solr_doc(doc)
+def push_couch_doc_to_solr(solr_doc, solr_db):
+    '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
         print "ADDED", solr_doc
@@ -84,27 +83,19 @@ def get_couchdb_last_seq():
 if __name__=='__main__':
     server = Server(URL_COUCHDB)
     db = server[COUCHDB_DB]
-    changes = db.changes()
     since = get_couchdb_last_seq()
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
     n = 0
-###    changed_ids = defaultdict(int)
-###    for row in results:
-###        n += 1
-###        changed_ids[row['id']] += 1
-###        if (n % 10000) == 0:
-###            print row['id'], row['changes']
-###    ##TODO: set_couchdb_last_seq(last_seq)
-
-###    print("CHANGED IDS:{0} RESULTS: {1}".format(len(changed_ids),len(results))) 
     solr_db = Solr(URL_SOLR)
     for row in results:
+        if '_design' in row['id']:
+            print("Skip {0}".format(row['id']))
+            continue
         n += 1
         doc = db.get(row['id'])
-        solr_doc = push_couch_doc_to_solr(doc, solr_db=solr_db)
-        break
-    print d
-    print type(d), dir(d)
-    print solr_doc
+        solr_doc = map_couch_to_solr_doc(doc)
+        solr_doc = push_couch_doc_to_solr(solr_doc, solr_db=solr_db) 
+    #TODO: set_couchdb_last_seq(last_seq)
+    print("UPDATED {0} DOCUMENTS")
