@@ -36,7 +36,7 @@ setup(
     install_requires = [ 
         'Sickle==0.3',
         'argparse==1.2.1',
-        'lxml==3.3.0beta1',
+        'lxml==3.3.5',
         'requests==2.1.0',
         'solrpy==0.9.6',
         'wsgiref==0.1.2',
