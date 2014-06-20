@@ -14,7 +14,7 @@ import run_ingest
 
 REDIS_HOST = 'http://127.0.0.1'
 REDIS_PORT = '6379'
-REDIS_CONNECT_TIMEOUT = 1
+REDIS_CONNECT_TIMEOUT = 10
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
 TIMEOUT = datetime.timedelta(seconds=600)

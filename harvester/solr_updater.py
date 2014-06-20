@@ -80,7 +80,7 @@ def get_couchdb_last_seq():
     k = b.get_key(COUCHDB_LAST_SEQ_KEY)
     return int(k.get_contents_as_string())
 
-if __name__=='__main__':
+def main():
     server = Server(URL_COUCHDB)
     db = server[COUCHDB_DB]
     since = get_couchdb_last_seq()
@@ -99,3 +99,6 @@ if __name__=='__main__':
         solr_doc = push_couch_doc_to_solr(solr_doc, solr_db=solr_db) 
     #TODO: set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS")
+
+if __name__=='__main__':
+    main()
