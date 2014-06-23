@@ -17,6 +17,9 @@ import logbook
 import httpretty
 from harvester import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
+from harvester.solr_updater import main as solr_updater_main
+from harvester.solr_updater import push_couch_doc_to_solr, map_couch_to_solr_doc
+from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 
 #from harvester import Collection
 from dplaingestion.couch import Couch
@@ -1082,13 +1085,15 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     ingest process.
     '''
     @httpretty.activate
+    @patch('redis.Redis')
+    @patch('rq.Queue')
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
     @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
     @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
     @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
     @patch('dplaingestion.couch.Couch')
-    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich):
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq, mock_redis):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
         mail_handler = MagicMock()
         httpretty.register_uri(httpretty.GET,
@@ -1104,10 +1109,26 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
 
+class QueueHervestTestCase(TestCase):
+    '''Test the queue harvester. 
+    For now will mock the RQ library.
+    '''
+    pass
+
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
-    def testExists(self):
+#    def testMain(self):
+#        '''Test running of main fn'''
+#solr_updater_main
+    def test_push_couch_doc_to_solr(self):
         pass
+    def test_map_couch_to_solr_doc(self):
+        pass
+    def test_set_couchdb_last_seq(self):
+        pass
+    def test_get_couchdb_last_seq(self):
+        pass
+
 
 CONFIG_FILE_DPLA = '''
 [Akara]

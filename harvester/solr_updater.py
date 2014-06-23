@@ -28,17 +28,6 @@ def map_couch_to_solr_doc(doc):
     for p in doc.keys():
         if p in DPLA_COUCHDOC_TO_SOLR_MAPPING:
             solr_doc.update(DPLA_COUCHDOC_TO_SOLR_MAPPING[p](doc))
-    #solr_doc['id'] = doc['_id']
-    #collection = doc['originalRecord']['collection']
-    #solr_doc['collection_name'] = collection['name']
-    #solr_doc['campus'] = []
-    #solr_doc['repository'] = []
-    #campuses = doc['originalRecord']['campus']
-    #for c in campuses:
-    #    solr_doc['campus'].append(c['name'])
-    #repositories = doc['originalRecord']['repository']
-    #for r in repositories:
-    #    solr_doc['repository'].append(r['name'])
     for k, value in doc['sourceResource'].items():
         if k not in ('subject', 'stateLocatedIn', 'spatial', 'collection'):
             solr_doc[k] = value

@@ -33,7 +33,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     return msg
 
 def get_redis_connection(redis_host, redis_port, redis_pswd):
-    print("HOST:{0}  PORT:{1} PSWD:{2}".format(redis_host, redis_port, redis_pswd))
+    print("HOST:{0}  PORT:{1}".format(redis_host, redis_port))
     return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
 
 def def_args():
@@ -107,13 +107,9 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         sys.exit(1)
 
 
-    print("HOST:{0}  PORT:{1} PSWD:{2}".format(redis_host, redis_port, redis_pswd))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
     result = rQ.enqueue(solr_updater.main)
-
-    logger.info("Ingestion complete for {0}!".format(url_api_collection))
-    mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection ingest complete for {0}'.format(url_api_collection), 'Completed harvest for {0}'.format(url_api_collection))
-    mail_handler.deliver(mimetext, user_email)
+    logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
 
 if __name__ == '__main__':
     parser = def_args()
@@ -122,7 +118,7 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     redis_host, redis_port, redis_pswd = parse_env()
-    print("HOST:{0}  PORT:{1} PSWD:{2}".format(redis_host, redis_port, redis_pswd))
+    print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email, args.url_api_collection, redis_host=redis_host,
         redis_port=redis_port, redis_pswd=redis_pswd)
