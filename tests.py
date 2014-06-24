@@ -8,6 +8,8 @@ import json
 import shutil
 import tempfile
 from mock import MagicMock
+from mock import Mock
+from mock import call as mcall
 from mock import patch
 from mock import call, ANY
 from xml.etree import ElementTree as ET
@@ -15,6 +17,7 @@ import requests
 import harvester
 import logbook
 import httpretty
+from redis import Redis
 from harvester import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
 from harvester.solr_updater import main as solr_updater_main
@@ -1084,30 +1087,32 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
     '''
-    @httpretty.activate
-    @patch('redis.Redis')
-    @patch('rq.Queue')
+    @patch('rq.Queue', autospec=True)
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
     @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
     @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
     @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
     @patch('dplaingestion.couch.Couch')
-    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq, mock_redis):
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq_q):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
+        #mock_rq.return_value = Mock(spec='redis.Redis')
         mail_handler = MagicMock()
+        httpretty.enable()
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 body=open('./fixtures/collection_api_test_oac.json').read())
         httpretty.register_uri(httpretty.GET,
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open('./fixtures/testOAC-url_next-1.json').read())
-                #body=open('./fixtures/testOAC.json').read())
         run_ingest.main('mark.redar@ucop.edu',
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 mail_handler=mail_handler)
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
+        mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
+        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
+        self.assertIn('call().enqueue(<function', mock_calls[1])
 
 class QueueHervestTestCase(TestCase):
     '''Test the queue harvester. 

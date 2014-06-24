@@ -17,12 +17,12 @@ import logbook
 import harvester
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
-from rq import Queue
+import rq
 import solr_updater
 
 EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
-REDIS_HOST = '54.84.142.143'
-REDIS_PORT = '6379'
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
 REDIS_CONNECT_TIMEOUT = 10
 
 def create_mimetext_msg(mail_from, mail_to, subject, message):
@@ -106,8 +106,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logger.error( "Error cleaning up dashboard")
         sys.exit(1)
 
-
-    rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
+    rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
     result = rQ.enqueue(solr_updater.main)
     logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
 

@@ -1,6 +1,6 @@
 export REDIS_HOST=127.0.0.1
 export REDIS_PORT=6379
-export REDIS_PSWD=<pswd>
+export REDIS_PASSWORD=<PASSWORD>
 export ID_EC2_INGEST=<ingest control instance>
 export ID_EC2_SOLR_BUILD=<solr work instance>
 export EMAIL_RETURN_ADDRESS=<addr>
