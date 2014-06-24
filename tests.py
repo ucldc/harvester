@@ -20,6 +20,10 @@ import httpretty
 from redis import Redis
 from harvester import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
+from harvester.queue_harvest import main as queue_harvest_main
+from harvester.queue_harvest import get_redis_connection, check_redis_queue
+from harvester.queue_harvest import start_ec2_instances
+from harvester.queue_harvest import parse_env as qh_parse_env
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_couch_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
@@ -1114,11 +1118,48 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
         self.assertIn('call().enqueue(<function', mock_calls[1])
 
-class QueueHervestTestCase(TestCase):
+class QueueHarvestTestCase(TestCase):
     '''Test the queue harvester. 
     For now will mock the RQ library.
     '''
-    pass
+    def testGetRedisConnection(self):
+        r = get_redis_connection('127.0.0.1', '6379', 'PASS')
+        self.assertEqual(str(type(r)), "<class 'redis.client.Redis'>")
+
+    def testCheckRedisQ(self):
+        res = check_redis_queue('127.0.0.1', '6379', 'PASS')
+        self.assertEqual(res, False)
+        with patch('redis.Redis.ping', return_value=True) as mock_redis:
+            res = check_redis_queue('127.0.0.1', '6379', 'PASS')
+            self.assertEqual(res, True)
+
+    @patch('boto.ec2')
+    def testStartEC2(self, mock_boto):
+        start_ec2_instances('XXXX', 'YYYY')
+        mock_boto.connect_to_region.assert_called_with('us-east-1')
+        mock_boto.connect_to_region().start_instances.assert_called_with(('XXXX', 'YYYY'))
+
+    def testParseEnv(self):
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+        h, p, pswd, ingest, build = qh_parse_env()
+        self.assertEqual(h, 'http://127.0.0.1')
+        self.assertEqual(p, '6379')
+        self.assertEqual(pswd, 'XX')
+        self.assertEqual(ingest, 'INGEST')
+        self.assertEqual(build, 'BUILD')
+
+###    main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD):
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
