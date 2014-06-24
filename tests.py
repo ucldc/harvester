@@ -7,6 +7,7 @@ import re
 import json
 import shutil
 import tempfile
+import pickle
 from mock import MagicMock
 from mock import Mock
 from mock import call as mcall
@@ -1195,7 +1196,19 @@ class SolrUpdaterTestCase(TestCase):
     def test_push_couch_doc_to_solr(self):
         pass
     def test_map_couch_to_solr_doc(self):
-        pass
+        '''Test the mapping of a couch db source json doc to a solr schema
+        compatible doc.
+        '''
+        from pprint import pprint
+        f = open('pickled_couchdb_doc')
+        doc = pickle.load(f)
+        pprint('COLLECTION CDB: {0}'.format(doc['originalRecord']['collection']))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['id'], doc['_id'])
+        self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        pprint(sdoc)
+        #self.assertEqual(sdoc['collection'], 'pleasants-family-papers--http://ark.cdlib.org/ark:/13030/hb9d5nb63n')
+
     def test_set_couchdb_last_seq(self):
         pass
     def test_get_couchdb_last_seq(self):

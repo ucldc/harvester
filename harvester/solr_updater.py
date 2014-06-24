@@ -4,7 +4,7 @@ from collections import defaultdict
 import requests
 import boto
 from solr import Solr, SolrException
-from couchdb.client import Server, Database, Document
+from couchdb import Server, Database, Document
 
 
 URL_SOLR = os.environ.get('URL_SOLR', 'http://10.0.1.13:8080/solr/dc-collection/')
