@@ -1100,7 +1100,6 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     @patch('dplaingestion.couch.Couch')
     def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq_q):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
-        #mock_rq.return_value = Mock(spec='redis.Redis')
         mail_handler = MagicMock()
         httpretty.enable()
         httpretty.register_uri(httpretty.GET,
@@ -1159,7 +1158,34 @@ class QueueHarvestTestCase(TestCase):
         self.assertEqual(ingest, 'INGEST')
         self.assertEqual(build, 'BUILD')
 
-###    main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD):
+    @patch('boto.ec2')
+    def testMain(self, mock_boto):
+        with self.assertRaises(Exception) as cm:
+            queue_harvest_main('mark.redar@ucop.edu',
+                'https://registry.cdlib.org/api/v1/collection/178/',
+                redis_host='127.0.0.1',
+                redis_port='6379',
+                redis_pswd='X',
+                timeout=1,
+                poll_interval=1
+                )
+        self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE. TODO: EMAIL USER', cm.exception.message)
+        with patch('redis.Redis', autospec=True) as mock_redis:
+            mock_redis.ping.return_value = True
+            queue_harvest_main('mark.redar@ucop.edu',
+                'https://registry.cdlib.org/api/v1/collection/178/',
+                redis_host='127.0.0.1',
+                redis_port='6379',
+                redis_pswd='X',
+                timeout=1,
+                poll_interval=1
+                )
+        mock_calls = [ str(x) for x in mock_redis.mock_calls]
+        self.assertEqual(len(mock_calls), 10)
+        self.assertEqual(mock_redis.call_count, 3)
+        self.assertIn('call().ping()', mock_calls)
+        self.assertIn("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls)
+
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
