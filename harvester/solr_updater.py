@@ -15,18 +15,35 @@ COUCHDB_DB =os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
 COUCHDOC_TO_SOLR_MAPPING = {
-        'id' : lambda d: {'id': d['_id']},
+    'id' : lambda d: {'id': d['_id']},
 }
 
 COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
-        'campus' : lambda d: { 'campus' : [ c['name'] for c in d['campus']] },
-        'repository' : lambda d: { 'repository' : [ r['name'] for r in d['repository']]},
+    'campus'     : lambda d: { 'campus' : [ c['@id'] for c in d['campus']], 
+                        'campus_name' : [ c['name'] for c in d['campus']] },
+    'repository' : lambda d: { 'repository' : [ r['@id'] for r in d['repository']],
+                               'repository_name': [ r['name'] for r in d['repository']]},
+    'handle'     : lambda d : { 'url_item' : d['handle'][0] },
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-        'collection' : lambda d: { 'collection' : d['collection'],
-                                'collection_name' : d['collection']['name'] },
-        'subject' : lambda d: { 'subject' : [s['name'] for s in d['subject']] }
+    #assuming one collection only, may need to change
+    'collection'  : lambda d: { 'collection' : d['collection']['@id'],
+                               'collection_name' : d['collection']['name'] },
+    'contributor' : lambda d: {'contributor': d.get('contributor', None)},
+    'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
+    'creator'     : lambda d: {'creator': d.get('creator', None)},
+    'description' : lambda d: {'description': d.get('description', None)},
+    'date'        : lambda d: {'date': d.get('date', None)},
+    'language'    : lambda d: {'language': d.get('language', None)},
+    'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
+    'relation'    : lambda d: {'relation': d.get('relation', None)},
+    'rights'      : lambda d: {'rights': d.get('rights', None)},
+    'subject'     : lambda d: { 'subject' : [s['name'] for s in d['subject']] },
+    'title'       : lambda d: {'title': d.get('title', None)},
+    'type'        : lambda d: {'type': d.get('type', None)},
+    'format'      : lambda d: {'format': d.get('format', None)},
+    'extent'      : lambda d: {'extent': d.get('extent', None)},
 }
 
 def map_couch_to_solr_doc(doc):
@@ -68,7 +85,6 @@ def set_couchdb_last_seq(seq_num):
         k.key = COUCHDB_LAST_SEQ_KEY 
     k.set_contents_from_string(seq_num)
 
-
 def get_couchdb_last_seq():
     '''Return the value stored in the s3 bucket'''
     conn = boto.connect_s3()
@@ -94,7 +110,7 @@ def main():
         solr_doc = map_couch_to_solr_doc(doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
     #TODO: set_couchdb_last_seq(last_seq)
-    print("UPDATED {0} DOCUMENTS")
+    print("UPDATED {0} DOCUMENTS".format(n))
 
 if __name__=='__main__':
     main()
