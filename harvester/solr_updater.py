@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 import os, sys
 import urllib
 from collections import defaultdict
@@ -12,13 +14,19 @@ URL_COUCHDB = os.environ.get('URL_COUCHDB', 'http://localhost:5984')
 COUCHDB_DB =os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
-DPLA_COUCHDOC_TO_SOLR_MAPPING = {
+COUCHDOC_TO_SOLR_MAPPING = {
         'id' : lambda d: {'id': d['_id']},
-        'collection' : lambda d: { 'collection' : d['originalRecord']['collection']},
-        'collection_name' : lambda d: { 'collection_name' : d['originalRecord']['collection']['name']},
-        'campus' : lambda d: { 'campus' : [ c.name for c in d['originalRecord']['campus']] },
-        'repository' : lambda d: { 'repository' : [ r.name for r in d['originalRecord']['repository']]},
+}
 
+COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
+        'campus' : lambda d: { 'campus' : [ c['name'] for c in d['campus']] },
+        'repository' : lambda d: { 'repository' : [ r['name'] for r in d['repository']]},
+}
+
+COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
+        'collection' : lambda d: { 'collection' : d['collection'],
+                                'collection_name' : d['collection']['name'] },
+        'subject' : lambda d: { 'subject' : [s['name'] for s in d['subject']] }
 }
 
 def map_couch_to_solr_doc(doc):
@@ -26,20 +34,19 @@ def map_couch_to_solr_doc(doc):
     how to make schema aware mapping?'''
     solr_doc = {}
     for p in doc.keys():
-        if p in DPLA_COUCHDOC_TO_SOLR_MAPPING:
-            solr_doc.update(DPLA_COUCHDOC_TO_SOLR_MAPPING[p](doc))
-    for k, value in doc['sourceResource'].items():
-        if k not in ('subject', 'stateLocatedIn', 'spatial', 'collection'):
-            solr_doc[k] = value
-        if k == 'subject':
-            for s in doc.get('subject', []):
-                if not has_key('subject', solr_doc):
-                    doc['subject'] = [ s['name'] ]
-                else:
-                    doc['subject'].append(s['name'])
+        if p in COUCHDOC_TO_SOLR_MAPPING:
+            solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
+    originalRecord = doc['originalRecord']
+    for p in originalRecord.keys():
+        if p in COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING:
+            solr_doc.update(COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING[p](originalRecord))
+    sourceResource = doc['sourceResource']
+    for p in sourceResource.keys():
+        if p in COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING:
+            solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
     return solr_doc
 
-def push_couch_doc_to_solr(solr_doc, solr_db):
+def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
@@ -85,7 +92,7 @@ def main():
         n += 1
         doc = db.get(row['id'])
         solr_doc = map_couch_to_solr_doc(doc)
-        solr_doc = push_couch_doc_to_solr(solr_doc, solr_db=solr_db) 
+        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
     #TODO: set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS")
 

@@ -26,7 +26,7 @@ from harvester.queue_harvest import get_redis_connection, check_redis_queue
 from harvester.queue_harvest import start_ec2_instances
 from harvester.queue_harvest import parse_env as qh_parse_env
 from harvester.solr_updater import main as solr_updater_main
-from harvester.solr_updater import push_couch_doc_to_solr, map_couch_to_solr_doc
+from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 
 #from harvester import Collection
@@ -1193,21 +1193,23 @@ class SolrUpdaterTestCase(TestCase):
 #    def testMain(self):
 #        '''Test running of main fn'''
 #solr_updater_main
-    def test_push_couch_doc_to_solr(self):
-        pass
+###    def test_push_doc_to_solr(self):
+###        f = open('pickled_couchdb_doc')
+###        doc = pickle.load(f)
+###        sdoc = map_couch_to_solr_doc(doc)
+###        push_doc_to_solr(sdoc)
+    #@patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
+
+
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
         '''
-        from pprint import pprint
         f = open('pickled_couchdb_doc')
         doc = pickle.load(f)
-        pprint('COLLECTION CDB: {0}'.format(doc['originalRecord']['collection']))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], doc['_id'])
         self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
-        pprint(sdoc)
-        #self.assertEqual(sdoc['collection'], 'pleasants-family-papers--http://ark.cdlib.org/ark:/13030/hb9d5nb63n')
 
     def test_set_couchdb_last_seq(self):
         pass
