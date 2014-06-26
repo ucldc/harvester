@@ -39,6 +39,11 @@ TEST_COUCH_DASHBOARD = 'test-dashboard'
 
 def skipUnlessIntegrationTest(selfobj=None):
     '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
+    TO run integration tests need the following:
+    - Registry server
+    - couchdb server with databases setup
+    - redis server
+    - solr server with schema
     '''
     if os.environ.get('RUN_INTEGRATION_TESTS', False):
         return lambda func: func
@@ -1193,13 +1198,15 @@ class SolrUpdaterTestCase(TestCase):
 #    def testMain(self):
 #        '''Test running of main fn'''
 #solr_updater_main
-###    def test_push_doc_to_solr(self):
-###        f = open('pickled_couchdb_doc')
-###        doc = pickle.load(f)
-###        sdoc = map_couch_to_solr_doc(doc)
-###        push_doc_to_solr(sdoc)
-    #@patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
-
+    @patch('solr.Solr', autospec=True)
+    def test_push_doc_to_solr(self, mock_solr):
+        '''Unit test calls to solr'''
+        f = open('pickled_couchdb_doc')
+        doc = pickle.load(f)
+        sdoc = map_couch_to_solr_doc(doc)
+        push_doc_to_solr(sdoc, mock_solr)
+        mock_solr.add.assert_called_with({'repository': [u'Bancroft Library'], 'collection_name': u'Uchida (Yoshiko) photograph collection', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive'], 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'collection': {u'@id': u'https://registry.cdlib.org/api/v1/collection/23066', u'name': u'Uchida (Yoshiko) photograph collection'}, 'campus': [u'UC Berkeley']})
+        print('CALLS:{0}'.format( mock_solr.mock_calls))
 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
@@ -1211,10 +1218,23 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], doc['_id'])
         self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
 
-    def test_set_couchdb_last_seq(self):
-        pass
-    def test_get_couchdb_last_seq(self):
-        pass
+    @patch('boto.connect_s3', autospec=True)
+    def test_set_couchdb_last_seq(self, mock_boto):
+        '''Mock test s3 last_seq setting'''
+        set_couchdb_last_seq(5)
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_get_couchdb_last_seq(self, mock_boto):
+        '''Mock test s3 last_seq getting'''
+        get_couchdb_last_seq()
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
 
 CONFIG_FILE_DPLA = '''
