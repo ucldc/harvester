@@ -7,7 +7,10 @@ import re
 import json
 import shutil
 import tempfile
+import pickle
 from mock import MagicMock
+from mock import Mock
+from mock import call as mcall
 from mock import patch
 from mock import call, ANY
 from xml.etree import ElementTree as ET
@@ -15,8 +18,17 @@ import requests
 import harvester
 import logbook
 import httpretty
+from redis import Redis
 from harvester import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
+from harvester.queue_harvest import main as queue_harvest_main
+from harvester.queue_harvest import get_redis_connection, check_redis_queue
+from harvester.queue_harvest import start_ec2_instances
+from harvester.queue_harvest import parse_env as qh_parse_env
+from harvester.solr_updater import main as solr_updater_main
+from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
+from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
+
 #from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
@@ -27,6 +39,11 @@ TEST_COUCH_DASHBOARD = 'test-dashboard'
 
 def skipUnlessIntegrationTest(selfobj=None):
     '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
+    TO run integration tests need the following:
+    - Registry server
+    - couchdb server with databases setup
+    - redis server
+    - solr server with schema
     '''
     if os.environ.get('RUN_INTEGRATION_TESTS', False):
         return lambda func: func
@@ -1080,28 +1097,167 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
     '''
-    @httpretty.activate
+    @patch('rq.Queue', autospec=True)
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
     @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
     @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
     @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
     @patch('dplaingestion.couch.Couch')
-    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich):
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq_q):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
         mail_handler = MagicMock()
+        httpretty.enable()
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 body=open('./fixtures/collection_api_test_oac.json').read())
         httpretty.register_uri(httpretty.GET,
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open('./fixtures/testOAC-url_next-1.json').read())
-                #body=open('./fixtures/testOAC.json').read())
         run_ingest.main('mark.redar@ucop.edu',
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 mail_handler=mail_handler)
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
+        mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
+        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
+        self.assertIn('call().enqueue(<function', mock_calls[1])
+
+class QueueHarvestTestCase(TestCase):
+    '''Test the queue harvester. 
+    For now will mock the RQ library.
+    '''
+    def testGetRedisConnection(self):
+        r = get_redis_connection('127.0.0.1', '6379', 'PASS')
+        self.assertEqual(str(type(r)), "<class 'redis.client.Redis'>")
+
+    def testCheckRedisQ(self):
+        with patch('redis.Redis.ping', return_value=False) as mock_redis:
+            res = check_redis_queue('127.0.0.1', '6379', 'PASS')
+            self.assertEqual(res, False)
+        with patch('redis.Redis.ping', return_value=True) as mock_redis:
+            res = check_redis_queue('127.0.0.1', '6379', 'PASS')
+            self.assertEqual(res, True)
+
+    @patch('boto.ec2')
+    def testStartEC2(self, mock_boto):
+        start_ec2_instances('XXXX', 'YYYY')
+        mock_boto.connect_to_region.assert_called_with('us-east-1')
+        mock_boto.connect_to_region().start_instances.assert_called_with(('XXXX', 'YYYY'))
+
+    def testParseEnv(self):
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        with self.assertRaises(KeyError) as cm:
+            qh_parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+        h, p, pswd, ingest, build = qh_parse_env()
+        self.assertEqual(h, 'http://127.0.0.1')
+        self.assertEqual(p, '6379')
+        self.assertEqual(pswd, 'XX')
+        self.assertEqual(ingest, 'INGEST')
+        self.assertEqual(build, 'BUILD')
+
+    @patch('boto.ec2')
+    def testMain(self, mock_boto):
+        with self.assertRaises(Exception) as cm:
+            with patch('harvester.queue_harvest.Redis') as mock_redis:
+                mock_redis().ping.return_value = False
+                queue_harvest_main('mark.redar@ucop.edu',
+                    'https://registry.cdlib.org/api/v1/collection/178/',
+                    redis_host='127.0.0.1',
+                    redis_port='6379',
+                    redis_pswd='X',
+                    timeout=1,
+                    poll_interval=1
+                )
+        self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE. TODO: EMAIL USER', cm.exception.message)
+        with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
+            mock_redis().ping.return_value = True
+            queue_harvest_main('mark.redar@ucop.edu',
+                'https://registry.cdlib.org/api/v1/collection/178/',
+                redis_host='127.0.0.1',
+                redis_port='6379',
+                redis_pswd='X',
+                timeout=1,
+                poll_interval=1
+                )
+        mock_calls = [ str(x) for x in mock_redis.mock_calls]
+        self.assertEqual(len(mock_calls), 9)
+        self.assertEqual(mock_redis.call_count, 4)
+        self.assertIn('call().ping()', mock_calls)
+        self.assertIn("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls)
+
+
+class SolrUpdaterTestCase(TestCase):
+    '''Test the solr update from couchdb changes feed'''
+#    def testMain(self):
+#        '''Test running of main fn'''
+#solr_updater_main
+    @patch('solr.Solr', autospec=True)
+    def test_push_doc_to_solr(self, mock_solr):
+        '''Unit test calls to solr'''
+        f = open('pickled_couchdb_doc')
+        doc = pickle.load(f)
+        sdoc = map_couch_to_solr_doc(doc)
+        push_doc_to_solr(sdoc, mock_solr)
+        mock_solr.add.assert_called_with({'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': u'Uchida (Yoshiko) photograph collection', 'format': u'mods', 'title': u'Neighbor', 'collection': u'https://registry.cdlib.org/api/v1/collection/23066', 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'campus_name': [u'UC Berkeley'], 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'type': u'image', 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
+
+    def test_map_couch_to_solr_doc(self):
+        '''Test the mapping of a couch db source json doc to a solr schema
+        compatible doc.
+        '''
+        f = open('pickled_couchdb_doc')
+        doc = pickle.load(f)
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['id'], doc['_id'])
+        self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['campus'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
+        self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
+        self.assertEqual(sdoc['repository'],  [u'https://registry.cdlib.org/api/v1/repository/4/'])
+        self.assertEqual(sdoc['repository_name'], [u'Bancroft Library'])
+        self.assertEqual(sdoc['collection'],'https://registry.cdlib.org/api/v1/collection/23066') 
+        self.assertEqual(sdoc['collection_name'], 'Uchida (Yoshiko) photograph collection')
+        self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        #self.assertEqual(sdoc['contributor'], '')
+        #self.assertEqual(sdoc['coverage'], '')
+        #self.assertEqual(sdoc['creator'], '')
+        #self.assertEqual(sdoc['description'], '')
+        #self.assertEqual(sdoc['date'], '')
+        #self.assertEqual(sdoc['language'], '')
+        self.assertEqual(sdoc['publisher'], u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/'),
+        self.assertEqual(sdoc['relation'], [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'])
+        self.assertEqual(sdoc['rights'], [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'])
+        self.assertEqual(sdoc['subject'], [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive'])
+        self.assertEqual(sdoc['title'], u'Neighbor')
+        self.assertEqual(sdoc['type'], u'image')
+        self.assertEqual(sdoc['format'], 'mods')
+        #self.assertEqual(sdoc['extent'], '')
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_set_couchdb_last_seq(self, mock_boto):
+        '''Mock test s3 last_seq setting'''
+        set_couchdb_last_seq(5)
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_get_couchdb_last_seq(self, mock_boto):
+        '''Mock test s3 last_seq getting'''
+        get_couchdb_last_seq()
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
 
 CONFIG_FILE_DPLA = '''

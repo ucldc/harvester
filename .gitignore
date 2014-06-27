@@ -1,10 +1,13 @@
-*.py[cod]
-
 profiles
 workspace
 venv
 logs
 akara.ini
+include
+local
+share
+
+*.py[cod]
 
 # C extensions
 *.so

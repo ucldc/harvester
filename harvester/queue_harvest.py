@@ -5,7 +5,7 @@ import sys
 import os
 import datetime
 import time
-from redis import Redis
+from  redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 import boto.ec2
@@ -14,10 +14,10 @@ import run_ingest
 
 REDIS_HOST = 'http://127.0.0.1'
 REDIS_PORT = '6379'
-REDIS_CONNECT_TIMEOUT = 1
+REDIS_CONNECT_TIMEOUT = 10
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
-TIMEOUT = datetime.timedelta(seconds=600)
+TIMEOUT = 600 
 
 def get_redis_connection(redis_host, redis_port, redis_pswd):
     return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
@@ -53,9 +53,9 @@ def parse_env():
     redis_host = os.environ.get('REDIS_HOST', REDIS_HOST)
     redis_port = os.environ.get('REDIS_PORT', REDIS_PORT)
     try:
-        redis_pswd = os.environ['REDIS_PSWD']
+        redis_pswd = os.environ['REDIS_PASSWORD']
     except KeyError, e:
-        raise KeyError('Please set environment variable REDIS_PSWD to redis password!')
+        raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
     try:
         id_ec2_ingest = os.environ['ID_EC2_INGEST']
     except KeyError, e:
@@ -66,14 +66,15 @@ def parse_env():
         raise KeyError('Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
     return redis_host, redis_port, redis_pswd, id_ec2_ingest, id_ec2_solr_build
 
-def main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD):
+def main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD, timeout=None, poll_interval=20):
+    timeout_dt = datetime.timedelta(seconds=timeout) if timeout else datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):
         start_ec2_instances(id_ec2_ingest=id_ec2_ingest, id_ec2_solr=id_ec2_solr)
     start_time = datetime.datetime.now()
     while not check_redis_queue(redis_host, redis_port, redis_pswd):
-        time.sleep(20)
-        if datetime.datetime.now() - start_time > TIMEOUT:
-            raise Exception('TIMEOUT WAITING FOR QUEUE. EMAIL USER')
+        time.sleep(poll_interval)
+        if datetime.datetime.now() - start_time > timeout_dt:
+            raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE. TODO: EMAIL USER'.format(timeout))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
     result = rQ.enqueue(run_ingest.main, user_email, url_api_collection)
     print result
