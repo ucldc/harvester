@@ -109,7 +109,8 @@ def main():
         doc = db.get(row['id'])
         solr_doc = map_couch_to_solr_doc(doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
-    #TODO: set_couchdb_last_seq(last_seq)
+    solr_db.commit() #commit updates
+    set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS".format(n))
 
 if __name__=='__main__':

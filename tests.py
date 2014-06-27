@@ -1132,8 +1132,9 @@ class QueueHarvestTestCase(TestCase):
         self.assertEqual(str(type(r)), "<class 'redis.client.Redis'>")
 
     def testCheckRedisQ(self):
-        res = check_redis_queue('127.0.0.1', '6379', 'PASS')
-        self.assertEqual(res, False)
+        with patch('redis.Redis.ping', return_value=False) as mock_redis:
+            res = check_redis_queue('127.0.0.1', '6379', 'PASS')
+            self.assertEqual(res, False)
         with patch('redis.Redis.ping', return_value=True) as mock_redis:
             res = check_redis_queue('127.0.0.1', '6379', 'PASS')
             self.assertEqual(res, True)
@@ -1167,17 +1168,19 @@ class QueueHarvestTestCase(TestCase):
     @patch('boto.ec2')
     def testMain(self, mock_boto):
         with self.assertRaises(Exception) as cm:
-            queue_harvest_main('mark.redar@ucop.edu',
-                'https://registry.cdlib.org/api/v1/collection/178/',
-                redis_host='127.0.0.1',
-                redis_port='6379',
-                redis_pswd='X',
-                timeout=1,
-                poll_interval=1
+            with patch('harvester.queue_harvest.Redis') as mock_redis:
+                mock_redis().ping.return_value = False
+                queue_harvest_main('mark.redar@ucop.edu',
+                    'https://registry.cdlib.org/api/v1/collection/178/',
+                    redis_host='127.0.0.1',
+                    redis_port='6379',
+                    redis_pswd='X',
+                    timeout=1,
+                    poll_interval=1
                 )
         self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE. TODO: EMAIL USER', cm.exception.message)
-        with patch('redis.Redis', autospec=True) as mock_redis:
-            mock_redis.ping.return_value = True
+        with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
+            mock_redis().ping.return_value = True
             queue_harvest_main('mark.redar@ucop.edu',
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 redis_host='127.0.0.1',
@@ -1187,8 +1190,8 @@ class QueueHarvestTestCase(TestCase):
                 poll_interval=1
                 )
         mock_calls = [ str(x) for x in mock_redis.mock_calls]
-        self.assertEqual(len(mock_calls), 10)
-        self.assertEqual(mock_redis.call_count, 3)
+        self.assertEqual(len(mock_calls), 9)
+        self.assertEqual(mock_redis.call_count, 4)
         self.assertIn('call().ping()', mock_calls)
         self.assertIn("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls)
 

@@ -5,7 +5,7 @@ import sys
 import os
 import datetime
 import time
-import redis
+from  redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 import boto.ec2
@@ -20,7 +20,7 @@ ID_EC2_SOLR_BUILD = ''
 TIMEOUT = 600 
 
 def get_redis_connection(redis_host, redis_port, redis_pswd):
-    return redis.Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
+    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
 
 def check_redis_queue(redis_host, redis_port, redis_pswd):
     '''Check if the redis host db is up and running'''
