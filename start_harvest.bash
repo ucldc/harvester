@@ -15,5 +15,6 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.com/questions/59895
 cd $DIR
 
+. ~/.harvester-env
 . ./bin/activate
 python harvester/queue_harvest.py "$1" "$2"
