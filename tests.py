@@ -19,7 +19,7 @@ import harvester
 import logbook
 import httpretty
 from redis import Redis
-from harvester import get_log_file_path
+from harvester.fetcher import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
 from harvester.queue_harvest import main as queue_harvest_main
 from harvester.queue_harvest import get_redis_connection, check_redis_queue
@@ -32,6 +32,7 @@ from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 #from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
+import harvester.fetcher as harvester
 
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
@@ -932,7 +933,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
             c.dpla_profile_obj
 
     @httpretty.activate
-    @patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
+    @patch('harvester.fetcher.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
     def testMainHarvestController__init__Error(self, mock_method):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
@@ -951,7 +952,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         os.remove(os.path.abspath(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
 
     @httpretty.activate
-    @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
+    @patch('harvester.fetcher.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",

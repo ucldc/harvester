@@ -60,7 +60,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
     try:
-        collection = harvester.Collection(url_api_collection)
+        collection = harvester.collection_registry_client.Collection(url_api_collection)
     except Exception, e:
         mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for ' + url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
         mail_handler.deliver(mimetext, user_email)
@@ -69,7 +69,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         #log_handler = logbook.FileHandler(harvester.get_log_file_path(collection.slug))
         log_handler = logbook.StderrHandler(level='DEBUG')
 
-    ingest_doc_id, num_recs, dir_save = harvester.main(
+    ingest_doc_id, num_recs, dir_save = harvester.fetcher.main(
                         user_email,
                         url_api_collection,
                         log_handler=log_handler,

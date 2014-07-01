@@ -10,7 +10,7 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 import boto.ec2
 
-import run_ingest
+import harvester.run_ingest
 
 REDIS_HOST = 'http://127.0.0.1'
 REDIS_PORT = '6379'
@@ -76,7 +76,7 @@ def main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS
         if datetime.datetime.now() - start_time > timeout_dt:
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE. TODO: EMAIL USER'.format(timeout))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue(run_ingest.main, user_email, url_api_collection)
+    result = rQ.enqueue(harvester.run_ingest.main, user_email, url_api_collection)
     print result
 
 if __name__=='__main__':
