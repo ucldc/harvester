@@ -50,7 +50,7 @@ def parse_env():
     redis_host = os.environ.get('REDIS_HOST', REDIS_HOST)
     redis_port = os.environ.get('REDIS_PORT', REDIS_PORT)
     try:
-        redis_pswd = os.environ['REDIS_PASSSWORD']
+        redis_pswd = os.environ['REDIS_PASSWORD']
     except KeyError, e:
         raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
     return redis_host, redis_port, redis_pswd
