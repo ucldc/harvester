@@ -5,3 +5,6 @@ export ID_EC2_INGEST=<ingest control instance>
 export ID_EC2_SOLR_BUILD=<solr work instance>
 export EMAIL_RETURN_ADDRESS=<addr>
 export URL_SOLR=<url to solr work instance>
+export AWS_ACCESS_KEY=<AWS_ACCESS_KEY>
+export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
