@@ -52,7 +52,7 @@ def parse_env():
     try:
         redis_pswd = os.environ['REDIS_PASSSWORD']
     except KeyError, e:
-        raise KeyError('Please set environment variable REDIS_PSWD to redis password!')
+        raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
     return redis_host, redis_port, redis_pswd
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini', redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None):
