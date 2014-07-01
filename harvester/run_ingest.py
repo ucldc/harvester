@@ -15,6 +15,7 @@ from dplaingestion.scripts import dashboard_cleanup
 from dplaingestion.scripts import check_ingestion_counts
 import logbook
 import harvester
+from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 import rq
@@ -55,18 +56,24 @@ def parse_env():
         raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
     return redis_host, redis_port, redis_pswd
 
-def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini', redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None):
+def main(user_email, url_api_collection, log_handler=None,
+        mail_handler=None, dir_profile='profiles', profile_path=None,
+        config_file='akara.ini', redis_host=REDIS_HOST, redis_port=REDIS_PORT,
+        redis_pswd=None):
     logger = logbook.Logger('run_ingest')
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email,
+                                           level=logbook.ERROR) 
     try:
-        collection = harvester.collection_registry_client.Collection(url_api_collection)
+        print("dir harvester:{0}".format(dir(harvester)))
+        collection = Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for ' + url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email,
+                        'Collection init failed for ' + url_api_collection,
+                        ' '.join(('Exception in Collection', url_api_collection,                        ' init', str(e))))
         mail_handler.deliver(mimetext, user_email)
         raise e
     if not log_handler:
-        #log_handler = logbook.FileHandler(harvester.get_log_file_path(collection.slug))
         log_handler = logbook.StderrHandler(level='DEBUG')
 
     ingest_doc_id, num_recs, dir_save = harvester.fetcher.main(
