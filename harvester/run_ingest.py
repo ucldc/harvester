@@ -14,7 +14,7 @@ from dplaingestion.scripts import remove_deleted_records
 from dplaingestion.scripts import dashboard_cleanup
 from dplaingestion.scripts import check_ingestion_counts
 import logbook
-import harvester
+from harvester import fetcher
 from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
@@ -64,8 +64,8 @@ def main(user_email, url_api_collection, log_handler=None,
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email,
                                            level=logbook.ERROR) 
+    
     try:
-        print("dir harvester:{0}".format(dir(harvester)))
         collection = Collection(url_api_collection)
     except Exception, e:
         mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email,
@@ -76,7 +76,7 @@ def main(user_email, url_api_collection, log_handler=None,
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
 
-    ingest_doc_id, num_recs, dir_save = harvester.fetcher.main(
+    ingest_doc_id, num_recs, dir_save = fetcher.main(
                         user_email,
                         url_api_collection,
                         log_handler=log_handler,
