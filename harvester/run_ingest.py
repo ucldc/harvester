@@ -15,6 +15,7 @@ from dplaingestion.scripts import dashboard_cleanup
 from dplaingestion.scripts import check_ingestion_counts
 import logbook
 from harvester import fetcher
+from harvester.parse_env import parse_env
 from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
@@ -22,9 +23,6 @@ import rq
 import solr_updater
 
 EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
-REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
-REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
-REDIS_CONNECT_TIMEOUT = 10
 
 def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg = MIMEText(message)
@@ -33,9 +31,8 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg['To'] = mail_to
     return msg
 
-def get_redis_connection(redis_host, redis_port, redis_pswd):
-    print("HOST:{0}  PORT:{1}".format(redis_host, redis_port))
-    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
+def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
+    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
 
 def def_args():
     import argparse
@@ -45,20 +42,9 @@ def def_args():
             help='URL for the collection Django tastypie api resource')
     return parser
 
-def parse_env():
-    '''Get any overrides from the runtime environment for the server variables
-    '''
-    redis_host = os.environ.get('REDIS_HOST', REDIS_HOST)
-    redis_port = os.environ.get('REDIS_PORT', REDIS_PORT)
-    try:
-        redis_pswd = os.environ['REDIS_PASSWORD']
-    except KeyError, e:
-        raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
-    return redis_host, redis_port, redis_pswd
-
 def main(user_email, url_api_collection, log_handler=None,
         mail_handler=None, dir_profile='profiles', profile_path=None,
-        config_file='akara.ini', redis_host=REDIS_HOST, redis_port=REDIS_PORT,
+        config_file='akara.ini', redis_host=None, redis_port=None,
         redis_pswd=None):
     logger = logbook.Logger('run_ingest')
     if not mail_handler:
@@ -123,7 +109,7 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         sys.exit(27)
-    redis_host, redis_port, redis_pswd = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email, args.url_api_collection, redis_host=redis_host,

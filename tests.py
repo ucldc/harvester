@@ -24,7 +24,7 @@ from harvester.collection_registry_client import Registry, Collection
 from harvester.queue_harvest import main as queue_harvest_main
 from harvester.queue_harvest import get_redis_connection, check_redis_queue
 from harvester.queue_harvest import start_ec2_instances
-from harvester.queue_harvest import parse_env as qh_parse_env
+from harvester.parse_env import parse_env
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
@@ -1094,6 +1094,30 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
         n = self.controller.harvest()
         self.assertEqual(n, 128)
 
+class ParseEnvTestCase(TestCase):
+    '''test the environment variable parsing'''
+    def testParseEnv(self):
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+        self.assertEqual(redis_host, 'http://127.0.0.1')
+        self.assertEqual(redis_port, '6379')
+        self.assertEqual(redis_pswd, 'XX')
+        self.assertEqual(redis_connect_timeout, 10)
+        self.assertEqual(id_ec2_ingest, 'INGEST')
+        self.assertEqual(id_ec2_solr_build, 'BUILD')
+
+
 class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
@@ -1121,7 +1145,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
-        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
+        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=None,port=None,db=0>>>)', mock_calls)
         self.assertIn('call().enqueue(<function', mock_calls[1])
 
 class QueueHarvestTestCase(TestCase):
@@ -1145,26 +1169,6 @@ class QueueHarvestTestCase(TestCase):
         start_ec2_instances('XXXX', 'YYYY')
         mock_boto.connect_to_region.assert_called_with('us-east-1')
         mock_boto.connect_to_region().start_instances.assert_called_with(('XXXX', 'YYYY'))
-
-    def testParseEnv(self):
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
-        os.environ['REDIS_PASSWORD'] = 'XX'
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
-        os.environ['ID_EC2_INGEST'] = 'INGEST'
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
-        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
-        h, p, pswd, ingest, build = qh_parse_env()
-        self.assertEqual(h, 'http://127.0.0.1')
-        self.assertEqual(p, '6379')
-        self.assertEqual(pswd, 'XX')
-        self.assertEqual(ingest, 'INGEST')
-        self.assertEqual(build, 'BUILD')
 
     @patch('boto.ec2')
     def testMain(self, mock_boto):
