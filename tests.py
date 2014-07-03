@@ -1110,7 +1110,7 @@ class ParseEnvTestCase(TestCase):
         self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
         redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
-        self.assertEqual(redis_host, 'http://127.0.0.1')
+        self.assertEqual(redis_host, '127.0.0.1')
         self.assertEqual(redis_port, '6379')
         self.assertEqual(redis_pswd, 'XX')
         self.assertEqual(redis_connect_timeout, 10)
@@ -1145,7 +1145,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
-        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=None,port=None,db=0>>>)', mock_calls)
+        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
         self.assertIn('call().enqueue(<function', mock_calls[1])
 
 class QueueHarvestTestCase(TestCase):

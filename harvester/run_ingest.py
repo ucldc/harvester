@@ -50,7 +50,9 @@ def main(user_email, url_api_collection, log_handler=None,
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email,
                                            level=logbook.ERROR) 
-    
+    if not( redis_host and redis_port and redis_pswd):
+    	redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+ 
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
