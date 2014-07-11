@@ -4,6 +4,7 @@
 import sys
 import os
 
+from ansible import errors
 from ansible import utils
 import ansible.playbook
 import ansible.constants as C

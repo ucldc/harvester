@@ -1,1 +1,1 @@
-solr_build	10.0.1.13
+solr_build	ansible_ssh_host=10.0.1.13 ansible_ssh_private_key_file=~/.ssh/UCLDC-ingest-private.pem

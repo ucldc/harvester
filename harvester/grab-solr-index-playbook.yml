@@ -6,14 +6,22 @@
       dir_servers: '~/servers/'
     tasks:
     - name: get public ip
-      shell:  GET http://169.254.169.254/latest/meta-data/public-ipv4
+      local_action: shell curl http://169.254.169.254/latest/meta-data/public-ipv4
       register: public_ip
-    - name: 
-
-
-#sudo tar -cvf solr-latest-index.tar /home/solr/servers/solr/dc-collection/data/index
+    - name: tar up latests solr index directoy
+      sudo: yes
+      command: tar -cvf solr-latest-index.tar /home/solr/servers/solr/dc-collection/data/index
+    - name: chown back to ec2-user
+      sudo: yes
+      command: chown ec2-user:ec2-user solr-latest-index.tar
+    - name: bzip index file
+      command: bzip2 solr-latest-index.tar
+    - name: fetch index tarball
+      fetch: src=solr-latest-index.tar.bz2 dest=/home/ec2-user/ flat=yes
+    - name: remove artifacts on remote
+      command: rm /home/ec2-user/solr-latest-index.tar.bz2
+ 
 #sudo chown ec2-user:ec2-user solr-latest-index.tar
 #bzip2 solr-latest-index.tar
 #scp solr-latest-index.tar.bz2 10.0.0.68:
 #rm solr-latest-index.tar
-
