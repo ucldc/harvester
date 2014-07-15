@@ -2,7 +2,8 @@ language: python
 python:
   - "2.7"
 
-env: HOME=/home/travis/mredar
+#env: HOME=/home/travis/mredar -- doesn't work
+env: CODE_DIR=.
 
 # command to install dependencies
 install: 
