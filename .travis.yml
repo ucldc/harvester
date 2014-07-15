@@ -13,6 +13,7 @@ install:
   - "mkdir profiles"
   - "mkdir -p ${HOME}/code/harvester/harvester/"
   - "touch ${HOME}/code/harvester/harvester/grab-solr-index-playbook.yml"
+  - "touch ${HOME}/code/harvester/harvester/host_inventory"
 
 # command to run tests
 script: python tests.py
