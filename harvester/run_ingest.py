@@ -102,8 +102,9 @@ def main(user_email, url_api_collection, log_handler=None,
         sys.exit(1)
 
     rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue(solr_updater.main)
+    update_job = rQ.enqueue(solr_updater.main)
     logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
+    fetch_index_job = rQ.enqueue(grab_solr_index, depends_on=update_job)
 
 if __name__ == '__main__':
     parser = def_args()
