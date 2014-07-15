@@ -28,6 +28,7 @@ from harvester.parse_env import parse_env
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
+from harvester import grab_solr_index
 
 #from harvester import Collection
 from dplaingestion.couch import Couch
@@ -1096,6 +1097,12 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
 class ParseEnvTestCase(TestCase):
     '''test the environment variable parsing'''
+    def tearDown(self):
+        # remove env vars if created?
+        del os.environ['REDIS_PASSWORD']
+        del os.environ['ID_EC2_INGEST']
+        del os.environ['ID_EC2_SOLR_BUILD']
+
     def testParseEnv(self):
         with self.assertRaises(KeyError) as cm:
             parse_env()
@@ -1122,6 +1129,17 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
     '''
+    def setUp(self):
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+
+    def tearDown(self):
+        # remove env vars if created?
+        del os.environ['REDIS_PASSWORD']
+        del os.environ['ID_EC2_INGEST']
+        del os.environ['ID_EC2_SOLR_BUILD']
+
     @patch('rq.Queue', autospec=True)
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
@@ -1145,8 +1163,12 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
+        self.assertEqual(len(mock_calls), 3)
+        print("MOCK CALLS FOR RQ:{0}".format(mock_calls))
         self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
         self.assertIn('call().enqueue(<function', mock_calls[1])
+        self.assertIn('call().enqueue(<function', mock_calls[2])
+        self.assertIn('depends_on', mock_calls[2])
 
 class QueueHarvestTestCase(TestCase):
     '''Test the queue harvester. 
@@ -1264,6 +1286,27 @@ class SolrUpdaterTestCase(TestCase):
         mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
+class GrabSolrIndexTestCase(TestCase):
+    '''Basic test for grabbing solr index. Like others, heavily mocked
+    '''
+    @patch('ansible.callbacks.PlaybookRunnerCallbacks', autospec=True)
+    @patch('ansible.callbacks.PlaybookCallbacks', autospec=True)
+    @patch('ansible.callbacks.AggregateStats', autospec=True)
+    @patch('ansible.inventory.Inventory', autospec=True)
+    @patch('ansible.playbook.PlayBook', autospec=True)
+    def test_grab_solr_main(self, mock_pb, mock_inv, mock_stats, mock_cb, mock_cbr):
+        inventory = mock_inv.return_value
+        inventory.list_hosts.return_value = ['test-host']
+        grab_solr_index.main()
+        mock_pb.assert_called_with(playbook=os.environ['HOME']+'/code/harvester/harvester/grab-solr-index-playbook.yml',
+                inventory=inventory,
+                callbacks=mock_cb.return_value,
+                runner_callbacks=mock_cbr.return_value,
+                stats=mock_stats.return_value
+        )
+        self.assertEqual(mock_pb.return_value.run.called, True)
+        self.assertEqual(mock_pb.return_value.run.call_count, 1)
+       
 
 CONFIG_FILE_DPLA = '''
 [Akara]

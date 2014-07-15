@@ -55,7 +55,7 @@ def main(playbook, inventory, remote_user=None, private_key_file=None):
 ###        module_path=options.module_path,
         inventory=inventory,
 ###        forks=options.forks,
-       remote_user=remote_user,
+###       remote_user=remote_user,
 ###        remote_pass=sshpass,
         callbacks=playbook_cb,
         runner_callbacks=runner_cb,
@@ -66,12 +66,16 @@ def main(playbook, inventory, remote_user=None, private_key_file=None):
 ###        sudo_user=options.sudo_user,
 ###        sudo_pass=sudopass,
 ###        extra_vars=extra_vars,
-        private_key_file=private_key_file,
+###        private_key_file=private_key_file,
 ###        only_tags=only_tags,
 ###        check=options.check,
 ###        diff=options.diff
     )
 
+    if remote_user:
+        pb.remote_user = remote_user
+    if private_key_file:
+        pb.private_key_file = private_key_file
     pb.run()
 
 if __name__=='__main__':

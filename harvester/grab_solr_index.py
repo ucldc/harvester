@@ -7,4 +7,7 @@ def main():
 	playbook = os.path.join(code_dir, 'grab-solr-index-playbook.yml')
 	inventory = os.path.join(code_dir, 'host_inventory')
 	print("======================PLAYBOOK:{0} INV:{1}".format(playbook, inventory))
-	main(playbook, inventory)
+	ansible_run_pb.main(playbook, inventory)
+
+if __name__=='__main__':
+    main()
