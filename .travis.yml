@@ -11,8 +11,8 @@ install:
   - "pip install -r test-requirements.txt --use-mirrors"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
-  - "mkdir -p code/harvester/harvester/"
-  - "touch code/harvester/harvester/grab-solr-index-playbook.yml"
+  - "mkdir -p ~/code/harvester/harvester/"
+  - "touch ~/code/harvester/harvester/grab-solr-index-playbook.yml"
 
 # command to run tests
 script: python tests.py
