@@ -1,8 +1,10 @@
 #Use the ansible runnner to run the specific playbook
 import os
-from  ansible_run_pb import main
+import  ansible_run_pb
 
-code_dir = os.path.abspath(os.path.join(os.environ.get('HOME', '~'), 'code/harvester/harvester/'))
-playbook = os.path.join(code_dir, 'grab-solr-index-playbook.yml')
-inventory = os.path.join(code_dir, 'host_inventory')
-main(playbook, inventory)
+def main():
+	code_dir = os.path.abspath(os.path.join(os.environ.get('HOME', '~'), 'code/harvester/harvester/'))
+	playbook = os.path.join(code_dir, 'grab-solr-index-playbook.yml')
+	inventory = os.path.join(code_dir, 'host_inventory')
+	print("======================PLAYBOOK:{0} INV:{1}".format(playbook, inventory))
+	main(playbook, inventory)
