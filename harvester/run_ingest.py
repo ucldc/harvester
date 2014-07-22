@@ -65,47 +65,49 @@ def main(user_email, url_api_collection, log_handler=None,
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
 
-    ingest_doc_id, num_recs, dir_save = fetcher.main(
-                        user_email,
-                        url_api_collection,
-                        log_handler=log_handler,
-                        mail_handler=mail_handler
-            )
-
-    logger.info( "INGEST DOC ID:{0}".format(ingest_doc_id))
-    logger.info('HARVESTED {0} RECORDS'.format(num_recs))
-    logger.info('IN DIR:{0}'.format(dir_save))
-    resp = enrich_records.main([None, ingest_doc_id])
-    if not resp == 0:
-        logger.error("Error enriching records")
-        sys.exit(1)
-    logger.info('Enriched records')
-
-    resp = save_records.main([None, ingest_doc_id])
-    if not resp == 0:
-        logger.error("Error saving records {0}".format(str(resp)))
-        sys.exit(1)
-    logger.info("SAVED RECS")
-
-    resp = remove_deleted_records.main([None, ingest_doc_id]) 
-    if not resp == 0:
-        logger.error( "Error deleting records")
-        sys.exit(1)
-
-    resp = check_ingestion_counts.main([None, ingest_doc_id])
-    if not resp == 0:
-        logger.error( "Error checking counts")
-        sys.exit(1)
-
-    resp = dashboard_cleanup.main([None, ingest_doc_id])
-    if not resp == 0:
-        logger.error( "Error cleaning up dashboard")
-        sys.exit(1)
-
-    rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    update_job = rQ.enqueue(solr_updater.main)
-    logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
-    fetch_index_job = rQ.enqueue(grab_solr_index.main, depends_on=update_job)
+    with mail_handler.applicationbound():
+        with log_handler.applicationbound():
+            ingest_doc_id, num_recs, dir_save = fetcher.main(
+                                user_email,
+                                url_api_collection,
+                                log_handler=log_handler,
+                                mail_handler=mail_handler
+                    )
+        
+            logger.info( "INGEST DOC ID:{0}".format(ingest_doc_id))
+            logger.info('HARVESTED {0} RECORDS'.format(num_recs))
+            logger.info('IN DIR:{0}'.format(dir_save))
+            resp = enrich_records.main([None, ingest_doc_id])
+            if not resp == 0:
+                logger.error("Error enriching records")
+                sys.exit(1)
+            logger.info('Enriched records')
+        
+            resp = save_records.main([None, ingest_doc_id])
+            if not resp == 0:
+                logger.error("Error saving records {0}".format(str(resp)))
+                sys.exit(1)
+            logger.info("SAVED RECS")
+        
+            resp = remove_deleted_records.main([None, ingest_doc_id]) 
+            if not resp == 0:
+                logger.error( "Error deleting records")
+                sys.exit(1)
+        
+            resp = check_ingestion_counts.main([None, ingest_doc_id])
+            if not resp == 0:
+                logger.error( "Error checking counts")
+                sys.exit(1)
+        
+            resp = dashboard_cleanup.main([None, ingest_doc_id])
+            if not resp == 0:
+                logger.error( "Error cleaning up dashboard")
+                sys.exit(1)
+        
+            rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
+            update_job = rQ.enqueue(solr_updater.main)
+            logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
+            fetch_index_job = rQ.enqueue(grab_solr_index.main, depends_on=update_job)
 
 if __name__ == '__main__':
     parser = def_args()

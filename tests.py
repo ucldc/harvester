@@ -1164,7 +1164,6 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_enrich.assert_called_with([None, 'test-id'])
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
         self.assertEqual(len(mock_calls), 3)
-        print("MOCK CALLS FOR RQ:{0}".format(mock_calls))
         self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
         self.assertIn('call().enqueue(<function', mock_calls[1])
         self.assertIn('call().enqueue(<function', mock_calls[2])

@@ -519,7 +519,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
                 harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
                 logger.info(msg)
                 #email directly
-                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
+                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest of raw records for ', collection.slug, ' enriching next')), msg)
                 mail_handler.deliver(mimetext, user_email)
             except Exception, e:
                 import traceback
