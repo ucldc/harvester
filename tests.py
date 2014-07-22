@@ -1289,6 +1289,12 @@ class SolrUpdaterTestCase(TestCase):
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
     '''
+    def setUp(self):
+        os.environ['DIR_CODE'] = os.path.abspath(os.path.dirname(__file__))
+
+    def tearDown(self):
+        del os.environ['DIR_CODE']
+
     @patch('ansible.callbacks.PlaybookRunnerCallbacks', autospec=True)
     @patch('ansible.callbacks.PlaybookCallbacks', autospec=True)
     @patch('ansible.callbacks.AggregateStats', autospec=True)
@@ -1298,7 +1304,7 @@ class GrabSolrIndexTestCase(TestCase):
         inventory = mock_inv.return_value
         inventory.list_hosts.return_value = ['test-host']
         grab_solr_index.main()
-        mock_pb.assert_called_with(playbook=os.environ['HOME']+'/code/harvester/harvester/grab-solr-index-playbook.yml',
+        mock_pb.assert_called_with(playbook=os.path.join(os.environ['DIR_CODE'], 'harvester/grab-solr-index-playbook.yml'),
                 inventory=inventory,
                 callbacks=mock_cb.return_value,
                 runner_callbacks=mock_cbr.return_value,
