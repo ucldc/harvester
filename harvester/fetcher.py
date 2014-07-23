@@ -17,9 +17,8 @@ from logbook import FileHandler
 from collection_registry_client import Collection
 import dplaingestion.couch 
 
-EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
+EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
-
 
 #TODO: Each harvester must pick correct field for creating a "handle"
 class Harvester(object):
@@ -106,7 +105,10 @@ class OAC_XML_Harvester(Harvester):
         ids = docHit.find('meta').findall('identifier')
         ark = None
         for i in ids:
-            split = i.text.split('ark:')
+            try:
+                split = i.text.split('ark:')
+            except AttributeError:
+                continue
             if len(split) > 1:
                 ark = ''.join(('ark:', split[1]))
         return ark
@@ -312,7 +314,7 @@ class HarvestController(object):
     dc_elements = ['title', 'creator', 'subject', 'description', 'publisher', 'contributor', 'date', 'type', 'format', 'identifier', 'source', 'language', 'relation', 'coverage', 'rights']
 
     def __init__(self, user_email, collection, profile_path=None, config_file='akara.ini'):
-        self.user_email = user_email
+        self.user_email = user_email #single or list
         self.collection = collection
         self.profile_path = profile_path
         self.config_file = config_file
@@ -348,8 +350,11 @@ class HarvestController(object):
         return sID
 
     def save_objset(self, objset):
-        '''Save an object set to disk'''
+        '''Save an object set to disk. If it is a single object, wrap in a
+        list to be uniform'''
         filename = os.path.join(self.dir_save, str(uuid.uuid4()))
+        if not type(objset) == list:
+            objset = [ objset ]
         with open(filename, 'w') as foo:
             foo.write(json.dumps(objset))
 
@@ -421,7 +426,7 @@ class HarvestController(object):
 
     def harvest(self):
         '''Harvest the collection'''
-        self.logger.info(' '.join(('Starting harvest for:', self.user_email, self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
+        self.logger.info(' '.join(('Starting harvest for:', str(self.user_email), self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
         self.num_records = 0
         next_log_n = interval = 100
         for objset in self.harvester:
@@ -462,7 +467,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     msg = MIMEText(message)
     msg['Subject'] = str(subject)
     msg['From'] = mail_from
-    msg['To'] = mail_to
+    msg['To'] = mail_to if type(mail_to) == str else ', '.join(mail_to)
     return msg
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini'):
@@ -471,61 +476,65 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     '''
     num_recs = -1
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
+                                           user_email,
+                                           level='ERROR',
+                                           bubble=True)
+    mail_handler.push_application()
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for '+url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
-        mail_handler.deliver(mimetext, user_email)
+        msg = 'Exception in Collection {}, init {}'.format(url_api_collection, str(e))
+        logbook.error(msg)
         raise e
     if not(collection['harvest_type'] in HARVEST_TYPES):
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Wrong Collection Type {0}'.format(collection['harvest_type']), 'Collection {0} wrong type {1} for harvesting.'.format(url_api_collection, collection['harvest_type']))
-        mail_handler.deliver(mimetext, user_email)
+        msg = 'Collection {} wrong type {} for harvesting.'.format(url_api_collection, collection['harvest_type'])
+        logbook.error(msg)
         raise ValueError('Collection is not an OAC or OAI harvest collection')
-    mail_handler.subject = "Error during harvest of " + collection.url
-    if not log_handler:
-        log_handler = FileHandler(get_log_file_path(collection.slug))
-    with log_handler.applicationbound():
-        with mail_handler.applicationbound():
-            logger = logbook.Logger('HarvestMain')
-            logger.info('Init harvester next')
-            msg = ' '.join(('ARGS:', user_email, collection.url))
-            logger.info(msg)
-            #email directly
-            mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
-            mail_handler.deliver(mimetext, user_email)
-            logger.info('Create DPLA profile document')
-            if not profile_path:
-                profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
-            with codecs.open(profile_path, 'w', 'utf8') as pfoo:
-                pfoo.write(collection.dpla_profile)
-            logger.info('DPLA profile document : '+profile_path)
-            harvester = None
-            try:
-                harvester = HarvestController(user_email, collection, profile_path=profile_path, config_file=config_file)
-            except Exception, e:
-                import traceback
-                error_msg = "Exception in harvester init: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
-                #logger.error(' '.join(("Exception in harvester init", unicode(e))))
-                logger.error(error_msg)
-                raise e
-            logger.info('Create ingest doc in couch')
-            ingest_doc_id = harvester.create_ingest_doc()
-            logger.info('Ingest DOC ID: '+ ingest_doc_id)
-            logger.info('Start harvesting next')
-            try:
-                num_recs = harvester.harvest()
-                msg = ''.join(('Finished harvest of ', collection.slug, '. ', str(num_recs), ' records harvested.'))
-                harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
-                logger.info(msg)
-                #email directly
-                mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest for ', collection.slug)), msg)
-                mail_handler.deliver(mimetext, user_email)
-            except Exception, e:
-                import traceback
-                error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
-                logger.error(error_msg)
-                harvester.update_ingest_doc('error', error_msg=error_msg, items=num_recs)
+    mail_handler.subject = "Error during harvest of " + collection.url #default
+    if not log_handler: #can't init until have collection
+        log_handler = FileHandler(get_log_file_path(collection.slug),
+                                  bubble=True)
+    log_handler.push_application()
+    logger = logbook.Logger('HarvestMain')
+    msg ='Init harvester next. Collection:{}'.format(collection.url) 
+    logger.info(msg)
+    #email directly
+    mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
+    mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    logger.info('Create DPLA profile document')
+    if not profile_path:
+        profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
+    with codecs.open(profile_path, 'w', 'utf8') as pfoo:
+        pfoo.write(collection.dpla_profile)
+    logger.info('DPLA profile document : '+profile_path)
+    harvester = None
+    try:
+        harvester = HarvestController(user_email, collection, profile_path=profile_path, config_file=config_file)
+    except Exception, e:
+        import traceback
+        msg = 'Exception in harvester init: type: {} TRACE:\n{}'.format(type(e), traceback.format_exc())
+        logger.error(msg)
+        raise e
+    logger.info('Create ingest doc in couch')
+    ingest_doc_id = harvester.create_ingest_doc()
+    logger.info('Ingest DOC ID: '+ ingest_doc_id)
+    logger.info('Start harvesting next')
+    try:
+        num_recs = harvester.harvest()
+        msg = ''.join(('Finished harvest of ', collection.slug, '. ', str(num_recs), ' records harvested.'))
+        harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
+        logger.info(msg)
+        #email directly
+        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest of raw records for ', collection.slug, ' enriching next')), msg)
+        mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    except Exception, e:
+        import traceback
+        error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
+        logger.error(error_msg)
+        harvester.update_ingest_doc('error', error_msg=error_msg, items=num_recs)
+    log_handler.pop_application()
+    mail_handler.pop_application()
     return ingest_doc_id, num_recs, harvester.dir_save
 
 if __name__=='__main__':

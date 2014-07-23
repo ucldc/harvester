@@ -2,12 +2,18 @@ language: python
 python:
   - "2.7"
 
+#env: HOME=/home/travis/mredar -- doesn't work
+env: CODE_DIR=.
+
 # command to install dependencies
 install: 
   - "python setup.py install"
   - "pip install -r test-requirements.txt --use-mirrors"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
+  - "mkdir -p ${HOME}/code/harvester/harvester/"
+  - "touch ${HOME}/code/harvester/harvester/grab-solr-index-playbook.yml"
+  - "touch ${HOME}/code/harvester/harvester/host_inventory"
 
 # command to run tests
 script: python tests.py

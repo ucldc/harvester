@@ -1,0 +1,839 @@
+{
+  "objects": [
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "",
+      "description": "",
+      "collection_type": "C",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "",
+      "metadata_level": "",
+      "metadata_standard": "",
+      "name": "On demand patron requests",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/1/",
+      "slug": "on-demand-patron-requests"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt3j49s14x",
+      "url_local": "",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt3j49s14x",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "Selections of photographs, proofs, transparencies, and negatives of Milton \"Hal\" Halberstadt commericial and artistic photography.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "MODS; METS (forthcoming); EAD",
+      "name": "Halberstadt (Milton) Papers and Photographs.",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/2/",
+      "slug": "halberstadt-collection-selections-of-photographs-p"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "",
+      "description": "Amerine Lectures.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Local (UCD File Server)",
+      "metadata_level": "None",
+      "metadata_standard": "",
+      "name": "Viticulture Lectures",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/3/",
+      "slug": "viticulture-lectures-amerine-lectures"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "",
+      "description": "Videos",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Local (UCD File Server)",
+      "metadata_level": "None",
+      "metadata_standard": "",
+      "name": "Daniel J. Crowley and Jean Colvin Carnival of Salvador de Bahia, Brazil videocassettes, 1983",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/4/",
+      "slug": "crowly-carnivale-films-videos"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "51539607552",
+      "enrichments_item": "",
+      "description": "This collection consists of approximately 620 aerial photos taken in Yolo County in 1937.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Local (UCD File Server)",
+      "metadata_level": "Item",
+      "metadata_standard": "MODS (very minimal); METS",
+      "name": "1937 Yolo County Aerial Photographs",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/5/",
+      "slug": "1937-yolo-county-aerial-photographs-this-collectio"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "",
+      "description": "",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Third-party (ProQuest and hopefully eScholarship in the future)",
+      "metadata_level": "Item",
+      "metadata_standard": "MARC",
+      "name": "Electronic Theses and Dissertations",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/6/",
+      "slug": "electronic-theses-and-dissertations"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt5h4nf5dx",
+      "url_local": "http://oac.cdlib.org/findaid/ark:/13030/kt5h4nf5dx/",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt5h4nf5dx",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": "124554051584",
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "The collection contains photographic prints and negatives, and depicts buildings and grounds, faculty and staff, annual events such as Picnic Day, campus events, classes and classrooms, student clubs and activities, departments, and sporting events.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "CDL (Calisphere/OAC)",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "MODS; METS",
+      "name": "University Archives Photographs",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "university-archives",
+          "resource_uri": "/api/v1/repository/13/",
+          "name": "University Archives",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/kt3z09r97h"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/7/",
+      "slug": "university-archives-photos-the-collection-contains"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/tf6w100646",
+      "url_local": "http://oac.cdlib.org/findaid/ark:/13030/tf6w100646/",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf6w100646",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": "207232172032",
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "CDL (Calisphere/OAC)",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "METS; MARC; EAD",
+      "name": "Eastman (J.H.) Collection",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/8/",
+      "slug": "eastman-originals"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt309nf08j",
+      "url_local": "http://oac.cdlib.org/findaid/ark:/13030/kt309nf08j/",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt309nf08j",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "In 1942, Higgins took photographs of Mexican workers entering the United States \"brought in for the [sugar] beet harvest\" for California Fields Crops, Inc. and as Higgins explains in a letter that he tried \"to catch a lot of the social side in pictures.\" The photographs were taken mainly in the agricultural areas of the California communities of Woodland, Pleasanton, Manteca, and Salinas.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "CDL (Calisphere/OAC)",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "MODS, METS, EAD",
+      "name": "Higgins (Floyd Halleck) Photographs of Mexican Sugar Beet Workers",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/9/",
+      "slug": "higgins-images-of-mexican-beet-workers-in-1942-hig"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt3g5003ms",
+      "url_local": "http://digital.lib.ucdavis.edu/projects/bwrp/",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "1610612736",
+      "enrichments_item": "",
+      "description": "The British Women Romantic Poets is a collection of works published by British women poets between 1789 and 1832. Texts are drawn from the UCD Library's Kohler Collection of British Poetry, over 14,000 texts housed in the Special Collections Department and on microfilm. A more detailed description of the project may be found here: http://digital.lib.ucdavis.edu/projects/bwrp/BWRPDesc.htm",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Locally (UCD Library Web Server); CDL (OAC)",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "MARC(for most), METS (for most), EAD Finding Aid ",
+      "name": "British Women Romantic Poets",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/10/",
+      "slug": "british-women-romantic-poets-the-british-women-rom"
+    },
+    {
+      "url_was": "",
+      "url_oai": "http://archive.org/services/oai2.php",
+      "url_oac": "",
+      "url_local": "http://archive.org/search.php?query=collection%3A%22caminesgeo%22",
+      "url_harvest": "http://archive.org/services/oai2.php",
+      "harvest_type": "OAI",
+      "harvest_extra_data": "collection:caminesgeo",
+      "extent": null,
+      "enrichments_item": "/select-id,\r\n/oai-to-dpla,\r\n/cleanup_value,\r\n/move_date_values?prop=sourceResource%2Fsubject,\r\n/move_date_values?prop=sourceResource%2Fspatial,\r\n/shred?prop=sourceResource%2Fspatial&delim=--,\r\n/enrich-subject,\r\n/enrich_date,\r\n/enrich-type,\r\n/enrich-format,\r\n/enrich_location,\r\n/scdl_enrich_location,\r\n/geocode,\r\n/scdl_geocode_regions,\r\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\r\n/cleanup_language,\r\n/enrich_language,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\r\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\r\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\r\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\r\n/enrich_location?prop=sourceResource%2FstateLocatedIn\r\n",
+      "description": "The Bulletin of the California Division of Mines and Geology collection is a series of publications published from 1888 to 2001 by the Division and its predecessor agencies.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Third-party (Internet Archive)",
+      "metadata_level": "Item",
+      "metadata_standard": "MARC",
+      "name": "Bulletin of Calif. division of Mines and Geology",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/11/",
+      "slug": "bulletin-of-calif-division-of-mines-and-geology-th"
+    },
+    {
+      "url_was": "",
+      "url_oai": "http://archive.org/services/oai2.php",
+      "url_oac": "",
+      "url_local": "http://archive.org/details/californiaagriculturalexperimentstationpublications",
+      "url_harvest": "http://archive.org/services/oai2.php",
+      "harvest_type": "OAI",
+      "harvest_extra_data": "collection:californiaagriculturalexperimentstationpublications",
+      "extent": null,
+      "enrichments_item": "/select-id,\r\n/oai-to-dpla,\r\n/cleanup_value,\r\n/move_date_values?prop=sourceResource%2Fsubject,\r\n/move_date_values?prop=sourceResource%2Fspatial,\r\n/shred?prop=sourceResource%2Fspatial&delim=--,\r\n/enrich-subject,\r\n/enrich_date,\r\n/enrich-type,\r\n/enrich-format,\r\n/enrich_location,\r\n/scdl_enrich_location,\r\n/geocode,\r\n/scdl_geocode_regions,\r\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\r\n/cleanup_language,\r\n/enrich_language,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\r\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\r\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\r\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\r\n/enrich_location?prop=sourceResource%2FstateLocatedIn\r\n",
+      "description": "This is a collection of publications produced by the University of CaliforniaÃ­s Agricultural Experiment Station. It contains all items in the Bulletin series which was published from 1884 to 1983. It also contains other series produced by the California Agricultural Experiment Station.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Third-party (Internet Archive)",
+      "metadata_level": "Item",
+      "metadata_standard": "MARC",
+      "name": "California Agricultural Experiment Station Publications",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/13/",
+      "slug": "california-agricultural-experiment-station-publica"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt8n39p803",
+      "url_local": "",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt8n39p803",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": "139586437120",
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "Contains court records and correspondence documenting Chol Soo Lee murder case and appeals. Also include digitized issues of Koreatown Newspaper.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "CDL (Calisphere/OAC)",
+      "metadata_level": "Item level; Collection level",
+      "metadata_standard": "MODS, METS",
+      "name": "Lee (K.W.) Papers",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/12/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCD",
+              "resource_uri": "/api/v1/campus/2/",
+              "position": 1,
+              "name": "UC Davis",
+              "ark": "ark:/13030/tf6p3013t7"
+            }
+          ],
+          "ark": "ark:/13030/tf1489p250"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/14/",
+      "slug": "kw-lee-papers-contains-court-records-and-correspon"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "4499439616",
+      "enrichments_item": "",
+      "description": "This collection provides digital access to contracts between the United Farm Workers Union AFL-CIO and California growers spanning about 30 years. The project is a collaboration between the Digital Initiatives program and the Agricultural and Resource Economics Library. The goal of the project is to provide researchers with access to a searchable and browseable collection of otherwise elusive materials.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCD",
+          "resource_uri": "/api/v1/campus/2/",
+          "position": 1,
+          "name": "UC Davis",
+          "ark": "ark:/13030/tf6p3013t7"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Locally (UCD Library Web Server); CDL (OAC)",
+      "metadata_level": "Item",
+      "metadata_standard": "MARC, TEI ",
+      "name": "Labor Contracts (UFW)",
+      "phase_one": false,
+      "repository": [],
+      "resource_uri": "/api/v1/collection/15/",
+      "slug": "labor-contracts-ufw-this-collection-provides-digit"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt638nf52f",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "12884901888",
+      "enrichments_item": "",
+      "description": "Dr. F. Sherwood Rowland, Donald Bren Research Professor of Chemistry in Earth System Science, came to the University of California Irvine in 1964 as the first chair of the Department of Chemistry. Dr. Rowland was, with postdoctoral colleague Mario Molina, the first to warn that chlorofluorocarbons (CFCs) released into the atmosphere were depleting the earthÃ­s critical ozone layer. Collection comprises Desktop and Document directories from Dr. Rowland's Mac and Macbook Pro.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Current: Locally (Redundantly on hard drives), Future: CDL (Merritt for Preservation) and Locally (UCISpace)",
+      "metadata_level": "Future: Series Level, Item Level",
+      "metadata_standard": "",
+      "name": "Rowland (F. Sherwood) Papers",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/16/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/tf1p3008cx"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/16/",
+      "slug": "f-sherwood-rowland-born-digital-files-dr-f-sherwoo"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt1z09r9q4",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "26843545600",
+      "enrichments_item": "",
+      "description": "3 1/2\" floppy disks: approximately 300 Ranges from 720 KB to 1.4 MB each; 5 1/4\" floppy disks: 152 Ranges from 360 KB to 1.2 MB each; External hard drives: 2 Unknown MB",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Current: Locally (floppy disks and USB Hard Drives), Future: CDL (Merritt for Preservation) and Locally (UCISpace)",
+      "metadata_level": "Future: Series Level, Item Level",
+      "metadata_standard": "",
+      "name": "Miller (J. Hillis) papers",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "critical-theory-archive",
+          "resource_uri": "/api/v1/repository/14/",
+          "name": "Critical Theory Archive",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/kt1m3nb11c"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/17/",
+      "slug": "j-hillis-miller-born-digital-files-3-12-floppy-dis"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt08701714",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": null,
+      "enrichments_item": "",
+      "description": "80 3.5\" Floppies 158 5.25\" Floppies 1 external HD - Unknown Size",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Current: Locally (floppy disks and USB Hard Drives), Future: CDL (Merritt for Preservation) and Locally (UCISpace)",
+      "metadata_level": "Future: Series Level, Item Level",
+      "metadata_standard": "",
+      "name": "Fish (Stanley) Papers",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "critical-theory-archive",
+          "resource_uri": "/api/v1/repository/14/",
+          "name": "Critical Theory Archive",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/kt1m3nb11c"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/18/",
+      "slug": "stanley-fish-born-digital-files-80-35-floppies-158"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/tf867nb584",
+      "url_local": "",
+      "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf867nb584",
+      "harvest_type": "OAC",
+      "harvest_extra_data": "",
+      "extent": "15784004812",
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Locally (Canto Cumulus)",
+      "metadata_level": "Item",
+      "metadata_standard": "Custom",
+      "name": "Cochems (Edward W.) Photographs",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/16/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/tf1p3008cx"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/19/",
+      "slug": "edward-cochems-photographs-this-collection-is-comp"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt7f59s3rs",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "21689584844",
+      "enrichments_item": "/select-id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/scdl_enrich_location,\n/geocode,\n/scdl_geocode_regions,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\n/cleanup_language,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn\n",
+      "description": "This collection consists of black and white photographs taken by Hugh McMillan in the late 1940s and 1950s. Most of the photos were taken in and around Newport Beach while McMillan worked as a reporter and photographer for the Ensign newspaper.",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Locally (Canto Cumulus)",
+      "metadata_level": "Item",
+      "metadata_standard": "Custom",
+      "name": "McMillan (Hugh R.) Photographs",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/16/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/tf1p3008cx"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/20/",
+      "slug": "hugh-mcmillan-photographs-this-collection-consists"
+    },
+    {
+      "url_was": "",
+      "url_oai": "",
+      "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt2k4035rh",
+      "url_local": "",
+      "url_harvest": "",
+      "harvest_type": "X",
+      "harvest_extra_data": "",
+      "extent": "55405078118",
+      "enrichments_item": "",
+      "description": "Photographs of Newport Beach, Costa Mesa, Corona del Mar, and other Orange County localities",
+      "collection_type": "A",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "appendix": "Nuxeo DAMS",
+      "hosted": "Locally (Canto Cumulus)",
+      "metadata_level": "Item",
+      "metadata_standard": "Custom",
+      "name": "Gerhardt (Wally) Photograph Collection",
+      "phase_one": false,
+      "repository": [
+        {
+          "slug": "special-collections",
+          "resource_uri": "/api/v1/repository/16/",
+          "name": "Special Collections",
+          "campus": [
+            {
+              "slug": "UCI",
+              "resource_uri": "/api/v1/campus/3/",
+              "position": 2,
+              "name": "UC Irvine",
+              "ark": "ark:/13030/tf3f59p4sv"
+            }
+          ],
+          "ark": "ark:/13030/tf1p3008cx"
+        }
+      ],
+      "resource_uri": "/api/v1/collection/21/",
+      "slug": "w-gerhardt-photographs-photographs-of-newport-bea"
+    }
+  ],
+  "meta": {
+    "total_count": 25526,
+    "previous": null,
+    "offset": 0,
+    "next": "/api/v1/collection/?offset=20&limit=20&format=json",
+    "limit": 20
+  }
+}

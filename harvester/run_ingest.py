@@ -23,14 +23,8 @@ import rq
 from harvester import solr_updater
 from harvester import grab_solr_index
 
-EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
-
-def create_mimetext_msg(mail_from, mail_to, subject, message):
-    msg = MIMEText(message)
-    msg['Subject'] = str(subject)
-    msg['From'] = mail_from
-    msg['To'] = mail_to
-    return msg
+EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
+EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
 
 def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
     return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
@@ -47,26 +41,33 @@ def main(user_email, url_api_collection, log_handler=None,
         mail_handler=None, dir_profile='profiles', profile_path=None,
         config_file='akara.ini', redis_host=None, redis_port=None,
         redis_pswd=None):
-    logger = logbook.Logger('run_ingest')
+    '''Runs a UCLDC ingest process for the given collection'''
+    emails = [user_email]
+    if EMAIL_SYS_ADMIN:
+    	emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
+    logbook.info("EMAILS:{0}".format(emails))
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email,
-                                           level=logbook.ERROR) 
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
+                                           emails,
+                                           level='ERROR',
+                                           bubble=True) 
+    mail_handler.push_application()
     if not( redis_host and redis_port and redis_pswd):
     	redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
  
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email,
-                        'Collection init failed for ' + url_api_collection,
-                        ' '.join(('Exception in Collection', url_api_collection,                        ' init', str(e))))
-        mail_handler.deliver(mimetext, user_email)
+        msg = 'Exception in Collection {}, init {}'.format(url_api_collection, str(e))
+        logbook.error(msg)
         raise e
     if not log_handler:
-        log_handler = logbook.StderrHandler(level='DEBUG')
+        log_handler = logbook.StderrHandler(level='DEBUG', bubble=True)
 
+    log_handler.push_application()
+    logger = logbook.Logger('run_ingest')
     ingest_doc_id, num_recs, dir_save = fetcher.main(
-                        user_email,
+                        emails,
                         url_api_collection,
                         log_handler=log_handler,
                         mail_handler=mail_handler
@@ -78,7 +79,7 @@ def main(user_email, url_api_collection, log_handler=None,
     resp = enrich_records.main([None, ingest_doc_id])
     if not resp == 0:
         logger.error("Error enriching records")
-        sys.exit(1)
+        raise Exception('Failed during enrichment process')
     logger.info('Enriched records')
 
     resp = save_records.main([None, ingest_doc_id])
@@ -106,6 +107,8 @@ def main(user_email, url_api_collection, log_handler=None,
     update_job = rQ.enqueue(solr_updater.main)
     logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
     fetch_index_job = rQ.enqueue(grab_solr_index.main, depends_on=update_job)
+    log_handler.pop_application()
+    mail_handler.pop_application()
 
 if __name__ == '__main__':
     parser = def_args()

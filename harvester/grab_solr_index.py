@@ -3,11 +3,15 @@ import os
 import  ansible_run_pb
 
 def main():
-	code_dir = os.path.abspath(os.path.join(os.environ.get('HOME', '~'), 'code/harvester/harvester/'))
-	playbook = os.path.join(code_dir, 'grab-solr-index-playbook.yml')
-	inventory = os.path.join(code_dir, 'host_inventory')
-	print("======================PLAYBOOK:{0} INV:{1}".format(playbook, inventory))
-	ansible_run_pb.main(playbook, inventory)
+    dir_code = os.environ['DIR_CODE'] if os.environ.has_key('DIR_CODE') \
+        else \
+        os.path.join(os.path.join(os.environ.get('HOME', '~'), 'code/harvester'))
+    dir_code = os.path.abspath(dir_code)
+    dir_pb = os.path.join(dir_code, 'harvester') 
+    playbook = os.path.join(dir_pb, 'grab-solr-index-playbook.yml')
+    inventory = os.path.join(dir_pb, 'host_inventory')
+    print("======================PLAYBOOK:{0} INV:{1}".format(playbook, inventory))
+    ansible_run_pb.main(playbook, inventory)
 
 if __name__=='__main__':
     main()
