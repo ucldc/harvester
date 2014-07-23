@@ -134,6 +134,9 @@ class RegistryApiTestCase(TestCase):
     def testResourceIteratorReturnsCollection(self):
         '''Test that the resource iterator returns a Collection object
         for library collection resources'''
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/',
+                body=open('./fixtures/registry_api_collection.json').read())
         riter = self.registry.resource_iter('collection')
         c = riter.next()
         self.assertTrue(isinstance(c, Collection))
