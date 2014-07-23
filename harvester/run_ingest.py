@@ -45,7 +45,6 @@ def main(user_email, url_api_collection, log_handler=None,
     emails = [user_email]
     if EMAIL_SYS_ADMIN:
     	emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
-    logbook.info("EMAILS:{0}".format(emails))
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
                                            emails,
@@ -104,9 +103,14 @@ def main(user_email, url_api_collection, log_handler=None,
         sys.exit(1)
 
     rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    update_job = rQ.enqueue(solr_updater.main)
+    #TODO: add emails pass in for email notify
+    update_job = rQ.enqueue_call(func=solr_updater.main,
+                                timeout=600)
     logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
-    fetch_index_job = rQ.enqueue(grab_solr_index.main, depends_on=update_job)
+    #TODO: add emails pass in for email notify
+    fetch_index_job = rQ.enqueue_call(func=grab_solr_index.main,
+                                    depends_on=update_job,
+                                    timeout=600)
     log_handler.pop_application()
     mail_handler.pop_application()
 

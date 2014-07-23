@@ -1162,8 +1162,8 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
         self.assertEqual(len(mock_calls), 3)
         self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
-        self.assertIn('call().enqueue(<function', mock_calls[1])
-        self.assertIn('call().enqueue(<function', mock_calls[2])
+        self.assertIn('call().enqueue_call(func=<function', mock_calls[1])
+        self.assertIn('call().enqueue_call(depends_on=', mock_calls[2])
         self.assertIn('depends_on', mock_calls[2])
 
 class QueueHarvestTestCase(TestCase):
