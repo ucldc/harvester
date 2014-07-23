@@ -481,7 +481,8 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.controller_oai.harvest()
         dir_list = os.listdir(self.controller_oai.dir_save)
         self.assertEqual(len(dir_list), 128)
-        obj_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
         self.assertEqual(obj_saved['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/197/',
             'name':'Calisphere - Santa Clara University: Digital Objects'})

@@ -347,8 +347,11 @@ class HarvestController(object):
         return sID
 
     def save_objset(self, objset):
-        '''Save an object set to disk'''
+        '''Save an object set to disk. If it is a single object, wrap in a
+        list to be uniform'''
         filename = os.path.join(self.dir_save, str(uuid.uuid4()))
+        if not type(objset) == list:
+            objset = [ objset ]
         with open(filename, 'w') as foo:
             foo.write(json.dumps(objset))
 
