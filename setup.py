@@ -1,5 +1,5 @@
 import os
-from pip.req import parse_requirements
+from pip import main as pip_main
 from setuptools import setup
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
@@ -49,6 +49,8 @@ setup(
         'redis==2.10.1',
         'rq==0.4.6',
         'boto==2.29.1',
-        'CouchDB==0.9'
+        'CouchDB==0.9',
         ]
 )
+
+pip_main(['install', 'ansible'])

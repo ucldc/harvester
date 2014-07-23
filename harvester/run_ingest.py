@@ -14,27 +14,20 @@ from dplaingestion.scripts import remove_deleted_records
 from dplaingestion.scripts import dashboard_cleanup
 from dplaingestion.scripts import check_ingestion_counts
 import logbook
-import harvester
+from harvester import fetcher
+from harvester.parse_env import parse_env
+from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 import rq
-import solr_updater
+from harvester import solr_updater
+from harvester import grab_solr_index
 
-EMAIL_RETURN_ADDRESS = os.environ.get('RETURN_EMAIL_ADDRESS', 'example@example.com')
-REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
-REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
-REDIS_CONNECT_TIMEOUT = 10
+EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
+EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
 
-def create_mimetext_msg(mail_from, mail_to, subject, message):
-    msg = MIMEText(message)
-    msg['Subject'] = str(subject)
-    msg['From'] = mail_from
-    msg['To'] = mail_to
-    return msg
-
-def get_redis_connection(redis_host, redis_port, redis_pswd):
-    print("HOST:{0}  PORT:{1}".format(redis_host, redis_port))
-    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
+def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
+    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
 
 def def_args():
     import argparse
@@ -44,33 +37,36 @@ def def_args():
             help='URL for the collection Django tastypie api resource')
     return parser
 
-def parse_env():
-    '''Get any overrides from the runtime environment for the server variables
-    '''
-    redis_host = os.environ.get('REDIS_HOST', REDIS_HOST)
-    redis_port = os.environ.get('REDIS_PORT', REDIS_PORT)
-    try:
-        redis_pswd = os.environ['REDIS_PASSSWORD']
-    except KeyError, e:
-        raise KeyError('Please set environment variable REDIS_PSWD to redis password!')
-    return redis_host, redis_port, redis_pswd
-
-def main(user_email, url_api_collection, log_handler=None, mail_handler=None, dir_profile='profiles', profile_path=None, config_file='akara.ini', redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None):
-    logger = logbook.Logger('run_ingest')
+def main(user_email, url_api_collection, log_handler=None,
+        mail_handler=None, dir_profile='profiles', profile_path=None,
+        config_file='akara.ini', redis_host=None, redis_port=None,
+        redis_pswd=None):
+    '''Runs a UCLDC ingest process for the given collection'''
+    emails = [user_email]
+    if EMAIL_SYS_ADMIN:
+    	emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS, user_email, level=logbook.ERROR) 
+        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
+                                           emails,
+                                           level='ERROR',
+                                           bubble=True) 
+    mail_handler.push_application()
+    if not( redis_host and redis_port and redis_pswd):
+    	redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+ 
     try:
-        collection = harvester.Collection(url_api_collection)
+        collection = Collection(url_api_collection)
     except Exception, e:
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, 'Collection init failed for ' + url_api_collection, ' '.join(("Exception in Collection", url_api_collection, " init", str(e))))
-        mail_handler.deliver(mimetext, user_email)
+        msg = 'Exception in Collection {}, init {}'.format(url_api_collection, str(e))
+        logbook.error(msg)
         raise e
     if not log_handler:
-        #log_handler = logbook.FileHandler(harvester.get_log_file_path(collection.slug))
-        log_handler = logbook.StderrHandler(level='DEBUG')
+        log_handler = logbook.StderrHandler(level='DEBUG', bubble=True)
 
-    ingest_doc_id, num_recs, dir_save = harvester.main(
-                        user_email,
+    log_handler.push_application()
+    logger = logbook.Logger('run_ingest')
+    ingest_doc_id, num_recs, dir_save = fetcher.main(
+                        emails,
                         url_api_collection,
                         log_handler=log_handler,
                         mail_handler=mail_handler
@@ -82,7 +78,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     resp = enrich_records.main([None, ingest_doc_id])
     if not resp == 0:
         logger.error("Error enriching records")
-        sys.exit(1)
+        raise Exception('Failed during enrichment process')
     logger.info('Enriched records')
 
     resp = save_records.main([None, ingest_doc_id])
@@ -107,8 +103,16 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         sys.exit(1)
 
     rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue(solr_updater.main)
+    #TODO: add emails pass in for email notify
+    update_job = rQ.enqueue_call(func=solr_updater.main,
+                                timeout=600)
     logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
+    #TODO: add emails pass in for email notify
+    fetch_index_job = rQ.enqueue_call(func=grab_solr_index.main,
+                                    depends_on=update_job,
+                                    timeout=600)
+    log_handler.pop_application()
+    mail_handler.pop_application()
 
 if __name__ == '__main__':
     parser = def_args()
@@ -116,7 +120,7 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         sys.exit(27)
-    redis_host, redis_port, redis_pswd = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email, args.url_api_collection, redis_host=redis_host,

@@ -2,7 +2,6 @@
 # may need to start ec2 instances
 # and then dump job to queue
 import sys
-import os
 import datetime
 import time
 from  redis import Redis
@@ -10,17 +9,15 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 import boto.ec2
 
-import run_ingest
+import harvester.run_ingest
+from harvester.parse_env import parse_env
 
-REDIS_HOST = 'http://127.0.0.1'
-REDIS_PORT = '6379'
-REDIS_CONNECT_TIMEOUT = 10
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
 TIMEOUT = 600 
 
-def get_redis_connection(redis_host, redis_port, redis_pswd):
-    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=REDIS_CONNECT_TIMEOUT)
+def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
+    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
 
 def check_redis_queue(redis_host, redis_port, redis_pswd):
     '''Check if the redis host db is up and running'''
@@ -47,26 +44,7 @@ def def_args():
             help='URL for the collection Django tastypie api resource')
     return parser
 
-def parse_env():
-    '''Get any overrides from the runtime environment for the server variables
-    '''
-    redis_host = os.environ.get('REDIS_HOST', REDIS_HOST)
-    redis_port = os.environ.get('REDIS_PORT', REDIS_PORT)
-    try:
-        redis_pswd = os.environ['REDIS_PASSWORD']
-    except KeyError, e:
-        raise KeyError('Please set environment variable REDIS_PASSWORD to redis password!')
-    try:
-        id_ec2_ingest = os.environ['ID_EC2_INGEST']
-    except KeyError, e:
-        raise KeyError('Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
-    try:
-        id_ec2_solr_build = os.environ['ID_EC2_SOLR_BUILD']
-    except KeyError, e:
-        raise KeyError('Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
-    return redis_host, redis_port, redis_pswd, id_ec2_ingest, id_ec2_solr_build
-
-def main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS_PORT, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD, timeout=None, poll_interval=20):
+def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD, timeout=None, poll_interval=20):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):
         start_ec2_instances(id_ec2_ingest=id_ec2_ingest, id_ec2_solr=id_ec2_solr)
@@ -76,7 +54,9 @@ def main(user_email, url_api_collection, redis_host=REDIS_HOST, redis_port=REDIS
         if datetime.datetime.now() - start_time > timeout_dt:
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE. TODO: EMAIL USER'.format(timeout))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue(run_ingest.main, user_email, url_api_collection)
+    result = rQ.enqueue_call(func=harvester.run_ingest.main,
+            args=(user_email, url_api_collection),
+            timeout=600)
     print result
 
 if __name__=='__main__':
@@ -85,11 +65,11 @@ if __name__=='__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         raise Exception('Need to pass in user email and collection api URL')
-    redis_host, redis_port, redis_pswd, id_ec2_ingest, id_ec2_solr = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     main(args.user_email, args.url_api_collection.strip(), 
             redis_host=redis_host,
             redis_port=redis_port,
             redis_pswd=redis_pswd,
             id_ec2_ingest=id_ec2_ingest,
-            id_ec2_solr=id_ec2_solr
+            id_ec2_solr=id_ec2_solr_build
             )

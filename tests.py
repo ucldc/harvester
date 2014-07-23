@@ -19,19 +19,21 @@ import harvester
 import logbook
 import httpretty
 from redis import Redis
-from harvester import get_log_file_path
+from harvester.fetcher import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
 from harvester.queue_harvest import main as queue_harvest_main
 from harvester.queue_harvest import get_redis_connection, check_redis_queue
 from harvester.queue_harvest import start_ec2_instances
-from harvester.queue_harvest import parse_env as qh_parse_env
+from harvester.parse_env import parse_env
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
+from harvester import grab_solr_index
 
 #from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
+import harvester.fetcher as harvester
 
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
@@ -132,6 +134,9 @@ class RegistryApiTestCase(TestCase):
     def testResourceIteratorReturnsCollection(self):
         '''Test that the resource iterator returns a Collection object
         for library collection resources'''
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/',
+                body=open('./fixtures/registry_api_collection.json').read())
         riter = self.registry.resource_iter('collection')
         c = riter.next()
         self.assertTrue(isinstance(c, Collection))
@@ -479,7 +484,8 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.controller_oai.harvest()
         dir_list = os.listdir(self.controller_oai.dir_save)
         self.assertEqual(len(dir_list), 128)
-        obj_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
         self.assertEqual(obj_saved['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/197/',
             'name':'Calisphere - Santa Clara University: Digital Objects'})
@@ -845,13 +851,14 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         sys.argv = ['thisexe', self.user_email, self.url_api_collection]
         self.collection = Collection(self.url_api_collection)
         self.setUp_config(self.collection)
+        self.mail_handler = logbook.TestHandler(bubble=True)
 
     def tearDown(self):
         super(MainTestCase, self).tearDown()
         self.tearDown_config()
         if self.dir_save:
             shutil.rmtree(self.dir_save)
-        os.removedirs(self.dir_test_profile)
+        shutil.rmtree(self.dir_test_profile)
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
@@ -886,7 +893,6 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
 
     @patch('dplaingestion.couch.Couch')
     def testMainCollection__init__Error(self, mock_couch):
-        self.mail_handler = MagicMock()
         self.assertRaises(ValueError, harvester.main,
                                     self.user_email,
                                     'this-is-a-bad-url',
@@ -895,11 +901,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                                     dir_profile=self.dir_test_profile,
                                     config_file=self.config_file
                          )
-        self.assertEqual(len(self.test_log_handler.records), 0)
-        self.mail_handler.deliver.assert_called()
-        self.assertEqual(self.mail_handler.deliver.call_count, 1)
-
-
+        self.assertEqual(len(self.test_log_handler.records), 1)
+        self.assertEqual(len(self.mail_handler.records), 1)
 
     @httpretty.activate
     @patch('dplaingestion.couch.Couch')
@@ -908,7 +911,6 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
                 body=open('./fixtures/collection_api_test_bad_type.json').read())
-        self.mail_handler = MagicMock()
         self.assertRaises(ValueError, harvester.main,
                     self.user_email,
                     "https://registry.cdlib.org/api/v1/collection/197/",
@@ -917,9 +919,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                                     dir_profile=self.dir_test_profile,
                                     config_file=self.config_file
                          )
-        self.assertEqual(len(self.test_log_handler.records), 0)
-        self.mail_handler.deliver.assert_called()
-        self.assertEqual(self.mail_handler.deliver.call_count, 1)
+        self.assertEqual(len(self.test_log_handler.records), 1)
+        self.assertEqual(len(self.mail_handler.records), 1)
 
 
     @httpretty.activate
@@ -932,7 +933,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
             c.dpla_profile_obj
 
     @httpretty.activate
-    @patch('harvester.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
+    @patch('harvester.fetcher.HarvestController.__init__', side_effect=Exception('Boom!'), autospec=True)
     def testMainHarvestController__init__Error(self, mock_method):
         '''Test the try-except block in main when HarvestController not created
         correctly'''
@@ -944,14 +945,14 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                 body=open('./fixtures/testOAI-128-records.xml').read())
         sys.argv = ['thisexe', 'email@example.com', 'https://registry.cdlib.org/api/v1/collection/197/']
         self.assertRaises(Exception, harvester.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
-        self.assertEqual(len(self.test_log_handler.records), 5)
-        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[4])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
+        self.assertEqual(len(self.test_log_handler.records), 4)
+        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[3])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
         c = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         os.remove(os.path.abspath(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
 
     @httpretty.activate
-    @patch('harvester.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
+    @patch('harvester.fetcher.HarvestController.harvest', side_effect=Exception('Boom!'), autospec=True)
     def testMainFnWithException(self, mock_method):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
@@ -969,9 +970,9 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                     mail_handler=self.test_log_handler,
                     profile_path=self.profile_path,
                     config_file=self.config_file)
-        self.assertEqual(len(self.test_log_handler.records), 8)
-        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[7])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[7])
+        self.assertEqual(len(self.test_log_handler.records), 7)
+        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[6])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[6])
 
     @httpretty.activate
     def testMainFn(self):
@@ -992,19 +993,17 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                     dir_profile=self.dir_test_profile,
                     profile_path=self.profile_path,
                     config_file=self.config_file)
-        #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
-        self.assertEqual(len(self.test_log_handler.records), 11)
-        self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com https://registry.cdlib.org/api/v1/collection/197/')
-        self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Create DPLA profile document')
-        self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[3])
-        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Create ingest doc in couch')
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Ingest DOC ID: test-id')
-        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestMain: Start harvesting next')
-        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[7])
-        self.assertEqual(self.test_log_handler.formatted_records[8], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[9], u'[INFO] HarvestController: 128 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[10], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
+        self.assertEqual(len(self.test_log_handler.records), 10)
+        self.assertIn(u'[INFO] HarvestMain: Init harvester next', self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: Create DPLA profile document')
+        self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[2])
+        self.assertEqual(self.test_log_handler.formatted_records[3], u'[INFO] HarvestMain: Create ingest doc in couch')
+        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Ingest DOC ID: test-id')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Start harvesting next')
+        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[6])
+        self.assertEqual(self.test_log_handler.formatted_records[7], u'[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[8], u'[INFO] HarvestController: 128 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[9], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
 class LogFileNameTestCase(TestCase):
@@ -1093,10 +1092,51 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
         n = self.controller.harvest()
         self.assertEqual(n, 128)
 
+class ParseEnvTestCase(TestCase):
+    '''test the environment variable parsing'''
+    def tearDown(self):
+        # remove env vars if created?
+        del os.environ['REDIS_PASSWORD']
+        del os.environ['ID_EC2_INGEST']
+        del os.environ['ID_EC2_SOLR_BUILD']
+
+    def testParseEnv(self):
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        with self.assertRaises(KeyError) as cm:
+            parse_env()
+        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+        self.assertEqual(redis_host, '127.0.0.1')
+        self.assertEqual(redis_port, '6379')
+        self.assertEqual(redis_pswd, 'XX')
+        self.assertEqual(redis_connect_timeout, 10)
+        self.assertEqual(id_ec2_ingest, 'INGEST')
+        self.assertEqual(id_ec2_solr_build, 'BUILD')
+
+
 class RunIngestTestCase(LogOverrideMixin, TestCase):
     '''Test the run_ingest script. Wraps harvesting with rest of DPLA
     ingest process.
     '''
+    def setUp(self):
+        os.environ['REDIS_PASSWORD'] = 'XX'
+        os.environ['ID_EC2_INGEST'] = 'INGEST'
+        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+
+    def tearDown(self):
+        # remove env vars if created?
+        del os.environ['REDIS_PASSWORD']
+        del os.environ['ID_EC2_INGEST']
+        del os.environ['ID_EC2_SOLR_BUILD']
+
     @patch('rq.Queue', autospec=True)
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
@@ -1120,8 +1160,11 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
         mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
+        self.assertEqual(len(mock_calls), 3)
         self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
-        self.assertIn('call().enqueue(<function', mock_calls[1])
+        self.assertIn('call().enqueue_call(func=<function', mock_calls[1])
+        self.assertIn('call().enqueue_call(depends_on=', mock_calls[2])
+        self.assertIn('depends_on', mock_calls[2])
 
 class QueueHarvestTestCase(TestCase):
     '''Test the queue harvester. 
@@ -1144,26 +1187,6 @@ class QueueHarvestTestCase(TestCase):
         start_ec2_instances('XXXX', 'YYYY')
         mock_boto.connect_to_region.assert_called_with('us-east-1')
         mock_boto.connect_to_region().start_instances.assert_called_with(('XXXX', 'YYYY'))
-
-    def testParseEnv(self):
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
-        os.environ['REDIS_PASSWORD'] = 'XX'
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
-        os.environ['ID_EC2_INGEST'] = 'INGEST'
-        with self.assertRaises(KeyError) as cm:
-            qh_parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
-        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
-        h, p, pswd, ingest, build = qh_parse_env()
-        self.assertEqual(h, 'http://127.0.0.1')
-        self.assertEqual(p, '6379')
-        self.assertEqual(pswd, 'XX')
-        self.assertEqual(ingest, 'INGEST')
-        self.assertEqual(build, 'BUILD')
 
     @patch('boto.ec2')
     def testMain(self, mock_boto):
@@ -1259,6 +1282,33 @@ class SolrUpdaterTestCase(TestCase):
         mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
+class GrabSolrIndexTestCase(TestCase):
+    '''Basic test for grabbing solr index. Like others, heavily mocked
+    '''
+    def setUp(self):
+        os.environ['DIR_CODE'] = os.path.abspath(os.path.dirname(__file__))
+
+    def tearDown(self):
+        del os.environ['DIR_CODE']
+
+    @patch('ansible.callbacks.PlaybookRunnerCallbacks', autospec=True)
+    @patch('ansible.callbacks.PlaybookCallbacks', autospec=True)
+    @patch('ansible.callbacks.AggregateStats', autospec=True)
+    @patch('ansible.inventory.Inventory', autospec=True)
+    @patch('ansible.playbook.PlayBook', autospec=True)
+    def test_grab_solr_main(self, mock_pb, mock_inv, mock_stats, mock_cb, mock_cbr):
+        inventory = mock_inv.return_value
+        inventory.list_hosts.return_value = ['test-host']
+        grab_solr_index.main()
+        mock_pb.assert_called_with(playbook=os.path.join(os.environ['DIR_CODE'], 'harvester/grab-solr-index-playbook.yml'),
+                inventory=inventory,
+                callbacks=mock_cb.return_value,
+                runner_callbacks=mock_cbr.return_value,
+                stats=mock_stats.return_value
+        )
+        self.assertEqual(mock_pb.return_value.run.called, True)
+        self.assertEqual(mock_pb.return_value.run.call_count, 1)
+       
 
 CONFIG_FILE_DPLA = '''
 [Akara]

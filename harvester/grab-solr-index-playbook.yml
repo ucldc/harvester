@@ -1,0 +1,27 @@
+---
+-   hosts: solr_build
+    gather_facts: True         
+    vars:
+      dir_code_src: '~/code/'
+      dir_servers: '~/servers/'
+      datetime: "{{ ansible_date_time.date }}:{{ ansible_date_time.time }}"
+      email_to: "{{ lookup('env', 'EMAIL_SYS_ADMINS') }}"
+    tasks:
+    - name: get public ip
+      local_action: shell curl http://169.254.169.254/latest/meta-data/public-ipv4
+      register: public_ip
+    - name: tar up latest solr index directoy
+      sudo: yes
+      command: tar --force-local -cvf solr-index.{{ datetime }}.tar /home/solr/servers/solr/dc-collection/data/index
+    - name: chown back to ec2-user
+      sudo: yes
+      command: chown ec2-user:ec2-user solr-index.{{ datetime }}.tar
+    - name: bzip index file
+      command: bzip2 solr-index.{{ datetime }}.tar
+    - name: fetch index tarball
+      fetch: src=solr-index.{{ datetime }}.tar.bz2 dest=/home/ec2-user/solr-indexes/ flat=yes
+    - name: remove artifacts on remote
+      command: rm /home/ec2-user/solr-index.{{ datetime }}.tar.bz2
+    - name: email note of new index (right now only manual index overwrite)-
+      local_action: mail from="ucldc@example.edu" to={{ email_to }} subject="New solr index tarball ready" body="New solr index ready for download-> solr-indexes/solr-index.{{datetime}}.tar.bz2"
+      #local_action: mail from="ec2-user@example.edu" to="mark.redar@ucop.edu" subject="New solr index tarball ready" body="New solr index ready for download"
