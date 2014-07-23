@@ -105,7 +105,10 @@ class OAC_XML_Harvester(Harvester):
         ids = docHit.find('meta').findall('identifier')
         ark = None
         for i in ids:
-            split = i.text.split('ark:')
+            try:
+                split = i.text.split('ark:')
+            except AttributeError:
+                continue
             if len(split) > 1:
                 ark = ''.join(('ark:', split[1]))
         return ark
