@@ -847,13 +847,14 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         sys.argv = ['thisexe', self.user_email, self.url_api_collection]
         self.collection = Collection(self.url_api_collection)
         self.setUp_config(self.collection)
+        self.mail_handler = logbook.TestHandler(bubble=True)
 
     def tearDown(self):
         super(MainTestCase, self).tearDown()
         self.tearDown_config()
         if self.dir_save:
             shutil.rmtree(self.dir_save)
-        os.removedirs(self.dir_test_profile)
+        shutil.rmtree(self.dir_test_profile)
 
     def testReturnAdd(self):
         self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
@@ -888,7 +889,6 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
 
     @patch('dplaingestion.couch.Couch')
     def testMainCollection__init__Error(self, mock_couch):
-        self.mail_handler = MagicMock()
         self.assertRaises(ValueError, harvester.main,
                                     self.user_email,
                                     'this-is-a-bad-url',
@@ -897,11 +897,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                                     dir_profile=self.dir_test_profile,
                                     config_file=self.config_file
                          )
-        self.assertEqual(len(self.test_log_handler.records), 0)
-        self.mail_handler.deliver.assert_called()
-        self.assertEqual(self.mail_handler.deliver.call_count, 1)
-
-
+        self.assertEqual(len(self.test_log_handler.records), 1)
+        self.assertEqual(len(self.mail_handler.records), 1)
 
     @httpretty.activate
     @patch('dplaingestion.couch.Couch')
@@ -910,7 +907,6 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
                 body=open('./fixtures/collection_api_test_bad_type.json').read())
-        self.mail_handler = MagicMock()
         self.assertRaises(ValueError, harvester.main,
                     self.user_email,
                     "https://registry.cdlib.org/api/v1/collection/197/",
@@ -919,9 +915,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                                     dir_profile=self.dir_test_profile,
                                     config_file=self.config_file
                          )
-        self.assertEqual(len(self.test_log_handler.records), 0)
-        self.mail_handler.deliver.assert_called()
-        self.assertEqual(self.mail_handler.deliver.call_count, 1)
+        self.assertEqual(len(self.test_log_handler.records), 1)
+        self.assertEqual(len(self.mail_handler.records), 1)
 
 
     @httpretty.activate
@@ -946,9 +941,9 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                 body=open('./fixtures/testOAI-128-records.xml').read())
         sys.argv = ['thisexe', 'email@example.com', 'https://registry.cdlib.org/api/v1/collection/197/']
         self.assertRaises(Exception, harvester.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
-        self.assertEqual(len(self.test_log_handler.records), 5)
-        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[4])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[4])
+        self.assertEqual(len(self.test_log_handler.records), 4)
+        self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[3])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
         c = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         os.remove(os.path.abspath(os.path.join(self.dir_test_profile, c.slug+'.pjs')))
 
@@ -971,9 +966,9 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                     mail_handler=self.test_log_handler,
                     profile_path=self.profile_path,
                     config_file=self.config_file)
-        self.assertEqual(len(self.test_log_handler.records), 8)
-        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[7])
-        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[7])
+        self.assertEqual(len(self.test_log_handler.records), 7)
+        self.assertTrue("[ERROR] HarvestMain: Error while harvesting:" in self.test_log_handler.formatted_records[6])
+        self.assertTrue("Boom!" in self.test_log_handler.formatted_records[6])
 
     @httpretty.activate
     def testMainFn(self):
@@ -994,19 +989,17 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                     dir_profile=self.dir_test_profile,
                     profile_path=self.profile_path,
                     config_file=self.config_file)
-        #print len(self.test_log_handler.records), self.test_log_handler.formatted_records
-        self.assertEqual(len(self.test_log_handler.records), 11)
-        self.assertEqual(self.test_log_handler.formatted_records[0], u'[INFO] HarvestMain: Init harvester next')
-        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: ARGS: email@example.com https://registry.cdlib.org/api/v1/collection/197/')
-        self.assertEqual(self.test_log_handler.formatted_records[2], u'[INFO] HarvestMain: Create DPLA profile document')
-        self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[3])
-        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Create ingest doc in couch')
-        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Ingest DOC ID: test-id')
-        self.assertEqual(self.test_log_handler.formatted_records[6], u'[INFO] HarvestMain: Start harvesting next')
-        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[7])
-        self.assertEqual(self.test_log_handler.formatted_records[8], u'[INFO] HarvestController: 100 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[9], u'[INFO] HarvestController: 128 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[10], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
+        self.assertEqual(len(self.test_log_handler.records), 10)
+        self.assertIn(u'[INFO] HarvestMain: Init harvester next', self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], u'[INFO] HarvestMain: Create DPLA profile document')
+        self.assertTrue(u'[INFO] HarvestMain: DPLA profile document' in self.test_log_handler.formatted_records[2])
+        self.assertEqual(self.test_log_handler.formatted_records[3], u'[INFO] HarvestMain: Create ingest doc in couch')
+        self.assertEqual(self.test_log_handler.formatted_records[4], u'[INFO] HarvestMain: Ingest DOC ID: test-id')
+        self.assertEqual(self.test_log_handler.formatted_records[5], u'[INFO] HarvestMain: Start harvesting next')
+        self.assertTrue(u"[INFO] HarvestController: Starting harvest for: email@example.com Santa Clara University: Digital Objects ['UCDL'] ['Calisphere']", self.test_log_handler.formatted_records[6])
+        self.assertEqual(self.test_log_handler.formatted_records[7], u'[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[8], u'[INFO] HarvestController: 128 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[9], u'[INFO] HarvestMain: Finished harvest of calisphere-santa-clara-university-digital-objects. 128 records harvested.')
 
 
 class LogFileNameTestCase(TestCase):
