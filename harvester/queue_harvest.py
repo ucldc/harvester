@@ -10,6 +10,7 @@ from rq import Queue
 import boto.ec2
 
 import harvester.run_ingest
+from harvester.parse_env import parse_env
 
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
@@ -53,7 +54,9 @@ def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis
         if datetime.datetime.now() - start_time > timeout_dt:
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE. TODO: EMAIL USER'.format(timeout))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue(harvester.run_ingest.main, user_email, url_api_collection)
+    result = rQ.enqueue_call(func=harvester.run_ingest.main,
+            args=(user_email, url_api_collection),
+            timeout=600)
     print result
 
 if __name__=='__main__':
@@ -62,11 +65,11 @@ if __name__=='__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         raise Exception('Need to pass in user email and collection api URL')
-    redis_host, redis_port, redis_pswd, id_ec2_ingest, id_ec2_solr = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     main(args.user_email, args.url_api_collection.strip(), 
             redis_host=redis_host,
             redis_port=redis_port,
             redis_pswd=redis_pswd,
             id_ec2_ingest=id_ec2_ingest,
-            id_ec2_solr=id_ec2_solr
+            id_ec2_solr=id_ec2_solr_build
             )
