@@ -54,10 +54,14 @@ def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis
         if datetime.datetime.now() - start_time > timeout_dt:
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE. TODO: EMAIL USER'.format(timeout))
     rQ = Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    result = rQ.enqueue_call(func=harvester.run_ingest.main,
-            args=(user_email, url_api_collection),
+    url_api_collection = [ u.strip() for u in url_api_collection.split(';')]
+    results = []
+    for url in url_api_collection:
+        result = rQ.enqueue_call(func=harvester.run_ingest.main,
+            args=(user_email, url),
             timeout=600)
-    print result
+        results.append(result)
+    return results
 
 if __name__=='__main__':
     parser = def_args()

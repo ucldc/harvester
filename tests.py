@@ -1194,7 +1194,8 @@ class QueueHarvestTestCase(TestCase):
             with patch('harvester.queue_harvest.Redis') as mock_redis:
                 mock_redis().ping.return_value = False
                 queue_harvest_main('mark.redar@ucop.edu',
-                    'https://registry.cdlib.org/api/v1/collection/178/',
+                    'https://registry.cdlib.org/api/v1/collection/178/; \
+                            https://registry.cdlib.org/api/v1/collection/189',
                     redis_host='127.0.0.1',
                     redis_port='6379',
                     redis_pswd='X',
@@ -1204,8 +1205,9 @@ class QueueHarvestTestCase(TestCase):
         self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE. TODO: EMAIL USER', cm.exception.message)
         with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
             mock_redis().ping.return_value = True
-            queue_harvest_main('mark.redar@ucop.edu',
-                'https://registry.cdlib.org/api/v1/collection/178/',
+            results = queue_harvest_main('mark.redar@ucop.edu',
+                'https://registry.cdlib.org/api/v1/collection/178/; \
+                            https://registry.cdlib.org/api/v1/collection/189',
                 redis_host='127.0.0.1',
                 redis_port='6379',
                 redis_pswd='X',
@@ -1213,10 +1215,17 @@ class QueueHarvestTestCase(TestCase):
                 poll_interval=1
                 )
         mock_calls = [ str(x) for x in mock_redis.mock_calls]
-        self.assertEqual(len(mock_calls), 9)
+        self.assertEqual(len(mock_calls), 12)
         self.assertEqual(mock_redis.call_count, 4)
         self.assertIn('call().ping()', mock_calls)
-        self.assertIn("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls)
+        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls[6])
+        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls[9])
+        self.assertIn("call().rpush(u'rq:queue:default", mock_calls[8])
+        self.assertIn("call().rpush(u'rq:queue:default", mock_calls[11])
+        self.assertIn("call().hmset('rq:job", mock_calls[7])
+        self.assertIn(results[0].id, mock_calls[7])
+        self.assertIn("call().hmset('rq:job", mock_calls[10])
+        self.assertIn(results[1].id, mock_calls[10])
 
 
 class SolrUpdaterTestCase(TestCase):
