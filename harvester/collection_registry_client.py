@@ -51,6 +51,7 @@ class ResourceIterator(object):
             self.obj_list_index += 1
         else:
             self.total_returned += 1
+        #TODO: smarter conversion here
         return Collection(json_obj=self.objects[self.obj_list_index]) if self.object_type == 'collection' else self.objects[self.obj_list_index]
 
 
