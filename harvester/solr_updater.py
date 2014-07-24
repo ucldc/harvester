@@ -67,7 +67,6 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
-        print "ADDED", solr_doc
     except SolrException, e:
         print "ERROR:", solr_doc
         print e
