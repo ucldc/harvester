@@ -14,7 +14,8 @@ from harvester.parse_env import parse_env
 
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
-TIMEOUT = 600 
+TIMEOUT = 600  # for machine start
+JOB_TIMEOUT = 600 #for jobs
 
 def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
     return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
@@ -42,11 +43,13 @@ def def_args():
     parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
-    parser.add_argument('--timeout', type=int,
+    parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
             help='Timeout for the RQ job')
     return parser
 
-def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD, timeout=None, poll_interval=20):
+def main(user_email, url_api_collection, redis_host=None, redis_port=None,
+    redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD,
+    timeout=None, poll_interval=20, job_timeout=600):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):
         start_ec2_instances(id_ec2_ingest=id_ec2_ingest, id_ec2_solr=id_ec2_solr)
@@ -61,7 +64,7 @@ def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis
     for url in url_api_collection:
         result = rQ.enqueue_call(func=harvester.run_ingest.main,
             args=(user_email, url),
-            timeout=600)
+            timeout=job_timeout)
         results.append(result)
     return results
 
@@ -78,5 +81,5 @@ if __name__=='__main__':
             redis_pswd=redis_pswd,
             id_ec2_ingest=id_ec2_ingest,
             id_ec2_solr=id_ec2_solr_build,
-            timeout = args.timeout if args.timeout else TIMEOUT
+            job_timeout = args.job_timeout
             )
