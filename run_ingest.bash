@@ -25,4 +25,4 @@ pip install -r requirements.txt
 %%%
     exit 13;
 fi
-python harvester/run_ingest.py "$1" "$2"
+python harvester/run_ingest.py ${@:1}
