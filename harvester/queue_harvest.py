@@ -42,6 +42,8 @@ def def_args():
     parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
+    parser.add_argument('--timeout', type=int,
+            help='Timeout for the RQ job')
     return parser
 
 def main(user_email, url_api_collection, redis_host=None, redis_port=None, redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD, timeout=None, poll_interval=20):
@@ -75,5 +77,6 @@ if __name__=='__main__':
             redis_port=redis_port,
             redis_pswd=redis_pswd,
             id_ec2_ingest=id_ec2_ingest,
-            id_ec2_solr=id_ec2_solr_build
+            id_ec2_solr=id_ec2_solr_build,
+            timeout = args.timeout if args.timeout else TIMEOUT
             )
