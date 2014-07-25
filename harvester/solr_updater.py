@@ -39,7 +39,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
-    'subject'     : lambda d: {'subject' : d.get('subject', None)},
+    'subject'     : lambda d: { 'subject' : [s['name'] for s in d['subject']] },
     'title'       : lambda d: {'title': d.get('title', None)},
     'type'        : lambda d: {'type': d.get('type', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
