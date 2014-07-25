@@ -1137,14 +1137,13 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
 
-    @patch('rq.Queue', autospec=True)
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
     @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
     @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
     @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
     @patch('dplaingestion.couch.Couch')
-    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_rq_q):
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
         mail_handler = MagicMock()
         httpretty.enable()
@@ -1159,12 +1158,6 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
                 mail_handler=mail_handler)
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
-        mock_calls = [ str(x) for x in mock_rq_q.mock_calls]
-        self.assertEqual(len(mock_calls), 3)
-        self.assertIn('call(connection=Redis<ConnectionPool<Connection<host=127.0.0.1,port=6379,db=0>>>)', mock_calls)
-        self.assertIn('call().enqueue_call(func=<function', mock_calls[1])
-        self.assertIn('call().enqueue_call(depends_on=', mock_calls[2])
-        self.assertIn('depends_on', mock_calls[2])
 
 class QueueHarvestTestCase(TestCase):
     '''Test the queue harvester. 
