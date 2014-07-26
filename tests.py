@@ -15,10 +15,10 @@ from mock import patch
 from mock import call, ANY
 from xml.etree import ElementTree as ET
 import requests
-import harvester
 import logbook
 import httpretty
 from redis import Redis
+import harvester
 from harvester.fetcher import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
 from harvester.queue_harvest import main as queue_harvest_main
@@ -33,7 +33,7 @@ from harvester import grab_solr_index
 #from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
-import harvester.fetcher as harvester
+import harvester.fetcher as fetcher
 
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
@@ -216,7 +216,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
                 body=open('./fixtures/testOAC.json').read())
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
         self.setUp_config(self.collection)
-        self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
     def tearDown(self):
         super(HarvestOAC_JSON_ControllerTestCase, self).tearDown()
@@ -261,7 +261,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
 
 
 class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
-    '''Test the function of an OAI harvester'''
+    '''Test the function of an OAI fetcher'''
     def setUp(self):
         super(HarvestOAIControllerTestCase, self).setUp()
 
@@ -280,7 +280,7 @@ class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, Te
                 body=open('./fixtures/testOAC-url_next-0.xml').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
         self.setUp_config(self.collection)
-        self.controller = harvester.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertTrue(hasattr(self.controller, 'harvest'))
         #TODO: fix why logbook.TestHandler not working for the previous logging
         #self.assertEqual(len(self.test_log_handler.records), 2)
@@ -301,7 +301,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         #self.collection = Collection('fixtures/collection_api_test.json')
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         config_file, profile_path = self.setUp_config(self.collection) 
-        self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
+        self.controller_oai = fetcher.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
         self.objset_test_doc = json.load(open('objset_test_doc.json'))
 
     def tearDown(self):
@@ -318,16 +318,16 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open('./fixtures/testOAI-128-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
-        controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
         self.assertTrue(hasattr(controller, 'harvester'))
-        self.assertIsInstance(controller.harvester, harvester.OAIHarvester)
+        self.assertIsInstance(controller.harvester, fetcher.OAIHarvester)
         self.assertTrue(hasattr(controller, 'campus_valid'))
         self.assertTrue(hasattr(controller, 'dc_elements'))
         shutil.rmtree(controller.dir_save)
 
     def testOAIHarvesterType(self):
         '''Check the correct object returned for type of harvest'''
-        self.assertIsInstance(self.controller_oai.harvester, harvester.OAIHarvester)
+        self.assertIsInstance(self.controller_oai.harvester, fetcher.OAIHarvester)
         self.assertEqual(self.controller_oai.collection.campus[0]['slug'], 'UCDL')
 
     @httpretty.activate
@@ -350,7 +350,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         #collection = Collection('fixtures/collection_api_test.json')
-        controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         sid = controller.create_id(identifier)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         shutil.rmtree(controller.dir_save)
@@ -444,7 +444,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open('./fixtures/testOAI-2400-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/198/')
-        controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 13)
         self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
@@ -466,7 +466,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         self.tearDown_config() # remove ones setup in setUp
         self.setUp_config(collection)
-        controller = harvester.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         obj = {'id':'fakey', 'otherdata':'test'}
         self.assertNotIn('collection', obj)
         objnew = controller._add_registry_data(obj)
@@ -502,7 +502,7 @@ class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
         super(CouchIntegrationTestCase, self).setUp()
         self.collection = Collection('fixtures/collection_api_test.json')
         config_file, profile_path = self.setUp_config(self.collection) 
-        self.controller_oai = harvester.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
+        self.controller_oai = fetcher.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
         self.remove_log_dir = False
         if not os.path.isdir('logs'):
             os.makedirs('logs')
@@ -530,7 +530,7 @@ class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
 class HarvesterClassTestCase(TestCase):
     '''Test the abstract Harvester class'''
     def testClassExists(self):
-        h = harvester.Harvester
+        h = fetcher.Harvester
         h = h('url_harvest', 'extra_data')
 
 
@@ -543,7 +543,7 @@ class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
                 body=open('./fixtures/testOAI.xml').read())
-        self.harvester = harvester.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
+        self.harvester = fetcher.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
 
     def tearDown(self):
         super(OAIHarvesterTestCase, self).tearDown()
@@ -571,7 +571,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 body=open('./fixtures/testOAC-url_next-0.xml').read())
         #self.testFile = 'fixtures/testOAC-url_next-0.xml'
         super(OAC_XML_HarvesterTestCase, self).setUp()
-        self.harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
+        self.harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
 
     def tearDown(self):
         super(OAC_XML_HarvesterTestCase, self).tearDown()
@@ -582,7 +582,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx',
                 body=open('./fixtures/testOAC-badsearch.xml').read())
         #self.testFile = 'fixtures/testOAC-badsearch.xml'
-        self.assertRaises(ValueError, harvester.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
+        self.assertRaises(ValueError, fetcher.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
 
     @httpretty.activate
     def testOnlyTextResults(self):
@@ -591,7 +591,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open('./fixtures/testOAC-noimages-in-results.xml').read())
         #self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
-        h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 11)
         recs = self.harvester.next()
         self.assertEqual(self.harvester.groups['text']['end'], 10)
@@ -603,7 +603,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open('./fixtures/testOAC-utf8-content.xml').read())
         #self.testFile = 'fixtures/testOAC-utf8-content.xml'
-        h = harvester.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 0)
         objset = h.next()
@@ -685,7 +685,7 @@ class OAC_XML_Harvester_text_contentTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=1&group=text',
                 body=open('./fixtures/testOAC-noimages-in-results.xml').read())
-        oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
         first_set = oac_harvester.next()
         self.assertEqual(len(first_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
@@ -714,7 +714,7 @@ class OAC_XML_Harvester_mixed_contentTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image',
                 body=open('./fixtures/testOAC-url_next-0.xml').read())
-        oac_harvester = harvester.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
         first_set = oac_harvester.next()
         self.assertEqual(len(first_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image')
@@ -748,7 +748,7 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open('./fixtures/testOAC-url_next-0.json').read())
         super(OAC_JSON_HarvesterTestCase, self).setUp()
-        self.harvester = harvester.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.harvester = fetcher.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
     def tearDown(self):
         super(OAC_JSON_HarvesterTestCase, self).tearDown()
@@ -861,7 +861,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         shutil.rmtree(self.dir_test_profile)
 
     def testReturnAdd(self):
-        self.assertTrue(hasattr(harvester, 'EMAIL_RETURN_ADDRESS'))
+        self.assertTrue(hasattr(fetcher, 'EMAIL_RETURN_ADDRESS'))
 
     @httpretty.activate
     def testMainCreatesCollectionProfile(self):
@@ -879,7 +879,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(
+            ingest_doc_id, num, self.dir_save = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -893,7 +893,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
 
     @patch('dplaingestion.couch.Couch')
     def testMainCollection__init__Error(self, mock_couch):
-        self.assertRaises(ValueError, harvester.main,
+        self.assertRaises(ValueError, fetcher.main,
                                     self.user_email,
                                     'this-is-a-bad-url',
                                     log_handler=self.test_log_handler,
@@ -911,7 +911,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
                 body=open('./fixtures/collection_api_test_bad_type.json').read())
-        self.assertRaises(ValueError, harvester.main,
+        self.assertRaises(ValueError, fetcher.main,
                     self.user_email,
                     "https://registry.cdlib.org/api/v1/collection/197/",
                                     log_handler=self.test_log_handler,
@@ -944,7 +944,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open('./fixtures/testOAI-128-records.xml').read())
         sys.argv = ['thisexe', 'email@example.com', 'https://registry.cdlib.org/api/v1/collection/197/']
-        self.assertRaises(Exception, harvester.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
+        self.assertRaises(Exception, fetcher.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 4)
         self.assertTrue("[ERROR] HarvestMain: Exception in harvester init" in self.test_log_handler.formatted_records[3])
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
@@ -963,7 +963,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(
+            ingest_doc_id, num, self.dir_save = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -985,7 +985,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = harvester.main(
+            ingest_doc_id, num, self.dir_save = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -1026,7 +1026,7 @@ class LogFileNameTestCase(TestCase):
 class HarvesterLogSetupTestCase(TestCase):
     '''Test that the log gets setup and run'''
     def testLogDirExists(self):
-        log_file_path = harvester.get_log_file_path('x')
+        log_file_path = fetcher.get_log_file_path('x')
         log_file_dir = log_file_path.rsplit('/', 1)[0]
         self.assertTrue(os.path.isdir(log_file_dir))
 
@@ -1039,7 +1039,7 @@ class MainMailIntegrationTestCase(TestCase):
 
     def testMainFunctionMail(self):
         '''This should error out and send mail through error handler'''
-        self.assertRaises(requests.exceptions.ConnectionError, harvester.main, 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/')
+        self.assertRaises(requests.exceptions.ConnectionError, fetcher.main, 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/')
 
 @skipUnlessIntegrationTest()
 class ScriptFileTestCase(TestCase):
@@ -1063,7 +1063,7 @@ class FullOACHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
     def testFullOACHarvest(self):
         self.assertIsNotNone(self.collection)
-        self.controller = harvester.HarvestController('email@example.com',
+        self.controller = fetcher.HarvestController('email@example.com',
                self.collection,
                config_file=self.config_file,
                profile_path=self.profile_path
@@ -1084,7 +1084,7 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
     def testFullOAIHarvest(self):
         self.assertIsNotNone(self.collection)
-        self.controller = harvester.HarvestController('email@example.com',
+        self.controller = fetcher.HarvestController('email@example.com',
                self.collection,
                config_file=self.config_file,
                profile_path=self.profile_path
