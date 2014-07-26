@@ -852,8 +852,10 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.collection = Collection(self.url_api_collection)
         self.setUp_config(self.collection)
         self.mail_handler = logbook.TestHandler(bubble=True)
+        self.mail_handler.push_thread()
 
     def tearDown(self):
+        self.mail_handler.pop_thread()
         super(MainTestCase, self).tearDown()
         self.tearDown_config()
         if self.dir_save:

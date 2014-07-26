@@ -475,12 +475,14 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     Returns the ingest_doc_id, directory harvest saved to and number of records.
     '''
     num_recs = -1
+    my_mail_handler = None
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
+        my_mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
                                            user_email,
                                            level='ERROR',
                                            bubble=True)
-    mail_handler.push_application()
+        my_mail_handler.push_application()
+        mail_handler = my_mail_handler
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
@@ -492,10 +494,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logbook.error(msg)
         raise ValueError('Collection is not an OAC or OAI harvest collection')
     mail_handler.subject = "Error during harvest of " + collection.url #default
+    my_log_handler = None
     if not log_handler: #can't init until have collection
-        log_handler = FileHandler(get_log_file_path(collection.slug),
-                                  bubble=True)
-    log_handler.push_application()
+        my_log_handler = FileHandler(get_log_file_path(collection.slug))
+        my_log_handler.push_application()
     logger = logbook.Logger('HarvestMain')
     msg ='Init harvester next. Collection:{}'.format(collection.url) 
     logger.info(msg)
@@ -533,8 +535,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
         logger.error(error_msg)
         harvester.update_ingest_doc('error', error_msg=error_msg, items=num_recs)
-    log_handler.pop_application()
-    mail_handler.pop_application()
+    if my_log_handler:
+        my_log_handler.pop_application()
+    if my_mail_handler:
+        my_mail_handler.pop_application()
     return ingest_doc_id, num_recs, harvester.dir_save
 
 if __name__=='__main__':

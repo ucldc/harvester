@@ -58,7 +58,7 @@ def main(user_email, url_api_collection, log_handler=None,
         logbook.error(msg)
         raise e
     if not log_handler:
-        log_handler = logbook.StderrHandler(level='DEBUG', bubble=True)
+        log_handler = logbook.StderrHandler(level='DEBUG')
 
     log_handler.push_application()
     logger = logbook.Logger('run_ingest')
@@ -81,23 +81,23 @@ def main(user_email, url_api_collection, log_handler=None,
     resp = save_records.main([None, ingest_doc_id])
     if not resp == 0:
         logger.error("Error saving records {0}".format(str(resp)))
-        sys.exit(1)
+        raise Exception("Error saving records {0}".format(str(resp)))
     logger.info("SAVED RECS")
 
     resp = remove_deleted_records.main([None, ingest_doc_id]) 
     if not resp == 0:
-        logger.error( "Error deleting records")
-        sys.exit(1)
+        logger.error("Error deleting records")
+        raise Exception("Error deleting records")
 
     resp = check_ingestion_counts.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error( "Error checking counts")
-        sys.exit(1)
+        logger.error("Error checking counts")
+        raise Exception("Error checking counts")
 
     resp = dashboard_cleanup.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error( "Error cleaning up dashboard")
-        sys.exit(1)
+        logger.error("Error cleaning up dashboard")
+        raise Exception("Error cleaning up dashboard")
 
     log_handler.pop_application()
     mail_handler.pop_application()
