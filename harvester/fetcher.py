@@ -503,7 +503,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     logger.info(msg)
     #email directly
     mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
-    mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    try: #TODO: request more emails from AWS
+        mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    except:
+        pass
     logger.info('Create DPLA profile document')
     if not profile_path:
         profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
@@ -529,7 +532,10 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logger.info(msg)
         #email directly
         mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest of raw records for ', collection.slug, ' enriching next')), msg)
-        mail_handler.deliver(mimetext, 'mredar@gmail.com')
+        try:
+            mail_handler.deliver(mimetext, 'mredar@gmail.com')
+        except:
+            pass
     except Exception, e:
         import traceback
         error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
