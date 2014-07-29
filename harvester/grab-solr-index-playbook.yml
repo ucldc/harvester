@@ -19,9 +19,9 @@
     - name: bzip index file
       command: bzip2 solr-index.{{ datetime }}.tar
     - name: fetch index tarball
-      fetch: src=solr-index.{{ datetime }}.tar.bz2 dest=/home/ec2-user/solr-indexes/ flat=yes
+      fetch: src=solr-index.{{ datetime }}.tar.bz2 dest=/var/local/solr-indexes/ flat=yes
     - name: remove artifacts on remote
       command: rm /home/ec2-user/solr-index.{{ datetime }}.tar.bz2
     - name: email note of new index (right now only manual index overwrite)-
-      local_action: mail from="ucldc@example.edu" to={{ email_to }} subject="New solr index tarball ready" body="New solr index ready for download-> solr-indexes/solr-index.{{datetime}}.tar.bz2"
+      local_action: mail from="ucldc@example.edu" to={{ email_to }} subject="New solr index tarball ready" body="New solr index ready for download-> /usr/local/solr-indexes/solr-index.{{datetime}}.tar.bz2"
       #local_action: mail from="ec2-user@example.edu" to="mark.redar@ucop.edu" subject="New solr index tarball ready" body="New solr index ready for download"
