@@ -1253,12 +1253,12 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['collection'],['https://registry.cdlib.org/api/v1/collection/23066']) 
         self.assertEqual(sdoc['collection_name'], ['Uchida (Yoshiko) photograph collection'])
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
-        #self.assertEqual(sdoc['contributor'], '')
-        #self.assertEqual(sdoc['coverage'], '')
-        #self.assertEqual(sdoc['creator'], '')
-        #self.assertEqual(sdoc['description'], '')
-        #self.assertEqual(sdoc['date'], '')
-        #self.assertEqual(sdoc['language'], '')
+        self.assertTrue('contributor' not in sdoc)
+        self.assertTrue('coverage' not in sdoc)
+        self.assertTrue('creator' not in sdoc)
+        self.assertTrue('description' not in sdoc)
+        self.assertTrue('date' not in sdoc)
+        self.assertTrue('language' not in sdoc)
         self.assertEqual(sdoc['publisher'], u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/'),
         self.assertEqual(sdoc['relation'], [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'])
         self.assertEqual(sdoc['rights'], [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'])
@@ -1266,7 +1266,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['title'], u'Neighbor')
         self.assertEqual(sdoc['type'], u'image')
         self.assertEqual(sdoc['format'], 'mods')
-        #self.assertEqual(sdoc['extent'], '')
+        self.assertTrue('extent' not in sdoc)
+        self.assertTrue('identifier' not in sdoc)
 
     @patch('boto.connect_s3', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
