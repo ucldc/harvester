@@ -545,7 +545,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         my_log_handler.pop_application()
     if my_mail_handler:
         my_mail_handler.pop_application()
-    return ingest_doc_id, num_recs, harvester.dir_save
+    return ingest_doc_id, num_recs, harvester.dir_save, harvester
 
 if __name__=='__main__':
     args = parse_args()

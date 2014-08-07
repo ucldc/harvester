@@ -22,6 +22,7 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 import rq
 from harvester import solr_updater
 from harvester import grab_solr_index
+from harvester import image_harvest
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
@@ -62,7 +63,7 @@ def main(user_email, url_api_collection, log_handler=None,
 
     log_handler.push_application()
     logger = logbook.Logger('run_ingest')
-    ingest_doc_id, num_recs, dir_save = fetcher.main(
+    ingest_doc_id, num_recs, dir_save, harvester = fetcher.main(
                         emails,
                         url_api_collection,
                         log_handler=log_handler,
@@ -98,6 +99,9 @@ def main(user_email, url_api_collection, log_handler=None,
     if not resp == 0:
         logger.error("Error cleaning up dashboard")
         raise Exception("Error cleaning up dashboard")
+
+    url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
+    image_harvest.by_collection(collection_key=collection.slug, url_couchdb=url_couchdb)
 
     log_handler.pop_application()
     mail_handler.pop_application()

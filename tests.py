@@ -29,6 +29,7 @@ from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 from harvester import grab_solr_index
+from harvester import image_harvest
 
 #from harvester import Collection
 from dplaingestion.couch import Couch
@@ -881,7 +882,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = fetcher.main(
+            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -965,7 +966,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = fetcher.main(
+            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -987,7 +988,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save = fetcher.main(
+            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -1139,13 +1140,14 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
 
+    @patch('couchdb.Server')
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
     @patch('dplaingestion.scripts.save_records.main', return_value=0)
     @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
     @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
     @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
     @patch('dplaingestion.couch.Couch')
-    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich):
+    def testRunIngest(self, mock_couch, mock_dash_clean, mock_check, mock_remove, mock_save, mock_enrich, mock_couchdb):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
         mail_handler = MagicMock()
         httpretty.enable()
@@ -1314,6 +1316,40 @@ class GrabSolrIndexTestCase(TestCase):
         self.assertEqual(mock_pb.return_value.run.called, True)
         self.assertEqual(mock_pb.return_value.run.call_count, 1)
        
+
+class ImageHarvestTestCase(TestCase):
+    '''Test the md5 s3 image harvesting calls.....
+    '''
+    '''test 
+def harvest_image_for_doc(doc):
+def harvest_by_collection(collection_key=None, url_couchdb=COUCHDB_URL):
+    '''
+    from collections import namedtuple
+    report = namedtuple('Report', 's3_url')
+    #StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
+
+    @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url'))
+    def test_stash_image(self, mock_stash):
+        '''Test the stash image calls are correct'''
+        doc = {'_id':'TESTID'}
+        self.assertRaises(KeyError, image_harvest.stash_image, doc)
+        doc['isShownBy']  = {'src':'test local url'}
+        ret = image_harvest.stash_image(doc)
+        mock_stash.assert_called_with('test local url', bucket_base='ucldc')
+        self.assertEqual('s3 test url', ret.s3_url)
+        ret = image_harvest.stash_image(doc, bucket_base='x')
+        mock_stash.assert_called_with('test local url', bucket_base='x')
+
+    def test_update_doc_object(self):
+        '''Test call to couchdb, right data'''
+        doc = {}
+        r = self.report('s3 test2 url')
+        db = MagicMock()
+        ret = image_harvest.update_doc_object(doc, r, db)
+        self.assertEqual('s3 test2 url', ret)
+        self.assertEqual('s3 test2 url', doc['object'])
+        db.save.assert_called_with({'object': 's3 test2 url'})
+
 
 CONFIG_FILE_DPLA = '''
 [Akara]
