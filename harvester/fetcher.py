@@ -413,7 +413,7 @@ class HarvestController(object):
         #get base registry URL
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
-        obj['collection'] = {'@id': self.collection.url, 'name': self.collection.name}
+        obj['collection'] = [{'@id': self.collection.url, 'name': self.collection.name}]
         obj['campus'] = []
         for c in self.collection.get('campus', []):
             obj['campus'].append({'@id':''.join((base_url, c['resource_uri'])), 

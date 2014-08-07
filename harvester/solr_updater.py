@@ -28,8 +28,8 @@ COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     #assuming one collection only, may need to change
-    'collection'  : lambda d: { 'collection' : d['collection']['@id'],
-                               'collection_name' : d['collection']['name'] },
+    'collection'  : lambda d: { 'collection' : [c['@id'] for c in d['collection']],
+                               'collection_name' : [c['name'] for c in d['collection']] },
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
     'creator'     : lambda d: {'creator': d.get('creator', None)},

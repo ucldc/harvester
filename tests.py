@@ -252,7 +252,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/178/', 'name':'Harry Crosby Collection'})
+        self.assertEqual(obj['collection'], [{'@id':'https://registry.cdlib.org/api/v1/collection/178/', 'name':'Harry Crosby Collection'}])
         self.assertIn('campus', obj)
         self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
         self.assertIn('repository', obj)
@@ -471,7 +471,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.assertNotIn('collection', obj)
         objnew = controller._add_registry_data(obj)
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection']['@id'], 'https://registry.cdlib.org/api/v1/collection/197/')
+        self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/197/')
         self.assertIn('campus', obj)
         self.assertIn('repository', obj)
         #need to test one without campus
@@ -487,8 +487,8 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'], {'@id':'https://registry.cdlib.org/api/v1/collection/197/',
-            'name':'Calisphere - Santa Clara University: Digital Objects'})
+        self.assertEqual(obj_saved['collection'], [{'@id':'https://registry.cdlib.org/api/v1/collection/197/',
+            'name':'Calisphere - Santa Clara University: Digital Objects'}])
         self.assertIn('campus', obj_saved)
         self.assertEqual(obj_saved['campus'], [{'@id':'https://registry.cdlib.org/api/v1/campus/12/',
             'name':'California Digital Library'}])
@@ -1235,7 +1235,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = pickle.load(f)
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
-        mock_solr.add.assert_called_with({'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': u'Uchida (Yoshiko) photograph collection', 'format': u'mods', 'title': u'Neighbor', 'collection': u'https://registry.cdlib.org/api/v1/collection/23066', 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'campus_name': [u'UC Berkeley'], 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'type': u'image', 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
+        mock_solr.add.assert_called_with({'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'title': u'Neighbor', 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066'], 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'campus_name': [u'UC Berkeley'], 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'type': u'image', 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
@@ -1250,8 +1250,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
         self.assertEqual(sdoc['repository'],  [u'https://registry.cdlib.org/api/v1/repository/4/'])
         self.assertEqual(sdoc['repository_name'], [u'Bancroft Library'])
-        self.assertEqual(sdoc['collection'],'https://registry.cdlib.org/api/v1/collection/23066') 
-        self.assertEqual(sdoc['collection_name'], 'Uchida (Yoshiko) photograph collection')
+        self.assertEqual(sdoc['collection'],['https://registry.cdlib.org/api/v1/collection/23066']) 
+        self.assertEqual(sdoc['collection_name'], ['Uchida (Yoshiko) photograph collection'])
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
         #self.assertEqual(sdoc['contributor'], '')
         #self.assertEqual(sdoc['coverage'], '')
