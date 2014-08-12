@@ -1325,10 +1325,10 @@ def harvest_image_for_doc(doc):
 def harvest_by_collection(collection_key=None, url_couchdb=COUCHDB_URL):
     '''
     from collections import namedtuple
-    report = namedtuple('Report', 's3_url')
+    report = namedtuple('Report', 's3_url, md5')
     #StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
 
-    @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url'))
+    @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))
     def test_stash_image(self, mock_stash):
         '''Test the stash image calls are correct'''
         doc = {'_id':'TESTID'}
@@ -1343,12 +1343,12 @@ def harvest_by_collection(collection_key=None, url_couchdb=COUCHDB_URL):
     def test_update_doc_object(self):
         '''Test call to couchdb, right data'''
         doc = {}
-        r = self.report('s3 test2 url')
+        r = self.report('s3 test2 url', 'md5 test value')
         db = MagicMock()
         ret = image_harvest.update_doc_object(doc, r, db)
-        self.assertEqual('s3 test2 url', ret)
-        self.assertEqual('s3 test2 url', doc['object'])
-        db.save.assert_called_with({'object': 's3 test2 url'})
+        self.assertEqual('md5 test value', ret)
+        self.assertEqual('md5 test value', doc['object'])
+        db.save.assert_called_with({'object': 'md5 test value'})
 
 
 CONFIG_FILE_DPLA = '''

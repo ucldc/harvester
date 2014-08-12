@@ -30,7 +30,7 @@ def stash_image(doc, bucket_base=BUCKET_BASE):
 
 def update_doc_object(doc, report, db_couchdb):
     '''Update the object field to point to an s3 bucket'''
-    doc['object'] = report.s3_url
+    doc['object'] = report.md5
     db_couchdb.save(doc)
     return doc['object']
 

@@ -16,6 +16,7 @@ COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
 COUCHDOC_TO_SOLR_MAPPING = {
     'id' : lambda d: {'id': d['_id']},
+    'reference_image_md5' : lambda d: {'reference_image_md5': d['object']},
 }
 
 COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
