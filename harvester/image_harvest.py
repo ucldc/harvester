@@ -36,6 +36,7 @@ def update_doc_object(doc, report, db_couchdb):
 
 def harvest_image_for_doc(doc, db_couchdb=None):
     '''Try to harvest an image for a couchdb doc'''
+    report = None
     if not db_couchdb:
         db_couchdb = get_couchdb()
     try:
