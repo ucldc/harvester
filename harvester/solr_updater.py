@@ -62,7 +62,11 @@ def map_couch_to_solr_doc(doc):
     sourceResource = doc['sourceResource']
     for p in sourceResource.keys():
         if p in COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING:
-            solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
+            try:
+                solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
+            except TypeError, e:
+                print('TypeError for doc {} on sourceResource {}'.format(doc['_id'], p))
+                raise e
     return solr_doc
 
 def push_doc_to_solr(solr_doc, solr_db):
@@ -108,8 +112,11 @@ def main():
             continue
         n += 1
         doc = db.get(row['id'])
-        solr_doc = map_couch_to_solr_doc(doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
+        try:
+            solr_doc = map_couch_to_solr_doc(doc)
+            solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
+        except TypeError:
+            continue
     solr_db.commit() #commit updates
     set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS".format(n))
