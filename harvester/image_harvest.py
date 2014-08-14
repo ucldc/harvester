@@ -26,6 +26,11 @@ def stash_image(doc, bucket_base=BUCKET_BASE):
         url_image = doc['isShownBy']['src']
     except KeyError, e:
         raise KeyError("isShownBy field missing for {}".format(doc['_id']))
+    # for some OAC objects, the reference image is not a url but a path.
+    if 'http' != url_image[:4]:
+        #not a URL....
+        if 'ark:' in url_image:
+            url_image = 'http://content.cdlib.org/'+url_image
     return md5s3stash.md5s3stash(url_image, bucket_base=bucket_base)
 
 def update_doc_object(doc, report, db_couchdb):
@@ -47,6 +52,9 @@ def harvest_image_for_doc(doc, db_couchdb=None):
             print e
         else:
             raise e
+    except IOError, e:
+        print e
+        print dir(e)
     return report
 
 def by_list_of_doc_ids(doc_ids, url_couchdb=COUCHDB_URL):
