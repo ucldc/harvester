@@ -565,23 +565,52 @@ class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
 
 class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
+    #URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
     @httpretty.activate
     def testClassInit(self):
         '''Test that the class exists and gives good error messages
         if initial data not correct'''
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
-            body = open('./fixtures/ucsd_bb5837608z_1-3.xml').read()
-#URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
+            body = open('./fixtures/ucsd_bb5837608z-1.xml').read()
             )
         self.assertRaises(TypeError, fetcher.SolrHarvester)
-        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data')
+        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
+        rows=3)
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, solr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
         self.assertTrue(hasattr(h, 'query'))
         self.assertEqual(h.query, 'extra_data')
         self.assertTrue(hasattr(h, 'resp'))
+        self.assertEqual(h.resp.start, 0)
+        self.assertEqual(len(h.resp.results), 3)
+        self.assertTrue(hasattr(h, 'numFound'))
+        self.assertEqual(h.numFound, 10)
+        self.assertTrue(hasattr(h, 'index'))
+
+    @httpretty.activate
+    def testIterateOverResults(self):
+        '''Test the iteration over a mock set of data'''
+        httpretty.register_uri(httpretty.POST,
+            'http://example.edu/solr/select',
+            responses = [
+                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-1.xml').read()),
+                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-2.xml').read()),
+                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-3.xml').read()),
+                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-4.xml').read()),
+                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-5.xml').read()),
+            ]
+            )
+        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
+            rows=3)
+        self.assertEqual(len(h.resp.results), 3)
+        n = 0
+        for r in h:
+            n += 1
+        print r['title_tesim']
+        self.assertEqual(['Urey Hall and Mayer Hall'], r['title_tesim'])
+
 
 class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Harvester

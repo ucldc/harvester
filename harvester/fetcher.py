@@ -60,11 +60,24 @@ class OAIHarvester(Harvester):
         return rec
 
 class SolrHarvester(Harvester):
-    def __init__(self, url_harvest, extra_data):
-        super(SolrHarvester, self).__init__(url_harvest, extra_data)
+    def __init__(self, url_harvest, query, **query_params):
+        super(SolrHarvester, self).__init__(url_harvest, query)
         self.solr = solr.Solr(url_harvest, debug=True)
-        self.query = extra_data 
+        self.query = query 
         self.resp = self.solr.select(self.query)
+        self.numFound = self.resp.numFound
+        self.index = 0
+
+    def next(self):
+        if self.index < len(self.resp.results):
+            self.index +=1
+            return self.resp.results[self.index-1]
+        self.index = 1
+        self.resp = self.resp.next_batch()
+        if not len(self.resp.results):
+            raise StopIteration
+        return self.resp.results[self.index-1]
+
 
 class BunchDict(dict):
     def __init__(self, **kwds):
