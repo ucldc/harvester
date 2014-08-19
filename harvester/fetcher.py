@@ -14,6 +14,7 @@ from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
+import solr
 from collection_registry_client import Collection
 import dplaingestion.couch 
 
@@ -57,6 +58,13 @@ class OAIHarvester(Harvester):
         rec = sickle_rec.metadata
         rec['handle'] = sickle_rec.header.identifier
         return rec
+
+class SolrHarvester(Harvester):
+    def __init__(self, url_harvest, extra_data):
+        super(SolrHarvester, self).__init__(url_harvest, extra_data)
+        self.solr = solr.Solr(url_harvest, debug=True)
+        self.query = extra_data 
+        self.resp = self.solr.select(self.query)
 
 class BunchDict(dict):
     def __init__(self, **kwds):

@@ -18,6 +18,7 @@ import requests
 import logbook
 import httpretty
 from redis import Redis
+import solr
 import harvester
 from harvester.fetcher import get_log_file_path
 from harvester.collection_registry_client import Registry, Collection
@@ -561,6 +562,26 @@ class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
         rec = self.harvester.next()
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
+
+class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
+    '''Test the harvesting of solr baed data.'''
+    @httpretty.activate
+    def testClassInit(self):
+        '''Test that the class exists and gives good error messages
+        if initial data not correct'''
+        httpretty.register_uri(httpretty.POST,
+            'http://example.edu/solr/select',
+            body = open('./fixtures/ucsd_bb5837608z_1-3.xml').read()
+#URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
+            )
+        self.assertRaises(TypeError, fetcher.SolrHarvester)
+        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data')
+        self.assertTrue(hasattr(h, 'solr'))
+        self.assertTrue(isinstance(h.solr, solr.Solr))
+        self.assertEqual(h.solr.url, 'http://example.edu/solr')
+        self.assertTrue(hasattr(h, 'query'))
+        self.assertEqual(h.query, 'extra_data')
+        self.assertTrue(hasattr(h, 'resp'))
 
 class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Harvester
