@@ -16,6 +16,7 @@ COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
 COUCHDOC_TO_SOLR_MAPPING = {
     'id' : lambda d: {'id': d['_id']},
+    'object' : lambda d: {'reference_image_md5': d['object']},
 }
 
 COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
@@ -28,18 +29,19 @@ COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     #assuming one collection only, may need to change
-    'collection'  : lambda d: { 'collection' : d['collection']['@id'],
-                               'collection_name' : d['collection']['name'] },
+    'collection'  : lambda d: { 'collection' : [c['@id'] for c in d['collection']],
+                               'collection_name' : [c['name'] for c in d['collection']] },
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
     'description' : lambda d: {'description': d.get('description', None)},
     'date'        : lambda d: {'date': d.get('date', None)},
+    'identifier'  : lambda d: {'identifier': d.get('identifier', None)},
     'language'    : lambda d: {'language': d.get('language', None)},
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
-    'subject'     : lambda d: { 'subject' : [s['name'] for s in d['subject']] },
+    'subject'     : lambda d: { 'subject' : [s['name'] for s in d['subject'] if s] },
     'title'       : lambda d: {'title': d.get('title', None)},
     'type'        : lambda d: {'type': d.get('type', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
@@ -60,7 +62,11 @@ def map_couch_to_solr_doc(doc):
     sourceResource = doc['sourceResource']
     for p in sourceResource.keys():
         if p in COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING:
-            solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
+            try:
+                solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
+            except TypeError, e:
+                print('TypeError for doc {} on sourceResource {}'.format(doc['_id'], p))
+                raise e
     return solr_doc
 
 def push_doc_to_solr(solr_doc, solr_db):
@@ -106,8 +112,11 @@ def main():
             continue
         n += 1
         doc = db.get(row['id'])
-        solr_doc = map_couch_to_solr_doc(doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
+        try:
+            solr_doc = map_couch_to_solr_doc(doc)
+            solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
+        except TypeError:
+            continue
     solr_db.commit() #commit updates
     set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS".format(n))

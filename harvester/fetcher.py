@@ -14,6 +14,7 @@ from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
+import solr
 from collection_registry_client import Collection
 import dplaingestion.couch 
 
@@ -57,6 +58,26 @@ class OAIHarvester(Harvester):
         rec = sickle_rec.metadata
         rec['handle'] = sickle_rec.header.identifier
         return rec
+
+class SolrHarvester(Harvester):
+    def __init__(self, url_harvest, query, **query_params):
+        super(SolrHarvester, self).__init__(url_harvest, query)
+        self.solr = solr.Solr(url_harvest, debug=True)
+        self.query = query 
+        self.resp = self.solr.select(self.query)
+        self.numFound = self.resp.numFound
+        self.index = 0
+
+    def next(self):
+        if self.index < len(self.resp.results):
+            self.index +=1
+            return self.resp.results[self.index-1]
+        self.index = 1
+        self.resp = self.resp.next_batch()
+        if not len(self.resp.results):
+            raise StopIteration
+        return self.resp.results[self.index-1]
+
 
 class BunchDict(dict):
     def __init__(self, **kwds):
@@ -413,7 +434,7 @@ class HarvestController(object):
         #get base registry URL
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
-        obj['collection'] = {'@id': self.collection.url, 'name': self.collection.name}
+        obj['collection'] = [{'@id': self.collection.url, 'name': self.collection.name}]
         obj['campus'] = []
         for c in self.collection.get('campus', []):
             obj['campus'].append({'@id':''.join((base_url, c['resource_uri'])), 
@@ -475,12 +496,14 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
     Returns the ingest_doc_id, directory harvest saved to and number of records.
     '''
     num_recs = -1
+    my_mail_handler = None
     if not mail_handler:
-        mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
+        my_mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
                                            user_email,
                                            level='ERROR',
                                            bubble=True)
-    mail_handler.push_application()
+        my_mail_handler.push_application()
+        mail_handler = my_mail_handler
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
@@ -492,16 +515,19 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logbook.error(msg)
         raise ValueError('Collection is not an OAC or OAI harvest collection')
     mail_handler.subject = "Error during harvest of " + collection.url #default
+    my_log_handler = None
     if not log_handler: #can't init until have collection
-        log_handler = FileHandler(get_log_file_path(collection.slug),
-                                  bubble=True)
-    log_handler.push_application()
+        my_log_handler = FileHandler(get_log_file_path(collection.slug))
+        my_log_handler.push_application()
     logger = logbook.Logger('HarvestMain')
     msg ='Init harvester next. Collection:{}'.format(collection.url) 
     logger.info(msg)
     #email directly
     mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Starting harvest for ', collection.slug)), msg)
-    mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    try: #TODO: request more emails from AWS
+        mail_handler.deliver(mimetext, 'mredar@gmail.com')
+    except:
+        pass
     logger.info('Create DPLA profile document')
     if not profile_path:
         profile_path = os.path.abspath(os.path.join(dir_profile, collection.slug+'.pjs'))
@@ -527,15 +553,20 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logger.info(msg)
         #email directly
         mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(('Finished harvest of raw records for ', collection.slug, ' enriching next')), msg)
-        mail_handler.deliver(mimetext, 'mredar@gmail.com')
+        try:
+            mail_handler.deliver(mimetext, 'mredar@gmail.com')
+        except:
+            pass
     except Exception, e:
         import traceback
         error_msg = "Error while harvesting: type-> "+str(type(e))+ " TRACE:\n"+str(traceback.format_exc())
         logger.error(error_msg)
         harvester.update_ingest_doc('error', error_msg=error_msg, items=num_recs)
-    log_handler.pop_application()
-    mail_handler.pop_application()
-    return ingest_doc_id, num_recs, harvester.dir_save
+    if my_log_handler:
+        my_log_handler.pop_application()
+    if my_mail_handler:
+        my_mail_handler.pop_application()
+    return ingest_doc_id, num_recs, harvester.dir_save, harvester
 
 if __name__=='__main__':
     args = parse_args()
