@@ -22,12 +22,10 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 import rq
 from harvester import solr_updater
 from harvester import grab_solr_index
+from harvester import image_harvest
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
-
-def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
-    return Redis(host=redis_host, port=redis_port, password=redis_pswd, socket_connect_timeout=redis_timeout)
 
 def def_args():
     import argparse
@@ -40,7 +38,7 @@ def def_args():
 def main(user_email, url_api_collection, log_handler=None,
         mail_handler=None, dir_profile='profiles', profile_path=None,
         config_file='akara.ini', redis_host=None, redis_port=None,
-        redis_pswd=None):
+        redis_pswd=None, redis_timeout=6000):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
     if EMAIL_SYS_ADMIN:
@@ -61,11 +59,11 @@ def main(user_email, url_api_collection, log_handler=None,
         logbook.error(msg)
         raise e
     if not log_handler:
-        log_handler = logbook.StderrHandler(level='DEBUG', bubble=True)
+        log_handler = logbook.StderrHandler(level='DEBUG')
 
     log_handler.push_application()
     logger = logbook.Logger('run_ingest')
-    ingest_doc_id, num_recs, dir_save = fetcher.main(
+    ingest_doc_id, num_recs, dir_save, harvester = fetcher.main(
                         emails,
                         url_api_collection,
                         log_handler=log_handler,
@@ -84,33 +82,27 @@ def main(user_email, url_api_collection, log_handler=None,
     resp = save_records.main([None, ingest_doc_id])
     if not resp == 0:
         logger.error("Error saving records {0}".format(str(resp)))
-        sys.exit(1)
+        raise Exception("Error saving records {0}".format(str(resp)))
     logger.info("SAVED RECS")
 
     resp = remove_deleted_records.main([None, ingest_doc_id]) 
     if not resp == 0:
-        logger.error( "Error deleting records")
-        sys.exit(1)
+        logger.error("Error deleting records")
+        raise Exception("Error deleting records")
 
     resp = check_ingestion_counts.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error( "Error checking counts")
-        sys.exit(1)
+        logger.error("Error checking counts")
+        raise Exception("Error checking counts")
 
     resp = dashboard_cleanup.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error( "Error cleaning up dashboard")
-        sys.exit(1)
+        logger.error("Error cleaning up dashboard")
+        raise Exception("Error cleaning up dashboard")
 
-    rQ = rq.Queue(connection=get_redis_connection(redis_host, redis_port, redis_pswd))
-    #TODO: add emails pass in for email notify
-    update_job = rQ.enqueue_call(func=solr_updater.main,
-                                timeout=600)
-    logger.info("Solr Update queuedd for {0}!".format(url_api_collection))
-    #TODO: add emails pass in for email notify
-    fetch_index_job = rQ.enqueue_call(func=grab_solr_index.main,
-                                    depends_on=update_job,
-                                    timeout=600)
+    url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
+    image_harvest.by_collection(collection_key=collection.slug, url_couchdb=url_couchdb)
+
     log_handler.pop_application()
     mail_handler.pop_application()
 
@@ -123,5 +115,9 @@ if __name__ == '__main__':
     redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
-    main(args.user_email, args.url_api_collection, redis_host=redis_host,
-        redis_port=redis_port, redis_pswd=redis_pswd)
+    main(   args.user_email,
+            args.url_api_collection,
+            redis_host=redis_host,
+            redis_port=redis_port,
+            redis_pswd=redis_pswd,
+            redis_timeout=redis_connect_timeout)

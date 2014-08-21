@@ -32,6 +32,7 @@ setup(
             'https://github.com/zepheira/amara/archive/master.zip#egg=amara', 
             'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
             'https://github.com/mredar/DPLA-ingestion/archive/ucldc.zip#egg=dplaingestion',
+            'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
             ],
     install_requires = [ 
         'Sickle==0.3',
@@ -50,6 +51,7 @@ setup(
         'rq==0.4.6',
         'boto==2.29.1',
         'CouchDB==0.9',
+        'md5s3stash'
         ]
 )
 

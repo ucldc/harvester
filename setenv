@@ -9,3 +9,4 @@ export AWS_ACCESS_KEY=<AWS_ACCESS_KEY>
 export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 export EMAIL_SYS_ADMINS=<csv list of admin emails>
+export COUCHDB_URL=http://localhost:5984
