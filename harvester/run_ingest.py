@@ -19,13 +19,14 @@ from harvester.parse_env import parse_env
 from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
-import rq
+from rq import Queue
 from harvester import solr_updater
 from harvester import grab_solr_index
-from harvester import image_harvest
+import harvester.image_harvest
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
+IMAGE_HARVEST_TIMEOUT = 14400
 
 def def_args():
     import argparse
@@ -34,6 +35,17 @@ def def_args():
     parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
     return parser
+
+def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
+collection_key, url_couchdb):
+    rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
+                                password=redis_pswd,
+                                socket_connect_timeout=redis_timeout)
+    )
+    job = rQ.enqueue_call(func=harvester.image_harvest.by_collection,
+            kwargs=dict(collection_key=collection_key, url_couchdb=url_couchdb),
+            timeout=IMAGE_HARVEST_TIMEOUT)
+    return job
 
 def main(user_email, url_api_collection, log_handler=None,
         mail_handler=None, dir_profile='profiles', profile_path=None,
@@ -101,7 +113,11 @@ def main(user_email, url_api_collection, log_handler=None,
         raise Exception("Error cleaning up dashboard")
 
     url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
-    image_harvest.by_collection(collection_key=collection.slug, url_couchdb=url_couchdb)
+    #the image_harvest should be a separate job, with a long timeout
+    job = queue_image_harvest(redis_host, redis_port, redis_pswd,
+                              redis_timeout, collection_key=collection.slug,
+                              url_couchdb=url_couchdb)
+    logger.info("Started job for image_harvest:{}".format(job.result))
 
     log_handler.pop_application()
     mail_handler.pop_application()
