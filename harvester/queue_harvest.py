@@ -48,7 +48,7 @@ def def_args():
     return parser
 
 def main(user_email, url_api_collection, redis_host=None, redis_port=None,
-    redis_pswd=None, id_ec2_ingest=ID_EC2_INGEST, id_ec2_solr=ID_EC2_SOLR_BUILD,
+    redis_pswd=None, id_ec2_ingest=None, id_ec2_solr=None,
     timeout=None, poll_interval=20, job_timeout=600):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):

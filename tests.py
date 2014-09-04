@@ -304,7 +304,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         config_file, profile_path = self.setUp_config(self.collection) 
         self.controller_oai = fetcher.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
-        self.objset_test_doc = json.load(open('objset_test_doc.json'))
+        self.objset_test_doc = json.load(open('fixtures/objset_test_doc.json'))
 
     def tearDown(self):
         super(HarvestControllerTestCase, self).tearDown()
@@ -1283,7 +1283,7 @@ class SolrUpdaterTestCase(TestCase):
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
-        f = open('pickled_couchdb_doc')
+        f = open('fixtures/pickled_couchdb_doc')
         doc = pickle.load(f)
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
@@ -1293,7 +1293,7 @@ class SolrUpdaterTestCase(TestCase):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
         '''
-        f = open('pickled_couchdb_doc')
+        f = open('fixtures/pickled_couchdb_doc')
         doc = pickle.load(f)
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], doc['_id'])

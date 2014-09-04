@@ -62,7 +62,7 @@ class OAIHarvester(Harvester):
 class SolrHarvester(Harvester):
     def __init__(self, url_harvest, query, **query_params):
         super(SolrHarvester, self).__init__(url_harvest, query)
-        self.solr = solr.Solr(url_harvest, debug=True)
+        self.solr = solr.Solr(url_harvest)#, debug=True)
         self.query = query 
         self.resp = self.solr.select(self.query)
         self.numFound = self.resp.numFound
@@ -323,6 +323,7 @@ class OAC_JSON_Harvester(Harvester):
 HARVEST_TYPES = { 'OAI': OAIHarvester,
             'OAJ': OAC_JSON_Harvester,
             'OAC': OAC_XML_Harvester,
+            'SLR': SolrHarvester,
         }
 
 class HarvestController(object):
@@ -370,6 +371,16 @@ class HarvestController(object):
         sID = '-'.join((campusStr, repoStr, self.collection.slug, identifier[0].replace(' ', '-')))
         return sID
 
+    @staticmethod
+    def dt_json_handler(obj):
+        '''The json package cannot deal with datetimes.
+        Provide this serializer for datetimes.
+        '''
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        else:
+            return json.JSONEncoder.default(obj)
+
     def save_objset(self, objset):
         '''Save an object set to disk. If it is a single object, wrap in a
         list to be uniform'''
@@ -377,7 +388,7 @@ class HarvestController(object):
         if not type(objset) == list:
             objset = [ objset ]
         with open(filename, 'w') as foo:
-            foo.write(json.dumps(objset))
+            foo.write(json.dumps(objset, default=HarvestController.dt_json_handler))
 
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session.
@@ -511,9 +522,14 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None, di
         logbook.error(msg)
         raise e
     if not(collection['harvest_type'] in HARVEST_TYPES):
-        msg = 'Collection {} wrong type {} for harvesting.'.format(url_api_collection, collection['harvest_type'])
+        msg = 'Collection {} wrong type {} for harvesting. \
+                Harvest type {} is not in {}'.format(url_api_collection,
+                                            collection['harvest_type'],
+                                            collection['harvest_type'],
+                                            HARVEST_TYPES.keys()
+                                            )
         logbook.error(msg)
-        raise ValueError('Collection is not an OAC or OAI harvest collection')
+        raise ValueError(msg)
     mail_handler.subject = "Error during harvest of " + collection.url #default
     my_log_handler = None
     if not log_handler: #can't init until have collection
