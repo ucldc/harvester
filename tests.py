@@ -38,6 +38,9 @@ from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
 import harvester.fetcher as fetcher
 
+DIR_THIS_FILE = os.path.abspath(os.path.split(__file__)[0])
+DIR_FIXTURES = os.path.join(DIR_THIS_FILE, 'fixtures')
+
 #NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
 TEST_COUCH_DASHBOARD = 'test-dashboard'
@@ -105,7 +108,7 @@ class RegistryApiTestCase(TestCase):
         '''Test when less than one page worth of objects fetched'''
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/campus/',
-                body=open('./fixtures/registry_api_campus.json').read())
+                body=open(DIR_FIXTURES+'/registry_api_campus.json').read())
         l = []
         for c in self.registry.resource_iter('campus'):
             l.append(c)
@@ -117,10 +120,10 @@ class RegistryApiTestCase(TestCase):
         '''Test when less than one page worth of objects fetched'''
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/repository/?limit=20&offset=20',
-                body=open('./fixtures/registry_api_repository-page-2.json').read())
+                body=open(DIR_FIXTURES+'/registry_api_repository-page-2.json').read())
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/repository/',
-                body=open('./fixtures/registry_api_repository.json').read())
+                body=open(DIR_FIXTURES+'/registry_api_repository.json').read())
 
         riter = self.registry.resource_iter('repository')
         self.assertEqual(riter.url, 'https://registry.cdlib.org/api/v1/repository/')
@@ -139,7 +142,7 @@ class RegistryApiTestCase(TestCase):
         for library collection resources'''
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/',
-                body=open('./fixtures/registry_api_collection.json').read())
+                body=open(DIR_FIXTURES+'/registry_api_collection.json').read())
         riter = self.registry.resource_iter('collection')
         c = riter.next()
         self.assertTrue(isinstance(c, Collection))
@@ -152,7 +155,7 @@ class ApiCollectionTestCase(TestCase):
     def testOAICollectionAPI(self):
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/197',
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         c = Collection('https://registry.cdlib.org/api/v1/collection/197')
         self.assertEqual(c['harvest_type'], 'OAI')
         self.assertEqual(c.harvest_type, 'OAI')
@@ -167,7 +170,7 @@ class ApiCollectionTestCase(TestCase):
     def testOACApiCollection(self):
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/178',
-                body=open('./fixtures/collection_api_test_oac.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
         c = Collection('https://registry.cdlib.org/api/v1/collection/178')
         self.assertEqual(c['harvest_type'], 'OAJ')
         self.assertEqual(c.harvest_type, 'OAJ')
@@ -183,7 +186,7 @@ class ApiCollectionTestCase(TestCase):
         '''Test the creation of a DPLA style proflie file'''
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/178',
-                body=open('./fixtures/collection_api_test_oac.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
         c = Collection('https://registry.cdlib.org/api/v1/collection/178')
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertIsInstance(c.dpla_profile, str)
@@ -213,10 +216,10 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         #self.testFile = 'fixtures/collection_api_test_oac.json'
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/178/",
-                body=open('./fixtures/collection_api_test_oac.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
         httpretty.register_uri(httpretty.GET,
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
-                body=open('./fixtures/testOAC.json').read())
+                body=open(DIR_FIXTURES+'/testOAC.json').read())
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
@@ -231,7 +234,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         '''Test the function of the OAC harvest'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.assertTrue(hasattr(self.controller, 'harvest'))
         self.controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 2)
@@ -243,10 +246,10 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         #test OAC objsets
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
-                body=open('./fixtures/testOAC-url_next-0.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         self.ranGet = False
         self.controller.harvest()
@@ -277,10 +280,10 @@ class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, Te
         '''Test the function of the OAI harvest'''
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/',
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 'http://content.cdlib.org/oai',
-                body=open('./fixtures/testOAC-url_next-0.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
@@ -297,10 +300,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         super(HarvestControllerTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         #self.collection = Collection('fixtures/collection_api_test.json')
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         config_file, profile_path = self.setUp_config(self.collection) 
@@ -316,10 +319,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
     def testHarvestControllerExists(self):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/101/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
         self.assertTrue(hasattr(controller, 'harvester'))
@@ -338,10 +341,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         '''Test how the id for the index is created'''
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         self.assertTrue(hasattr(self.controller_oai, 'create_id'))
         identifier = 'x'
         self.assertRaises(TypeError, self.controller_oai.create_id, identifier)
@@ -442,10 +445,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
     def testLoggingMoreThan1000(self):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/198/",
-                body=open('./fixtures/collection_api_big_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_big_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-2400-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-2400-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/198/')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         controller.harvest()
@@ -461,10 +464,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         '''Unittest the _add_registry_data function'''
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
 
         collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         self.tearDown_config() # remove ones setup in setUp
@@ -545,7 +548,7 @@ class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
         super(OAIHarvesterTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
                 'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
-                body=open('./fixtures/testOAI.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI.xml').read())
         self.harvester = fetcher.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
 
     def tearDown(self):
@@ -573,7 +576,7 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
         if initial data not correct'''
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
-            body = open('./fixtures/ucsd_bb5837608z-1.xml').read()
+            body = open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()
             )
         self.assertRaises(TypeError, fetcher.SolrHarvester)
         h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
@@ -596,11 +599,11 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
             responses = [
-                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-1.xml').read()),
-                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-2.xml').read()),
-                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-3.xml').read()),
-                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-4.xml').read()),
-                    httpretty.Response(body=open('./fixtures/ucsd_bb5837608z-5.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-2.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-3.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-4.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-5.xml').read()),
             ]
             )
         h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
@@ -609,8 +612,31 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
         n = 0
         for r in h:
             n += 1
-        print r['title_tesim']
         self.assertEqual(['Urey Hall and Mayer Hall'], r['title_tesim'])
+        self.assertEqual(n, 10)
+
+
+class MARCHarvesterTestCase(LogOverrideMixin, TestCase):
+    '''Test MARC fetching'''
+    def testInit(self):
+        '''Basic tdd start'''
+
+        h = fetcher.MARCHarvester('file:'+DIR_FIXTURES+'/marc-test', None)
+        self.assertTrue(hasattr(h, 'url_marc_file'))
+        self.assertTrue(hasattr(h, 'marc_file'))
+        self.assertIsInstance(h.marc_file, file)
+        self.assertTrue(hasattr(h, 'marc_reader'))
+        self.assertEqual(str(type(h.marc_reader)), "<class 'pymarc.reader.MARCReader'>")
+
+    def testLocalFileLoad(self):
+        h = fetcher.MARCHarvester('file:'+DIR_FIXTURES+'/marc-test', None)
+        for n, rec in enumerate(h):
+            pass
+            #print("NUM->{}:{}".format(n,rec))
+        self.assertEqual(n, 10)
+        self.assertIsInstance(rec, dict)
+        self.assertEqual(rec['leader'], '01850nkm a2200265ia 4500')
+        self.assertEqual(len(rec['fields']), 20)
 
 
 class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
@@ -620,7 +646,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     def setUp(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
-                body=open('./fixtures/testOAC-url_next-0.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         #self.testFile = 'fixtures/testOAC-url_next-0.xml'
         super(OAC_XML_HarvesterTestCase, self).setUp()
         self.harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
@@ -632,7 +658,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     def testBadOACSearch(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx',
-                body=open('./fixtures/testOAC-badsearch.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-badsearch.xml').read())
         #self.testFile = 'fixtures/testOAC-badsearch.xml'
         self.assertRaises(ValueError, fetcher.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
 
@@ -641,7 +667,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''Test when only texts are in result'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
         #self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
         h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 11)
@@ -653,7 +679,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
     def testUTF8ResultsContent(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-utf8-content.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-utf8-content.xml').read())
         #self.testFile = 'fixtures/testOAC-utf8-content.xml'
         h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 25)
@@ -711,7 +737,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-url_next-0.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         self.assertTrue(hasattr(self.harvester, 'totalDocs'))
         self.assertTrue(hasattr(self.harvester, 'totalGroups'))
         self.assertTrue(hasattr(self.harvester, 'groups'))
@@ -733,17 +759,17 @@ class OAC_XML_Harvester_text_contentTestCase(LogOverrideMixin, TestCase):
     def testFetchTextOnlyContent(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10',
-                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=1&group=text',
-                body=open('./fixtures/testOAC-noimages-in-results.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
         oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
         first_set = oac_harvester.next()
         self.assertEqual(len(first_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=11&group=text',
-                body=open('./fixtures/testOAC-noimages-in-results-1.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-noimages-in-results-1.xml').read())
         second_set = oac_harvester.next()
         self.assertEqual(len(second_set), 1)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
@@ -762,29 +788,29 @@ class OAC_XML_Harvester_mixed_contentTestCase(LogOverrideMixin, TestCase):
         '''
         httpretty.register_uri(httpretty.GET,
                  'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10',
-                body=open('./fixtures/testOAC-url_next-0.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image',
-                body=open('./fixtures/testOAC-url_next-0.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
         first_set = oac_harvester.next()
         self.assertEqual(len(first_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image',
-                body=open('./fixtures/testOAC-url_next-1.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.xml').read())
         second_set = oac_harvester.next()
         self.assertEqual(len(second_set), 3)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text',
-                body=open('./fixtures/testOAC-url_next-2.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-2.xml').read())
         third_set = oac_harvester.next()
         self.assertEqual(len(third_set), 10)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text',
-                body=open('./fixtures/testOAC-url_next-3.xml').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-3.xml').read())
         fourth_set = oac_harvester.next()
         self.assertEqual(len(fourth_set), 1)
         self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
@@ -798,7 +824,7 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
     def setUp(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-url_next-0.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
         super(OAC_JSON_HarvesterTestCase, self).setUp()
         self.harvester = fetcher.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
@@ -815,7 +841,7 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         rec = self.harvester.next()[0]
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
@@ -825,10 +851,10 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''Test the older by single record interface'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-url_next-0.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         r = self.harvester.next_record()
@@ -844,7 +870,7 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
     def testHarvestIsIter(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.assertTrue(hasattr(self.harvester, '__iter__')) 
         self.assertEqual(self.harvester, self.harvester.__iter__())
         rec1 = self.harvester.next_record()
@@ -856,10 +882,10 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         response set records are all consumed'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-url_next-0.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         self.ranGet = False
@@ -872,10 +898,10 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''Test fetching data in whole objsets'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
-                body=open('./fixtures/testOAC-url_next-0.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.assertTrue(hasattr(self.harvester, 'next_objset'))
         self.assertTrue(hasattr(self.harvester.next_objset, '__call__'))
         objset = self.harvester.next_objset()
@@ -898,7 +924,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.user_email = 'email@example.com'
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         self.url_api_collection = "https://registry.cdlib.org/api/v1/collection/197/"
         sys.argv = ['thisexe', self.user_email, self.url_api_collection]
         self.collection = Collection(self.url_api_collection)
@@ -925,10 +951,10 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         '''
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         c = Collection("https://registry.cdlib.org/api/v1/collection/197/")
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
@@ -964,7 +990,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         '''Test what happens with wrong type of harvest'''
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test_bad_type.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test_bad_type.json').read())
         self.assertRaises(ValueError, fetcher.main,
                     self.user_email,
                     "https://registry.cdlib.org/api/v1/collection/197/",
@@ -981,7 +1007,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     def testCollectionNoEnrichItems(self):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/36/",
-                body=open('./fixtures/collection_api_no_enrich_item.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_no_enrich_item.json').read())
         c = Collection("https://registry.cdlib.org/api/v1/collection/36/")
         with self.assertRaises(ValueError):
             c.dpla_profile_obj
@@ -993,10 +1019,10 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         correctly'''
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         sys.argv = ['thisexe', 'email@example.com', 'https://registry.cdlib.org/api/v1/collection/197/']
         self.assertRaises(Exception, fetcher.main, self.user_email, self.url_api_collection, log_handler=self.test_log_handler, mail_handler=self.test_log_handler, dir_profile=self.dir_test_profile)
         self.assertEqual(len(self.test_log_handler.records), 4)
@@ -1010,10 +1036,10 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     def testMainFnWithException(self, mock_method):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -1032,10 +1058,10 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     def testMainFn(self):
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open('./fixtures/collection_api_test.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
-                body=open('./fixtures/testOAI-128-records.xml').read())
+                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -1209,10 +1235,10 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         httpretty.enable()
         httpretty.register_uri(httpretty.GET,
                 'https://registry.cdlib.org/api/v1/collection/178/',
-                body=open('./fixtures/collection_api_test_oac.json').read())
+                body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
         httpretty.register_uri(httpretty.GET,
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
-                body=open('./fixtures/testOAC-url_next-1.json').read())
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         run_ingest.main('mark.redar@ucop.edu',
                 'https://registry.cdlib.org/api/v1/collection/178/',
                 log_handler=self.test_log_handler,

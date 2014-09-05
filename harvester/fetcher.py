@@ -10,12 +10,15 @@ import ConfigParser
 from collections import defaultdict
 from xml.etree import ElementTree as ET
 import urlparse
+import urllib
+import tempfile
 from sickle import Sickle
 import requests
 import logbook
 from logbook import FileHandler
 import solr
 from collection_registry_client import Collection
+from pymarc import MARCReader
 import dplaingestion.couch 
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
@@ -77,6 +80,22 @@ class SolrHarvester(Harvester):
         if not len(self.resp.results):
             raise StopIteration
         return self.resp.results[self.index-1]
+
+class MARCHarvester(Harvester):
+    '''Harvest a MARC FILE. Can be local or at a URL'''
+    def __init__(self, url_harvest, extra_data):
+        '''Grab file and copy to local temp file'''
+        self.url_marc_file = url_harvest
+        self.marc_file = tempfile.TemporaryFile()
+        self.marc_file.write(urllib.urlopen(self.url_marc_file).read())
+        self.marc_file.seek(0)
+        self.marc_reader = MARCReader(self.marc_file,
+                to_unicode=True,
+                utf8_handling='replace')
+
+    def next(self):
+        '''Return MARC record by record to the controller'''
+        return self.marc_reader.next().as_dict()
 
 
 class BunchDict(dict):
