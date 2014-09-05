@@ -343,6 +343,7 @@ HARVEST_TYPES = { 'OAI': OAIHarvester,
             'OAJ': OAC_JSON_Harvester,
             'OAC': OAC_XML_Harvester,
             'SLR': SolrHarvester,
+            'MRC': MARCHarvester,
         }
 
 class HarvestController(object):

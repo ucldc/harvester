@@ -630,13 +630,40 @@ class MARCHarvesterTestCase(LogOverrideMixin, TestCase):
 
     def testLocalFileLoad(self):
         h = fetcher.MARCHarvester('file:'+DIR_FIXTURES+'/marc-test', None)
-        for n, rec in enumerate(h):
+        for n, rec in enumerate(h):#enum starts at 0
             pass
             #print("NUM->{}:{}".format(n,rec))
-        self.assertEqual(n, 10)
+        self.assertEqual(n, 9)
         self.assertIsInstance(rec, dict)
-        self.assertEqual(rec['leader'], '01850nkm a2200265ia 4500')
-        self.assertEqual(len(rec['fields']), 20)
+        self.assertEqual(rec['leader'], '01914nkm a2200277ia 4500')
+        self.assertEqual(len(rec['fields']), 21)
+
+class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+    '''Test the function of an MARC harvest controller'''
+    def setUp(self):
+        super(Harvest_MARC_ControllerTestCase, self).setUp()
+
+    def tearDown(self):
+        super(Harvest_MARC_ControllerTestCase, self).tearDown()
+        shutil.rmtree(self.controller.dir_save)
+
+    @httpretty.activate
+    def testMARCHarvest(self):
+        '''Test the function of the MARC harvest'''
+        httpretty.register_uri(httpretty.GET,
+                'http://registry.cdlib.org/api/v1/collection/',
+                body=open(DIR_FIXTURES+'/collection_api_test_marc.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
+        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
+        self.collection.url_harvest = 'file:'+DIR_FIXTURES+'/marc-test'
+        self.setUp_config(self.collection)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.assertTrue(hasattr(self.controller, 'harvest'))
+        num = self.controller.harvest()
+        self.assertEqual(num, 10)
+        self.tearDown_config()
 
 
 class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
