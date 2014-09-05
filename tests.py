@@ -653,9 +653,6 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/',
                 body=open(DIR_FIXTURES+'/collection_api_test_marc.json').read())
-        httpretty.register_uri(httpretty.GET,
-                'http://content.cdlib.org/oai',
-                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
         self.collection.url_harvest = 'file:'+DIR_FIXTURES+'/marc-test'
         self.setUp_config(self.collection)
