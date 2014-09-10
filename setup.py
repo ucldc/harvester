@@ -33,6 +33,7 @@ setup(
             'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
             'https://github.com/mredar/DPLA-ingestion/archive/ucldc.zip#egg=dplaingestion',
             'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
+            'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
             ],
     install_requires = [ 
         'Sickle==0.3',
@@ -53,6 +54,7 @@ setup(
         'CouchDB==0.9',
         'md5s3stash',
         'pymarc>=3.0',
+        'pynux',
         ]
 )
 

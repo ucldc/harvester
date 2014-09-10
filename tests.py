@@ -37,6 +37,7 @@ from harvester import image_harvest
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
 import harvester.fetcher as fetcher
+import pynux.utils
 
 DIR_THIS_FILE = os.path.abspath(os.path.split(__file__)[0])
 DIR_FIXTURES = os.path.join(DIR_THIS_FILE, 'fixtures')
@@ -670,6 +671,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         h = fetcher.NuxeoFetcher('http://example.edu')
         self.assertTrue(hasattr(h, 'url'))
         self.assertEqual(h.url, 'http://example.edu')
+        self.assertTrue(hasattr(h, 'nx'))
+        self.assertIsInstance(h.nx, pynux.utils.Nuxeo)
 
 
 ####class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):

@@ -20,6 +20,7 @@ import solr
 from collection_registry_client import Collection
 from pymarc import MARCReader
 import dplaingestion.couch 
+import pynux.utils
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
@@ -106,6 +107,7 @@ class NuxeoFetcher(Fetcher):
         super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
         self.url = url_harvest
         self.extra_data = extra_data
+        self.nx = pynux.utils.Nuxeo()
 
 ###    def next(self):
 ###        '''Return Nuxeo record by record to the controller'''
