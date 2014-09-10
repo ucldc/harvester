@@ -663,6 +663,40 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.tearDown_config()
 
 
+class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test Nuxeo fetching'''
+    def testInit(self):
+        '''Basic tdd start'''
+        h = fetcher.NuxeoFetcher('http://example.edu')
+        self.assertTrue(hasattr(h, 'url'))
+        self.assertEqual(h.url, 'http://example.edu')
+
+
+####class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+####    '''Test the function of an Nuxeo harvest controller'''
+####    def setUp(self):
+####        super(Harvest_Nuxeo_ControllerTestCase, self).setUp()
+####
+####    def tearDown(self):
+####        super(Harvest_Nuxeo_ControllerTestCase, self).tearDown()
+####        shutil.rmtree(self.controller.dir_save)
+####
+####    @httpretty.activate
+####    def testNuxeoHarvest(self):
+####        '''Test the function of the Nuxeo harvest'''
+####        httpretty.register_uri(httpretty.GET,
+####                'http://registry.cdlib.org/api/v1/collection/',
+####                body=open(DIR_FIXTURES+'/collection_api_test_Nuxeo.json').read())
+####        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
+####        self.collection.url_harvest = 'file:'+DIR_FIXTURES+'/Nuxeo-test'
+####        self.setUp_config(self.collection)
+####        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+####        self.assertTrue(hasattr(self.controller, 'harvest'))
+####        num = self.controller.harvest()
+####        self.assertEqual(num, 10)
+####        self.tearDown_config()
+####
+####
 class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Fetcher
     '''

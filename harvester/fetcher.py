@@ -85,6 +85,7 @@ class MARCFetcher(Fetcher):
     '''Harvest a MARC FILE. Can be local or at a URL'''
     def __init__(self, url_harvest, extra_data):
         '''Grab file and copy to local temp file'''
+        super(MARCFetcher, self).__init__(url_harvest, extra_data)
         self.url_marc_file = url_harvest
         self.marc_file = tempfile.TemporaryFile()
         self.marc_file.write(urllib.urlopen(self.url_marc_file).read())
@@ -96,6 +97,19 @@ class MARCFetcher(Fetcher):
     def next(self):
         '''Return MARC record by record to the controller'''
         return self.marc_reader.next().as_dict()
+
+
+class NuxeoFetcher(Fetcher):
+    '''Harvest a Nuxeo FILE. Can be local or at a URL'''
+    def __init__(self, url_harvest, extra_data=None):
+        '''Grab file and copy to local temp file'''
+        super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
+        self.url = url_harvest
+        self.extra_data = extra_data
+
+###    def next(self):
+###        '''Return Nuxeo record by record to the controller'''
+###        return self.Nuxeo_reader.next().as_dict()
 
 
 class BunchDict(dict):
