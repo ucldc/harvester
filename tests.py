@@ -325,15 +325,15 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
-        self.assertTrue(hasattr(controller, 'harvester'))
-        self.assertIsInstance(controller.harvester, fetcher.OAIHarvester)
+        self.assertTrue(hasattr(controller, 'fetcher'))
+        self.assertIsInstance(controller.fetcher, fetcher.OAIFetcher)
         self.assertTrue(hasattr(controller, 'campus_valid'))
         self.assertTrue(hasattr(controller, 'dc_elements'))
         shutil.rmtree(controller.dir_save)
 
-    def testOAIHarvesterType(self):
+    def testOAIFetcherType(self):
         '''Check the correct object returned for type of harvest'''
-        self.assertIsInstance(self.controller_oai.harvester, fetcher.OAIHarvester)
+        self.assertIsInstance(self.controller_oai.fetcher, fetcher.OAIFetcher)
         self.assertEqual(self.controller_oai.collection.campus[0]['slug'], 'UCDL')
 
     @httpretty.activate
@@ -533,41 +533,41 @@ class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
         self.ingest_doc_id = self.controller_oai.create_ingest_doc()
         self.controller_oai.update_ingest_doc('error', error_msg='This is an error')
 
-class HarvesterClassTestCase(TestCase):
-    '''Test the abstract Harvester class'''
+class FetcherClassTestCase(TestCase):
+    '''Test the abstract Fetcher class'''
     def testClassExists(self):
-        h = fetcher.Harvester
+        h = fetcher.Fetcher
         h = h('url_harvest', 'extra_data')
 
 
-class OAIHarvesterTestCase(LogOverrideMixin, TestCase):
-    '''Test the OAIHarvester
+class OAIFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the OAIFetcher
     '''
     @httpretty.activate
     def setUp(self):
-        super(OAIHarvesterTestCase, self).setUp()
+        super(OAIFetcherTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
                 'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
                 body=open(DIR_FIXTURES+'/testOAI.xml').read())
-        self.harvester = fetcher.OAIHarvester('http://content.cdlib.org/oai', 'oac:images')
+        self.fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'oac:images')
 
     def tearDown(self):
-        super(OAIHarvesterTestCase, self).tearDown()
+        super(OAIFetcherTestCase, self).tearDown()
 
     def testHarvestIsIter(self):
-        self.assertTrue(hasattr(self.harvester, '__iter__')) 
-        self.assertEqual(self.harvester, self.harvester.__iter__())
-        rec1 = self.harvester.next()
+        self.assertTrue(hasattr(self.fetcher, '__iter__')) 
+        self.assertEqual(self.fetcher, self.fetcher.__iter__())
+        rec1 = self.fetcher.next()
 
-    def testOAIHarvesterReturnedData(self):
-        '''test that the data returned by the OAI harvester is a proper dc
+    def testOAIFetcherReturnedData(self):
+        '''test that the data returned by the OAI Fetcher is a proper dc
         dictionary
         '''
-        rec = self.harvester.next()
+        rec = self.fetcher.next()
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
-class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
+class SolrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
     #URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
     @httpretty.activate
@@ -578,8 +578,8 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
             'http://example.edu/solr/select',
             body = open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()
             )
-        self.assertRaises(TypeError, fetcher.SolrHarvester)
-        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
+        self.assertRaises(TypeError, fetcher.SolrFetcher)
+        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
         rows=3)
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, solr.Solr))
@@ -606,7 +606,7 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-5.xml').read()),
             ]
             )
-        h = fetcher.SolrHarvester('http://example.edu/solr', 'extra_data',
+        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
             rows=3)
         self.assertEqual(len(h.resp.results), 3)
         n = 0
@@ -616,12 +616,12 @@ class SolrHarvesterTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(n, 10)
 
 
-class MARCHarvesterTestCase(LogOverrideMixin, TestCase):
+class MARCFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test MARC fetching'''
     def testInit(self):
         '''Basic tdd start'''
 
-        h = fetcher.MARCHarvester('file:'+DIR_FIXTURES+'/marc-test', None)
+        h = fetcher.MARCFetcher('file:'+DIR_FIXTURES+'/marc-test', None)
         self.assertTrue(hasattr(h, 'url_marc_file'))
         self.assertTrue(hasattr(h, 'marc_file'))
         self.assertIsInstance(h.marc_file, file)
@@ -629,7 +629,7 @@ class MARCHarvesterTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(str(type(h.marc_reader)), "<class 'pymarc.reader.MARCReader'>")
 
     def testLocalFileLoad(self):
-        h = fetcher.MARCHarvester('file:'+DIR_FIXTURES+'/marc-test', None)
+        h = fetcher.MARCFetcher('file:'+DIR_FIXTURES+'/marc-test', None)
         for n, rec in enumerate(h):#enum starts at 0
             pass
             #print("NUM->{}:{}".format(n,rec))
@@ -663,8 +663,8 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.tearDown_config()
 
 
-class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
-    '''Test the OAC_XML_Harvester
+class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the OAC_XML_Fetcher
     '''
     @httpretty.activate
     def setUp(self):
@@ -672,11 +672,11 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
         #self.testFile = 'fixtures/testOAC-url_next-0.xml'
-        super(OAC_XML_HarvesterTestCase, self).setUp()
-        self.harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
+        super(OAC_XML_FetcherTestCase, self).setUp()
+        self.fetcher = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
 
     def tearDown(self):
-        super(OAC_XML_HarvesterTestCase, self).tearDown()
+        super(OAC_XML_FetcherTestCase, self).tearDown()
 
     @httpretty.activate
     def testBadOACSearch(self):
@@ -684,7 +684,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx',
                 body=open(DIR_FIXTURES+'/testOAC-badsearch.xml').read())
         #self.testFile = 'fixtures/testOAC-badsearch.xml'
-        self.assertRaises(ValueError, fetcher.OAC_XML_Harvester, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
+        self.assertRaises(ValueError, fetcher.OAC_XML_Fetcher, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
 
     @httpretty.activate
     def testOnlyTextResults(self):
@@ -693,10 +693,10 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
         #self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
-        h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Fetcher( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 11)
-        recs = self.harvester.next()
-        self.assertEqual(self.harvester.groups['text']['end'], 10)
+        recs = self.fetcher.next()
+        self.assertEqual(self.fetcher.groups['text']['end'], 10)
         self.assertEqual(len(recs), 10)
 
     @httpretty.activate
@@ -705,7 +705,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-utf8-content.xml').read())
         #self.testFile = 'fixtures/testOAC-utf8-content.xml'
-        h = fetcher.OAC_XML_Harvester( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Fetcher( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 0)
         objset = h.next()
@@ -717,7 +717,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''Check that the _docHits_to_objset to function returns expected
         object for a given input'''
         docHits = ET.parse(open('fixtures/docHit.xml')).getroot()
-        objset = self.harvester._docHits_to_objset([docHits])
+        objset = self.fetcher._docHits_to_objset([docHits])
         obj = objset[0]
         self.assertIsNotNone(obj.get('handle'))
         self.assertEqual(obj['handle'][0], 'http://ark.cdlib.org/ark:/13030/kt40000501')
@@ -747,7 +747,7 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
         '''Check when the X & Y for thumbnail or reference image is not an 
         integer. Text have value of "" for X & Y'''
         docHits = ET.parse(open('fixtures/docHit-blank-image-sizes.xml')).getroot()
-        objset = self.harvester._docHits_to_objset([docHits])
+        objset = self.fetcher._docHits_to_objset([docHits])
         obj = objset[0]
         self.assertEqual(0, obj['reference-image'][0]['X'])
         self.assertEqual(0, obj['reference-image'][0]['Y'])
@@ -762,22 +762,22 @@ class OAC_XML_HarvesterTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
-        self.assertTrue(hasattr(self.harvester, 'totalDocs'))
-        self.assertTrue(hasattr(self.harvester, 'totalGroups'))
-        self.assertTrue(hasattr(self.harvester, 'groups'))
-        self.assertIsInstance(self.harvester.totalDocs, int)
-        self.assertEqual(self.harvester.totalDocs, 24)
-        self.assertEqual(self.harvester.groups['image']['total'], 13)
-        self.assertEqual(self.harvester.groups['image']['start'], 1)
-        self.assertEqual(self.harvester.groups['image']['end'], 0)
-        self.assertEqual(self.harvester.groups['text']['total'], 11)
-        self.assertEqual(self.harvester.groups['text']['start'], 0)
-        self.assertEqual(self.harvester.groups['text']['end'], 0)
-        recs = self.harvester.next()
-        self.assertEqual(self.harvester.groups['image']['end'], 10)
+        self.assertTrue(hasattr(self.fetcher, 'totalDocs'))
+        self.assertTrue(hasattr(self.fetcher, 'totalGroups'))
+        self.assertTrue(hasattr(self.fetcher, 'groups'))
+        self.assertIsInstance(self.fetcher.totalDocs, int)
+        self.assertEqual(self.fetcher.totalDocs, 24)
+        self.assertEqual(self.fetcher.groups['image']['total'], 13)
+        self.assertEqual(self.fetcher.groups['image']['start'], 1)
+        self.assertEqual(self.fetcher.groups['image']['end'], 0)
+        self.assertEqual(self.fetcher.groups['text']['total'], 11)
+        self.assertEqual(self.fetcher.groups['text']['start'], 0)
+        self.assertEqual(self.fetcher.groups['text']['end'], 0)
+        recs = self.fetcher.next()
+        self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-class OAC_XML_Harvester_text_contentTestCase(LogOverrideMixin, TestCase):
+class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
     @httpretty.activate
     def testFetchTextOnlyContent(self):
@@ -787,20 +787,20 @@ class OAC_XML_Harvester_text_contentTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=1&group=text',
                 body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
-        oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
-        first_set = oac_harvester.next()
+        oac_fetcher = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        first_set = oac_fetcher.next()
         self.assertEqual(len(first_set), 10)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&DocsPerPage=10&startDoc=11&group=text',
                 body=open(DIR_FIXTURES+'/testOAC-noimages-in-results-1.xml').read())
-        second_set = oac_harvester.next()
+        second_set = oac_fetcher.next()
         self.assertEqual(len(second_set), 1)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
-        self.assertRaises(StopIteration, oac_harvester.next)
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
+        self.assertRaises(StopIteration, oac_fetcher.next)
 
 
-class OAC_XML_Harvester_mixed_contentTestCase(LogOverrideMixin, TestCase):
+class OAC_XML_Fetcher_mixed_contentTestCase(LogOverrideMixin, TestCase):
     @httpretty.activate
     def testFetchMixedContent(self):
         '''This interface gets tricky when image & text data are in the
@@ -816,57 +816,57 @@ class OAC_XML_Harvester_mixed_contentTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
-        oac_harvester = fetcher.OAC_XML_Harvester('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
-        first_set = oac_harvester.next()
+        oac_fetcher = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data', docsPerPage=10)
+        first_set = oac_fetcher.next()
         self.assertEqual(len(first_set), 10)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image')
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=image')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.xml').read())
-        second_set = oac_harvester.next()
+        second_set = oac_fetcher.next()
         self.assertEqual(len(second_set), 3)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image')
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=image')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-2.xml').read())
-        third_set = oac_harvester.next()
+        third_set = oac_fetcher.next()
         self.assertEqual(len(third_set), 10)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=1&group=text')
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-3.xml').read())
-        fourth_set = oac_harvester.next()
+        fourth_set = oac_fetcher.next()
         self.assertEqual(len(fourth_set), 1)
-        self.assertEqual(oac_harvester._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
-        self.assertRaises(StopIteration, oac_harvester.next)
+        self.assertEqual(oac_fetcher._url_current, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10&startDoc=11&group=text')
+        self.assertRaises(StopIteration, oac_fetcher.next)
 
 
-class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
-    '''Test the OAC_JSON_Harvester
+class OAC_JSON_FetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the OAC_JSON_Fetcher
     '''
     @httpretty.activate
     def setUp(self):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
-        super(OAC_JSON_HarvesterTestCase, self).setUp()
-        self.harvester = fetcher.OAC_JSON_Harvester('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        super(OAC_JSON_FetcherTestCase, self).setUp()
+        self.fetcher = fetcher.OAC_JSON_Fetcher('http://dsc.cdlib.org/search?rmode=json&facet=type-tab&style=cui&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
 
     def tearDown(self):
-        super(OAC_JSON_HarvesterTestCase, self).tearDown()
+        super(OAC_JSON_FetcherTestCase, self).tearDown()
 
     def testParseArk(self):
-        self.assertEqual(self.harvester._parse_oac_findaid_ark(self.harvester.url), 'ark:/13030/hb5d5nb7dj')
+        self.assertEqual(self.fetcher._parse_oac_findaid_ark(self.fetcher.url), 'ark:/13030/hb5d5nb7dj')
 
     @httpretty.activate
-    def testOAC_JSON_HarvesterReturnedData(self):
-        '''test that the data returned by the OAI harvester is a proper dc
+    def testOAC_JSON_FetcherReturnedData(self):
+        '''test that the data returned by the OAI Fetcher is a proper dc
         dictionary
         '''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
-        rec = self.harvester.next()[0]
+        rec = self.fetcher.next()[0]
         self.assertIsInstance(rec, dict)
         self.assertIn('handle', rec)
 
@@ -881,11 +881,11 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
-        r = self.harvester.next_record()
+        r = self.fetcher.next_record()
         try:
             while True:
                 records.append(r)
-                r = self.harvester.next_record()
+                r = self.fetcher.next_record()
         except StopIteration:
             pass
         self.assertEqual(len(records), 28)
@@ -895,14 +895,14 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
-        self.assertTrue(hasattr(self.harvester, '__iter__')) 
-        self.assertEqual(self.harvester, self.harvester.__iter__())
-        rec1 = self.harvester.next_record()
-        objset = self.harvester.next()
+        self.assertTrue(hasattr(self.fetcher, '__iter__')) 
+        self.assertEqual(self.fetcher, self.fetcher.__iter__())
+        rec1 = self.fetcher.next_record()
+        objset = self.fetcher.next()
 
     @httpretty.activate
     def testNextGroupFetch(self):
-        '''Test that the OAC harvester will fetch more records when current
+        '''Test that the OAC Fetcher will fetch more records when current
         response set records are all consumed'''
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
@@ -913,7 +913,7 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         self.testFile = 'fixtures/testOAC-url_next-1.json'
         records = []
         self.ranGet = False
-        for r in self.harvester:
+        for r in self.fetcher:
             records.extend(r)
         self.assertEqual(len(records), 28)
 
@@ -926,15 +926,15 @@ class OAC_JSON_HarvesterTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
-        self.assertTrue(hasattr(self.harvester, 'next_objset'))
-        self.assertTrue(hasattr(self.harvester.next_objset, '__call__'))
-        objset = self.harvester.next_objset()
+        self.assertTrue(hasattr(self.fetcher, 'next_objset'))
+        self.assertTrue(hasattr(self.fetcher.next_objset, '__call__'))
+        objset = self.fetcher.next_objset()
         self.assertIsNotNone(objset)
         self.assertIsInstance(objset, list)
         self.assertEqual(len(objset), 25)
-        objset2 = self.harvester.next_objset()
+        objset2 = self.fetcher.next_objset()
         self.assertTrue(objset != objset2)
-        self.assertRaises(StopIteration, self.harvester.next_objset)
+        self.assertRaises(StopIteration, self.fetcher.next_objset)
 
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
@@ -983,7 +983,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
+            ingest_doc_id, num, self.dir_save, self.fetcher = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,

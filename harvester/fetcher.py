@@ -25,12 +25,12 @@ EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.c
 CONTENT_SERVER = 'http://content.cdlib.org/'
 
 #TODO: Each harvester must pick correct field for creating a "handle"
-class Harvester(object):
+class Fetcher(object):
     '''Base class for harvest objects.'''
     def __init__(self, url_harvest, extra_data):
         self.url = url_harvest
         self.extra_data = extra_data
-        self.logger = logbook.Logger('HarvesterBaseClass')
+        self.logger = logbook.Logger('FetcherBaseClass')
 
     def __iter__(self):
         return self
@@ -42,10 +42,10 @@ class Harvester(object):
         raise NotImplementedError
 
 
-class OAIHarvester(Harvester):
-    '''Harvester for oai'''
+class OAIFetcher(Fetcher):
+    '''Fetcher for oai'''
     def __init__(self, url_harvest, extra_data):
-        super(OAIHarvester, self).__init__(url_harvest, extra_data)
+        super(OAIFetcher, self).__init__(url_harvest, extra_data)
         #TODO: check extra_data?
         self.oai_client = Sickle(self.url)
         self.records = self.oai_client.ListRecords(set=extra_data, metadataPrefix='oai_dc')
@@ -62,9 +62,9 @@ class OAIHarvester(Harvester):
         rec['handle'] = sickle_rec.header.identifier
         return rec
 
-class SolrHarvester(Harvester):
+class SolrFetcher(Fetcher):
     def __init__(self, url_harvest, query, **query_params):
-        super(SolrHarvester, self).__init__(url_harvest, query)
+        super(SolrFetcher, self).__init__(url_harvest, query)
         self.solr = solr.Solr(url_harvest)#, debug=True)
         self.query = query 
         self.resp = self.solr.select(self.query)
@@ -81,7 +81,7 @@ class SolrHarvester(Harvester):
             raise StopIteration
         return self.resp.results[self.index-1]
 
-class MARCHarvester(Harvester):
+class MARCFetcher(Fetcher):
     '''Harvest a MARC FILE. Can be local or at a URL'''
     def __init__(self, url_harvest, extra_data):
         '''Grab file and copy to local temp file'''
@@ -103,14 +103,14 @@ class BunchDict(dict):
         dict.__init__(self, kwds)
         self.__dict__ = self
 
-class OAC_XML_Harvester(Harvester):
-    '''Harvester for the OAC
+class OAC_XML_Fetcher(Fetcher):
+    '''Fetcher for the OAC
     The results are returned in 3 groups, image, text and website.
     Image and text are the ones we care about.
     '''
     def __init__(self, url_harvest, extra_data, docsPerPage=100):
-        super(OAC_XML_Harvester, self).__init__(url_harvest, extra_data)
-        self.logger = logbook.Logger('HarvesterOACXML')
+        super(OAC_XML_Fetcher, self).__init__(url_harvest, extra_data)
+        self.logger = logbook.Logger('FetcherOACXML')
         self.docsPerPage = docsPerPage
         self.url = self.url + '&docsPerPage=' + str(self.docsPerPage)
         self._url_current = self.url
@@ -253,11 +253,11 @@ class OAC_XML_Harvester(Harvester):
         return objset
 
 #TODO: handle is qdc['identifier']
-class OAC_JSON_Harvester(Harvester):
-    '''Harvester for oac, using the JSON objset interface
+class OAC_JSON_Fetcher(Fetcher):
+    '''Fetcher for oac, using the JSON objset interface
     This is being deprecated in favor of the xml interface'''
     def __init__(self, url_harvest, extra_data):
-        super(OAC_JSON_Harvester, self).__init__(url_harvest, extra_data)
+        super(OAC_JSON_Fetcher, self).__init__(url_harvest, extra_data)
         self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url)
         self.headers = {'content-type': 'application/json'}
         self.objset_last = False
@@ -339,15 +339,15 @@ class OAC_JSON_Harvester(Harvester):
         return cur_objset
 
 
-HARVEST_TYPES = { 'OAI': OAIHarvester,
-            'OAJ': OAC_JSON_Harvester,
-            'OAC': OAC_XML_Harvester,
-            'SLR': SolrHarvester,
-            'MRC': MARCHarvester,
+HARVEST_TYPES = { 'OAI': OAIFetcher,
+            'OAJ': OAC_JSON_Fetcher,
+            'OAC': OAC_XML_Fetcher,
+            'SLR': SolrFetcher,
+            'MRC': MARCFetcher,
         }
 
 class HarvestController(object):
-    '''Controller for the harvesting. Selects correct harvester for the given 
+    '''Controller for the harvesting. Selects correct Fetcher for the given 
     collection, then retrieves records for the given collection and saves to 
     disk.
     TODO: produce profile file
@@ -369,7 +369,7 @@ class HarvestController(object):
         if not self.couch_dashboard_name:
             self.couch_dashboard_name = 'dashboard'
 
-        self.harvester = HARVEST_TYPES.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.harvest_extra_data)
+        self.fetcher = HARVEST_TYPES.get(self.collection.harvest_type, None)(self.collection.url_harvest, self.collection.harvest_extra_data)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
@@ -481,7 +481,7 @@ class HarvestController(object):
         self.logger.info(' '.join(('Starting harvest for:', str(self.user_email), self.collection.url, str(self.collection['campus']), str(self.collection['repository']))))
         self.num_records = 0
         next_log_n = interval = 100
-        for objset in self.harvester:
+        for objset in self.fetcher:
             if isinstance(objset, list):
                 self.num_records += len(objset)
                 for obj in objset:
