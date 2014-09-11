@@ -704,6 +704,45 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
             docs.append(d)
         self.assertEqual(10, len(docs))
         self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
+        self.assertIn('picture:views', docs[0]['properties'])
+        self.assertIn('dc:subjects', docs[0]['properties'])
+
+class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test that the UCLDC Nuxeo Fetcher errors if necessary 
+    Nuxeo document schema header property not set.
+    '''
+    @httpretty.activate
+    def testNuxeoPropHeader(self):
+        '''Test that the Nuxeo document property header has necessary 
+        settings. This will test the base UCLDC schemas
+        '''
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/path-to-asset/here/@children',
+                body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
+        #can test adding a prop, but what if prop needed not there.
+        # need to remove ~/.pynuxrc
+        self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
+                'https://example.edu/api/v1/',
+                'path-to-asset/here',
+                conf_pynux = {'X-NXDocumentProperties':''}
+        )
+        self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
+                'https://example.edu/api/v1/',
+                'path-to-asset/here',
+                conf_pynux = {'X-NXDocumentProperties':'dublincore'}
+        )
+        self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
+                'https://example.edu/api/v1/',
+                'path-to-asset/here',
+                conf_pynux = {'X-NXDocumentProperties':'dublincore,ucldc_schema'}
+        )
+        h = fetcher.UCLDCNuxeoFetcher('https://example.edu/api/v1/',
+                'path-to-asset/here',
+                conf_pynux = {'X-NXDocumentProperties':'dublincore,ucldc_schema,picture'}
+                )
+        self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
+        self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
+        self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
 
 
 class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):

@@ -102,18 +102,41 @@ class MARCFetcher(Fetcher):
 
 class NuxeoFetcher(Fetcher):
     '''Harvest a Nuxeo FILE. Can be local or at a URL'''
-    def __init__(self, url_harvest, extra_data=None):
-        '''Grab file and copy to local temp file'''
+    def __init__(self, url_harvest, extra_data, conf_pynux={}):
+        '''
+        uses pynux (https://github.com/ucldc/pynux) to grab objects from
+        the Nuxeo API
+
+        api url is set from url_harvest, overriding pynuxrc config and
+        passed in conf.
+
+        the pynux config file should have user & password 
+        and X-NXDocumemtProperties values filled in.
+        '''
         super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
         self._url = url_harvest
-        self._extra_data = extra_data
-        self._nx = pynux.utils.Nuxeo(conf={'api':self.url})
-        self._children = self._nx.children(self.extra_data)
+        self._path = extra_data
+        self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
+        self._nx.conf['api'] = self._url
+        self._children = self._nx.children(self._path)
         
     def next(self):
         '''Return Nuxeo record by record to the controller'''
-        cur = self._children.next()
-        return self._nx.get_metadata(uid=cur['uid'])
+        doc = self._children.next()
+        return self._nx.get_metadata(uid=doc['uid'])
+
+class UCLDCNuxeoFetcher(NuxeoFetcher):
+    '''A nuxeo fetcher that verifies headers required for UCLDC metadata
+    from the UCLDC Nuxeo instance.
+    Essentially, this checks that the X-NXDocumentProperties is correct 
+    for the UCLDC
+    '''
+    def __init__(self, url_harvest, extra_data, conf_pynux={}):
+        '''Check that required UCLDC properties in conf setting'''
+        super(UCLDCNuxeoFetcher, self).__init__(url_harvest, extra_data, conf_pynux)
+        assert('dublincore' in self._nx.conf['X-NXDocumentProperties'])
+        assert('ucldc_schema' in self._nx.conf['X-NXDocumentProperties'])
+        assert('picture' in self._nx.conf['X-NXDocumentProperties'])
 
 
 class BunchDict(dict):
@@ -362,7 +385,7 @@ HARVEST_TYPES = { 'OAI': OAIFetcher,
             'OAC': OAC_XML_Fetcher,
             'SLR': SolrFetcher,
             'MRC': MARCFetcher,
-            'NUX': NuxeoFetcher,
+            'NUX': UCLDCNuxeoFetcher,
         }
 
 class HarvestController(object):
