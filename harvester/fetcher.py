@@ -105,13 +105,15 @@ class NuxeoFetcher(Fetcher):
     def __init__(self, url_harvest, extra_data=None):
         '''Grab file and copy to local temp file'''
         super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
-        self.url = url_harvest
-        self.extra_data = extra_data
-        self.nx = pynux.utils.Nuxeo()
-
-###    def next(self):
-###        '''Return Nuxeo record by record to the controller'''
-###        return self.Nuxeo_reader.next().as_dict()
+        self._url = url_harvest
+        self._extra_data = extra_data
+        self._nx = pynux.utils.Nuxeo(conf={'api':self.url})
+        self._children = self._nx.children(self.extra_data)
+        
+    def next(self):
+        '''Return Nuxeo record by record to the controller'''
+        cur = self._children.next()
+        return self._nx.get_metadata(uid=cur['uid'])
 
 
 class BunchDict(dict):
@@ -360,6 +362,7 @@ HARVEST_TYPES = { 'OAI': OAIFetcher,
             'OAC': OAC_XML_Fetcher,
             'SLR': SolrFetcher,
             'MRC': MARCFetcher,
+            'NUX': NuxeoFetcher,
         }
 
 class HarvestController(object):

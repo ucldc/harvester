@@ -1,0 +1,47 @@
+{
+  "url_was": "",
+  "url_oai": "",
+  "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/tf867nb584",
+  "url_local": "https://nuxeo.cdlib.org/nuxeo/nxdoc/default/399637a4-24af-4c4a-9298-bca82ce69050/view_documents",
+  "url_harvest": "https://example.edu/Nuxeo/site/api/v1",
+  "harvest_type": "NUX",
+  "harvest_extra_data": "asset-library/UCI/Cochems/",
+  "extent": "15784004812",
+  "enrichments_item": "/select-id,\r\n/oai-to-dpla,\r\n/cleanup_value,\r\n/move_date_values?prop=sourceResource%2Fsubject,\r\n/move_date_values?prop=sourceResource%2Fspatial,\r\n/shred?prop=sourceResource%2Fspatial&delim=--,\r\n/enrich-subject,\r\n/enrich_date,\r\n/enrich-type,\r\n/enrich-format,\r\n/enrich_location,\r\n/scdl_enrich_location,\r\n/geocode,\r\n/scdl_geocode_regions,\r\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider&create=True,\r\n/cleanup_language,\r\n/enrich_language,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\r\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\r\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&create=True&no_overwrite=True,\r\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\r\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\r\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\r\n/oac-thumbnail,\r\n/oac-to-sourceResource",
+  "description": "This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.",
+  "collection_type": "A",
+  "campus": [
+    {
+      "slug": "UCI",
+      "resource_uri": "/api/v1/campus/3/",
+      "position": 2,
+      "name": "UC Irvine",
+      "ark": "ark:/13030/tf3f59p4sv"
+    }
+  ],
+  "appendix": "Nuxeo DAMS",
+  "hosted": "Locally (Canto Cumulus)",
+  "metadata_level": "Item",
+  "metadata_standard": "Custom",
+  "name": "Cochems (Edward W.) Photographs",
+  "phase_one": false,
+  "repository": [
+    {
+      "slug": "special-collections",
+      "resource_uri": "/api/v1/repository/16/",
+      "name": "Special Collections",
+      "campus": [
+        {
+          "slug": "UCI",
+          "resource_uri": "/api/v1/campus/3/",
+          "position": 2,
+          "name": "UC Irvine",
+          "ark": "ark:/13030/tf3f59p4sv"
+        }
+      ],
+      "ark": "ark:/13030/tf1p3008cx"
+    }
+  ],
+  "resource_uri": "/api/v1/collection/19/",
+  "slug": "edward-cochems-photographs-this-collection-is-comp"
+}

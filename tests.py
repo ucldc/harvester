@@ -666,40 +666,92 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
 
 class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
+    #put httppretty here, have sample outputs.
+    @httpretty.activate
     def testInit(self):
         '''Basic tdd start'''
-        h = fetcher.NuxeoFetcher('http://example.edu')
-        self.assertTrue(hasattr(h, 'url'))
-        self.assertEqual(h.url, 'http://example.edu')
-        self.assertTrue(hasattr(h, 'nx'))
-        self.assertIsInstance(h.nx, pynux.utils.Nuxeo)
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/path-to-asset/here/@children',
+                body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        self.assertTrue(hasattr(h, '_url')) #assert in called next repeatedly
+        self.assertEqual(h.url, 'https://example.edu/api/v1/')
+        self.assertTrue(hasattr(h, '_nx'))
+        self.assertIsInstance(h._nx, pynux.utils.Nuxeo)
+        self.assertTrue(hasattr(h, '_children'))
+        self.assertTrue(hasattr(h, 'next'))
+
+    @httpretty.activate
+    def testFetch(self):
+        '''Test the httpretty mocked fetching of documents'''
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/path-to-asset/here/@children',
+                responses=[
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder.json').read(),
+                        status=200),
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder-1.json').read(),
+                        status=200),
+                ]
+        )
+        httpretty.register_uri(httpretty.GET,
+                re.compile('https://example.edu/api/v1/id/.*'),
+                body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        docs = []
+        for d in h:
+            docs.append(d)
+        self.assertEqual(10, len(docs))
+        self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
 
 
-####class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
-####    '''Test the function of an Nuxeo harvest controller'''
-####    def setUp(self):
-####        super(Harvest_Nuxeo_ControllerTestCase, self).setUp()
-####
-####    def tearDown(self):
-####        super(Harvest_Nuxeo_ControllerTestCase, self).tearDown()
-####        shutil.rmtree(self.controller.dir_save)
-####
-####    @httpretty.activate
-####    def testNuxeoHarvest(self):
-####        '''Test the function of the Nuxeo harvest'''
-####        httpretty.register_uri(httpretty.GET,
-####                'http://registry.cdlib.org/api/v1/collection/',
-####                body=open(DIR_FIXTURES+'/collection_api_test_Nuxeo.json').read())
-####        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
-####        self.collection.url_harvest = 'file:'+DIR_FIXTURES+'/Nuxeo-test'
-####        self.setUp_config(self.collection)
-####        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
-####        self.assertTrue(hasattr(self.controller, 'harvest'))
-####        num = self.controller.harvest()
-####        self.assertEqual(num, 10)
-####        self.tearDown_config()
-####
-####
+class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+    '''Test the function of an Nuxeo harvest controller'''
+    def setUp(self):
+        super(Harvest_Nuxeo_ControllerTestCase, self).setUp()
+
+    def tearDown(self):
+        super(Harvest_Nuxeo_ControllerTestCase, self).tearDown()
+        shutil.rmtree(self.controller.dir_save)
+
+    @httpretty.activate
+    def testNuxeoHarvest(self):
+        '''Test the function of the Nuxeo harvest'''
+        httpretty.register_uri(httpretty.GET,
+                'http://registry.cdlib.org/api/v1/collection/19/',
+                body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/Nuxeo/site/api/v1/path/asset-library/UCI/Cochems/@children',
+                responses=[
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder.json').read(),
+                        status=200),
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder-1.json').read(),
+                        status=200),
+                ]
+        )
+        httpretty.register_uri(httpretty.GET,
+                re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
+                body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
+        self.setUp_config(self.collection)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.assertTrue(hasattr(self.controller, 'harvest'))
+        num = self.controller.harvest()
+        self.assertEqual(num, 10)
+        self.tearDown_config()
+        #verify one record has collection and such filled in
+        fname = os.listdir(self.controller.dir_save)[0]
+        saved_objset = json.load(open(os.path.join(self.controller.dir_save, fname)))
+        saved_obj = saved_objset[0]
+        self.assertEqual(saved_obj['collection'],[{u'@id': u'http://registry.cdlib.org/api/v1/collection/19/', u'name': u'Cochems (Edward W.) Photographs'}])
+        self.assertEqual(saved_obj['campus'],[{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
+        self.assertEqual(saved_obj['state'],'project')
+        self.assertEqual(saved_obj['title'],'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')
+
+
 class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Fetcher
     '''

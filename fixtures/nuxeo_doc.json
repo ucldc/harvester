@@ -1,0 +1,117 @@
+{
+  "contextParameters": {},
+  "changeToken": "1393973477000",
+  "facets": [
+    "Picture",
+    "Commentable",
+    "Asset",
+    "MultiviewPicture",
+    "Versionable",
+    "Publishable",
+    "HasRelatedText",
+    "Folderish",
+    "Orderable"
+  ],
+  "properties": {
+    "ucldc_schema:physdesc": "Photographic print",
+    "ucldc_schema:place": [
+      {
+        "coordinates": null,
+        "authorityid": null,
+        "name": "Santa Ana (Calif.)",
+        "source": null
+      }
+    ],
+    "ucldc_schema:description": "First picture of Adeline Cochems (Mrs. Weston Walker) and one of the first pictures Cochems took while practicing with his daughter as model",
+    "ucldc_schema:rightsenddate": null,
+    "ucldc_schema:provenance": [],
+    "ucldc_schema:rightsnote": null,
+    "ucldc_schema:subjectname": [],
+    "ucldc_schema:contributor": [],
+    "ucldc_schema:publisher": [],
+    "ucldc_schema:accessrestrict": null,
+    "ucldc_schema:rightscontact": null,
+    "ucldc_schema:rightsjurisdiction": null,
+    "ucldc_schema:creator": [
+      {
+        "authorityid": null,
+        "role": "Photographer",
+        "name": "Cochems, Edward W. (Edward William), 1874-1949",
+        "source": null,
+        "nametype": "persname"
+      }
+    ],
+    "ucldc_schema:rightsholder": [],
+    "ucldc_schema:subjecttopic": [
+      {
+        "heading": "Photographers -- Photographs",
+        "authorityid": null,
+        "headingtype": "topic",
+        "source": null
+      }
+    ],
+    "ucldc_schema:date": [
+      {
+        "inclusiveend": "1949",
+        "date": "1919 - 1949",
+        "datetype": "created",
+        "single": null,
+        "inclusivestart": "1919"
+      }
+    ],
+    "ucldc_schema:rightsdeterminationdate": null,
+    "ucldc_schema:temporalcoverage": [],
+    "ucldc_schema:physlocation": "Box 6 : Folder 3",
+    "dc:language": null,
+    "dc:coverage": null,
+    "dc:expired": null,
+    "dc:modified": "2014-03-04T22:51:17.00Z",
+    "dc:issued": null,
+    "dc:format": null,
+    "dc:valid": null,
+    "dc:publisher": null,
+    "dc:creator": "system",
+    "dc:source": null,
+    "dc:nature": null,
+    "dc:contributors": [
+      "system",
+      "Administrator"
+    ],
+    "dc:created": "2014-01-23T08:26:49.59Z",
+    "dc:description": null,
+    "dc:rights": null,
+    "dc:subjects": [],
+    "dc:title": "Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph",
+    "dc:lastContributor": "Administrator",
+    "ucldc_schema:rightsstatus": "copyrighted",
+    "ucldc_schema:campusunit": [
+      "https://registry.cdlib.org/api/v1/repository/16/"
+    ],
+    "ucldc_schema:localidentifier": [
+      "633"
+    ],
+    "ucldc_schema:rightsnotice": null,
+    "ucldc_schema:language": [],
+    "ucldc_schema:relatedresource": [],
+    "ucldc_schema:source": null,
+    "ucldc_schema:alternativetitle": [],
+    "ucldc_schema:collection": [
+      "https://registry.cdlib.org/api/v1/collection/19/"
+    ],
+    "ucldc_schema:formgenre": [],
+    "ucldc_schema:identifier": null,
+    "ucldc_schema:rightsstartdate": null,
+    "ucldc_schema:rightsstatement": "This material is provided for private study, scholarship, or research. Transmission or reproduction of any material protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. The creators of the material or their heirs may retain copyright to this material.",
+    "ucldc_schema:type": "image"
+  },
+  "lastModified": "2014-03-04T22:51:17.00Z",
+  "title": "Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph",
+  "entity-type": "document",
+  "repository": "default",
+  "uid": "40677ed1-f7c2-476f-886d-bf79c3fec8c4",
+  "path": "/asset-library/UCI/Cochems/MS-R016_1092.tif",
+  "type": "SampleCustomPicture",
+  "state": "project",
+  "versionLabel": "0.0",
+  "isCheckedOut": true
+}
