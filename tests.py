@@ -745,18 +745,22 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
 
 
-class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an Nuxeo harvest controller'''
     def setUp(self):
-        super(Harvest_Nuxeo_ControllerTestCase, self).setUp()
+        super(Harvest_UCLDCNuxeo_ControllerTestCase, self).setUp()
 
     def tearDown(self):
-        super(Harvest_Nuxeo_ControllerTestCase, self).tearDown()
+        super(Harvest_UCLDCNuxeo_ControllerTestCase, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
+    #need to mock out ConfigParser to override pynuxrc
+    @patch('ConfigParser.SafeConfigParser', autospec=True)
     @httpretty.activate
-    def testNuxeoHarvest(self):
+    def testNuxeoHarvest(self, mock_configparser):
         '''Test the function of the Nuxeo harvest'''
+        config_inst = mock_configparser.return_value
+        config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
                 body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())
@@ -776,7 +780,12 @@ class Harvest_Nuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
         self.setUp_config(self.collection)
-        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.controller = fetcher.HarvestController(
+                'email@example.com',
+                self.collection,
+                config_file=self.config_file,
+                profile_path=self.profile_path
+        )
         self.assertTrue(hasattr(self.controller, 'harvest'))
         num = self.controller.harvest()
         self.assertEqual(num, 10)
