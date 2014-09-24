@@ -23,7 +23,7 @@ def get_couchdb(url_couchdb=COUCHDB_URL, db_name=COUCHDB_DB):
 def stash_image(doc, bucket_base=BUCKET_BASE):
     '''Stash the images in s3, using md5s3stash'''
     try:
-        url_image = doc['isShownBy']['src']
+        url_image = doc['isShownBy']
     except KeyError, e:
         raise KeyError("isShownBy field missing for {}".format(doc['_id']))
     # for some OAC objects, the reference image is not a url but a path.
@@ -65,6 +65,7 @@ def by_list_of_doc_ids(doc_ids, url_couchdb=COUCHDB_URL):
         doc = db[doc_id]
         report = harvest_image_for_doc(doc, db_couchdb=db)
         dt_end = datetime.datetime.now()
+        print('HARVESTED {} report:{}'.format(doc_id, report))
         time.sleep((dt_end-dt_start).total_seconds()) #delay to not hammer
     print("IMAGES FOR {}".format(doc_ids))
 

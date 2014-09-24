@@ -17,6 +17,7 @@ COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 COUCHDOC_TO_SOLR_MAPPING = {
     'id' : lambda d: {'id': d['_id']},
     'object' : lambda d: {'reference_image_md5': d['object']},
+    'isShownAt'     : lambda d : { 'url_item' : d['isShownAt'] },
 }
 
 COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
@@ -24,7 +25,6 @@ COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
                         'campus_name' : [ c['name'] for c in d['campus']] },
     'repository' : lambda d: { 'repository' : [ r['@id'] for r in d['repository']],
                                'repository_name': [ r['name'] for r in d['repository']]},
-    'handle'     : lambda d : { 'url_item' : d['handle'][0] },
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
@@ -111,6 +111,8 @@ def main():
             print("Skip {0}".format(row['id']))
             continue
         n += 1
+        #TODO: Handle deletions, need to look for "deleted" key in
+        # change doc
         doc = db.get(row['id'])
         try:
             solr_doc = map_couch_to_solr_doc(doc)

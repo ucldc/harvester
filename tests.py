@@ -566,7 +566,11 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         '''
         rec = self.fetcher.next()
         self.assertIsInstance(rec, dict)
-        self.assertIn('handle', rec)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], '13030/hb796nb5mn')
+        self.assertIn('datestamp', rec)
+        self.assertIn(rec['datestamp'], '2005-12-13')
+
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
@@ -856,10 +860,6 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         docHits = ET.parse(open('fixtures/docHit.xml')).getroot()
         objset = self.fetcher._docHits_to_objset([docHits])
         obj = objset[0]
-        self.assertIsNotNone(obj.get('handle'))
-        self.assertEqual(obj['handle'][0], 'http://ark.cdlib.org/ark:/13030/kt40000501')
-        self.assertEqual(obj['handle'][1], '[15]')
-        self.assertEqual(obj['handle'][2], 'brk00000755_7a.tif')
         self.assertEqual(obj['relation'][0], 'http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134')
         self.assertIsInstance(obj['relation'], list)
         self.assertIsNone(obj.get('google_analytics_tracking_code'))
@@ -1005,7 +1005,6 @@ class OAC_JSON_FetcherTestCase(LogOverrideMixin, TestCase):
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         rec = self.fetcher.next()[0]
         self.assertIsInstance(rec, dict)
-        self.assertIn('handle', rec)
 
     @httpretty.activate
     def testHarvestByRecord(self):
@@ -1580,7 +1579,7 @@ def harvest_by_collection(collection_key=None, url_couchdb=COUCHDB_URL):
         '''Test the stash image calls are correct'''
         doc = {'_id':'TESTID'}
         self.assertRaises(KeyError, image_harvest.stash_image, doc)
-        doc['isShownBy']  = {'src':'test local url'}
+        doc['isShownBy']  = 'test local url'
         ret = image_harvest.stash_image(doc)
         mock_stash.assert_called_with('test local url', bucket_base='ucldc')
         self.assertEqual('s3 test url', ret.s3_url)

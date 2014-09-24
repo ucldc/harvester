@@ -25,7 +25,6 @@ import pynux.utils
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
 
-#TODO: Each harvester must pick correct field for creating a "handle"
 class Fetcher(object):
     '''Base class for harvest objects.'''
     def __init__(self, url_harvest, extra_data):
@@ -60,7 +59,8 @@ class OAIFetcher(Fetcher):
         '''
         sickle_rec = self.records.next()
         rec = sickle_rec.metadata
-        rec['handle'] = sickle_rec.header.identifier
+        rec['datestamp'] = sickle_rec.header.datestamp
+        rec['id'] = sickle_rec.header.identifier
         return rec
 
 class SolrFetcher(Fetcher):
@@ -247,8 +247,6 @@ class OAC_XML_Fetcher(Fetcher):
                 else:
                     data = t.text
                 obj[t.tag].append(data)
-                if t.tag == 'identifier':
-                    obj['handle'].append(t.text)
             for key, value in obj.items():
                 if len(value) == 1:
                     obj[key] = value[0] # de list non-duplicate  tags
@@ -293,7 +291,6 @@ class OAC_XML_Fetcher(Fetcher):
         self.logger.debug('++++++++++++++ curDoc'+str(self.currentDoc))
         return objset
 
-#TODO: handle is qdc['identifier']
 class OAC_JSON_Fetcher(Fetcher):
     '''Fetcher for oac, using the JSON objset interface
     This is being deprecated in favor of the xml interface'''
@@ -314,7 +311,6 @@ class OAC_JSON_Fetcher(Fetcher):
         for rec in self.objset:
             rec_orig = rec
             rec = rec['qdc']
-            rec['handle'] = rec['identifier']
             rec['files'] = rec_orig['files']
             n_objset.append(rec)
         self.objset = n_objset
@@ -332,7 +328,6 @@ class OAC_JSON_Fetcher(Fetcher):
         while self.resp:
             try:
                 rec = self.objset.pop()
-                rec['handle'] = rec['identifier']
                 return rec
             except IndexError, e:
                 if self.objset_end == self.objset_total:
@@ -349,7 +344,6 @@ class OAC_JSON_Fetcher(Fetcher):
             for rec in self.objset:
                 rec_orig = rec
                 rec = rec['qdc']
-                rec['handle'] = rec['identifier']
                 rec['files'] = rec_orig['files']
                 n_objset.append(rec)
             self.objset = n_objset
@@ -373,7 +367,6 @@ class OAC_JSON_Fetcher(Fetcher):
             for rec in self.objset:
                 rec_orig = rec
                 rec = rec['qdc']
-                rec['handle'] = rec['identifier']
                 rec['files'] = rec_orig['files']
                 n_objset.append(rec)
             self.objset = n_objset
