@@ -1,6 +1,8 @@
 '''Objects to wrap the avram collection api'''
 import os
+from os.path import expanduser
 import json
+import ConfigParser
 import requests
 
 api_host = os.environ.get('REGISTRY_HOST', 'registry.cdlib.org')
@@ -90,6 +92,7 @@ class Collection(dict):
             self.__dict__.update(api_json)
         else:
             raise Exception('Must supply a url to collection api or json data')
+        self._auth = None
 
     def _build_contributor_list(self):
         '''Build the dpla style contributor list from the campus and
@@ -129,4 +132,27 @@ class Collection(dict):
     def dpla_profile(self):
         return json.dumps(self.dpla_profile_obj)
 
+    @property
+    def auth(self):
+        '''Return a username, password tuple suitable for authentication
+        if the remote objects require auth for access.
 
+        This is a bit of a hack, we know that the nuxeo style collections 
+        require Basic auth which is stored in our pynuxrc.
+
+        If other types of collections require authentication to dowload 
+        objects, we'll have to come up with a clever way of storing that
+        info in collection registry.
+        '''
+        if not self.harvest_type == 'NUX':
+            return None
+        if self._auth:
+            return self._auth
+        #    return self.auth #ConfigParser doesn't like return trips
+        #for now just grab auth directly from pynux, could also 
+        # have option for passing in.
+        config = ConfigParser.SafeConfigParser()
+        config.readfp(open(os.path.join(expanduser("~"),'.pynuxrc')))
+        self._auth = (config.get('nuxeo_account', 'user'),
+                config.get('nuxeo_account', 'password'))
+        return self._auth

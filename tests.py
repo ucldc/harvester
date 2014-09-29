@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import pickle
 import StringIO
+import __builtin__   # for patching open
 from mock import MagicMock
 from mock import Mock
 from mock import call as mcall
@@ -147,6 +148,31 @@ class RegistryApiTestCase(TestCase):
         riter = self.registry.resource_iter('collection')
         c = riter.next()
         self.assertTrue(isinstance(c, Collection))
+        self.assertTrue(hasattr(c, 'auth'))
+        self.assertEqual(c.auth, None)
+            
+    def testNuxeoCollectionAuth(self):
+        '''Test that a Nuxeo harvest collection returns an
+        authentication tuple, not None
+        '''
+        httpretty.register_uri(httpretty.GET,
+                'https://registry.cdlib.org/api/v1/collection/19',
+                body=open(DIR_FIXTURES+'/registry_api_collection_nuxeo.json').read())
+        c = Collection('https://registry.cdlib.org/api/v1/collection/19')
+        self.assertTrue(c.harvest_type, 'NUX')
+        defaultrc = """\
+[nuxeo_account]
+user = TestUser
+password = TestPass
+
+[platform_importer]
+base = http://localhost:8080/nuxeo/site/fileImporter
+"""
+
+        with patch('__builtin__.open') as fakeopen:
+            fakeopen.return_value = StringIO.StringIO(defaultrc)
+            self.assertEqual(c.auth[0], 'TestUser')
+            self.assertEqual(c.auth[1], 'TestPass')
 
 
 class ApiCollectionTestCase(TestCase):
@@ -1565,33 +1591,38 @@ class GrabSolrIndexTestCase(TestCase):
 
 class ImageHarvestTestCase(TestCase):
     '''Test the md5 s3 image harvesting calls.....
-    '''
-    '''test 
-def harvest_image_for_doc(doc):
-def harvest_by_collection(collection_key=None, url_couchdb=COUCHDB_URL):
+    TODO: Increase test coverage
     '''
     from collections import namedtuple
     report = namedtuple('Report', 's3_url, md5')
     #StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
 
+    
+    @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))
-    def test_stash_image(self, mock_stash):
+    def test_stash_image(self, mock_stash, mock_couch):
         '''Test the stash image calls are correct'''
         doc = {'_id':'TESTID'}
-        self.assertRaises(KeyError, image_harvest.stash_image, doc)
-        doc['isShownBy']  = 'test local url'
-        ret = image_harvest.stash_image(doc)
-        mock_stash.assert_called_with('test local url', bucket_base='ucldc')
+        self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
+        doc['isShownBy']  = 'test local url ark:'
+        ret = image_harvest.ImageHarvester().stash_image(doc)
+        mock_stash.assert_called_with('http://content.cdlib.org/test local url ark:', url_auth=None, bucket_base='ucldc')
         self.assertEqual('s3 test url', ret.s3_url)
-        ret = image_harvest.stash_image(doc, bucket_base='x')
-        mock_stash.assert_called_with('test local url', bucket_base='x')
+        ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
+        mock_stash.assert_called_with('http://content.cdlib.org/test local url ark:', url_auth=None, bucket_base='x')
+        ret = image_harvest.ImageHarvester(bucket_base='x',
+                           object_auth=('tstuser', 'tstpswd')).stash_image(doc)
+        mock_stash.assert_called_with(
+                'http://content.cdlib.org/test local url ark:',
+                url_auth=('tstuser', 'tstpswd'),
+                bucket_base='x')
 
     def test_update_doc_object(self):
         '''Test call to couchdb, right data'''
         doc = {}
         r = self.report('s3 test2 url', 'md5 test value')
         db = MagicMock()
-        ret = image_harvest.update_doc_object(doc, r, db)
+        ret = image_harvest.ImageHarvester(cdb=db).update_doc_object(doc, r)
         self.assertEqual('md5 test value', ret)
         self.assertEqual('md5 test value', doc['object'])
         db.save.assert_called_with({'object': 'md5 test value'})
