@@ -82,7 +82,7 @@ class ImageHarvester(object):
         '''If collection_key is none, trying to grab all of the images. (Not 
         recommended)
         '''
-        v = self.coucdb.view(self.view, include_docs='true', key=collection_key) if collection_key else self.couchdb.view(self.view, include_docs='true')
+        v = self.couchdb.view(self.view, include_docs='true', key=collection_key) if collection_key else self.couchdb.view(self.view, include_docs='true')
         doc_ids = []
         for r in v:
             dt_start = dt_end = datetime.datetime.now()

@@ -9,7 +9,7 @@ import datetime
 import time
 from md5s3stash import md5s3stash
 import couchdb
-from harvester.couchdb_pager import coucdb_pager
+from harvester.couchdb_pager import couchdb_pager
 
 BUCKET_BASE = 'ucldc'
 SERVER_COUCHDB = 'https://54.84.142.143/couchdb'
