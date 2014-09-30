@@ -92,9 +92,9 @@ class ImageHarvester(object):
             time.sleep((dt_end-dt_start).total_seconds()) #delay to not hammer
         return doc_ids
     
-def main(collection_key=None, url_couchdb=COUCHDB_URL):
+def main(collection_key=None, url_couchdb=COUCHDB_URL, object_auth=None):
     print("COUCHDB: {0}".format(url_couchdb))
-    print(by_collection(collection_key, url_couchdb))
+    print(ImageHarvester(url_couchdb=url_couchdb).by_collection(collection_key))
 
 if __name__=='__main__':
     main(collection_key='uchida-yoshiko-papers')

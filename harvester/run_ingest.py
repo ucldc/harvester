@@ -42,8 +42,9 @@ collection_key, url_couchdb, object_auth=None):
                                 password=redis_pswd,
                                 socket_connect_timeout=redis_timeout)
     )
-    job = rQ.enqueue_call(func=harvester.image_harvest.ImageHarvester(url_couchdb=url_couchdb).by_collection,
-            kwargs=dict(collection_key=collection_key,),
+    job = rQ.enqueue_call(func=harvester.image_harvest.main,
+            kwargs=dict(collection_key=collection_key,
+                        url_couchdb=url_couchdb,),
             timeout=IMAGE_HARVEST_TIMEOUT)
     return job
 
