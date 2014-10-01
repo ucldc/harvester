@@ -83,7 +83,6 @@ class ImageHarvester(object):
         '''If collection_key is none, trying to grab all of the images. (Not 
         recommended)
         '''
-        import pdb;pdb.set_trace()
         v = self._couchdb.view(self._view, include_docs='true', key=collection_key) if collection_key else self._couchdb.view(self._view, include_docs='true')
         doc_ids = []
         for r in v:
