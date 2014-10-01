@@ -59,8 +59,8 @@ class ImageHarvester(object):
         '''Try to harvest an image for a couchdb doc'''
         report = None
         try:
-            report = stash_image(doc)
-            obj_val = update_doc_object(doc, report)
+            report = self.stash_image(doc)
+            obj_val = self.update_doc_object(doc, report)
         except KeyError, e:
             if 'isShownBy' in e.message:
                 print e
@@ -75,7 +75,7 @@ class ImageHarvester(object):
         for doc_id in doc_ids:
             doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
-            report = harvest_image_for_doc(doc, db_couchdb=db)
+            report = self.harvest_image_for_doc(doc)
             dt_end = datetime.datetime.now()
             time.sleep((dt_end-dt_start).total_seconds()) #delay to not hammer
     
@@ -87,7 +87,7 @@ class ImageHarvester(object):
         doc_ids = []
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
-            report = harvest_image_for_doc(r.doc, db_couchdb=db)
+            report = self.harvest_image_for_doc(r.doc)
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end-dt_start).total_seconds()) #delay to not hammer
