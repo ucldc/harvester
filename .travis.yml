@@ -16,4 +16,4 @@ install:
   - "touch ${HOME}/code/harvester/harvester/host_inventory"
 
 # command to run tests
-script: python tests.py
+script: python setup.py test
