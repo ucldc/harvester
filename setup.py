@@ -31,9 +31,10 @@ setup(
     dependency_links = [
             'https://github.com/zepheira/amara/archive/master.zip#egg=amara', 
             'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-            'git+https://mredar@bibucket.org/mredar/dpla-ingestion.git#egg=dplaingestion',
+            #'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc#egg=dplaingestion',
             'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
             'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
+            'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
             ],
     install_requires = [ 
         'Sickle==0.3',
@@ -41,11 +42,12 @@ setup(
         'lxml==3.3.5',
         'requests==2.1.0',
         'solrpy==0.9.6',
+        'pilbox',
         'wsgiref==0.1.2',
         'Logbook==0.6.0',
         'amara',
         'akara',
-        'dplaingestion',
+        #'dplaingestion',
         'python-dateutil==2.2',
         'CouchDB==0.9',
         'redis==2.10.1',
@@ -55,7 +57,10 @@ setup(
         'md5s3stash',
         'pymarc>=3.0',
         'pynux',
-        ]
+        ], 
+    test_suite='tests',
+    tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],
 )
 
 pip_main(['install', 'ansible'])
+pip_main(['install', 'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])
