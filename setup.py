@@ -31,7 +31,7 @@ setup(
     dependency_links = [
             'https://github.com/zepheira/amara/archive/master.zip#egg=amara', 
             'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-            'https://github.com/mredar/DPLA-ingestion/archive/ucldc.zip#egg=dplaingestion',
+            'git+https://mredar@bibucket.org/mredar/dpla-ingestion.git#egg=dplaingestion',
             'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
             'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
             ],
