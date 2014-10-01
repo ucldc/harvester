@@ -95,7 +95,8 @@ class ImageHarvester(object):
     
 def main(collection_key=None, url_couchdb=COUCHDB_URL, object_auth=None):
     print("COUCHDB_url: {0}".format(url_couchdb))
-    print(ImageHarvester(url_couchdb=url_couchdb).by_collection(collection_key))
+    print(ImageHarvester(url_couchdb=url_couchdb,
+                        object_auth=object_auth).by_collection(collection_key))
 
 if __name__=='__main__':
     main(collection_key='uchida-yoshiko-papers')

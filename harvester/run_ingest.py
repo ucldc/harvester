@@ -44,7 +44,8 @@ collection_key, url_couchdb, object_auth=None):
     )
     job = rQ.enqueue_call(func=harvester.image_harvest.main,
             kwargs=dict(collection_key=collection_key,
-                        url_couchdb=url_couchdb,),
+                        url_couchdb=url_couchdb,
+                        object_auth=object_auth),
             timeout=IMAGE_HARVEST_TIMEOUT)
     return job
 
