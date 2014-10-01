@@ -31,7 +31,6 @@ setup(
     dependency_links = [
             'https://github.com/zepheira/amara/archive/master.zip#egg=amara', 
             'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-            'git+https://mredar@bibucket.org/mredar/dpla-ingestion.git#egg=dplaingestion',
             'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
             'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
             ],
@@ -45,7 +44,6 @@ setup(
         'Logbook==0.6.0',
         'amara',
         'akara',
-        'dplaingestion',
         'python-dateutil==2.2',
         'CouchDB==0.9',
         'redis==2.10.1',
@@ -59,3 +57,5 @@ setup(
 )
 
 pip_main(['install', 'ansible'])
+pip_main(['install',
+'https://mredar@bitbucket.org/mredar/dpla-ingestion.git
