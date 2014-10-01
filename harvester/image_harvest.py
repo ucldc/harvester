@@ -11,7 +11,7 @@ import md5s3stash
 import couchdb
 
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
-COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://localhost:5984')
+COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://127.0.0.1:5984')
 COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
@@ -24,14 +24,15 @@ class ImageHarvester(object):
                 couch_view=COUCHDB_VIEW,
                 bucket_base=BUCKET_BASE,
                 object_auth=None):
-        if couchdb:
-            self.couchdb = cdb
+        if cdb:
+            self._couchdb = cdb
         else:
-            self.couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
-        self.bucket_base = bucket_base
-        self.view = couch_view
+            self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+        print('COUCHDB???? {0}'.format(self._couchdb))
+        self._bucket_base = bucket_base
+        self._view = couch_view
         #auth is a tuple of username, password
-        self.auth = object_auth
+        self._auth = object_auth
     
     #Need to make each download a separate job.
     def stash_image(self, doc):
@@ -45,13 +46,13 @@ class ImageHarvester(object):
             #not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-        return md5s3stash.md5s3stash(url_image, bucket_base=self.bucket_base,
-                url_auth = self.auth)
+        return md5s3stash.md5s3stash(url_image, bucket_base=self._bucket_base,
+                url_auth = self._auth)
     
     def update_doc_object(self, doc, report):
         '''Update the object field to point to an s3 bucket'''
         doc['object'] = report.md5
-        self.couchdb.save(doc)
+        self._couchdb.save(doc)
         return doc['object']
     
     def harvest_image_for_doc(self, doc):
@@ -72,7 +73,7 @@ class ImageHarvester(object):
     def by_list_of_doc_ids(self, doc_ids):
         '''For a list of ids, harvest images'''
         for doc_id in doc_ids:
-            doc = self.couchdb[doc_id]
+            doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
             report = harvest_image_for_doc(doc, db_couchdb=db)
             dt_end = datetime.datetime.now()
@@ -82,7 +83,8 @@ class ImageHarvester(object):
         '''If collection_key is none, trying to grab all of the images. (Not 
         recommended)
         '''
-        v = self.couchdb.view(self.view, include_docs='true', key=collection_key) if collection_key else self.couchdb.view(self.view, include_docs='true')
+        import pdb;pdb.set_trace()
+        v = self._couchdb.view(self._view, include_docs='true', key=collection_key) if collection_key else self._couchdb.view(self._view, include_docs='true')
         doc_ids = []
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
@@ -93,7 +95,7 @@ class ImageHarvester(object):
         return doc_ids
     
 def main(collection_key=None, url_couchdb=COUCHDB_URL, object_auth=None):
-    print("COUCHDB: {0}".format(url_couchdb))
+    print("COUCHDB_url: {0}".format(url_couchdb))
     print(ImageHarvester(url_couchdb=url_couchdb).by_collection(collection_key))
 
 if __name__=='__main__':
