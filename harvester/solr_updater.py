@@ -119,16 +119,16 @@ def main(url_couchdb=URL_COUCHDB, dbname=COUCHDB_DB, url_solr=URL_SOLR):
             print("Skip {0}".format(row['id']))
             continue
         n += 1
-        print(row)
-        continue
-        # TODO: Handle deletions, need to look for "deleted" key in
-        # change doc
-        doc = db.get(row['id'])
-        try:
-            solr_doc = map_couch_to_solr_doc(doc)
-            solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-        except TypeError:
-            continue
+        if row.get('deleted', False):
+            print(row)
+            solr_db.delete(id=row['id'])
+        else:
+            doc = db.get(row['id'])
+            try:
+                solr_doc = map_couch_to_solr_doc(doc)
+                solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
+            except TypeError:
+                continue
     solr_db.commit() #commit updates
     #set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS".format(n))
@@ -142,5 +142,6 @@ if __name__ == '__main__':
     parser.add_argument('url_solr', help='URL to writeable solr instance')
 
     args = parser.parse_args()
+    print('Warning: this may take some time')
     main(url_couchdb=args.url_couchdb, dbname=args.dbname,
          url_solr=args.url_solr)
