@@ -103,20 +103,23 @@ def get_couchdb_last_seq():
     return int(k.get_contents_as_string())
 
 
-def main():
-    server = Server(URL_COUCHDB)
-    db = server[COUCHDB_DB]
+def main(url_couchdb=URL_COUCHDB, dbname=COUCHDB_DB, url_solr=URL_SOLR):
+    print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
+    server = Server(url_couchdb)
+    db = server[dbname]
     since = get_couchdb_last_seq()
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
     n = 0
-    solr_db = Solr(URL_SOLR)
+    solr_db = Solr(url_solr)
     for row in results:
         if '_design' in row['id']:
             print("Skip {0}".format(row['id']))
             continue
         n += 1
+        print(row)
+        continue
         # TODO: Handle deletions, need to look for "deleted" key in
         # change doc
         doc = db.get(row['id'])
@@ -126,7 +129,7 @@ def main():
         except TypeError:
             continue
     solr_db.commit() #commit updates
-    set_couchdb_last_seq(last_seq)
+    #set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS".format(n))
 
 if __name__ == '__main__':
