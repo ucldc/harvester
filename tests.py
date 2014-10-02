@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import pickle
 import StringIO
+from collections import namedtuple
 import __builtin__   # for patching open
 from mock import MagicMock
 from mock import Mock
@@ -33,8 +34,6 @@ from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 from harvester import grab_solr_index
 from harvester import image_harvest
-
-#from harvester import Collection
 from dplaingestion.couch import Couch
 import harvester.run_ingest as run_ingest
 import harvester.fetcher as fetcher
@@ -43,9 +42,10 @@ import pynux.utils
 DIR_THIS_FILE = os.path.abspath(os.path.split(__file__)[0])
 DIR_FIXTURES = os.path.join(DIR_THIS_FILE, 'fixtures')
 
-#NOTE: these are used in integration test runs
+#  NOTE: these are used in integration test runs
 TEST_COUCH_DB = 'test-ucldc'
 TEST_COUCH_DASHBOARD = 'test-dashboard'
+
 
 def skipUnlessIntegrationTest(selfobj=None):
     '''Skip the test unless the environmen variable RUN_INTEGRATION_TESTS is set
@@ -59,15 +59,18 @@ def skipUnlessIntegrationTest(selfobj=None):
         return lambda func: func
     return unittest.skip('RUN_INTEGRATION_TESTS not set. Skipping integration tests.')
 
+
 class LogOverrideMixin(object):
     '''Mixin to use logbook test_handler for logging'''
     def setUp(self):
         '''Use test_handler'''
         super(LogOverrideMixin, self).setUp()
         self.test_log_handler = logbook.TestHandler()
+
         def deliver(msg, email):
-            #print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
+            # print ' '.join(('Mail sent to ', email, ' MSG: ', msg))
             pass
+
         self.test_log_handler.deliver = deliver
         self.test_log_handler.push_thread()
 
@@ -92,17 +95,20 @@ class ConfigFileOverrideMixin(object):
         os.remove(self.config_file)
         os.remove(self.profile_path)
 
+
 class RegistryApiTestCase(TestCase):
     '''Test that the registry api works for our purposes'''
     @httpretty.activate
     def setUp(self):
         httpretty.register_uri(httpretty.GET,
-                'https://registry.cdlib.org/api/v1/',
-                body='''{"campus": {"list_endpoint": "/api/v1/campus/", "schema": "/api/v1/campus/schema/"}, "collection": {"list_endpoint": "/api/v1/collection/", "schema": "/api/v1/collection/schema/"}, "repository": {"list_endpoint": "/api/v1/repository/", "schema": "/api/v1/repository/schema/"}}''')
+           'https://registry.cdlib.org/api/v1/',
+           body='''{"campus": {"list_endpoint": "/api/v1/campus/", "schema": "/api/v1/campus/schema/"}, "collection": {"list_endpoint": "/api/v1/collection/", "schema": "/api/v1/collection/schema/"}, "repository": {"list_endpoint": "/api/v1/repository/", "schema": "/api/v1/repository/schema/"}}''')
         self.registry = Registry()
 
     def testRegistryListEndpoints(self):
-        self.assertEqual(set(self.registry.endpoints.keys()), set(['collection', 'repository', 'campus'])) #use set so order independent
+        # use set so order independent
+        self.assertEqual(set(self.registry.endpoints.keys()),
+                         set(['collection', 'repository', 'campus']))
         self.assertRaises(ValueError, self.registry.resource_iter, 'x')
 
     @httpretty.activate
@@ -131,7 +137,7 @@ class RegistryApiTestCase(TestCase):
         self.assertEqual(riter.url, 'https://registry.cdlib.org/api/v1/repository/')
         self.assertEqual(riter.path_next, '/api/v1/repository/?limit=20&offset=20')
         r = ''
-        for x in range(0,38):
+        for x in range(0, 38):
             r = riter.next()
         self.assertFalse(isinstance(r, Collection))
         self.assertEqual(r['resource_uri'], '/api/v1/repository/42/')
@@ -150,7 +156,7 @@ class RegistryApiTestCase(TestCase):
         self.assertTrue(isinstance(c, Collection))
         self.assertTrue(hasattr(c, 'auth'))
         self.assertEqual(c.auth, None)
-            
+
     def testNuxeoCollectionAuth(self):
         '''Test that a Nuxeo harvest collection returns an
         authentication tuple, not None
@@ -219,14 +225,14 @@ class ApiCollectionTestCase(TestCase):
         self.assertIsInstance(c.dpla_profile, str)
         j = json.loads(c.dpla_profile)
         self.assertEqual(j['name'], 'harry-crosby-collection-black-white-photographs-of')
-        self.assertEqual(j['enrichments_coll'], [ '/compare_with_schema' ])
+        self.assertEqual(j['enrichments_coll'], ['/compare_with_schema'])
         self.assertTrue('enrichments_item' in j)
         self.assertIsInstance(j['enrichments_item'], list)
         self.assertEqual(len(j['enrichments_item']), 30)
         self.assertIn('contributor', j)
         self.assertIsInstance(j['contributor'], list)
-        self.assertEqual(len(j['contributor']) , 4)
-        self.assertEqual(j['contributor'][1] , {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
+        self.assertEqual(len(j['contributor']), 4)
+        self.assertEqual(j['contributor'][1], {u'@id': u'/api/v1/campus/1/', u'name': u'UCB'})
         self.assertTrue(hasattr(c, 'dpla_profile_obj'))
         self.assertIsInstance(c.dpla_profile_obj, dict)
         self.assertIsInstance(c.dpla_profile_obj['enrichments_item'], list)
@@ -240,7 +246,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
     @httpretty.activate
     def setUp(self):
         super(HarvestOAC_JSON_ControllerTestCase, self).setUp()
-        #self.testFile = 'fixtures/collection_api_test_oac.json'
+        # self.testFile = 'fixtures/collection_api_test_oac.json'
         httpretty.register_uri(httpretty.GET,
                 "https://registry.cdlib.org/api/v1/collection/178/",
                 body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
@@ -270,7 +276,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
 
     @httpretty.activate
     def testObjectsHaveRegistryData(self):
-        #test OAC objsets
+        # test OAC objsets
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.json').read())
@@ -285,7 +291,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'], [{'@id':'https://registry.cdlib.org/api/v1/collection/178/', 'name':'Harry Crosby Collection'}])
+        self.assertEqual(obj['collection'], [{'@id': 'https://registry.cdlib.org/api/v1/collection/178/', 'name': 'Harry Crosby Collection'}])
         self.assertIn('campus', obj)
         self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
         self.assertIn('repository', obj)
@@ -315,8 +321,8 @@ class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, Te
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertTrue(hasattr(self.controller, 'harvest'))
-        #TODO: fix why logbook.TestHandler not working for the previous logging
-        #self.assertEqual(len(self.test_log_handler.records), 2)
+        # TODO: fix why logbook.TestHandler not working for the previous logging
+        # self.assertEqual(len(self.test_log_handler.records), 2)
         self.tearDown_config()
 
 
@@ -331,9 +337,8 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
-        #self.collection = Collection('fixtures/collection_api_test.json')
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
-        config_file, profile_path = self.setUp_config(self.collection) 
+        config_file, profile_path = self.setUp_config(self.collection)
         self.controller_oai = fetcher.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
         self.objset_test_doc = json.load(open('fixtures/objset_test_doc.json'))
 
@@ -351,7 +356,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
-        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path) 
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertTrue(hasattr(controller, 'fetcher'))
         self.assertIsInstance(controller.fetcher, fetcher.OAIFetcher)
         self.assertTrue(hasattr(controller, 'campus_valid'))
@@ -375,14 +380,13 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.assertTrue(hasattr(self.controller_oai, 'create_id'))
         identifier = 'x'
         self.assertRaises(TypeError, self.controller_oai.create_id, identifier)
-        identifier = ['x',]
+        identifier = ['x', ]
         sid = self.controller_oai.create_id(identifier)
         self.assertIn(self.controller_oai.collection.slug, sid)
         self.assertIn(self.controller_oai.collection.campus[0]['slug'], sid)
         self.assertIn(self.controller_oai.collection.repository[0]['slug'], sid)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
         collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
-        #collection = Collection('fixtures/collection_api_test.json')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         sid = controller.create_id(identifier)
         self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
@@ -398,7 +402,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
             foo = {}
-            with patch.dict(foo, {'test-id':'test-ingest-doc'}):
+            with patch.dict(foo, {'test-id': 'test-ingest-doc'}):
                 instance.dashboard_db = foo
                 self.controller_oai.update_ingest_doc('error', error_msg="BOOM!")
             call_args = unicode(instance.update_ingestion_doc.call_args)
@@ -433,7 +437,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             instance._create_ingestion_document.return_value = 'test-id'
             instance.update_ingestion_doc.return_value = None
             foo = {}
-            with patch.dict(foo, {'test-id':'test-ingest-doc'}):
+            with patch.dict(foo, {'test-id': 'test-ingest-doc'}):
                 instance.dashboard_db = foo
                 ingest_doc_id = self.controller_oai.create_ingest_doc()
             self.assertIsNotNone(ingest_doc_id)
@@ -462,7 +466,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.assertTrue(hasattr(self.controller_oai, 'dir_save'))
         self.assertTrue(hasattr(self.controller_oai, 'save_objset'))
         self.controller_oai.save_objset(self.objset_test_doc)
-        #did it save?
+        # did it save?
         dir_list = os.listdir(self.controller_oai.dir_save)
         self.assertEqual(len(dir_list), 1)
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
@@ -497,17 +501,17 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
 
         collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
-        self.tearDown_config() # remove ones setup in setUp
+        self.tearDown_config()  # remove ones setup in setUp
         self.setUp_config(collection)
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
-        obj = {'id':'fakey', 'otherdata':'test'}
+        obj = {'id': 'fakey', 'otherdata': 'test'}
         self.assertNotIn('collection', obj)
         objnew = controller._add_registry_data(obj)
         self.assertIn('collection', obj)
         self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/197/')
         self.assertIn('campus', obj)
         self.assertIn('repository', obj)
-        #need to test one without campus
+        # need to test one without campus
         self.assertEqual(obj['campus'][0]['@id'], 'https://registry.cdlib.org/api/v1/campus/12/')
         self.assertEqual(obj['repository'][0]['@id'], 'https://registry.cdlib.org/api/v1/repository/37/')
 
@@ -520,21 +524,22 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'], [{'@id':'https://registry.cdlib.org/api/v1/collection/197/',
-            'name':'Calisphere - Santa Clara University: Digital Objects'}])
+        self.assertEqual(obj_saved['collection'], [{'@id': 'https://registry.cdlib.org/api/v1/collection/197/',
+            'name': 'Calisphere - Santa Clara University: Digital Objects'}])
         self.assertIn('campus', obj_saved)
-        self.assertEqual(obj_saved['campus'], [{'@id':'https://registry.cdlib.org/api/v1/campus/12/',
-            'name':'California Digital Library'}])
+        self.assertEqual(obj_saved['campus'], [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
+            'name': 'California Digital Library'}])
         self.assertIn('repository', obj_saved)
-        self.assertEqual(obj_saved['repository'], [{'@id':'https://registry.cdlib.org/api/v1/repository/37/',
-            'name':'Calisphere'}])
+        self.assertEqual(obj_saved['repository'], [{'@id': 'https://registry.cdlib.org/api/v1/repository/37/',
+            'name': 'Calisphere'}])
+
 
 @skipUnlessIntegrationTest()
 class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
     def setUp(self):
         super(CouchIntegrationTestCase, self).setUp()
         self.collection = Collection('fixtures/collection_api_test.json')
-        config_file, profile_path = self.setUp_config(self.collection) 
+        config_file, profile_path = self.setUp_config(self.collection)
         self.controller_oai = fetcher.HarvestController('email@example.com', self.collection, profile_path=profile_path, config_file=config_file)
         self.remove_log_dir = False
         if not os.path.isdir('logs'):
@@ -543,22 +548,14 @@ class CouchIntegrationTestCase(ConfigFileOverrideMixin, TestCase):
 
     def tearDown(self):
         super(CouchIntegrationTestCase, self).tearDown()
-###        couch = Couch(config_file=self.config_file,
-###                dpla_db_name = TEST_COUCH_DB,
-###                dashboard_db_name = TEST_COUCH_DASHBOARD
-###            )
-###        db = couch.server[TEST_COUCH_DASHBOARD]
-###        doc = db.get(self.ingest_doc_id)
-###        db.delete(doc)
-###        self.tearDown_config()
         if self.remove_log_dir:
             shutil.rmtree('logs')
-
 
     def testCouchDocIntegration(self):
         '''Test the couch document creation in a test environment'''
         self.ingest_doc_id = self.controller_oai.create_ingest_doc()
         self.controller_oai.update_ingest_doc('error', error_msg='This is an error')
+
 
 class FetcherClassTestCase(TestCase):
     '''Test the abstract Fetcher class'''
@@ -582,7 +579,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         super(OAIFetcherTestCase, self).tearDown()
 
     def testHarvestIsIter(self):
-        self.assertTrue(hasattr(self.fetcher, '__iter__')) 
+        self.assertTrue(hasattr(self.fetcher, '__iter__'))
         self.assertEqual(self.fetcher, self.fetcher.__iter__())
         rec1 = self.fetcher.next()
 
@@ -600,14 +597,14 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
-    #URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
+    # URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
     @httpretty.activate
     def testClassInit(self):
         '''Test that the class exists and gives good error messages
         if initial data not correct'''
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
-            body = open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()
+            body=open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()
             )
         self.assertRaises(TypeError, fetcher.SolrFetcher)
         h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
@@ -629,7 +626,7 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
         '''Test the iteration over a mock set of data'''
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
-            responses = [
+            responses=[
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()),
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-2.xml').read()),
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-3.xml').read()),
@@ -661,13 +658,14 @@ class MARCFetcherTestCase(LogOverrideMixin, TestCase):
 
     def testLocalFileLoad(self):
         h = fetcher.MARCFetcher('file:'+DIR_FIXTURES+'/marc-test', None)
-        for n, rec in enumerate(h):#enum starts at 0
+        for n, rec in enumerate(h):  # enum starts at 0
             pass
-            #print("NUM->{}:{}".format(n,rec))
+            # print("NUM->{}:{}".format(n,rec))
         self.assertEqual(n, 9)
         self.assertIsInstance(rec, dict)
         self.assertEqual(rec['leader'], '01914nkm a2200277ia 4500')
         self.assertEqual(len(rec['fields']), 21)
+
 
 class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an MARC harvest controller'''
@@ -696,7 +694,7 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
 
 class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
-    #put httppretty here, have sample outputs.
+    # put httppretty here, have sample outputs.
     @httpretty.activate
     def testInit(self):
         '''Basic tdd start'''
@@ -704,7 +702,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        self.assertTrue(hasattr(h, '_url')) #assert in called next repeatedly
+        self.assertTrue(hasattr(h, '_url'))  # assert in called next repeatedly
         self.assertEqual(h.url, 'https://example.edu/api/v1/')
         self.assertTrue(hasattr(h, '_nx'))
         self.assertIsInstance(h._nx, pynux.utils.Nuxeo)
@@ -737,38 +735,39 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
 
+
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
-    '''Test that the UCLDC Nuxeo Fetcher errors if necessary 
+    '''Test that the UCLDC Nuxeo Fetcher errors if necessary
     Nuxeo document schema header property not set.
     '''
     @httpretty.activate
     def testNuxeoPropHeader(self):
-        '''Test that the Nuxeo document property header has necessary 
+        '''Test that the Nuxeo document property header has necessary
         settings. This will test the base UCLDC schemas
         '''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
-        #can test adding a prop, but what if prop needed not there.
+        # can test adding a prop, but what if prop needed not there.
         # need to remove ~/.pynuxrc
         self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
                 'https://example.edu/api/v1/',
                 'path-to-asset/here',
-                conf_pynux = {'X-NXDocumentProperties':''}
+                conf_pynux={'X-NXDocumentProperties': ''}
         )
         self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
                 'https://example.edu/api/v1/',
                 'path-to-asset/here',
-                conf_pynux = {'X-NXDocumentProperties':'dublincore'}
+                conf_pynux={'X-NXDocumentProperties': 'dublincore'}
         )
         self.assertRaises(AssertionError, fetcher.UCLDCNuxeoFetcher,
                 'https://example.edu/api/v1/',
                 'path-to-asset/here',
-                conf_pynux = {'X-NXDocumentProperties':'dublincore,ucldc_schema'}
+                conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema'}
         )
         h = fetcher.UCLDCNuxeoFetcher('https://example.edu/api/v1/',
                 'path-to-asset/here',
-                conf_pynux = {'X-NXDocumentProperties':'dublincore,ucldc_schema,picture'}
+                conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'}
                 )
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
@@ -784,7 +783,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         super(Harvest_UCLDCNuxeo_ControllerTestCase, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
-    #need to mock out ConfigParser to override pynuxrc
+    # need to mock out ConfigParser to override pynuxrc
     @patch('ConfigParser.SafeConfigParser', autospec=True)
     @httpretty.activate
     def testNuxeoHarvest(self, mock_configparser):
@@ -820,14 +819,14 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         num = self.controller.harvest()
         self.assertEqual(num, 10)
         self.tearDown_config()
-        #verify one record has collection and such filled in
+        # verify one record has collection and such filled in
         fname = os.listdir(self.controller.dir_save)[0]
         saved_objset = json.load(open(os.path.join(self.controller.dir_save, fname)))
         saved_obj = saved_objset[0]
-        self.assertEqual(saved_obj['collection'],[{u'@id': u'http://registry.cdlib.org/api/v1/collection/19/', u'name': u'Cochems (Edward W.) Photographs'}])
-        self.assertEqual(saved_obj['campus'],[{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
-        self.assertEqual(saved_obj['state'],'project')
-        self.assertEqual(saved_obj['title'],'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')
+        self.assertEqual(saved_obj['collection'], [{u'@id': u'http://registry.cdlib.org/api/v1/collection/19/', u'name': u'Cochems (Edward W.) Photographs'}])
+        self.assertEqual(saved_obj['campus'], [{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
+        self.assertEqual(saved_obj['state'], 'project')
+        self.assertEqual(saved_obj['title'], 'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')
 
 
 class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
@@ -838,7 +837,6 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
-        #self.testFile = 'fixtures/testOAC-url_next-0.xml'
         super(OAC_XML_FetcherTestCase, self).setUp()
         self.fetcher = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134', 'extra_data')
 
@@ -850,7 +848,6 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx',
                 body=open(DIR_FIXTURES+'/testOAC-badsearch.xml').read())
-        #self.testFile = 'fixtures/testOAC-badsearch.xml'
         self.assertRaises(ValueError, fetcher.OAC_XML_Fetcher, 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj--xxxx', 'extra_data')
 
     @httpretty.activate
@@ -859,8 +856,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-noimages-in-results.xml').read())
-        #self.testFile = 'fixtures/testOAC-noimages-in-results.xml'
-        h = fetcher.OAC_XML_Fetcher( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 11)
         recs = self.fetcher.next()
         self.assertEqual(self.fetcher.groups['text']['end'], 10)
@@ -871,8 +867,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
                 body=open(DIR_FIXTURES+'/testOAC-utf8-content.xml').read())
-        #self.testFile = 'fixtures/testOAC-utf8-content.xml'
-        h = fetcher.OAC_XML_Fetcher( 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        h = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 0)
         objset = h.next()
@@ -907,7 +902,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIsInstance(obj['publisher'], str)
 
     def testDocHitsToObjsetBadImageData(self):
-        '''Check when the X & Y for thumbnail or reference image is not an 
+        '''Check when the X & Y for thumbnail or reference image is not an
         integer. Text have value of "" for X & Y'''
         docHits = ET.parse(open('fixtures/docHit-blank-image-sizes.xml')).getroot()
         objset = self.fetcher._docHits_to_objset([docHits])
@@ -940,6 +935,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
+
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
     @httpretty.activate
@@ -971,7 +967,7 @@ class OAC_XML_Fetcher_mixed_contentTestCase(LogOverrideMixin, TestCase):
         My test Mock object will return an xml with 10 images
         then with 3 images
         then 10 texts
-        then 1 text then quit 
+        then 1 text then quit
         '''
         httpretty.register_uri(httpretty.GET,
                  'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&docsPerPage=10',
@@ -1057,7 +1053,7 @@ class OAC_JSON_FetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj&startDoc=26',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
-        self.assertTrue(hasattr(self.fetcher, '__iter__')) 
+        self.assertTrue(hasattr(self.fetcher, '__iter__'))
         self.assertEqual(self.fetcher, self.fetcher.__iter__())
         rec1 = self.fetcher.next_record()
         objset = self.fetcher.next()
@@ -1098,6 +1094,7 @@ class OAC_JSON_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(objset != objset2)
         self.assertRaises(StopIteration, self.fetcher.next_objset)
 
+
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
     @httpretty.activate
@@ -1132,7 +1129,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     @httpretty.activate
     def testMainCreatesCollectionProfile(self):
         '''Test that the main function produces a collection profile
-        file for DPLA. The path to this file is needed when creating a 
+        file for DPLA. The path to this file is needed when creating a
         DPLA ingestion document.
         '''
         httpretty.register_uri(httpretty.GET,
@@ -1187,7 +1184,6 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
                          )
         self.assertEqual(len(self.test_log_handler.records), 1)
         self.assertEqual(len(self.mail_handler.records), 1)
-
 
     @httpretty.activate
     def testCollectionNoEnrichItems(self):
@@ -1285,8 +1281,9 @@ class LogFileNameTestCase(TestCase):
 
     def testLogName(self):
         n = get_log_file_path('test_collection_slug')
-        self.assertTrue(re.match('test/log/dir/harvester-test_collection_slug-\d{8}-\d{6}.log', n))
-        
+        print(n)
+        self.assertTrue(re.match('test/log/dir/harvester-test_collection_slug-\d{8}-\d{6}-.log', n))
+
 
 @skipUnlessIntegrationTest()
 class HarvesterLogSetupTestCase(TestCase):
@@ -1296,26 +1293,29 @@ class HarvesterLogSetupTestCase(TestCase):
         log_file_dir = log_file_path.rsplit('/', 1)[0]
         self.assertTrue(os.path.isdir(log_file_dir))
 
+
 @skipUnlessIntegrationTest()
 class MainMailIntegrationTestCase(TestCase):
     '''Test that the main function emails?'''
     def setUp(self):
         '''Need to run fakesmtp server on local host'''
-        sys.argv = ['thisexe', 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/' ]
+        sys.argv = ['thisexe', 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/']
 
     def testMainFunctionMail(self):
         '''This should error out and send mail through error handler'''
         self.assertRaises(requests.exceptions.ConnectionError, fetcher.main, 'email@example.com', 'https://xregistry-dev.cdlib.org/api/v1/collection/197/')
 
+
 @skipUnlessIntegrationTest()
 class ScriptFileTestCase(TestCase):
-    '''Test that the script file exists and is executable. Check that it 
+    '''Test that the script file exists and is executable. Check that it
     starts the correct proecss
     '''
     def testScriptFileExists(self):
         '''Test that the ScriptFile exists'''
         path_script = os.environ.get('HARVEST_SCRIPT', os.path.join(os.environ['HOME'], 'code/harvester/start_harvest.bash'))
         self.assertTrue(os.path.exists(path_script))
+
 
 @skipUnlessIntegrationTest()
 class FullOACHarvestTestCase(ConfigFileOverrideMixin, TestCase):
@@ -1325,7 +1325,6 @@ class FullOACHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
     def tearDown(self):
         self.tearDown_config()
-        #shutil.rmtree(self.controller.dir_save)
 
     def testFullOACHarvest(self):
         self.assertIsNotNone(self.collection)
@@ -1357,6 +1356,7 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
                 )
         n = self.controller.harvest()
         self.assertEqual(n, 128)
+
 
 class ParseEnvTestCase(TestCase):
     '''test the environment variable parsing'''
@@ -1404,7 +1404,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['REDIS_PASSWORD']
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
-    
+
     @patch('harvester.run_ingest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
@@ -1435,8 +1435,9 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(self.test_log_handler.formatted_records[14],
             u'[INFO] run_ingest: Started job for image_harvest:RQ-result!')
 
+
 class QueueHarvestTestCase(TestCase):
-    '''Test the queue harvester. 
+    '''Test the queue harvester.
     For now will mock the RQ library.
     '''
     def testGetRedisConnection(self):
@@ -1471,7 +1472,7 @@ class QueueHarvestTestCase(TestCase):
                     timeout=1,
                     poll_interval=1
                 )
-        self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE. TODO: EMAIL USER', cm.exception.message)
+        self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE.', cm.exception.message)
         with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
             mock_redis().ping.return_value = True
             results = queue_harvest_main('mark.redar@ucop.edu',
@@ -1483,7 +1484,7 @@ class QueueHarvestTestCase(TestCase):
                 timeout=1,
                 poll_interval=1
                 )
-        mock_calls = [ str(x) for x in mock_redis.mock_calls]
+        mock_calls = [str(x) for x in mock_redis.mock_calls]
         self.assertEqual(len(mock_calls), 12)
         self.assertEqual(mock_redis.call_count, 4)
         self.assertIn('call().ping()', mock_calls)
@@ -1499,9 +1500,6 @@ class QueueHarvestTestCase(TestCase):
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
-#    def testMain(self):
-#        '''Test running of main fn'''
-#solr_updater_main
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
@@ -1522,10 +1520,13 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['campus'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
-        self.assertEqual(sdoc['repository'],  [u'https://registry.cdlib.org/api/v1/repository/4/'])
+        self.assertEqual(sdoc['repository'],
+                         [u'https://registry.cdlib.org/api/v1/repository/4/'])
         self.assertEqual(sdoc['repository_name'], [u'Bancroft Library'])
-        self.assertEqual(sdoc['collection'],['https://registry.cdlib.org/api/v1/collection/23066']) 
-        self.assertEqual(sdoc['collection_name'], ['Uchida (Yoshiko) photograph collection'])
+        self.assertEqual(sdoc['collection'],
+                         ['https://registry.cdlib.org/api/v1/collection/23066'])
+        self.assertEqual(sdoc['collection_name'],
+                         ['Uchida (Yoshiko) photograph collection'])
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertTrue('contributor' not in sdoc)
         self.assertTrue('coverage' not in sdoc)
@@ -1561,6 +1562,7 @@ class SolrUpdaterTestCase(TestCase):
         mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
+
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
     '''
@@ -1580,31 +1582,29 @@ class GrabSolrIndexTestCase(TestCase):
         inventory.list_hosts.return_value = ['test-host']
         grab_solr_index.main()
         mock_pb.assert_called_with(playbook=os.path.join(os.environ['DIR_CODE'], 'harvester/grab-solr-index-playbook.yml'),
-                inventory=inventory,
-                callbacks=mock_cb.return_value,
-                runner_callbacks=mock_cbr.return_value,
-                stats=mock_stats.return_value
-        )
+                                   inventory=inventory,
+                                   callbacks=mock_cb.return_value,
+                                   runner_callbacks=mock_cbr.return_value,
+                                   stats=mock_stats.return_value
+                                   )
         self.assertEqual(mock_pb.return_value.run.called, True)
         self.assertEqual(mock_pb.return_value.run.call_count, 1)
-       
+
 
 class ImageHarvestTestCase(TestCase):
     '''Test the md5 s3 image harvesting calls.....
     TODO: Increase test coverage
     '''
-    from collections import namedtuple
     report = namedtuple('Report', 's3_url, md5')
-    #StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
+    # StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
 
-    
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))
     def test_stash_image(self, mock_stash, mock_couch):
         '''Test the stash image calls are correct'''
-        doc = {'_id':'TESTID'}
+        doc = {'_id': 'TESTID'}
         self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
-        doc['isShownBy']  = 'test local url ark:'
+        doc['isShownBy'] = 'test local url ark:'
         ret = image_harvest.ImageHarvester().stash_image(doc)
         mock_stash.assert_called_with('http://content.cdlib.org/test local url ark:', url_auth=None, bucket_base='ucldc')
         self.assertEqual('s3 test url', ret.s3_url)
@@ -1636,8 +1636,8 @@ Port=8889
 URL=http://127.0.0.1:5984/
 Username=mark
 Password=mark
-ItemDatabase='''+ TEST_COUCH_DB + '''
-DashboardDatabase='''+ TEST_COUCH_DASHBOARD
+ItemDatabase=''' + TEST_COUCH_DB + '''
+DashboardDatabase=''' + TEST_COUCH_DASHBOARD
 
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.main()

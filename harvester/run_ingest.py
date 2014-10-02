@@ -24,9 +24,12 @@ from harvester import solr_updater
 from harvester import grab_solr_index
 import harvester.image_harvest
 
-EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS', 'example@example.com')
-EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None) #csv delim email addresses
+EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
+                                      'example@example.com')
+# csv delim email addresses
+EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None)
 IMAGE_HARVEST_TIMEOUT = 14400
+
 
 def def_args():
     import argparse
@@ -36,40 +39,43 @@ def def_args():
             help='URL for the collection Django tastypie api resource')
     return parser
 
+
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
-collection_key, url_couchdb, object_auth=None):
+                        collection_key, url_couchdb, object_auth=None):
     rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
                                 password=redis_pswd,
                                 socket_connect_timeout=redis_timeout)
     )
     job = rQ.enqueue_call(func=harvester.image_harvest.main,
-            kwargs=dict(collection_key=collection_key,
-                        url_couchdb=url_couchdb,
-                        object_auth=object_auth),
-            timeout=IMAGE_HARVEST_TIMEOUT)
+                          kwargs=dict(collection_key=collection_key,
+                                      url_couchdb=url_couchdb,
+                                      object_auth=object_auth),
+                          timeout=IMAGE_HARVEST_TIMEOUT)
     return job
 
+
 def main(user_email, url_api_collection, log_handler=None,
-        mail_handler=None, dir_profile='profiles', profile_path=None,
-        config_file='akara.ini', redis_host=None, redis_port=None,
-        redis_pswd=None, redis_timeout=6000):
+         mail_handler=None, dir_profile='profiles', profile_path=None,
+         config_file='akara.ini', redis_host=None, redis_port=None,
+         redis_pswd=None, redis_timeout=6000):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
     if EMAIL_SYS_ADMIN:
-    	emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
+        emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
     if not mail_handler:
         mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
                                            emails,
                                            level='ERROR',
-                                           bubble=True) 
+                                           bubble=True)
     mail_handler.push_application()
-    if not( redis_host and redis_port and redis_pswd):
-    	redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
- 
+    if not(redis_host and redis_port and redis_pswd):
+        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+
     try:
         collection = Collection(url_api_collection)
     except Exception, e:
-        msg = 'Exception in Collection {}, init {}'.format(url_api_collection, str(e))
+        msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
+                                                           str(e))
         logbook.error(msg)
         raise e
     if not log_handler:
@@ -78,13 +84,13 @@ def main(user_email, url_api_collection, log_handler=None,
     log_handler.push_application()
     logger = logbook.Logger('run_ingest')
     ingest_doc_id, num_recs, dir_save, harvester = fetcher.main(
-                        emails,
-                        url_api_collection,
-                        log_handler=log_handler,
-                        mail_handler=mail_handler
-            )
+        emails,
+        url_api_collection,
+        log_handler=log_handler,
+        mail_handler=mail_handler
+        )
 
-    logger.info( "INGEST DOC ID:{0}".format(ingest_doc_id))
+    logger.info("INGEST DOC ID:{0}".format(ingest_doc_id))
     logger.info('HARVESTED {0} RECORDS'.format(num_recs))
     logger.info('IN DIR:{0}'.format(dir_save))
     resp = enrich_records.main([None, ingest_doc_id])
@@ -99,7 +105,7 @@ def main(user_email, url_api_collection, log_handler=None,
         raise Exception("Error saving records {0}".format(str(resp)))
     logger.info("SAVED RECS")
 
-    resp = remove_deleted_records.main([None, ingest_doc_id]) 
+    resp = remove_deleted_records.main([None, ingest_doc_id])
     if not resp == 0:
         logger.error("Error deleting records")
         raise Exception("Error deleting records")
@@ -115,7 +121,7 @@ def main(user_email, url_api_collection, log_handler=None,
         raise Exception("Error cleaning up dashboard")
 
     url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
-    #the image_harvest should be a separate job, with a long timeout
+    # the image_harvest should be a separate job, with a long timeout
     job = queue_image_harvest(redis_host, redis_port, redis_pswd,
                               redis_timeout, collection_key=collection.slug,
                               url_couchdb=url_couchdb,
@@ -134,7 +140,7 @@ if __name__ == '__main__':
     redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
     print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
-    main(   args.user_email,
+    main(args.user_email,
             args.url_api_collection,
             redis_host=redis_host,
             redis_port=redis_port,

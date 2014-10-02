@@ -3,6 +3,7 @@ import os
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
 
+
 def parse_env():
     '''Get any overrides from the runtime environment for the server variables
     '''
@@ -22,4 +23,3 @@ def parse_env():
     except KeyError, e:
         raise KeyError('Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
     return redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build
-

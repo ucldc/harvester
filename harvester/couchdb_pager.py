@@ -5,7 +5,7 @@ def couchdb_pager(db, view_name='_all_docs',
     options = {'limit': bulk + 1}
     print("EXTRA: {}".format(extra_options))
     if extra_options:
-         options.update(extra_options)
+        options.update(extra_options)
     print("OPTS:{}".format(options))
     if startkey:
         options['startkey'] = startkey
