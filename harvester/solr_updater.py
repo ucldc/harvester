@@ -10,10 +10,6 @@ import boto
 from solr import Solr, SolrException
 from couchdb import Server, Database, Document
 
-URL_SOLR = os.environ.get('URL_SOLR',
-                          'http://10.0.1.13:8080/solr/dc-collection/')
-URL_COUCHDB = os.environ.get('URL_COUCHDB', 'http://localhost:5984')
-COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
 COUCHDOC_TO_SOLR_MAPPING = {
@@ -78,8 +74,7 @@ def push_doc_to_solr(solr_doc, solr_db):
     try:
         solr_db.add(solr_doc)
     except SolrException, e:
-        print "ERROR:", solr_doc
-        print e
+        print("ERROR for {0} : {1}".format(solr_doc['id'], e))
         if not e.httpcode == 400:
             raise e
     return solr_doc
@@ -104,34 +99,41 @@ def get_couchdb_last_seq():
     return int(k.get_contents_as_string())
 
 
-def main(url_couchdb=URL_COUCHDB, dbname=COUCHDB_DB, url_solr=URL_SOLR):
-    print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
+def main(url_couchdb=None, dbname=None, url_solr=None):
     server = Server(url_couchdb)
     db = server[dbname]
     since = get_couchdb_last_seq()
+    print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
-    n = 0
+    n_up = n_design = n_delete = 0
     solr_db = Solr(url_solr)
     for row in results:
-        if '_design' in row['id']:
-            print("Skip {0}".format(row['id']))
+        cur_id = row['id']
+        if '_design' in cur_id:
+            n_design += 1
+            print("Skip {0}".format(cur_id))
             continue
-        n += 1
         if row.get('deleted', False):
-            print(row)
-            solr_db.delete(id=row['id'])
+            print('====DELETING: {0}'.format(cur_id))
+            solr_db.delete(id=cur_id)
+            n_delete += 1
         else:
-            doc = db.get(row['id'])
+            doc = db.get(cur_id)
             try:
                 solr_doc = map_couch_to_solr_doc(doc)
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-            except TypeError:
+            except TypeError, e:
+                print('TypeError for {0} : {1}'.format(cur_id, e))
                 continue
+        n_up += 1
     solr_db.commit() #commit updates
-    #set_couchdb_last_seq(last_seq)
-    print("UPDATED {0} DOCUMENTS".format(n))
+    if (since + n_up + n_design) < last_seq:
+        last_seq = since + n_up + n_design  # can redo updates, safer if errs
+    set_couchdb_last_seq(last_seq)
+    print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
+    print("Last SEQ:{0}".format(last_seq))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
