@@ -3,6 +3,7 @@
 import os
 import sys
 import urllib
+import argparse
 from collections import defaultdict
 import requests
 import boto
@@ -133,4 +134,13 @@ def main(url_couchdb=URL_COUCHDB, dbname=COUCHDB_DB, url_solr=URL_SOLR):
     print("UPDATED {0} DOCUMENTS".format(n))
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description='update a solr instance from the couchdb doc store')
+    parser.add_argument('url_couchdb',
+                        help='URL to couchdb (http://127.0.0.1:5984)')
+    parser.add_argument('dbname', help='Couchdb database name')
+    parser.add_argument('url_solr', help='URL to writeable solr instance')
+
+    args = parser.parse_args()
+    main(url_couchdb=args.url_couchdb, dbname=args.dbname,
+         url_solr=args.url_solr)
