@@ -483,7 +483,7 @@ class HarvestController(object):
                                 )
         uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
         self.ingest_doc_id = self.couch._create_ingestion_document(
-            self.collection.url, uri_base, self.profile_path,
+            self.collection.slug, uri_base, self.profile_path,
             self.collection.dpla_profile_obj['thresholds'])
         self.ingestion_doc = self.couch.dashboard_db[self.ingest_doc_id]
         kwargs = {
