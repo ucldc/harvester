@@ -224,7 +224,7 @@ class ApiCollectionTestCase(TestCase):
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertIsInstance(c.dpla_profile, str)
         j = json.loads(c.dpla_profile)
-        self.assertEqual(j['name'], 'harry-crosby-collection-black-white-photographs-of')
+        self.assertEqual(j['name'], 'https://registry.cdlib.org/api/v1/collection/178')
         self.assertEqual(j['enrichments_coll'], ['/compare_with_schema'])
         self.assertTrue('enrichments_item' in j)
         self.assertIsInstance(j['enrichments_item'], list)

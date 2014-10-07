@@ -56,7 +56,7 @@ class ResourceIterator(object):
         else:
             self.total_returned += 1
         # TODO: smarter conversion here
-        return Collection(json_obj=self.objects[self.obj_list_index]) \
+        return Collection(url_base=self.url_base, json_obj=self.objects[self.obj_list_index]) \
             if self.object_type == 'collection' \
             else self.objects[self.obj_list_index]
 
@@ -87,9 +87,9 @@ class Collection(dict):
     '''A representation of the avram collection, as presented by the
     tastypie api
     '''
-    def __init__(self, url_api=None, json_obj=None):
-        self.url = self.json = None
-        if json_obj:
+    def __init__(self, url_api=None, url_base=None, json_obj=None): 
+        if url_base and json_obj:
+            self.url = url_base + json_obj['resource_uri']
             self.update(json_obj)
             self.__dict__.update(json_obj)
         elif url_api:
@@ -98,7 +98,8 @@ class Collection(dict):
             self.update(api_json)
             self.__dict__.update(api_json)
         else:
-            raise Exception('Must supply a url to collection api or json data')
+            raise Exception(
+                'Must supply a url to collection api or json data and api base url')
         self._auth = None
 
     def _build_contributor_list(self):
@@ -124,7 +125,7 @@ class Collection(dict):
         if not self.enrichments_item:
             raise ValueError("NO ITEM ENRICHMENTS FOR COLLECTION, WILL FAIL!")
         profile = {}
-        profile['name'] = self.slug
+        profile['name'] = self.url
         profile['contributor'] = self._build_contributor_list()
         profile['enrichments_coll'] = ['/compare_with_schema', ]
         profile['thresholds'] = {
