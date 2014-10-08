@@ -1416,6 +1416,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     def testRunIngest(self, mock_couch, mock_dash_clean, mock_check,
                 mock_remove, mock_save, mock_enrich, mock_couchdb, mock_redis):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
+        # this next is because the redis client unpickles....
         mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
         mail_handler = MagicMock()
         httpretty.enable()
@@ -1503,8 +1504,7 @@ class SolrUpdaterTestCase(TestCase):
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
-        f = open('fixtures/pickled_couchdb_doc')
-        doc = pickle.load(f)
+        doc = json.load(open('fixtures/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
         mock_solr.add.assert_called_with({'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'title': u'Neighbor', 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066'], 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'campus_name': [u'UC Berkeley'], 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'type': u'image', 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
@@ -1513,8 +1513,7 @@ class SolrUpdaterTestCase(TestCase):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
         '''
-        f = open('fixtures/pickled_couchdb_doc')
-        doc = pickle.load(f)
+        doc = json.load(open('fixtures/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], doc['_id'])
         self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')

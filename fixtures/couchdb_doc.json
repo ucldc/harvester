@@ -1,0 +1,159 @@
+{
+  "id": "1099870472665cec9bb82ba4027e70f1",
+  "originalRecord": {
+    "facet-onlineItems": "Items online",
+    "identifier": [
+      "http://ark.cdlib.org/ark:/13030/ft009nb05r",
+      "Banc Pic 1986.059:124--PIC"
+    ],
+    "dateStamp": "2011-10-27",
+    "facet-type-tab": "image",
+    "facet-collection-title": "Yoshiko Uchida photograph collection",
+    "facet-collection-order": "ark:/13030/ft6k4007pc::099",
+    "institution-url": "http://bancroft.berkeley.edu/",
+    "rights": [
+      "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",
+      "The Bancroft Library--assigned",
+      "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html",
+      "University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu"
+    ],
+    "publisher": "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/",
+    "collection": {
+      "name": "Uchida (Yoshiko) photograph collection",
+      "@id": "https://registry.cdlib.org/api/v1/collection/23066"
+    },
+    "title": "Neighbor",
+    "facet-institution": "UC Berkeley::Bancroft Library",
+    "subject": [
+      "Yoshiko Uchida photograph collection",
+      "Japanese American Relocation Digital Archive"
+    ],
+    "campus": [
+      {
+        "name": "UC Berkeley",
+        "@id": "https://registry.cdlib.org/api/v1/campus/1/"
+      }
+    ],
+    "sort-title": "neighbor",
+    "relation": [
+      "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
+      "http://bancroft.berkeley.edu/collections/jarda.html",
+      "hb158005k9",
+      "BANC PIC 1986.059--PIC",
+      "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
+      "http://calisphere.universityofcalifornia.edu/",
+      "http://bancroft.berkeley.edu/"
+    ],
+    "relation-from": "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc|Yoshiko Uchida photograph collection",
+    "facet-oac-tab": "digital item",
+    "oac4-tab": "Items::image",
+    "type": "still image",
+    "thumbnail": {
+      "src": "http://content.cdlib.org/ark:/13030/ft009nb05r/thumbnail",
+      "X": 102,
+      "Y": 125
+    },
+    "reference-image": [
+      {
+        "src": "http://content.cdlib.org/ark:/13030/ft009nb05r/FID3",
+        "X": 622,
+        "Y": 750
+      },
+      {
+        "src": "http://content.cdlib.org/ark:/13030/ft009nb05r/FID4",
+        "X": 1244,
+        "Y": 1500
+      }
+    ],
+    "handle": [
+      "http://ark.cdlib.org/ark:/13030/ft009nb05r",
+      "Banc Pic 1986.059:124--PIC"
+    ],
+    "repository": [
+      {
+        "name": "Bancroft Library",
+        "@id": "https://registry.cdlib.org/api/v1/repository/4/"
+      }
+    ],
+    "format": "mods",
+    "institution-doublelist": [
+      "B::Bancroft Library::UC Berkeley",
+      "U::UC Berkeley::Bancroft Library"
+    ]
+  },
+  "dataProvider": "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/",
+  "ingestType": "item",
+  "_id": "uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r",
+  "@id": "http://dp.la/api/items/1099870472665cec9bb82ba4027e70f1",
+  "_rev": "10-de00625004adfd61cce6fa1f695874db",
+  "ingestDate": "2014-06-13T21:49:28.594945",
+  "ingestionSequence": 11,
+  "isShownAt": "http://ark.cdlib.org/ark:/13030/ft009nb05r",
+  "sourceResource": {
+    "subject": [
+      {
+        "name": "Yoshiko Uchida photograph collection"
+      },
+      {
+        "name": "Japanese American Relocation Digital Archive"
+      }
+    ],
+    "publisher": "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/",
+    "rights": [
+      "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",
+      "The Bancroft Library--assigned",
+      "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html",
+      "University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu"
+    ],
+    "format": "mods",
+    "title": "Neighbor",
+    "collection": [
+      {
+        "name": "Uchida (Yoshiko) photograph collection",
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066"
+      }
+    ],
+    "relation": [
+      "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
+      "http://bancroft.berkeley.edu/collections/jarda.html",
+      "hb158005k9",
+      "BANC PIC 1986.059--PIC",
+      "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
+      "http://calisphere.universityofcalifornia.edu/",
+      "http://bancroft.berkeley.edu/"
+    ],
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "type": "image"
+  },
+  "@context": {
+    "LCSH": "http://id.loc.gov/authorities/subjects",
+    "provider": "edm:provider",
+    "originalRecord": "dpla:originalRecord",
+    "collection": "dpla:aggregation",
+    "dpla": "http://dp.la/terms/",
+    "object": "edm:object",
+    "sourceResource": "edm:sourceResource",
+    "name": "xsd:string",
+    "hasView": "edm:hasView",
+    "@vocab": "http://purl.org/dc/terms/",
+    "begin": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeStart"
+    },
+    "edm": "http://www.europeana.eu/schemas/edm/",
+    "state": "dpla:state",
+    "aggregatedDigitalResource": "dpla:aggregatedDigitalResource",
+    "coordinates": "dpla:coordinates",
+    "isShownAt": "edm:isShownAt",
+    "stateLocatedIn": "dpla:stateLocatedIn",
+    "end": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeEnd"
+    },
+    "dataProvider": "edm:dataProvider"
+  }
+}
