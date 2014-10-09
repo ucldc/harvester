@@ -100,6 +100,8 @@ class Collection(dict):
         else:
             raise Exception(
                 'Must supply a url to collection api or json data and api base url')
+        # use the django id for "provider", maybe url translated eventually
+        self.provider = self['resource_uri'].strip('/').rsplit('/', 1)[1]
         self._auth = None
 
     def _build_contributor_list(self):
@@ -125,7 +127,7 @@ class Collection(dict):
         if not self.enrichments_item:
             raise ValueError("NO ITEM ENRICHMENTS FOR COLLECTION, WILL FAIL!")
         profile = {}
-        profile['name'] = self.url
+        profile['name'] = self.provider
         profile['contributor'] = self._build_contributor_list()
         profile['enrichments_coll'] = ['/compare_with_schema', ]
         profile['thresholds'] = {
