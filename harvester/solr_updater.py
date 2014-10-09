@@ -130,6 +130,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None):
         n_up += 1
     solr_db.commit() #commit updates
     if (since + n_up + n_design) < last_seq:
+        print("OVERRIDING LAST SEQ. LAST SEQ:{0} SINCE:{1} NUP:{2} \
+        NTOT:{3}".format(last_seq, since, n_up+n_design, since+n_up+n_design))
         last_seq = since + n_up + n_design  # can redo updates, safer if errs
     set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
