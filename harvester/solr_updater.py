@@ -23,10 +23,12 @@ COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
                               'campus_name': [c['name'] for c in d['campus']]},
     'repository' : lambda d: {'repository': [r['@id'] for r in d['repository']],
                               'repository_name': [r['name'] for r in d['repository']]},
+    # assuming one collection only, may need to change
+    'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
+                               'collection_name': [c['name'] for c in d['collection']]},
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-    # assuming one collection only, may need to change
     'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
                                'collection_name': [c['name'] for c in d['collection']]},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},

@@ -224,7 +224,7 @@ class ApiCollectionTestCase(TestCase):
         self.assertTrue(hasattr(c, 'dpla_profile'))
         self.assertIsInstance(c.dpla_profile, str)
         j = json.loads(c.dpla_profile)
-        self.assertEqual(j['name'], 'harry-crosby-collection-black-white-photographs-of')
+        self.assertEqual(j['name'], '178')
         self.assertEqual(j['enrichments_coll'], ['/compare_with_schema'])
         self.assertTrue('enrichments_item' in j)
         self.assertIsInstance(j['enrichments_item'], list)
@@ -442,7 +442,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 ingest_doc_id = self.controller_oai.create_ingest_doc()
             self.assertIsNotNone(ingest_doc_id)
             self.assertEqual(ingest_doc_id, 'test-id')
-            instance._create_ingestion_document.assert_called_with(self.collection.slug, 'http://localhost:8889', self.profile_path, self.collection.dpla_profile_obj['thresholds'])
+            instance._create_ingestion_document.assert_called_with(self.collection.provider, 'http://localhost:8889', self.profile_path, self.collection.dpla_profile_obj['thresholds'])
             instance.update_ingestion_doc.assert_called()
             self.assertEqual(instance.update_ingestion_doc.call_count, 1)
             call_args = unicode(instance.update_ingestion_doc.call_args)
@@ -1360,11 +1360,32 @@ class FullOAIHarvestTestCase(ConfigFileOverrideMixin, TestCase):
 
 class ParseEnvTestCase(TestCase):
     '''test the environment variable parsing'''
+    def setUp(self):
+        self.rpwd = self.ec2ingest = self.ec2solr = None
+        if 'REDIS_PASSWORD' in os.environ:
+            self.rpwd = os.environ['REDIS_PASSWORD']
+            del os.environ['REDIS_PASSWORD']
+        if 'ID_EC2_INGEST' in os.environ:
+            self.ec2ingest = os.environ['ID_EC2_INGEST']
+            del os.environ['ID_EC2_INGEST']
+        if 'ID_EC2_SOLR_BUILD' in os.environ:
+            self.ec2ingest = os.environ['ID_EC2_SOLR_BUILD']
+            del os.environ['ID_EC2_SOLR_BUILD']
+
     def tearDown(self):
         # remove env vars if created?
-        del os.environ['REDIS_PASSWORD']
-        del os.environ['ID_EC2_INGEST']
-        del os.environ['ID_EC2_SOLR_BUILD']
+        if self.rpwd:
+            os.environ['REDIS_PASSWORD'] = self.rpwd
+        else:
+            del os.environ['REDIS_PASSWORD']
+        if self.ec2ingest:
+            os.environ['ID_EC2_INGEST'] = self.ec2ingest
+        else:
+            del os.environ['ID_EC2_INGEST']
+        if self.ec2solr:
+            os.environ['ID_EC2_SOLR_BUILD'] = self.ec2solr
+        else:
+            del os.environ['ID_EC2_SOLR_BUILD']
 
     def testParseEnv(self):
         with self.assertRaises(KeyError) as cm:
@@ -1416,6 +1437,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     def testRunIngest(self, mock_couch, mock_dash_clean, mock_check,
                 mock_remove, mock_save, mock_enrich, mock_couchdb, mock_redis):
         mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
+        # this next is because the redis client unpickles....
         mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
         mail_handler = MagicMock()
         httpretty.enable()
@@ -1503,28 +1525,26 @@ class SolrUpdaterTestCase(TestCase):
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
-        f = open('fixtures/pickled_couchdb_doc')
-        doc = pickle.load(f)
+        doc = json.load(open('fixtures/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
-        mock_solr.add.assert_called_with({'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'title': u'Neighbor', 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066'], 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'campus_name': [u'UC Berkeley'], 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'type': u'image', 'id': u'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
+        mock_solr.add.assert_called_with({'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066/'], 'id': u'23066--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'campus_name': [u'UC Berkeley'], 'reference_image_md5': u'f2610262f487f013fb96149f98990fb0', 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'title': u'Neighbor', 'identifier': [u'http://ark.cdlib.org/ark:/13030/ft009nb05r', u'Banc Pic 1986.059:124--PIC'], 'type': u'image', 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
         '''
-        f = open('fixtures/pickled_couchdb_doc')
-        doc = pickle.load(f)
+        doc = json.load(open('fixtures/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], doc['_id'])
-        self.assertEqual(sdoc['id'], 'uchida-yoshiko-photograph-collection--http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['id'], '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['campus'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
         self.assertEqual(sdoc['repository'],
                          [u'https://registry.cdlib.org/api/v1/repository/4/'])
         self.assertEqual(sdoc['repository_name'], [u'Bancroft Library'])
         self.assertEqual(sdoc['collection'],
-                         ['https://registry.cdlib.org/api/v1/collection/23066'])
+                         ['https://registry.cdlib.org/api/v1/collection/23066/'])
         self.assertEqual(sdoc['collection_name'],
                          ['Uchida (Yoshiko) photograph collection'])
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
@@ -1542,7 +1562,6 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['type'], u'image')
         self.assertEqual(sdoc['format'], 'mods')
         self.assertTrue('extent' not in sdoc)
-        self.assertTrue('identifier' not in sdoc)
 
     @patch('boto.connect_s3', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
