@@ -123,7 +123,7 @@ def main(user_email, url_api_collection, log_handler=None,
     url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
     # the image_harvest should be a separate job, with a long timeout
     job = queue_image_harvest(redis_host, redis_port, redis_pswd,
-                              redis_timeout, collection_key=collection.slug,
+                              redis_timeout, collection_key=collection.provider,
                               url_couchdb=url_couchdb,
                               object_auth=collection.auth)
     logger.info("Started job for image_harvest:{}".format(job.result))
