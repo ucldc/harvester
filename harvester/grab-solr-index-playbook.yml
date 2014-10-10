@@ -4,8 +4,9 @@
     vars:
       dir_code_src: '~/code/'
       dir_servers: '~/servers/'
+      # replace colons, scp doesn't play well with colons
       datetime: >
-        "{{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','-') }}"
+        {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
       email_to: "{{ lookup('env', 'EMAIL_SYS_ADMINS') }}"
     tasks:
     - name: get public ip
