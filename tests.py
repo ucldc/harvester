@@ -291,7 +291,13 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'], [{'@id': 'https://registry.cdlib.org/api/v1/collection/178/', 'name': 'Harry Crosby Collection'}])
+        self.assertEqual(obj['collection'], [
+            {'@id': 'https://registry.cdlib.org/api/v1/collection/178/',
+             'name': 'Harry Crosby Collection',
+             'title': 'Harry Crosby Collection',
+             'id': '178',
+             'ingestType': 'collection'
+        }])
         self.assertIn('campus', obj)
         self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
         self.assertIn('repository', obj)
@@ -524,8 +530,13 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'], [{'@id': 'https://registry.cdlib.org/api/v1/collection/197/',
-            'name': 'Calisphere - Santa Clara University: Digital Objects'}])
+        self.assertEqual(obj_saved['collection'], [
+            {'@id': 'https://registry.cdlib.org/api/v1/collection/197/',
+            'name': 'Calisphere - Santa Clara University: Digital Objects',
+            'title': 'Calisphere - Santa Clara University: Digital Objects',
+            'id': '197',
+            'ingestType': 'collection',
+        }])
         self.assertIn('campus', obj_saved)
         self.assertEqual(obj_saved['campus'], [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
             'name': 'California Digital Library'}])
@@ -823,7 +834,14 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         fname = os.listdir(self.controller.dir_save)[0]
         saved_objset = json.load(open(os.path.join(self.controller.dir_save, fname)))
         saved_obj = saved_objset[0]
-        self.assertEqual(saved_obj['collection'], [{u'@id': u'http://registry.cdlib.org/api/v1/collection/19/', u'name': u'Cochems (Edward W.) Photographs'}])
+        self.assertEqual(saved_obj['collection'], [
+            {u'@id': u'http://registry.cdlib.org/api/v1/collection/19/',
+                u'name': u'Cochems (Edward W.) Photographs',
+                u'title': u'Cochems (Edward W.) Photographs',
+                u'id': u'19',
+                u'ingestType': u'collection',
+            }]
+        )
         self.assertEqual(saved_obj['campus'], [{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
         self.assertEqual(saved_obj['state'], 'project')
         self.assertEqual(saved_obj['title'], 'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')

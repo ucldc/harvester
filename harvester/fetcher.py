@@ -533,7 +533,11 @@ class HarvestController(object):
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
         obj['collection'] = [{'@id': self.collection.url,
-                              'name': self.collection.name}]
+                              'id': self.collection.url.strip('/').rsplit('/', 1)[1],
+                              'name': self.collection.name,
+                              'title': self.collection.name,
+                              'ingestType': 'collection',
+                              }]
         obj['campus'] = []
         for c in self.collection.get('campus', []):
             obj['campus'].append({'@id': ''.join((base_url, c['resource_uri'])),
