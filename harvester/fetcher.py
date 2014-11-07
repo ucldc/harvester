@@ -259,7 +259,8 @@ class OAC_XML_Fetcher(Fetcher):
                         data = ''.join((data, innertext.strip()))
                 else:
                     data = t.text
-                obj[t.tag].append(data)
+                if data: #don't add blank ones
+                    obj[t.tag].append(data)
             for key, value in obj.items():
                 if len(value) == 1:
                     obj[key] = value[0]  # de list non-duplicate  tags

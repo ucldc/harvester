@@ -930,6 +930,15 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(0, obj['thumbnail']['X'])
         self.assertEqual(0, obj['thumbnail']['Y'])
 
+    def testDocHitsToObjsetRemovesBlanks(self):
+        '''Blank xml tags (no text value) get propagated through the system
+        as "null" values. Eliminate them here to make data cleaner.
+        '''
+        docHit = ET.parse(open('fixtures/testOAC-blank-value.xml')).getroot()
+        objset = self.fetcher._docHits_to_objset([docHit])
+        obj = objset[0]
+        self.assertEqual(obj['title'], 'Main Street, Cisko Placer Co. [California]. Popular American Scenery.')
+
     @httpretty.activate
     def testFetchOnePage(self):
         '''Test fetching one "page" of results where no return trips are
