@@ -538,6 +538,7 @@ class HarvestController(object):
                               'name': self.collection.name,
                               'title': self.collection.name,
                               'ingestType': 'collection',
+                              'description': self.collection.description,
                               }]
         obj['campus'] = []
         for c in self.collection.get('campus', []):

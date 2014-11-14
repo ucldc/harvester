@@ -296,7 +296,8 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
              'name': 'Harry Crosby Collection',
              'title': 'Harry Crosby Collection',
              'id': '178',
-             'ingestType': 'collection'
+             'ingestType': 'collection',
+             'description': 'Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.',
         }])
         self.assertIn('campus', obj)
         self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
@@ -536,6 +537,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             'title': 'Calisphere - Santa Clara University: Digital Objects',
             'id': '197',
             'ingestType': 'collection',
+            'description': '',
         }])
         self.assertIn('campus', obj_saved)
         self.assertEqual(obj_saved['campus'], [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
@@ -840,6 +842,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
                 u'title': u'Cochems (Edward W.) Photographs',
                 u'id': u'19',
                 u'ingestType': u'collection',
+                u'description': u'This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.'
             }]
         )
         self.assertEqual(saved_obj['campus'], [{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
