@@ -1653,6 +1653,8 @@ class ImageHarvestTestCase(TestCase):
         '''Test the stash image calls are correct'''
         doc = {'_id': 'TESTID'}
         self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
+        doc['isShownBy'] = None
+        self.assertRaises(ValueError, image_harvest.ImageHarvester().stash_image, doc)
         doc['isShownBy'] = 'test local url ark:'
         ret = image_harvest.ImageHarvester().stash_image(doc)
         mock_stash.assert_called_with('http://content.cdlib.org/test local url ark:', url_auth=None, bucket_base='ucldc')

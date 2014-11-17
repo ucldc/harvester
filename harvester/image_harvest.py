@@ -39,6 +39,8 @@ class ImageHarvester(object):
         '''Stash the images in s3, using md5s3stash'''
         try:
             url_image = doc['isShownBy']
+            if not url_image:
+                raise ValueError("isShownBy is blank for {0}".format(doc['_id']))
         except KeyError, e:
             raise KeyError("isShownBy missing for {0}".format(doc['_id']))
         if isinstance(url_image, list): # need to fix marc map_is_shown_at
@@ -65,6 +67,11 @@ class ImageHarvester(object):
             report = self.stash_image(doc)
             obj_val = self.update_doc_object(doc, report)
         except KeyError, e:
+            if 'isShownBy' in e.message:
+                print e
+            else:
+                raise e
+        except ValueError, e:
             if 'isShownBy' in e.message:
                 print e
             else:
