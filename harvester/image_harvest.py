@@ -29,7 +29,6 @@ class ImageHarvester(object):
             self._couchdb = cdb
         else:
             self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
-        print('COUCHDB???? {0}'.format(self._couchdb))
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password
@@ -42,11 +41,14 @@ class ImageHarvester(object):
             url_image = doc['isShownBy']
         except KeyError, e:
             raise KeyError("isShownBy missing for {0}".format(doc['_id']))
+        if isinstance(url_image, list): # need to fix marc map_is_shown_at
+            url_image = url_image[0]
         # for some OAC objects, the reference image is not a url but a path.
         if 'http' != url_image[:4]:
             # not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
+        #print("For {} url image is:{}".format(doc['_id'], url_image))
         return md5s3stash.md5s3stash(url_image, bucket_base=self._bucket_base,
                                      url_auth=self._auth)
 
@@ -98,11 +100,10 @@ class ImageHarvester(object):
 
 
 def main(collection_key=None, url_couchdb=COUCHDB_URL, object_auth=None):
-    print("COUCHDB_url: {0}".format(url_couchdb))
     print(ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth).by_collection(collection_key))
 
 if __name__ == '__main__':
-    main(collection_key='uchida-yoshiko-papers')
+    main(collection_key='lapl-photos-marc')
     # main(collection_key='uchida-yoshiko-photograph-collection')
     # main(collection_key='1934-international-longshoremens-association-and-g')
