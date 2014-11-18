@@ -29,7 +29,6 @@ class ImageHarvester(object):
             self._couchdb = cdb
         else:
             self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
-        print('COUCHDB???? {0}'.format(self._couchdb))
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password

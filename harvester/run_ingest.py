@@ -95,8 +95,8 @@ def main(user_email, url_api_collection, log_handler=None,
     logger.info('IN DIR:{0}'.format(dir_save))
     resp = enrich_records.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error("Error enriching records")
-        raise Exception('Failed during enrichment process')
+        logger.error("Error enriching records {0}".format(resp))
+        raise Exception('Failed during enrichment process: {0}'.format(resp))
     logger.info('Enriched records')
 
     resp = save_records.main([None, ingest_doc_id])
@@ -107,18 +107,18 @@ def main(user_email, url_api_collection, log_handler=None,
 
     resp = remove_deleted_records.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error("Error deleting records")
-        raise Exception("Error deleting records")
+        logger.error("Error deleting records {0}".format(resp))
+        raise Exception("Error deleting records {0}".format(resp))
 
     resp = check_ingestion_counts.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error("Error checking counts")
-        raise Exception("Error checking counts")
+        logger.error("Error checking counts {0}".format(resp))
+        raise Exception("Error checking counts {0}".format(resp))
 
     resp = dashboard_cleanup.main([None, ingest_doc_id])
     if not resp == 0:
-        logger.error("Error cleaning up dashboard")
-        raise Exception("Error cleaning up dashboard")
+        logger.error("Error cleaning up dashboard {0}".format(resp))
+        raise Exception("Error cleaning up dashboard {0}".format(resp))
 
     url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
     # the image_harvest should be a separate job, with a long timeout
