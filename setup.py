@@ -58,7 +58,7 @@ setup(
         'pymarc>=3.0',
         'pynux',
         ],
-    test_suite='tests',
+    test_suite='test',
     tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],
 )
 
