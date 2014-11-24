@@ -15,7 +15,7 @@ from dplaingestion.scripts import dashboard_cleanup
 from dplaingestion.scripts import check_ingestion_counts
 import logbook
 from harvester import fetcher
-from harvester.parse_env import parse_env
+from harvester.config import config as config_harvest
 from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
@@ -69,7 +69,7 @@ def main(user_email, url_api_collection, log_handler=None,
                                            bubble=True)
     mail_handler.push_application()
     if not(redis_host and redis_port and redis_pswd):
-        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+        config = config_harvest(config_file=config_file)
 
     try:
         collection = Collection(url_api_collection)
@@ -122,8 +122,9 @@ def main(user_email, url_api_collection, log_handler=None,
 
     url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
     # the image_harvest should be a separate job, with a long timeout
-    job = queue_image_harvest(redis_host, redis_port, redis_pswd,
-                              redis_timeout, collection_key=collection.provider,
+    job = queue_image_harvest(config.redis_host, config.redis_port,
+                              config.redis_pswd, config.redis_timeout,
+                              collection_key=collection.provider,
                               url_couchdb=url_couchdb,
                               object_auth=collection.auth)
     logger.info("Started job for image_harvest:{}".format(job.result))
@@ -137,7 +138,7 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         sys.exit(27)
-    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build, DPLA = config()
     print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email,

@@ -6,7 +6,6 @@ from email.mime.text import MIMEText
 import tempfile
 import uuid
 import json
-import ConfigParser
 from collections import defaultdict
 from xml.etree import ElementTree as ET
 import urlparse
@@ -18,6 +17,7 @@ import logbook
 from logbook import FileHandler
 import solr
 from collection_registry_client import Collection
+import config
 from pymarc import MARCReader
 import dplaingestion.couch
 import pynux.utils
@@ -415,13 +415,12 @@ class HarvestController(object):
                    'source', 'language', 'relation', 'coverage', 'rights']
 
     def __init__(self, user_email, collection, profile_path=None,
-                 config_file='akara.ini'):
+                 config_file=None):
         self.user_email = user_email  # single or list
         self.collection = collection
         self.profile_path = profile_path
         self.config_file = config_file
-        self.config_dpla = ConfigParser.ConfigParser()
-        self.config_dpla.readfp(open(config_file))
+        self.config_dpla = config.config(config_file).DPLA
         self.couch_db_name = self.config_dpla.get("CouchDb", "ItemDatabase")
         if not self.couch_db_name:
             self.couch_db_name = 'ucldc'
