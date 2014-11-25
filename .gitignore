@@ -1,6 +1,6 @@
 profiles
 workspace
-venv
+venv*
 testenv
 logs
 akara.ini
