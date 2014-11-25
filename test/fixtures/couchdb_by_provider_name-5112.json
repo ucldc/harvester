@@ -1,0 +1,619 @@
+{
+  "rows": [
+    {
+      "doc": {
+        "@type": "ore:Aggregation",
+        "dataProvider": [
+          {
+            "name": "Coronado Local History Photograph and Map Collection",
+            "id": "5112",
+            "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+            "ingestType": "collection",
+            "title": "Coronado Local History Photograph and Map Collection",
+            "description": ""
+          },
+          "Coronado Public Library"
+        ],
+        "isShownAt": "http://www.coronado.ca.us/library/",
+        "sourceResource": {
+          "subject": [
+            {
+              "name": "Saratoga (Aircraft carrier)"
+            },
+            {
+              "name": "United States. Navy--Provisioning"
+            },
+            {
+              "name": "United States. Navy--Supplies and stores"
+            },
+            {
+              "name": "Destroyers Warships"
+            },
+            {
+              "name": "Coronado Local History Photograph and Map Collection"
+            }
+          ],
+          "@id": "http://dp.la/api/items/339bf3afbb9495e528490852e6433d71#sourceResource",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt7580382j",
+            "ccoron_176",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "title": "Saratoga refueling a Destroyer while at sea, 1930",
+          "date": {
+            "displayDate": "1930 August 26",
+            "end": "1930-08-26",
+            "begin": "1930-08-26"
+          },
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "creator": "U. S. Department of Defense",
+          "publisher": "Coronado Public Library",
+          "description": "Navy Destroyer USS Tarbell being refueled at sea by USS Saratoga, August 26 1930.",
+          "language": [
+            {
+              "name": "English",
+              "iso639_3": "eng"
+            }
+          ],
+          "format": [
+            "1 photograph : b 21 x 26 cm.",
+            "Jp2"
+          ],
+          "type": "image",
+          "rights": [
+            "Public domain",
+            "Material in the public domain. No restrictions on use."
+          ],
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "stateLocatedIn": [
+            {
+              "name": "California"
+            }
+          ]
+        },
+        "ingestDate": "2014-11-15T04:52:25.751986Z",
+        "aggregatedCHO": "#sourceResource",
+        "object": "fae0a58a3f8ac4efda5819fca55ed0d2",
+        "_rev": "2-acb3054436c73523f5017c27ae234a73",
+        "_id": "5112--http://ark.cdlib.org/ark:/13030/kt7580382j",
+        "@id": "http://dp.la/api/items/339bf3afbb9495e528490852e6433d71",
+        "id": "339bf3afbb9495e528490852e6433d71",
+        "admin": {
+          "valid_after_enrich": false,
+          "validation_message": "'object' is a required property"
+        },
+        "isShownBy": "http://content.cdlib.org/ark:/13030/kt7580382j/FILEID-1.172.38",
+        "ingestionSequence": 1,
+        "@context": "http://dp.la/api/items/context",
+        "ingestType": "item",
+        "originalRecord": {
+          "facet-onlineItems": "Items online",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt7580382j",
+            "ccoron_176",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "dateStamp": "2009-09-11",
+          "facet-type-tab": "image",
+          "facet-subject": [
+            "Saratoga (Aircraft carrier)",
+            "United States. Navy",
+            "United States. Navy",
+            "Destroyers Warships"
+          ],
+          "facet-decade": "1930s",
+          "facet-collection-title": "Coronado Local History Photograph and Map Collection",
+          "type": [
+            "image",
+            "Image",
+            "Photographs"
+          ],
+          "oac4-tab": "Items::image",
+          "iso-end-date": "1930:00:00",
+          "facet-azBrowse": "maps",
+          "facet-type": [
+            "Image",
+            "Photographs"
+          ],
+          "title": "Saratoga refueling a Destroyer while at sea, 1930.",
+          "facet-institution": "Coronado Public Library",
+          "sort-year": "1930",
+          "facet-oac-tab": "digital item",
+          "creator": "U. S. Department of Defense",
+          "relation-from": "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j|Coronado Local History Photograph and Map Collection",
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "year": "1930",
+          "sort-title": "saratoga refueling a destroyer while at sea 1930",
+          "campus": [],
+          "subject": [
+            "Saratoga (Aircraft carrier)",
+            "United States. Navy -- Provisioning",
+            "United States. Navy -- Supplies and stores",
+            "Destroyers Warships",
+            "Coronado Local History Photograph and Map Collection"
+          ],
+          "thumbnail": {
+            "src": "http://content.cdlib.org/ark:/13030/kt25803396/thumbnail",
+            "X": 151,
+            "Y": 120
+          },
+          "reference-image": {
+            "src": "http://content.cdlib.org/ark:/13030/kt7580382j/FILEID-1.172.38",
+            "X": 1024,
+            "Y": 812
+          },
+          "description": "Navy Destroyer USS Tarbell being refueled at sea by USS Saratoga, August 26 1930.",
+          "repository": [
+            {
+              "name": "Coronado Public Library",
+              "@id": "https://registry.cdlib.org/api/v1/repository/64/"
+            }
+          ],
+          "format": [
+            "1 photograph : b 21 x 26 cm.",
+            "jp2"
+          ],
+          "azBrowse": "maps",
+          "institution-doublelist": "C::Coronado Public Library",
+          "sort-creator": "Defense",
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "date": "1930 August 26",
+          "publisher": "Coronado Public Library",
+          "language": "eng",
+          "rights": [
+            "Public domain",
+            "Material in the public domain. No restrictions on use."
+          ],
+          "iso-start-date": "1930:00:00",
+          "institution-url": "http://www.coronado.ca.us/library/",
+          "facet-collection-order": "ark:/13030/kt4n39r09j::-1"
+        }
+      },
+      "value": "5112--http://ark.cdlib.org/ark:/13030/kt7580382j",
+      "key": "5112",
+      "id": "5112--http://ark.cdlib.org/ark:/13030/kt7580382j"
+    },
+    {
+      "doc": {
+        "@type": "ore:Aggregation",
+        "dataProvider": [
+          {
+            "name": "Coronado Local History Photograph and Map Collection",
+            "id": "5112",
+            "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+            "ingestType": "collection",
+            "title": "Coronado Local History Photograph and Map Collection",
+            "description": ""
+          },
+          "Coronado Public Library"
+        ],
+        "isShownAt": "http://www.coronado.ca.us/library/",
+        "sourceResource": {
+          "subject": [
+            {
+              "name": "Fire engine"
+            },
+            {
+              "name": "Mack trucks"
+            },
+            {
+              "name": "Coronado Local History Photograph and Map Collection"
+            }
+          ],
+          "@id": "http://dp.la/api/items/24bb19b808aa0d77e3a8389de76519e8#sourceResource",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt7779r8zj",
+            "ccoron_186",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "title": "Coronado Fire Department’s 1928 Mack quadruple combination fire engine parked at an unknown location, circa 1935",
+          "date": {
+            "displayDate": "circa 1935",
+            "end": "1935-01-01",
+            "begin": "1935-01-01"
+          },
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "creator": "Unknown",
+          "publisher": "Coronado Public Library",
+          "description": "This fire-fighting apparatus is a Mack quadruple combination, with 360-foot ladders, 1000-foot hose body, and 100-gallon booster tank and 750-gallon pump. The City of Coronado paid $13,400 for this fire engine in 1928.",
+          "language": [
+            {
+              "name": "English",
+              "iso639_3": "eng"
+            }
+          ],
+          "format": [
+            "1 photographic print : b 24 x 19 cm.",
+            "Jp2"
+          ],
+          "type": "image",
+          "rights": [
+            "Copyrighted",
+            "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",
+            "Consult owning institution"
+          ],
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "stateLocatedIn": [
+            {
+              "name": "California"
+            }
+          ]
+        },
+        "ingestDate": "2014-11-15T04:52:39.254022Z",
+        "aggregatedCHO": "#sourceResource",
+        "object": "f4edc93e06646508cd28f68f93ce1ca7",
+        "_rev": "2-cd3752f08f86da72016e7f6109ecd166",
+        "_id": "5112--http://ark.cdlib.org/ark:/13030/kt7779r8zj",
+        "@id": "http://dp.la/api/items/24bb19b808aa0d77e3a8389de76519e8",
+        "id": "24bb19b808aa0d77e3a8389de76519e8",
+        "admin": {
+          "valid_after_enrich": false,
+          "validation_message": "'object' is a required property"
+        },
+        "isShownBy": "http://content.cdlib.org/ark:/13030/kt7779r8zj/FILEID-1.186.38",
+        "ingestionSequence": 1,
+        "@context": "http://dp.la/api/items/context",
+        "ingestType": "item",
+        "originalRecord": {
+          "facet-onlineItems": "Items online",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt7779r8zj",
+            "ccoron_186",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "dateStamp": "2009-09-11",
+          "facet-type-tab": "image",
+          "facet-subject": [
+            "Fire engine",
+            "Mack trucks"
+          ],
+          "facet-decade": "1930s",
+          "facet-collection-title": "Coronado Local History Photograph and Map Collection",
+          "type": [
+            "image",
+            "Image",
+            "Photographs"
+          ],
+          "oac4-tab": "Items::image",
+          "iso-end-date": "1935:00:00",
+          "facet-azBrowse": "maps",
+          "facet-type": [
+            "Image",
+            "Photographs"
+          ],
+          "title": "Coronado Fire Department’s 1928 Mack quadruple combination fire engine parked at an unknown location, circa 1935",
+          "facet-institution": "Coronado Public Library",
+          "sort-year": "1935",
+          "facet-oac-tab": "digital item",
+          "creator": "Unknown",
+          "relation-from": "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j|Coronado Local History Photograph and Map Collection",
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "year": "1935",
+          "sort-title": "coronado fire departments 1928 mack quadruple combination fire engine parked at an unknown location circa 1935",
+          "campus": [],
+          "subject": [
+            "Fire engine",
+            "Mack trucks",
+            "Coronado Local History Photograph and Map Collection"
+          ],
+          "thumbnail": {
+            "src": "http://content.cdlib.org/ark:/13030/kt25803396/thumbnail",
+            "X": 152,
+            "Y": 120
+          },
+          "reference-image": {
+            "src": "http://content.cdlib.org/ark:/13030/kt7779r8zj/FILEID-1.186.38",
+            "X": 1024,
+            "Y": 804
+          },
+          "description": "This fire-fighting apparatus is a Mack quadruple combination, with 360-foot ladders, 1000-foot hose body, and 100-gallon booster tank and 750-gallon pump. The City of Coronado paid $13,400 for this fire engine in 1928.",
+          "repository": [
+            {
+              "name": "Coronado Public Library",
+              "@id": "https://registry.cdlib.org/api/v1/repository/64/"
+            }
+          ],
+          "format": [
+            "1 photographic print : b 24 x 19 cm.",
+            "jp2"
+          ],
+          "azBrowse": "maps",
+          "institution-doublelist": "C::Coronado Public Library",
+          "sort-creator": "Unknown",
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "date": "circa 1935",
+          "publisher": "Coronado Public Library",
+          "language": "eng",
+          "rights": [
+            "Copyrighted",
+            "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. In addition, the reproduction of some materials may be restricted by terms of gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",
+            "Consult owning institution"
+          ],
+          "iso-start-date": "1935:00:00",
+          "institution-url": "http://www.coronado.ca.us/library/",
+          "facet-collection-order": "ark:/13030/kt4n39r09j::-1"
+        }
+      },
+      "value": "5112--http://ark.cdlib.org/ark:/13030/kt7779r8zj",
+      "key": "5112",
+      "id": "5112--http://ark.cdlib.org/ark:/13030/kt7779r8zj"
+    },
+    {
+      "doc": {
+        "@type": "ore:Aggregation",
+        "dataProvider": [
+          {
+            "name": "Coronado Local History Photograph and Map Collection",
+            "id": "5112",
+            "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+            "ingestType": "collection",
+            "title": "Coronado Local History Photograph and Map Collection",
+            "description": ""
+          },
+          "Coronado Public Library"
+        ],
+        "isShownAt": "http://www.coronado.ca.us/library/",
+        "sourceResource": {
+          "subject": [
+            {
+              "name": "Saratoga (Aircraft carrier)"
+            },
+            {
+              "name": "Aircraft carriers"
+            },
+            {
+              "name": "Military aircraft"
+            },
+            {
+              "name": "Biplanes--1930-1940"
+            },
+            {
+              "name": "Coronado Local History Photograph and Map Collection"
+            }
+          ],
+          "@id": "http://dp.la/api/items/9da64cac987f51d57ff3cbec2950b3b8#sourceResource",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt9h4nf4h7",
+            "ccoron_177",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "title": "A bad landing on deck of the Saratoga, 1930",
+          "date": {
+            "displayDate": "1930 May 3",
+            "end": "1930-05-03",
+            "begin": "1930-05-03"
+          },
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "creator": "U. S. Department of Defense",
+          "publisher": "Coronado Public Library",
+          "description": "A damaged Navy Plane sits on the deck of the USS Saratoga, May 3 1930.",
+          "language": [
+            {
+              "name": "English",
+              "iso639_3": "eng"
+            }
+          ],
+          "format": [
+            "1 photograph : b 21 x 26 cm.",
+            "Jp2"
+          ],
+          "type": "image",
+          "rights": [
+            "Public domain",
+            "Material in the public domain. No restrictions on use."
+          ],
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "stateLocatedIn": [
+            {
+              "name": "California"
+            }
+          ]
+        },
+        "ingestDate": "2014-11-15T04:52:21.438539Z",
+        "aggregatedCHO": "#sourceResource",
+        "object": "c71f025cbcfbef4f739fac93bd4a8d92",
+        "_rev": "2-5758ac061a0e5af61d6ab953b13c723e",
+        "_id": "5112--http://ark.cdlib.org/ark:/13030/kt9h4nf4h7",
+        "@id": "http://dp.la/api/items/9da64cac987f51d57ff3cbec2950b3b8",
+        "id": "9da64cac987f51d57ff3cbec2950b3b8",
+        "admin": {
+          "valid_after_enrich": false,
+          "validation_message": "'object' is a required property"
+        },
+        "isShownBy": "http://content.cdlib.org/ark:/13030/kt9h4nf4h7/FILEID-1.173.38",
+        "ingestionSequence": 1,
+        "@context": "http://dp.la/api/items/context",
+        "ingestType": "item",
+        "originalRecord": {
+          "facet-onlineItems": "Items online",
+          "identifier": [
+            "http://ark.cdlib.org/ark:/13030/kt9h4nf4h7",
+            "ccoron_177",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/"
+          ],
+          "dateStamp": "2009-09-11",
+          "facet-type-tab": "image",
+          "facet-subject": [
+            "Saratoga (Aircraft carrier)",
+            "Aircraft carriers",
+            "Military aircraft",
+            "Biplanes"
+          ],
+          "facet-decade": "1930s",
+          "facet-collection-title": "Coronado Local History Photograph and Map Collection",
+          "type": [
+            "image",
+            "Image",
+            "Photographs"
+          ],
+          "oac4-tab": "Items::image",
+          "iso-end-date": "1930:00:00",
+          "facet-azBrowse": "maps",
+          "facet-type": [
+            "Image",
+            "Photographs"
+          ],
+          "title": "A bad landing on deck of the Saratoga, 1930.",
+          "facet-institution": "Coronado Public Library",
+          "sort-year": "1930",
+          "facet-oac-tab": "digital item",
+          "creator": "U. S. Department of Defense",
+          "relation-from": "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j|Coronado Local History Photograph and Map Collection",
+          "relation": [
+            "http://ark.cdlib.org/ark:/13030/kt4n39r09j",
+            "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+            "ark:/13030/kt25803396",
+            "http://www.coronado.ca.us/library/",
+            "http://oac.cdlib.org/",
+            "http://calisphere.universityofcalifornia.edu/"
+          ],
+          "year": "1930",
+          "sort-title": "bad landing on deck of the saratoga 1930",
+          "campus": [],
+          "subject": [
+            "Saratoga (Aircraft carrier)",
+            "Aircraft carriers",
+            "Military aircraft",
+            "Biplanes--1930-1940",
+            "Coronado Local History Photograph and Map Collection"
+          ],
+          "thumbnail": {
+            "src": "http://content.cdlib.org/ark:/13030/kt25803396/thumbnail",
+            "X": 157,
+            "Y": 120
+          },
+          "reference-image": {
+            "src": "http://content.cdlib.org/ark:/13030/kt9h4nf4h7/FILEID-1.173.38",
+            "X": 1024,
+            "Y": 779
+          },
+          "description": "A damaged Navy Plane sits on the deck of the USS Saratoga, May 3 1930.",
+          "repository": [
+            {
+              "name": "Coronado Public Library",
+              "@id": "https://registry.cdlib.org/api/v1/repository/64/"
+            }
+          ],
+          "format": [
+            "1 photograph : b 21 x 26 cm.",
+            "jp2"
+          ],
+          "azBrowse": "maps",
+          "institution-doublelist": "C::Coronado Public Library",
+          "sort-creator": "Defense",
+          "collection": [
+            {
+              "name": "Coronado Local History Photograph and Map Collection",
+              "id": "5112",
+              "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
+              "ingestType": "collection",
+              "title": "Coronado Local History Photograph and Map Collection",
+              "description": ""
+            }
+          ],
+          "date": "1930 May 3",
+          "publisher": "Coronado Public Library",
+          "language": "eng",
+          "rights": [
+            "Public domain",
+            "Material in the public domain. No restrictions on use."
+          ],
+          "iso-start-date": "1930:00:00",
+          "institution-url": "http://www.coronado.ca.us/library/",
+          "facet-collection-order": "ark:/13030/kt4n39r09j::-1"
+        }
+      },
+      "value": "5112--http://ark.cdlib.org/ark:/13030/kt9h4nf4h7",
+      "key": "5112",
+      "id": "5112--http://ark.cdlib.org/ark:/13030/kt9h4nf4h7"
+    }
+  ],
+  "offset": 170231,
+  "total_rows": 198621
+}
