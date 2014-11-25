@@ -7,4 +7,4 @@ export EMAIL_RETURN_ADDRESS=<addr>
 export URL_SOLR=<url to solr work instance>
 #NOTE: use aws configure for s3 access
 export EMAIL_SYS_ADMINS=<csv list of admin emails>
-export COUCHDB_URL=http://localhost:5984
+export DPLA_CONFIG_FILE=<abs path to akara.ini>
