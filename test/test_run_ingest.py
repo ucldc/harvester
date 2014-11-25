@@ -12,7 +12,7 @@ from test.utils import DIR_FIXTURES
 from harvester.collection_registry_client import Collection
 import harvester.fetcher as fetcher
 from harvester.fetcher import get_log_file_path
-from harvester.parse_env import parse_env
+from harvester.config import config
 import harvester.run_ingest as run_ingest
 
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
@@ -205,18 +205,21 @@ class LogFileNameTestCase(TestCase):
         self.assertTrue(re.match('test/log/dir/harvester-test_collection_slug-\d{8}-\d{6}-.log', n))
 
 
-class ParseEnvTestCase(TestCase):
-    '''test the environment variable parsing'''
+class ConfigTestCase(TestCase):
+    '''test the environment variable parsing and confg file init'''
     def setUp(self):
-        self.rpwd = self.ec2ingest = self.ec2solr = None
+        self.rpwd = self.rhost = self.ec2ingest = self.ec2solr = None
         if 'REDIS_PASSWORD' in os.environ:
             self.rpwd = os.environ['REDIS_PASSWORD']
             del os.environ['REDIS_PASSWORD']
+        if 'REDIS_HOST' in os.environ:
+            self.rhost = os.environ['REDIS_HOST']
+            del os.environ['REDIS_HOST']
         if 'ID_EC2_INGEST' in os.environ:
             self.ec2ingest = os.environ['ID_EC2_INGEST']
             del os.environ['ID_EC2_INGEST']
         if 'ID_EC2_SOLR_BUILD' in os.environ:
-            self.ec2ingest = os.environ['ID_EC2_SOLR_BUILD']
+            self.ec2solr = os.environ['ID_EC2_SOLR_BUILD']
             del os.environ['ID_EC2_SOLR_BUILD']
 
     def tearDown(self):
@@ -225,6 +228,8 @@ class ParseEnvTestCase(TestCase):
             os.environ['REDIS_PASSWORD'] = self.rpwd
         else:
             del os.environ['REDIS_PASSWORD']
+        if self.rhost:
+            os.environ['REDIS_HOST'] = self.rhost
         if self.ec2ingest:
             os.environ['ID_EC2_INGEST'] = self.ec2ingest
         else:
@@ -234,20 +239,20 @@ class ParseEnvTestCase(TestCase):
         else:
             del os.environ['ID_EC2_SOLR_BUILD']
 
-    def testParseEnv(self):
+    def testConfig(self):
         with self.assertRaises(KeyError) as cm:
-            parse_env()
-        self.assertEqual(cm.exception.message, 'Please set environment variable REDIS_PASSWORD to redis password!')
+            config()
+        self.assertEqual(str(cm.exception.message), 'Please set environment variable REDIS_PASSWORD to redis password!')
         os.environ['REDIS_PASSWORD'] = 'XX'
         with self.assertRaises(KeyError) as cm:
-            parse_env()
+            config()
         self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
         os.environ['ID_EC2_INGEST'] = 'INGEST'
         with self.assertRaises(KeyError) as cm:
-            parse_env()
+            config()
         self.assertEqual(cm.exception.message, 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
-        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+        redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build, DPLA = config()
         self.assertEqual(redis_host, '127.0.0.1')
         self.assertEqual(redis_port, '6379')
         self.assertEqual(redis_pswd, 'XX')

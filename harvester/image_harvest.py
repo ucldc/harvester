@@ -9,10 +9,10 @@ import datetime
 import time
 import md5s3stash
 import couchdb
+from harvester.config import config
 
+HARVEST_CONFIG = config()
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
-COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://127.0.0.1:5984')
-COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
@@ -21,7 +21,8 @@ URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
 class ImageHarvester(object):
     '''Useful to cache couchdb, authentication info and such'''
     def __init__(self, cdb=None,
-                 url_couchdb=COUCHDB_URL, couchdb_name=COUCHDB_DB,
+                 url_couchdb=HARVEST_CONFIG.DPLA.get("CouchDb", "Server"),
+                 couchdb_name=HARVEST_CONFIG.DPLA.get("CouchDb", "ItemDatabase"),
                  couch_view=COUCHDB_VIEW,
                  bucket_base=BUCKET_BASE,
                  object_auth=None):
@@ -106,7 +107,10 @@ class ImageHarvester(object):
         return doc_ids
 
 
-def main(collection_key=None, url_couchdb=COUCHDB_URL, object_auth=None):
+def main(collection_key=None,
+         url_couchdb=HARVEST_CONFIG.DPLA.get("CouchDb", "Server"),
+         object_auth=None):
+    print("COUCHDB_url: {0}".format(url_couchdb))
     print(ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth).by_collection(collection_key))
 

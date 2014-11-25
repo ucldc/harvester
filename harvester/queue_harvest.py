@@ -10,7 +10,7 @@ from rq import Queue
 import boto.ec2
 
 import harvester.run_ingest
-from harvester.parse_env import parse_env
+from harvester.config import config
 
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         raise Exception('Need to pass in user email and collection api URL')
-    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build = parse_env()
+    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build, DPLA = config()
     main(args.user_email, args.url_api_collection.strip(),
          redis_host=redis_host,
          redis_port=redis_port,
