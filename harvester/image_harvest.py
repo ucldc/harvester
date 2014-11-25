@@ -11,7 +11,6 @@ import md5s3stash
 import couchdb
 from harvester.config import config
 
-HARVEST_CONFIG = config()
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
@@ -21,14 +20,19 @@ URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
 class ImageHarvester(object):
     '''Useful to cache couchdb, authentication info and such'''
     def __init__(self, cdb=None,
-                 url_couchdb=HARVEST_CONFIG.DPLA.get("CouchDb", "Server"),
-                 couchdb_name=HARVEST_CONFIG.DPLA.get("CouchDb", "ItemDatabase"),
+                 url_couchdb=None,
+                 couchdb_name=None,
                  couch_view=COUCHDB_VIEW,
                  bucket_base=BUCKET_BASE,
                  object_auth=None):
         if cdb:
             self._couchdb = cdb
         else:
+            cfg = config()
+            if not url_couchdb:
+                url_couchdb = cfg.DPLA.get("CouchDb", "Server"),
+            if not couchdb_name:
+                couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase"),
             self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
         self._bucket_base = bucket_base
         self._view = couch_view
@@ -41,7 +45,7 @@ class ImageHarvester(object):
         try:
             url_image = doc['isShownBy']
             if not url_image:
-                raise ValueError("isShownBy is blank for {0}".format(doc['_id']))
+                raise ValueError("isShownBy empty for {0}".format(doc['_id']))
         except KeyError, e:
             raise KeyError("isShownBy missing for {0}".format(doc['_id']))
         # for some OAC objects, the reference image is not a url but a path.
@@ -91,9 +95,11 @@ class ImageHarvester(object):
         '''If collection_key is none, trying to grab all of the images. (Not
         recommended)
         '''
-        v = self._couchdb.view(self._view, include_docs='true',
-                               key=collection_key) if collection_key else \
-                               self._couchdb.view(self._view, include_docs='true')
+        if collection_key:
+            v = self._couchdb.view(self._view, include_docs='true',
+                                   key=collection_key)
+        else:
+            v = self._couchdb.view(self._view, include_docs='true')
         doc_ids = []
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
@@ -105,9 +111,8 @@ class ImageHarvester(object):
 
 
 def main(collection_key=None,
-         url_couchdb=HARVEST_CONFIG.DPLA.get("CouchDb", "Server"),
+         url_couchdb=None,
          object_auth=None):
-    print("COUCHDB_url: {0}".format(url_couchdb))
     print(ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth).by_collection(collection_key))
 
