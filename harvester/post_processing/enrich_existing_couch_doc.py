@@ -1,5 +1,6 @@
 import httplib
 import json
+import couchdb
 from harvester.config import config
 
 def _get_source(doc):
@@ -47,9 +48,21 @@ def _update_doc(doc, newdoc):
     doc.update(newdoc)
     return doc
 
+# NOTE: the enrichment must include one that selects the _id from data
+# data should already have the "collection" data in originalRecord
 def akara_enrich_doc(doc, enrichment, port=8889):
     '''Enrich a doc that already exists in couch
     gets passed document, enrichment string, akara port.
     '''
     newdoc = _get_enriched_doc(doc, enrichment, port)
     return _update_doc(doc, newdoc)
+
+def main(doc_id, enrichment, port=8889):
+    '''Run akara_enrich_doc for one document and save result'''
+    _config = config()
+    url_couchdb = _config.DPLA.get("CouchDb", "Server")
+    couchdb_name = _config.DPLA.get("CouchDb", "ItemDatabase")
+    _couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+    indoc = _couchdb.get(doc_id)
+    doc = akara_enrich_doc(indoc, enrichment, port)
+    _couchdb[doc_id] = doc

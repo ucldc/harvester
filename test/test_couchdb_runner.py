@@ -99,6 +99,6 @@ class CouchDBJobEnqueueTestCase(TestCase):
         results = self._cdbrunner.queue_collection('5112', 6000, self.function,
                 'arg1', 'arg2', kwarg1='1', kwarg2=2)
         self.assertEqual(len(results), 3)
-        self.assertEqual(results[0].args, ('arg1', 'arg2'))
+        self.assertEqual(results[0].args, ('5112--http://ark.cdlib.org/ark:/13030/kt7580382j', 'arg1', 'arg2'))
         self.assertEqual(results[0].kwargs, {'kwarg1': '1', 'kwarg2': 2})
         self.assertEqual(results[0].func_name, 'test.test_couchdb_runner.func_for_test')

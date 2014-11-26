@@ -88,7 +88,6 @@ class CouchDBJobEnqueue(object):
         url_couchdb = self._config.DPLA.get("CouchDb", "Server")
         couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
         self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
-        print('REDIS TYPE:{}'.format(Redis))
         self._redis = Redis(host=self._config.redis_host,
                             port=self._config.redis_port,
                             password=self._config.redis_pswd,
@@ -100,21 +99,25 @@ class CouchDBJobEnqueue(object):
         '''Queue a job in the RQ queue for each document in the collection.
         func is function to run and it must be accessible from the
         rq worker's virtualenv.
+        func signature is func(doc_id, args, kwargs)
+        Can't pass the document in because it all gets converted to a string
+        and put into the RQ queue. Much easier to pass id and have worker deal
+        with couchdb directly.
         '''
         v = CouchDBCollectionFilter(couchdb_obj=self._couchdb,
                                     collection_key=collection_key)
         results = []
         for r in v:
             doc = r.doc
+            this_args = [doc['_id']]
+            if args:
+                this_args.extend(args)
+            this_args = tuple(this_args)
+            print('Enqueing doc {} args: {} kwargs:{}'.format(doc['_id'],
+                this_args, kwargs))
             result = self._rQ.enqueue_call(func=func,
-                                     args=args,
+                                     args=this_args,
                                      kwargs=kwargs,
                                      timeout=job_timeout)
             results.append(result)
         return results
-
-
-def run_akara_erichment(doc, enrichment=None):
-    '''run a single akara enrichment on the doc
-    Not sure where the best place to save the doc wille be'''
-    pass
