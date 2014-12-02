@@ -30,9 +30,9 @@ class ImageHarvester(object):
         else:
             cfg = config()
             if not url_couchdb:
-                url_couchdb = cfg.DPLA.get("CouchDb", "Server"),
+                url_couchdb = cfg.DPLA.get("CouchDb", "Server")
             if not couchdb_name:
-                couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase"),
+                couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
             self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
         self._bucket_base = bucket_base
         self._view = couch_view
@@ -120,6 +120,18 @@ def main(collection_key=None,
                          object_auth=object_auth).by_collection(collection_key))
 
 if __name__ == '__main__':
-    main(collection_key='lapl-photos-marc')
-    # main(collection_key='uchida-yoshiko-photograph-collection')
-    # main(collection_key='1934-international-longshoremens-association-and-g')
+    import argparse
+    parser = argparse.ArgumentParser(
+            description='Run the image harvesting on a collection')
+    parser.add_argument('collection_key', help='Registry collection id')
+    parser.add_argument('--object_auth', nargs='?',
+            help='HTTP Auth needed to download images - username:password')
+    parser.add_argument('--url_couchdb', nargs='?',
+            help='Override url to couchdb')
+    args = parser.parse_args()
+    print(args)
+    object_auth=None
+    if args.object_auth:
+        object_auth = (args.object_auth.split(':')[0],
+                args.object_auth.split(':')[1])
+    main(args.collection_key, object_auth=object_auth, url_couchdb=args.url_couchdb)
