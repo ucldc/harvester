@@ -1,5 +1,6 @@
 import httplib
 import json
+import argparse
 import couchdb
 from harvester.config import config
 
@@ -66,3 +67,13 @@ def main(doc_id, enrichment, port=8889):
     indoc = _couchdb.get(doc_id)
     doc = akara_enrich_doc(indoc, enrichment, port)
     _couchdb[doc_id] = doc
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(
+            description='Run enrichments on couchdb document')
+    parser.add_argument('doc_id', help='couchdb document _id')
+    parser.add_argument('enrichment',
+            help='Comma separated string of akara enrichments to run. \
+                    Must include enrichment to select id.')
+    args = parser.parse_args()
+    main(args.doc_id, args.enrichment)
