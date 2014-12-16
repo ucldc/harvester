@@ -1,3 +1,5 @@
+from __future__ import print_function
+import sys
 import httplib
 import json
 import argparse
@@ -24,7 +26,7 @@ def _get_enriched_doc(doc, enrichment, port):
     headers = {
             "Source": source,
             "Content-Type": "application/json",
-            "Pipeline-item": enrichment,
+            "Pipeline-item": enrichment.replace('\n',''),
             }
     conn.request("POST", "/enrich", json.dumps([doc['originalRecord']]), headers)
     resp = conn.getresponse()
@@ -34,6 +36,8 @@ def _get_enriched_doc(doc, enrichment, port):
                                 resp.status, doc['_id']))
     data = json.loads(resp.read())
     # there should only be one
+    print(data['enriched_records'])
+    print(data)
     assert(len(data['enriched_records'].keys()) == 1)
     return data['enriched_records'][data['enriched_records'].keys()[0]]
 
