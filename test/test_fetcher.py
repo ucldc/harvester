@@ -670,6 +670,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('src', obj['thumbnail'])
         self.assertEqual('http://content.cdlib.org/ark:/13030/kt40000501/thumbnail', obj['thumbnail']['src'])
         self.assertIsInstance(obj['publisher'], str)
+        self.assertEqual(obj['date'], ['7/21/42', '7/21/72'])
 
     def testDocHitsToObjsetBadImageData(self):
         '''Check when the X & Y for thumbnail or reference image is not an
