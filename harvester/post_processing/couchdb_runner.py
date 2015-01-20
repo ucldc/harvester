@@ -49,7 +49,7 @@ class CouchDBWorker(object):
     '''
     def __init__(self):
         self._config = config()
-        url_couchdb = self._config.DPLA.get("CouchDb", "Server")
+        url_couchdb = self._config.DPLA.get("CouchDb", "URL")
         couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
         self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
 

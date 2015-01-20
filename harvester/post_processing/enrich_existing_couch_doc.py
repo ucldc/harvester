@@ -65,7 +65,7 @@ def akara_enrich_doc(doc, enrichment, port=8889):
 def main(doc_id, enrichment, port=8889):
     '''Run akara_enrich_doc for one document and save result'''
     _config = config()
-    url_couchdb = _config.DPLA.get("CouchDb", "Server")
+    url_couchdb = _config.DPLA.get("CouchDb", "URL")
     couchdb_name = _config.DPLA.get("CouchDb", "ItemDatabase")
     _couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
     indoc = _couchdb.get(doc_id)

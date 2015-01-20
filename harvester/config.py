@@ -9,7 +9,7 @@ import os
 from collections import namedtuple
 import ConfigParser
 
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = '10.0.0.68'
 REDIS_PORT = '6379'
 DPLA_CONFIG_FILE = 'akara.ini'
 

@@ -120,7 +120,7 @@ def main(user_email, url_api_collection, log_handler=None,
         logger.error("Error cleaning up dashboard {0}".format(resp))
         raise Exception("Error cleaning up dashboard {0}".format(resp))
 
-    url_couchdb = harvester.config_dpla.get("CouchDb", "Server")
+    url_couchdb = harvester.config_dpla.get("CouchDb", "URL")
     # the image_harvest should be a separate job, with a long timeout
     job = queue_image_harvest(config.redis_host, config.redis_port,
                               config.redis_pswd, config.redis_timeout,

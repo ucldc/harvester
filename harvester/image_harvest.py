@@ -30,7 +30,7 @@ class ImageHarvester(object):
         else:
             cfg = config()
             if not url_couchdb:
-                url_couchdb = cfg.DPLA.get("CouchDb", "Server")
+                url_couchdb = cfg.DPLA.get("CouchDb", "URL")
             if not couchdb_name:
                 couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
             self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
