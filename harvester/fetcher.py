@@ -50,8 +50,12 @@ class OAIFetcher(Fetcher):
         super(OAIFetcher, self).__init__(url_harvest, extra_data)
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
-        self.records = self.oai_client.ListRecords(set=extra_data,
-                                                   metadataPrefix='oai_dc')
+        if extra_data: # extra data is set spec
+            self.records = self.oai_client.ListRecords(metadataPrefix='oai_dc',
+                                                    set=extra_data)
+        else:
+            self.records = self.oai_client.ListRecords(metadataPrefix='oai_dc')
+
 
     def next(self):
         '''return a record iterator? then outside layer is a controller,
