@@ -659,7 +659,8 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     logger.info('Create DPLA profile document')
     if not profile_path:
         profile_path = os.path.abspath(
-            os.path.join(dir_profile, collection.slug+'.pjs'))
+            os.path.join(dir_profile, collection.id+'.pjs'))
+            #os.path.join(dir_profile, collection.slug+'.pjs'))
     with codecs.open(profile_path, 'w', 'utf8') as pfoo:
         pfoo.write(collection.dpla_profile)
     logger.info('DPLA profile document : '+profile_path)

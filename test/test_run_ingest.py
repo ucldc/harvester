@@ -142,7 +142,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[3])
         c = Collection('https://registry.cdlib.org/api/v1/collection/197/')
         os.remove(os.path.abspath(os.path.join(
-                  self.dir_test_profile, c.slug+'.pjs')))
+                  self.dir_test_profile, c.id+'.pjs')))
+                  #self.dir_test_profile, c.slug+'.pjs')))
 
     @httpretty.activate
     @patch('harvester.fetcher.HarvestController.harvest',
@@ -266,6 +267,7 @@ class ConfigTestCase(TestCase):
             config(redis_required=True)
         self.assertEqual(str(cm.exception.message),
                 'Please set environment variable REDIS_PASSWORD to redis password!')
+        os.environ['REDIS_HOST'] = 'redis_host_ip'
         os.environ['REDIS_PASSWORD'] = 'XX'
         with self.assertRaises(KeyError) as cm:
             config(redis_required=True, ec2_required=True)
@@ -279,7 +281,7 @@ class ConfigTestCase(TestCase):
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
         redis_host, redis_port, redis_pswd, redis_connect_timeout, \
             id_ec2_ingest, id_ec2_solr_build, DPLA = config()
-        self.assertEqual(redis_host, '127.0.0.1')
+        self.assertEqual(redis_host, 'redis_host_ip')
         self.assertEqual(redis_port, '6379')
         self.assertEqual(redis_pswd, 'XX')
         self.assertEqual(redis_connect_timeout, 10)

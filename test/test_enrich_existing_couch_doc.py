@@ -32,7 +32,7 @@ class EnrichExistingCouchDocTestCase(TestCase):
         for enrichment and then saves the resulting document.
         '''
         conf = config()
-        self.url_couch_base = conf.DPLA.get('CouchDb', 'Server')
+        self.url_couch_base = conf.DPLA.get('CouchDb', 'URL')
         self.cdb = conf.DPLA.get('CouchDb', 'ItemDatabase')
         url_couchdb = os.path.join(self.url_couch_base, self.cdb)
         httpretty.register_uri(httpretty.HEAD,
