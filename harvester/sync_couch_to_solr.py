@@ -7,10 +7,11 @@ import solr
 import couchdb
 from solr import SolrException
 from solr_updater import map_couch_to_solr_doc, push_doc_to_solr
-from solr_updater import URL_SOLR
-from solr_updater import URL_COUCHDB, COUCHDB_DB
 from harvester.couchdb_pager import couchdb_pager
 
+URL_SOLR = os.environ.get('URL_SOLR', None)
+URL_COUCHDB = os.environ.get('URL_COUCHDB', 'http://localhost:5984')
+COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 
 def main(url_solr=URL_SOLR, url_couchdb=URL_COUCHDB, couchdb_db=COUCHDB_DB):
     solr_db = solr.Solr(url_solr)
@@ -21,21 +22,35 @@ def main(url_solr=URL_SOLR, url_couchdb=URL_COUCHDB, couchdb_db=COUCHDB_DB):
     for r in v:
         doc_couch = r.doc
         if '_design' not in doc_couch['_id']:
-            if not isinstance(doc_couch['originalRecord']['collection'], list):
-                doc_couch['originalRecord']['collection'] = [
-                                doc_couch['originalRecord']['collection'],
-                                ]
-                print("orgRec.Collection: {}".format(doc_couch['sourceResource']['collection']))
-            if not isinstance(doc_couch['sourceResource']['collection'], list):
-                doc_couch['sourceResource']['collection'] = [
-                                doc_couch['sourceResource']['collection'],
-                                ]
-                print("srcRes.Collection: {}".format(doc_couch['sourceResource']['subject']))
-            if not isinstance(doc_couch['sourceResource'].get('subject', [{},])[0], dict):
-                doc_couch['sourceResource']['subject'] = [{'name': x} for x in
-                                doc_couch['sourceResource']['subject']
-                                ]
-                print("srcRes.subject: {}".format(doc_couch['sourceResource'].get('subject', None)))
+            try:
+                if not isinstance(doc_couch['originalRecord']['collection'], list):
+                    doc_couch['originalRecord']['collection'] = [
+                                    doc_couch['originalRecord']['collection'],
+                                    ]
+                    print("orgRec.Collection: {}".format(doc_couch['sourceResource']['collection']))
+            except KeyError:
+                pass
+            try:
+                if not isinstance(doc_couch['sourceResource']['collection'], list):
+                    doc_couch['sourceResource']['collection'] = [
+                                    doc_couch['sourceResource']['collection'],
+                                    ]
+                    print("srcRes.Collection: {}".format(doc_couch['sourceResource']['subject']))
+            except KeyError:
+                pass
+            try:
+                subject = doc_couch['sourceResource'].get('subject', None)
+                if not isinstance(subject, list):
+                    subject = [subject]
+                subjects_norm = []
+                for sub in subject:
+                    if not isinstance(sub, dict):
+                        subjects_norm.append({'name': sub})
+                    else:
+                        subjects_norm.append(sub)
+                doc_couch['sourceResource']['subject'] = subjects_norm
+            except KeyError:
+                pass
             db.save(doc_couch)
             try:
                 doc_solr = push_doc_to_solr(map_couch_to_solr_doc(doc_couch),
