@@ -7,7 +7,8 @@ def dedup_sourceresource(doc):
     Values must be *exactly* the same
     '''
     for key, value in doc['sourceResource'].items():
-        if not isinstance(value, basestring):
+        if isinstance(value, list):
+            # can't use set() because of dict values (non-hashable)
             new_list = []
             for item in value:
                 if item not in new_list:
