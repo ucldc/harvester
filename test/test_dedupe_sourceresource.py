@@ -2,7 +2,7 @@ from unittest import TestCase
 import json
 from test.utils import DIR_FIXTURES
 
-from harvester.post_processing import dedup_sourceresource
+from harvester.post_processing import dedupe_sourceresource
 
 class DeduperTestCase(TestCase):
     def setUp(self):
@@ -11,15 +11,15 @@ class DeduperTestCase(TestCase):
         self.reference_doc = json.loads(
                 open(self.path_to_test_doc).read())
 
-    def test_dedup(self):
-        ''' Test that the de-duplication function returns a dedup'd
+    def test_dedupe(self):
+        ''' Test that the de-duplication function returns a dedupe'd
         document
         '''
         doc_with_dups = json.loads(
                 open(self.path_to_test_doc).read())
         self.assertEqual(len(doc_with_dups['sourceResource']['relation']), 11)
         self.assertEqual(len(doc_with_dups['sourceResource']['subject']), 7)
-        new_doc = dedup_sourceresource.dedup_sourceresource(doc_with_dups)
+        new_doc = dedupe_sourceresource.dedupe_sourceresource(doc_with_dups)
         # make sure other stuff didn't change
         self.assertEqual(self.reference_doc['originalRecord'],
                 new_doc['originalRecord'])

@@ -1,7 +1,7 @@
 # pass in a Couchdb doc, get back one with de-duplicated sourceResource values
 
 
-def dedup_sourceresource(doc):
+def dedupe_sourceresource(doc):
     ''' Look for duplicate values in the doc['sourceResource'] and 
     remove.
     Values must be *exactly* the same
