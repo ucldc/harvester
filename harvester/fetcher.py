@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+import time
 import codecs
 from email.mime.text import MIMEText
 import tempfile
@@ -21,6 +22,7 @@ import config
 from pymarc import MARCReader
 import dplaingestion.couch
 import pynux.utils
+from urllib3.exceptions import DecodeError
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -284,7 +286,19 @@ class OAC_XML_Fetcher(Fetcher):
     def _get_next_result_set(self):
         '''get the next result set
         Return the facet element, only one were interested in'''
-        resp = requests.get(self._url_current)
+        n_tries = 0
+        pause = 5 
+        while True:
+            try:
+                resp = requests.get(self._url_current)
+                break
+            except DecodeError, e:
+                n_tries += 1
+                if n_tries > 5:
+                    raise e
+                #backoff
+                time.sleep(pause)
+                pause = pause*2
         resp.encoding = 'utf-8'  # thinks it's ISO-8859-1
         crossQueryResult = ET.fromstring(resp.text.encode('utf-8'))
         return crossQueryResult.find('facet')

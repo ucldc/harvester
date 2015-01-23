@@ -6,12 +6,13 @@ from xml.etree import ElementTree as ET
 import json
 import solr
 import httpretty
-from mock import patch
+from mock import patch, call
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES, TEST_COUCH_DASHBOARD, TEST_COUCH_DB
 import harvester.fetcher as fetcher
 from harvester.collection_registry_client import Collection
 import pynux.utils
+from urllib3.exceptions import DecodeError
 
 class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
@@ -715,6 +716,21 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
+    @patch('requests.get', side_effect=DecodeError())
+    @patch('time.sleep')
+    def testDecodeErrorHandling(self, mock_sleep, mock_get):
+        '''Test that the requests download tries 5 times if 
+        it gets a DecodeError when decoding the gzip'd content.
+        This occaisionally crops up when harvesting from OAC
+        '''
+        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
+        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
+                                   call('http://bogus&docsPerPage=100'),
+                                   call('http://bogus&docsPerPage=100'),
+                                   call('http://bogus&docsPerPage=100'),
+                                   call('http://bogus&docsPerPage=100'),
+                                   call('http://bogus&docsPerPage=100')]
+                                  )
 
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
