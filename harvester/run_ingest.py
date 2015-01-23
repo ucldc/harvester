@@ -57,7 +57,7 @@ def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
 def main(user_email, url_api_collection, log_handler=None,
          mail_handler=None, dir_profile='profiles', profile_path=None,
          config_file='akara.ini', redis_host=None, redis_port=None,
-         redis_pswd=None, redis_timeout=6000):
+         redis_pswd=None, redis_timeout=600):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
     if EMAIL_SYS_ADMIN:

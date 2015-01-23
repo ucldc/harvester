@@ -55,7 +55,7 @@ def def_args():
 
 def main(user_email, url_api_collection, redis_host=None, redis_port=None,
          redis_pswd=None, id_ec2_ingest=None, id_ec2_solr=None,
-         timeout=None, poll_interval=20, job_timeout=600):
+         timeout=None, poll_interval=20, job_timeout=10800): # 3 hrs
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else \
                  datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):

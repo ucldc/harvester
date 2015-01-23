@@ -30,4 +30,5 @@ pip install -r requirements.txt
 %%%
     exit 13;
 fi
-python harvester/queue_harvest.py --job_timeout=6000 ${@:1}
+# 3hr timeout = 10800 secs
+python harvester/queue_harvest.py --job_timeout=10800 ${@:1}
