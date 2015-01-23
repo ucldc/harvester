@@ -102,6 +102,12 @@ def get_couchdb_last_seq():
 
 
 def main(url_couchdb=None, dbname=None, url_solr=None):
+    '''Use the _changes feed with a "since" parameter to only catch new 
+    changes to docs. The _changes feed will only have the *last* event on
+    a document and does not retain intermediate changes.
+    Setting the "since" to 0 will result in getting a _changes record for 
+    each document, essentially dumping the db to solr
+    '''
     server = Server(url_couchdb)
     db = server[dbname]
     since = get_couchdb_last_seq()
@@ -131,10 +137,6 @@ def main(url_couchdb=None, dbname=None, url_solr=None):
                 continue
         n_up += 1
     solr_db.commit() #commit updates
-    if (since + n_up + n_design) < last_seq:
-        print("OVERRIDING LAST SEQ. LAST SEQ:{0} SINCE:{1} NUP:{2} \
-        NTOT:{3}".format(last_seq, since, n_up+n_design, since+n_up+n_design))
-        last_seq = since + n_up + n_design  # can redo updates, safer if errs
     set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
     print("Last SEQ:{0}".format(last_seq))
