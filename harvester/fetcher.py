@@ -22,7 +22,7 @@ import config
 from pymarc import MARCReader
 import dplaingestion.couch
 import pynux.utils
-from urllib3.exceptions import DecodeError
+from requests.packages.urllib3.exceptions import DecodeError
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
