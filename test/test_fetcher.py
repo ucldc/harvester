@@ -12,7 +12,7 @@ from test.utils import DIR_FIXTURES, TEST_COUCH_DASHBOARD, TEST_COUCH_DB
 import harvester.fetcher as fetcher
 from harvester.collection_registry_client import Collection
 import pynux.utils
-from urllib3.exceptions import DecodeError
+from requests.packages.urllib3.exceptions import DecodeError
 
 class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''

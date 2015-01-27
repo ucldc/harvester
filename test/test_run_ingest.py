@@ -333,6 +333,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
                 mail_handler=mail_handler)
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')
         mock_enrich.assert_called_with([None, 'test-id'])
-        self.assertEqual(len(self.test_log_handler.records), 15)
-        self.assertEqual(self.test_log_handler.formatted_records[14],
-            u'[INFO] run_ingest: Started job for image_harvest:RQ-result!')
+        self.assertEqual(len(self.test_log_handler.records), 14)
+        # no longer run image_harvest by default
+        #self.assertEqual(self.test_log_handler.formatted_records[14],
+        #    u'[INFO] run_ingest: Started job for image_harvest:RQ-result!')
