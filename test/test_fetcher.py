@@ -652,7 +652,8 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         docHits = ET.parse(open(DIR_FIXTURES+'/docHit.xml')).getroot()
         objset = self.fetcher._docHits_to_objset([docHits])
         obj = objset[0]
-        self.assertEqual(obj['relation'][0], 'http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134')
+        self.assertEqual(obj['relation'][0], {'attrib':{},
+            'text':'http://www.oac.cdlib.org/findaid/ark:/13030/tf0c600134'})
         self.assertIsInstance(obj['relation'], list)
         self.assertIsNone(obj.get('google_analytics_tracking_code'))
         self.assertIsInstance(obj['reference-image'][0], dict)
@@ -670,8 +671,10 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(93, obj['thumbnail']['Y'])
         self.assertIn('src', obj['thumbnail'])
         self.assertEqual('http://content.cdlib.org/ark:/13030/kt40000501/thumbnail', obj['thumbnail']['src'])
-        self.assertIsInstance(obj['publisher'], str)
-        self.assertEqual(obj['date'], ['7/21/42', '7/21/72'])
+        self.assertIsInstance(obj['publisher'][0], dict)
+        self.assertEqual(obj['date'], [
+            {'attrib':{'q':'created'}, 'text':'7/21/42'},
+            {'attrib':{'q':'published'}, 'text':'7/21/72'}])
 
     def testDocHitsToObjsetBadImageData(self):
         '''Check when the X & Y for thumbnail or reference image is not an
@@ -691,7 +694,9 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         docHit = ET.parse(open(DIR_FIXTURES+'/testOAC-blank-value.xml')).getroot()
         objset = self.fetcher._docHits_to_objset([docHit])
         obj = objset[0]
-        self.assertEqual(obj['title'], 'Main Street, Cisko Placer Co. [California]. Popular American Scenery.')
+        self.assertEqual(obj['title'], [
+            {'attrib':{},
+             'text':'Main Street, Cisko Placer Co. [California]. Popular American Scenery.'}])
 
     @httpretty.activate
     def testFetchOnePage(self):

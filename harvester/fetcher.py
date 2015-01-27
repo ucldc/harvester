@@ -244,6 +244,7 @@ class OAC_XML_Fetcher(Fetcher):
                             'Y': y,
                             'src': src,
                             }
+                    obj[t.tag].append(data)
                 elif t.tag == 'thumbnail':
                     try:
                         x = int(t.attrib['X'])
@@ -259,17 +260,16 @@ class OAC_XML_Fetcher(Fetcher):
                             'Y': y,
                             'src': src,
                             }
+                    obj[t.tag] = data
                 elif len(list(t)) > 0:
                     # <snippet> tag breaks up text for findaid <relation>
                     for innertext in t.itertext():
                         data = ''.join((data, innertext.strip()))
+                    if data: 
+                        obj[t.tag].append({'attrib':t.attrib, 'text':data})
                 else:
-                    data = t.text
-                if data: #don't add blank ones
-                    obj[t.tag].append(data)
-            for key, value in obj.items():
-                if len(value) == 1:
-                    obj[key] = value[0]  # de list non-duplicate  tags
+                    if t.text: #don't add blank ones
+                        obj[t.tag].append({'attrib':t.attrib, 'text':t.text})
             objset.append(obj)
         return objset
 
