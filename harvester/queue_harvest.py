@@ -50,12 +50,17 @@ def def_args():
                         help='URL for the collection Django tastypie api resource')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
                         help='Timeout for the RQ job')
+    parser.add_argument('--run_image_harvest', type=bool, default=False,
+            help='Run image harvest set: --run_image_harvest=True to run')
     return parser
 
 
-def main(user_email, url_api_collection, redis_host=None, redis_port=None,
-         redis_pswd=None, id_ec2_ingest=None, id_ec2_solr=None,
-         timeout=None, poll_interval=20, job_timeout=10800): # 3 hrs
+def main(user_email, url_api_collection,
+        redis_host=None, redis_port=None, redis_pswd=None,
+        id_ec2_ingest=None, id_ec2_solr=None,
+        timeout=None, poll_interval=20,
+        job_timeout=10800, # 3 hrs
+        run_image_harvest=False):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else \
                  datetime.timedelta(seconds=TIMEOUT)
     if not check_redis_queue(redis_host, redis_port, redis_pswd):
@@ -74,7 +79,9 @@ def main(user_email, url_api_collection, redis_host=None, redis_port=None,
     for url in url_api_collection:
         result = rQ.enqueue_call(func=harvester.run_ingest.main,
                                  args=(user_email, url),
-                                 timeout=job_timeout)
+                                 kwargs={'run_image_harvest':run_image_harvest},
+                                 timeout=job_timeout,
+                                 )
         results.append(result)
     return results
 
@@ -91,5 +98,6 @@ if __name__ == '__main__':
          redis_pswd=redis_pswd,
          id_ec2_ingest=id_ec2_ingest,
          id_ec2_solr=id_ec2_solr_build,
-         job_timeout=args.job_timeout
+         job_timeout=args.job_timeout,
+         run_image_harvest=args.run_image_harvest
          )

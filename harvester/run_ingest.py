@@ -57,7 +57,8 @@ def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
 def main(user_email, url_api_collection, log_handler=None,
          mail_handler=None, dir_profile='profiles', profile_path=None,
          config_file='akara.ini', redis_host=None, redis_port=None,
-         redis_pswd=None, redis_timeout=600):
+         redis_pswd=None, redis_timeout=600,
+         run_image_harvest=True):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
     if EMAIL_SYS_ADMIN:
@@ -122,12 +123,13 @@ def main(user_email, url_api_collection, log_handler=None,
 
     url_couchdb = harvester.config_dpla.get("CouchDb", "URL")
     # the image_harvest should be a separate job, with a long timeout
-    job = queue_image_harvest(config.redis_host, config.redis_port,
-                              config.redis_pswd, config.redis_timeout,
-                              collection_key=collection.provider,
-                              url_couchdb=url_couchdb,
-                              object_auth=collection.auth)
-    logger.info("Started job for image_harvest:{}".format(job.result))
+    if run_image_harvest:
+        job = queue_image_harvest(config.redis_host, config.redis_port,
+                                  config.redis_pswd, config.redis_timeout,
+                                  collection_key=collection.provider,
+                                  url_couchdb=url_couchdb,
+                                  object_auth=collection.auth)
+        logger.info("Started job for image_harvest:{}".format(job.result))
 
     log_handler.pop_application()
     mail_handler.pop_application()
