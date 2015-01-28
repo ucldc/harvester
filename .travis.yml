@@ -8,7 +8,6 @@ env: CODE_DIR=.
 # command to install dependencies
 install: 
   - "python setup.py install"
-  - "pip install -r test-requirements.txt --use-mirrors"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
   - "mkdir -p ${HOME}/code/harvester/harvester/"
@@ -16,4 +15,4 @@ install:
   - "touch ${HOME}/code/harvester/harvester/host_inventory"
 
 # command to run tests
-script: python tests.py
+script: python setup.py test

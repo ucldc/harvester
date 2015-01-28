@@ -1,3 +1,0 @@
-#for testing env, add these
-mock==1.0.1
-httpretty

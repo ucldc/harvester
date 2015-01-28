@@ -1,36 +1,36 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, sys
+import os
+import sys
 import urllib
+import argparse
 from collections import defaultdict
 import requests
 import boto
 from solr import Solr, SolrException
 from couchdb import Server, Database, Document
 
-
-URL_SOLR = os.environ.get('URL_SOLR', 'http://10.0.1.13:8080/solr/dc-collection/')
-URL_COUCHDB = os.environ.get('URL_COUCHDB', 'http://localhost:5984')
-COUCHDB_DB =os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id' : lambda d: {'id': d['_id']},
-    'object' : lambda d: {'reference_image_md5': d['object']},
+    'id'       : lambda d: {'id': d['_id']},
+    'object'   : lambda d: {'reference_image_md5': d['object']},
+    'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
 COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
-    'campus'     : lambda d: { 'campus' : [ c['@id'] for c in d['campus']], 
-                        'campus_name' : [ c['name'] for c in d['campus']] },
-    'repository' : lambda d: { 'repository' : [ r['@id'] for r in d['repository']],
-                               'repository_name': [ r['name'] for r in d['repository']]},
-    'handle'     : lambda d : { 'url_item' : d['handle'][0] },
+    'campus'     : lambda d: {'campus': [c['@id'] for c in d['campus']],
+                              'campus_name': [c['name'] for c in d['campus']]},
+    'repository' : lambda d: {'repository': [r['@id'] for r in d['repository']],
+                              'repository_name': [r['name'] for r in d['repository']]},
+    # assuming one collection only, may need to change
+    'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
+                               'collection_name': [c['name'] for c in d['collection']]},
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-    #assuming one collection only, may need to change
-    'collection'  : lambda d: { 'collection' : [c['@id'] for c in d['collection']],
-                               'collection_name' : [c['name'] for c in d['collection']] },
+    'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
+                               'collection_name': [c['name'] for c in d['collection']]},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
@@ -41,12 +41,13 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
-    'subject'     : lambda d: { 'subject' : [s['name'] for s in d['subject'] if s] },
+    'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else s for s in d['subject']]},
     'title'       : lambda d: {'title': d.get('title', None)},
     'type'        : lambda d: {'type': d.get('type', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
 }
+
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
@@ -69,16 +70,17 @@ def map_couch_to_solr_doc(doc):
                 raise e
     return solr_doc
 
+
 def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
     except SolrException, e:
-        print "ERROR:", solr_doc
-        print e
+        print("ERROR for {0} : {1}".format(solr_doc['id'], e))
         if not e.httpcode == 400:
             raise e
     return solr_doc
+
 
 def set_couchdb_last_seq(seq_num):
     '''Set the value fof the last sequence from couchdb _changes api'''
@@ -87,8 +89,9 @@ def set_couchdb_last_seq(seq_num):
     k = b.get_key(COUCHDB_LAST_SEQ_KEY)
     if not k:
         k = Key(b)
-        k.key = COUCHDB_LAST_SEQ_KEY 
+        k.key = COUCHDB_LAST_SEQ_KEY
     k.set_contents_from_string(seq_num)
+
 
 def get_couchdb_last_seq():
     '''Return the value stored in the s3 bucket'''
@@ -97,29 +100,56 @@ def get_couchdb_last_seq():
     k = b.get_key(COUCHDB_LAST_SEQ_KEY)
     return int(k.get_contents_as_string())
 
-def main():
-    server = Server(URL_COUCHDB)
-    db = server[COUCHDB_DB]
+
+def main(url_couchdb=None, dbname=None, url_solr=None):
+    '''Use the _changes feed with a "since" parameter to only catch new 
+    changes to docs. The _changes feed will only have the *last* event on
+    a document and does not retain intermediate changes.
+    Setting the "since" to 0 will result in getting a _changes record for 
+    each document, essentially dumping the db to solr
+    '''
+    server = Server(url_couchdb)
+    db = server[dbname]
     since = get_couchdb_last_seq()
+    print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
-    n = 0
-    solr_db = Solr(URL_SOLR)
+    n_up = n_design = n_delete = 0
+    solr_db = Solr(url_solr)
     for row in results:
-        if '_design' in row['id']:
-            print("Skip {0}".format(row['id']))
+        cur_id = row['id']
+        if '_design' in cur_id:
+            n_design += 1
+            print("Skip {0}".format(cur_id))
             continue
-        n += 1
-        doc = db.get(row['id'])
-        try:
-            solr_doc = map_couch_to_solr_doc(doc)
-            solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db) 
-        except TypeError:
-            continue
+        if row.get('deleted', False):
+            print('====DELETING: {0}'.format(cur_id))
+            solr_db.delete(id=cur_id)
+            n_delete += 1
+        else:
+            doc = db.get(cur_id)
+            try:
+                solr_doc = map_couch_to_solr_doc(doc)
+                solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
+            except TypeError, e:
+                print('TypeError for {0} : {1}'.format(cur_id, e))
+                continue
+        n_up += 1
     solr_db.commit() #commit updates
     set_couchdb_last_seq(last_seq)
-    print("UPDATED {0} DOCUMENTS".format(n))
+    print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
+    print("Last SEQ:{0}".format(last_seq))
 
-if __name__=='__main__':
-    main()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='update a solr instance from the couchdb doc store')
+    parser.add_argument('url_couchdb',
+                        help='URL to couchdb (http://127.0.0.1:5984)')
+    parser.add_argument('dbname', help='Couchdb database name')
+    parser.add_argument('url_solr', help='URL to writeable solr instance')
+
+    args = parser.parse_args()
+    print('Warning: this may take some time')
+    main(url_couchdb=args.url_couchdb, dbname=args.dbname,
+         url_solr=args.url_solr)

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docHit rank="2" path="cdl:13030/04/tf2h4nb304/tf2h4nb304.mets.xml" score="100"
+        totalHits="0">
+   <meta>
+      <title>Main Street, Cisko Placer Co. [California]. Popular American Scenery.</title>
+      <title/>
+      <creator/>
+      <subject q="series">Zelda Mackay Collection of Stereographic Views,</subject>
+      <publisher>The Bancroft Library. University of California, Berkeley.</publisher>
+      <type>image</type>
+      <identifier>http://ark.cdlib.org/ark:/13030/tf2h4nb304</identifier>
+      <identifier>:14935</identifier>
+      <relation q="ispartof">
+         <snippet rank="1" score="100">http://oac.cdlib.org/findaid/<hit>
+               <term>ark</term>:/<term>13030/tf8t1nb6q8</term>
+            </hit>
+         </snippet>
+      </relation>
+      <relation q="ispartof">ark:/13030/tf7r29p8s0</relation>
+      <relation q="ispartof">http://bancroft.berkeley.edu/</relation>
+      <relation q="vc">http://sunsite.berkeley.edu/CalHeritage/</relation>
+      <relation>http://calisphere.universityofcalifornia.edu/</relation>
+      <sort-title>main street cisko placer co california popular american scenery</sort-title>
+      <relation-from q="collection">http://oac.cdlib.org/findaid/ark:/13030/tf8t1nb6q8|Zelda Mackay Collection of Stereographic Views,</relation-from>
+      <facet-collection-title>Zelda Mackay Collection of Stereographic Views,</facet-collection-title>
+      <facet-type-tab>image</facet-type-tab>
+      <oac4-tab>Items::image</oac4-tab>
+      <facet-oac-tab>digital item</facet-oac-tab>
+      <facet-onlineItems>Items online</facet-onlineItems>
+      <facet-collection-order>ark:/13030/tf8t1nb6q8::029</facet-collection-order>
+      <institution-url>http://bancroft.berkeley.edu/</institution-url>
+      <google_analytics_tracking_code>UA-31403262-1</google_analytics_tracking_code>
+      <institution-doublelist>B::Bancroft Library::UC Berkeley</institution-doublelist>
+      <institution-doublelist>U::UC Berkeley::Bancroft Library</institution-doublelist>
+      <facet-institution>UC Berkeley::Bancroft Library</facet-institution>
+      <dateStamp>2006-03-16</dateStamp>
+      <reference-image X="768" Y="512" src="/ark:/13030/tf2h4nb304/med-res"/>
+      <reference-image X="1536" Y="1024" src="/ark:/13030/tf2h4nb304/hi-res"/>
+      <thumbnail X="192" Y="128"/>
+   </meta>
+</docHit>
