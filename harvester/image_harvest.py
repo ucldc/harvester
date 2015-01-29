@@ -5,6 +5,7 @@
 # use brian's content md5s3stash to store the resulting image.
 
 import os
+import sys
 import datetime
 import time
 import md5s3stash
@@ -59,7 +60,7 @@ class ImageHarvester(object):
             # not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-        #print("For {} url image is:{}".format(doc['_id'], url_image))
+        # print >> sys.stderr,("For {} url image is:{}".format(doc['_id'], url_image))
         return md5s3stash.md5s3stash(url_image, bucket_base=self._bucket_base,
                                      url_auth=self._auth)
 
@@ -77,16 +78,16 @@ class ImageHarvester(object):
             obj_val = self.update_doc_object(doc, report)
         except KeyError, e:
             if 'isShownBy' in e.message:
-                print e
+                 print >> sys.stderr, e
             else:
                 raise e
         except ValueError, e:
             if 'isShownBy' in e.message:
-                print e
+                 print >> sys.stderr, e
             else:
                 raise e
         except IOError, e:
-            print e
+             print >> sys.stderr, e
         return report
 
     def by_list_of_doc_ids(self, doc_ids):
