@@ -33,7 +33,11 @@ class ImageHarvester(object):
                 url_couchdb = cfg.DPLA.get("CouchDb", "URL")
             if not couchdb_name:
                 couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
-            self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+            username = cfg.DPLA.get("CouchDb", "Username")
+            password = cfg.DPLA.get("CouchDb", "Password")
+            url = url_couchdb.split("//")
+            url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+            self._couchdb = couchdb.Server(url=url_server)[couchdb_name]
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password

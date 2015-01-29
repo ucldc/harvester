@@ -15,7 +15,11 @@ COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
 print("URL: {} DB: {}".format(COUCHDB_URL, COUCHDB_DB))
-_couchdb = couchdb.Server(url=COUCHDB_URL)[COUCHDB_DB]
+username = os.environ.get('COUCHDB_USER', None)
+password = os.environ.get('COUCHDB_PASSWORD', None)
+url = url_couchdb.split("//")
+url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+_couchdb = couchdb.Server(COUCHDB_URL)[COUCHDB_DB]
 
 
 def run_on_couchdb_by_collection(func, collection_key=None):

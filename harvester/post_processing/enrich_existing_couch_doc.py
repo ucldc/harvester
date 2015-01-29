@@ -65,7 +65,11 @@ def main(doc_id, enrichment, port=8889):
     _config = config()
     url_couchdb = _config.DPLA.get("CouchDb", "URL")
     couchdb_name = _config.DPLA.get("CouchDb", "ItemDatabase")
-    _couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+    username = _config.DPLA.get("CouchDb", "Username")
+    password = _config.DPLA.get("CouchDb", "Password")
+    url = url_couchdb.split("//")
+    url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+    _couchdb = couchdb.Server(url_server)[couchdb_name]
     indoc = _couchdb.get(doc_id)
     doc = akara_enrich_doc(indoc, enrichment, port)
     _couchdb[doc_id] = doc
