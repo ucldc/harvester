@@ -77,7 +77,7 @@ class ImageHarvester(object):
         report = None
         if not self.get_if_object:
             if doc.get('object', None):
-                print >> sys.stderr, 'Not trying {}, has object field'.format(doc['_id'])
+                print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
         try:
             report = self.stash_image(doc)
             obj_val = self.update_doc_object(doc, report)
@@ -125,9 +125,11 @@ class ImageHarvester(object):
 
 def main(collection_key=None,
          url_couchdb=None,
-         object_auth=None):
+         object_auth=None,
+         get_if_object=True):
     print(ImageHarvester(url_couchdb=url_couchdb,
-                         object_auth=object_auth).by_collection(collection_key))
+                         object_auth=object_auth,
+                         get_if_object=get_if_object).by_collection(collection_key))
 
 if __name__ == '__main__':
     import argparse
