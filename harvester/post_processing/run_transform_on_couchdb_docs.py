@@ -13,13 +13,12 @@ from harvester.collection_registry_client import Collection
 COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://127.0.0.1:5984')
 COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
-
-print("URL: {} DB: {}".format(COUCHDB_URL, COUCHDB_DB))
 username = os.environ.get('COUCHDB_USER', None)
 password = os.environ.get('COUCHDB_PASSWORD', None)
+
+print("URL: {} DB: {}".format(COUCHDB_URL, COUCHDB_DB))
 url = COUCHDB_URL.split("//")
 url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
-_couchdb = couchdb.Server(COUCHDB_URL)[COUCHDB_DB]
 
 
 def run_on_couchdb_by_collection(func, collection_key=None):
@@ -27,6 +26,7 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     func is a function that takes a couchdb doc in and returns it modified.
     (can take long time - not recommended)
     '''
+    _couchdb = couchdb.Server(COUCHDB_URL)[COUCHDB_DB]
     v = _couchdb.view(COUCHDB_VIEW, include_docs='true',
                            key=collection_key) if collection_key else \
                            _couchdb.view(COUCHDB_VIEW, include_docs='true')
@@ -61,6 +61,3 @@ def update_collection_description(doc):
         doc['originalRecord']['collection'][0]['description']=description
         doc['sourceResource']['collection'][0]['description']=description
     return doc
-
-doc_ids = run_on_couchdb_by_collection(update_collection_description)#, collection_key="172")
-print doc_ids

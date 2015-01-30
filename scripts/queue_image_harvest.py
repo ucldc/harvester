@@ -39,14 +39,15 @@ def def_args():
             help='HTTP Auth needed to download images - username:password')
     parser.add_argument('--url_couchdb', nargs='?',
             help='Override url to couchdb')
-    parser.add_argument('--get_if_object', nargs='?', default=True,
-            help='Should image harvester try to get image if the object field exists for the doc (default: True)')
+    parser.add_argument('--no_get_if_object', action='store_true',
+                        default=False,
+            help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     return parser
 
 
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
                         collection_key, url_couchdb, object_auth=None,
-                        get_if_object=True):
+                        no_get_if_object=False):
     rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
                                 password=redis_pswd,
                                 socket_connect_timeout=redis_timeout)
@@ -55,7 +56,7 @@ def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
                           kwargs=dict(collection_key=collection_key,
                                       url_couchdb=url_couchdb,
                                       object_auth=object_auth,
-                                      get_if_object=get_if_object),
+                                      no_get_if_object=no_get_if_object),
                           timeout=IMAGE_HARVEST_TIMEOUT)
     return job
 
@@ -113,8 +114,8 @@ if __name__ == '__main__':
 ###        kwargs['object_auth'] = args.object_auth
 ###    if args.url_couchdb:
 ###        kwargs['url_couchdb'] = args.url_couchdb
-    if args.get_if_object:
-        kwargs['get_if_object'] = args.get_if_object
+    if args.no_get_if_object:
+        kwargs['no_get_if_object'] = args.no_get_if_object
     main(args.user_email,
             args.url_api_collection,
             **kwargs)

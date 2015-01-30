@@ -50,7 +50,9 @@ def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
                           kwargs=dict(collection_key=collection_key,
                                       url_couchdb=url_couchdb,
                                       object_auth=object_auth),
-                          timeout=IMAGE_HARVEST_TIMEOUT)
+                          timeout=IMAGE_HARVEST_TIMEOUT,
+                          no_get_if_object=True) # default to no harvesting
+                          #image if object field has data
     return job
 
 

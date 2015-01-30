@@ -26,7 +26,7 @@ class ImageHarvester(object):
                  couch_view=COUCHDB_VIEW,
                  bucket_base=BUCKET_BASE,
                  object_auth=None,
-                 get_if_object=True):
+                 no_get_if_object=False):
         if cdb:
             self._couchdb = cdb
         else:
@@ -44,7 +44,7 @@ class ImageHarvester(object):
         self._view = couch_view
         # auth is a tuple of username, password
         self._auth = object_auth
-        self.get_if_object = get_if_object # if object field exists, try to get
+        self.no_get_if_object = no_get_if_object # if object field exists, try to get
 
     # Need to make each download a separate job.
     def stash_image(self, doc):
@@ -75,9 +75,10 @@ class ImageHarvester(object):
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
         report = None
-        if not self.get_if_object:
+        if self.no_get_if_object:
             if doc.get('object', None):
                 print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+                return
         try:
             report = self.stash_image(doc)
             obj_val = self.update_doc_object(doc, report)
@@ -126,10 +127,10 @@ class ImageHarvester(object):
 def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
-         get_if_object=True):
+         no_get_if_object=False):
     print(ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth,
-                         get_if_object=get_if_object).by_collection(collection_key))
+                         no_get_if_object=no_get_if_object).by_collection(collection_key))
 
 if __name__ == '__main__':
     import argparse
@@ -140,12 +141,17 @@ if __name__ == '__main__':
             help='HTTP Auth needed to download images - username:password')
     parser.add_argument('--url_couchdb', nargs='?',
             help='Override url to couchdb')
-    parser.add_argument('--get_if_object', nargs='?', default=True,
-            help='Should image harvester try to get image if the object field exists for the doc (default: True)')
+    parser.add_argument('--no_get_if_object', action='store_true',
+                        default=False,
+            help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     args = parser.parse_args()
     print(args)
     object_auth=None
     if args.object_auth:
         object_auth = (args.object_auth.split(':')[0],
                 args.object_auth.split(':')[1])
-    main(args.collection_key, object_auth=object_auth, url_couchdb=args.url_couchdb)
+    main(args.collection_key,
+         object_auth=object_auth,
+         url_couchdb=args.url_couchdb,
+         no_get_if_object=args.no_get_if_object)
+
