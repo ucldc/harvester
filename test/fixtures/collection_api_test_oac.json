@@ -7,6 +7,15 @@
   "extent": null,
   "description": "Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.",
   "collection_type": "A",
+  "dcmi_type": "I",
+  "files_in_dams": false,
+  "files_in_hand": false,
+  "metadata_in_dams": false,
+  "qa_completed": false,
+  "ready_for_publication": false,
+  "rights_statement": "a sample rights statement",
+  "rights_status": "PD",
+  "staging_notes": "some staging notes",
   "campus": [
     {
       "slug": "UCSD",

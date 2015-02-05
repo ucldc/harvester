@@ -27,6 +27,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open(DIR_FIXTURES+'/testOAC.json').read())
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
+        print "COLLECTION DIR:{}".format(dir(self.collection))
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
@@ -71,6 +72,9 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
              'id': '178',
              'ingestType': 'collection',
              'description': 'Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.',
+             'dcmi_type': 'I',
+             'rights_statement': 'a sample rights statement',
+             'rights_status': 'PD',
         }])
         self.assertIn('campus', obj)
         self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
@@ -311,6 +315,9 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             'id': '197',
             'ingestType': 'collection',
             'description': '',
+            'dcmi_type': 'I',
+            'rights_statement': 'a sample rights statement',
+            'rights_status': 'PD',
         }])
         self.assertIn('campus', obj_saved)
         self.assertEqual(obj_saved['campus'], [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
@@ -592,7 +599,10 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
                 u'title': u'Cochems (Edward W.) Photographs',
                 u'id': u'19',
                 u'ingestType': u'collection',
-                u'description': u'This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.'
+                u'description': u'This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.',
+            'dcmi_type': 'I',
+            'rights_statement': 'a sample rights statement',
+            'rights_status': 'PD',
             }]
         )
         self.assertEqual(saved_obj['campus'], [{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
