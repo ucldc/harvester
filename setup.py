@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='UCLDC Harvester',
-    version='0.7',
+    version='0.8.1',
     packages=['harvester', 'harvester.post_processing' ],
     include_package_data=True,
     license='BSD License - see LICENSE file',
