@@ -8,6 +8,8 @@ include
 local
 share
 
+env.
+
 *.py[cod]
 
 # C extensions
