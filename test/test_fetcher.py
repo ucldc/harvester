@@ -27,7 +27,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open(DIR_FIXTURES+'/testOAC.json').read())
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
-        print "COLLECTION DIR:{}".format(dir(self.collection))
+        #print "COLLECTION DIR:{}".format(dir(self.collection))
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
@@ -363,6 +363,16 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(rec['id'], '13030/hb796nb5mn')
         self.assertIn('datestamp', rec)
         self.assertIn(rec['datestamp'], '2005-12-13')
+
+    def testDeletedRecords(self):
+        '''Test that the OAI harvest handles "deleted" records.
+        For now that means skipping over them.
+        '''
+        recs = []
+        for r in self.fetcher:
+            recs.append(r)
+        #skips over 5 "deleted" records
+        self.assertEqual(len(recs), 3)
 
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):

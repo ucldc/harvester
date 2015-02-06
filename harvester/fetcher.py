@@ -67,7 +67,11 @@ class OAIFetcher(Fetcher):
         repo list
         collection name
         '''
-        sickle_rec = self.records.next()
+        while True:
+            sickle_rec = self.records.next()
+            if not sickle_rec.deleted:
+                break #good record to harvest, don't do deleted
+                      # update process looks for deletions
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier
