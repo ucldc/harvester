@@ -77,6 +77,24 @@
          </metadata>
       </record>
       <record>
+         <header status="deleted">
+            <identifier>deleted/hb367nb2vx</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+      </record>
+      <record>
+         <header status="deleted">
+            <identifier>deleted/2</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+      </record>
+      <record>
+         <header status="deleted">
+            <identifier>deleted/3</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+      </record>
+      <record>
          <header>
             <identifier>13030/hb367nb2vx</identifier>
             <datestamp>2005-12-13</datestamp>
@@ -113,6 +131,18 @@
                <dc:format>mods</dc:format>
             </oai_dc:dc>
          </metadata>
+      </record>
+      <record>
+         <header status="deleted">
+            <identifier>deleted/4</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
+      </record>
+      <record>
+         <header status="deleted">
+            <identifier>deleted/5</identifier>
+            <datestamp>2005-12-13</datestamp>
+         </header>
       </record>
    </ListRecords>
 </OAI-PMH>
