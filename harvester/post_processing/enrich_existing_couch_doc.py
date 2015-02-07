@@ -28,7 +28,8 @@ def _get_enriched_doc(doc, enrichment, port):
             "Content-Type": "application/json",
             "Pipeline-item": enrichment.replace('\n',''),
             }
-    conn.request("POST", "/enrich", json.dumps([doc['originalRecord']]), headers)
+    #conn.request("POST", "/enrich", json.dumps([doc['originalRecord']]), headers)
+    conn.request("POST", "/enrich", json.dumps([doc]), headers)
     resp = conn.getresponse()
 
     if not resp.status == 200:
