@@ -15,8 +15,6 @@ COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 username = os.environ.get('COUCHDB_USER', None)
 password = os.environ.get('COUCHDB_PASSWORD', None)
-
-print("URL: {} DB: {}".format(COUCHDB_URL, COUCHDB_DB))
 url = COUCHDB_URL.split("//")
 url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
 
@@ -26,7 +24,8 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     func is a function that takes a couchdb doc in and returns it modified.
     (can take long time - not recommended)
     '''
-    _couchdb = couchdb.Server(COUCHDB_URL)[COUCHDB_DB]
+    print("URL: {} DB: {}".format(url_server, COUCHDB_DB))
+    _couchdb = couchdb.Server(url_server)[COUCHDB_DB]
     v = _couchdb.view(COUCHDB_VIEW, include_docs='true',
                            key=collection_key) if collection_key else \
                            _couchdb.view(COUCHDB_VIEW, include_docs='true')
@@ -35,13 +34,12 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     for r in v:
         n += 1
         #dt_start = dt_end = datetime.datetime.now()
-
         doc_new = func(r.doc)
         _couchdb.save(doc_new)
         doc_ids.append(r.doc['_id'])
         #dt_end = datetime.datetime.now()
         #time.sleep((dt_end-dt_start).total_seconds())
-        if n % 1000  == 0:
+        if n % 100  == 0:
             print '{} docs ran. Last doc:{}\n'.format(n,r.doc['_id'])
     return doc_ids
 
@@ -60,4 +58,23 @@ def update_collection_description(doc):
         print('DOC: {} DESCRIP: {}'.format(doc['_id'], c['description'].encode('utf8')))
         doc['originalRecord']['collection'][0]['description']=description
         doc['sourceResource']['collection'][0]['description']=description
+    return doc
+
+def add_rights_and_type_to_collection(doc):
+    cjson = doc['originalRecord']['collection'][0]
+    #get collection description
+    if cjson['@id'] in C_CACHE:
+        c = C_CACHE[cjson['@id']]
+    else:
+        c = Collection(url_api=cjson['@id'])
+        C_CACHE[cjson['@id']] = c
+    doc['originalRecord']['collection'][0]['rights_status']=c['rights_status']
+    doc['originalRecord']['collection'][0]['rights_statement']=c['rights_statement']
+    doc['originalRecord']['collection'][0]['dcmi_type']=c['dcmi_type']
+    if 'collection' in doc['sourceResource']: 
+        doc['sourceResource']['collection'][0]['rights_status']=c['rights_status']
+        doc['sourceResource']['collection'][0]['rights_statement']=c['rights_statement']
+        doc['sourceResource']['collection'][0]['dcmi_type']=c['dcmi_type']
+    else:
+        doc['sourceResource']['collection'] = doc['originalRecord']['collection']
     return doc
