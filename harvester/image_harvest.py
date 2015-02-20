@@ -5,6 +5,7 @@
 # use brian's content md5s3stash to store the resulting image.
 
 import os
+import sys
 import datetime
 import time
 import md5s3stash
@@ -24,7 +25,8 @@ class ImageHarvester(object):
                  couchdb_name=None,
                  couch_view=COUCHDB_VIEW,
                  bucket_base=BUCKET_BASE,
-                 object_auth=None):
+                 object_auth=None,
+                 no_get_if_object=False):
         if cdb:
             self._couchdb = cdb
         else:
@@ -33,11 +35,16 @@ class ImageHarvester(object):
                 url_couchdb = cfg.DPLA.get("CouchDb", "URL")
             if not couchdb_name:
                 couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
-            self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+            username = cfg.DPLA.get("CouchDb", "Username")
+            password = cfg.DPLA.get("CouchDb", "Password")
+            url = url_couchdb.split("//")
+            url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+            self._couchdb = couchdb.Server(url=url_server)[couchdb_name]
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password
         self._auth = object_auth
+        self.no_get_if_object = no_get_if_object # if object field exists, try to get
 
     # Need to make each download a separate job.
     def stash_image(self, doc):
@@ -55,7 +62,7 @@ class ImageHarvester(object):
             # not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-        #print("For {} url image is:{}".format(doc['_id'], url_image))
+        # print >> sys.stderr,("For {} url image is:{}".format(doc['_id'], url_image))
         return md5s3stash.md5s3stash(url_image, bucket_base=self._bucket_base,
                                      url_auth=self._auth)
 
@@ -68,21 +75,25 @@ class ImageHarvester(object):
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
         report = None
+        if self.no_get_if_object:
+            if doc.get('object', None):
+                print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+                return
         try:
             report = self.stash_image(doc)
             obj_val = self.update_doc_object(doc, report)
         except KeyError, e:
             if 'isShownBy' in e.message:
-                print e
+                 print >> sys.stderr, e
             else:
                 raise e
         except ValueError, e:
             if 'isShownBy' in e.message:
-                print e
+                 print >> sys.stderr, e
             else:
                 raise e
         except IOError, e:
-            print e
+             print >> sys.stderr, e
         return report
 
     def by_list_of_doc_ids(self, doc_ids):
@@ -115,9 +126,11 @@ class ImageHarvester(object):
 
 def main(collection_key=None,
          url_couchdb=None,
-         object_auth=None):
+         object_auth=None,
+         no_get_if_object=False):
     print(ImageHarvester(url_couchdb=url_couchdb,
-                         object_auth=object_auth).by_collection(collection_key))
+                         object_auth=object_auth,
+                         no_get_if_object=no_get_if_object).by_collection(collection_key))
 
 if __name__ == '__main__':
     import argparse
@@ -128,10 +141,17 @@ if __name__ == '__main__':
             help='HTTP Auth needed to download images - username:password')
     parser.add_argument('--url_couchdb', nargs='?',
             help='Override url to couchdb')
+    parser.add_argument('--no_get_if_object', action='store_true',
+                        default=False,
+            help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     args = parser.parse_args()
     print(args)
     object_auth=None
     if args.object_auth:
         object_auth = (args.object_auth.split(':')[0],
                 args.object_auth.split(':')[1])
-    main(args.collection_key, object_auth=object_auth, url_couchdb=args.url_couchdb)
+    main(args.collection_key,
+         object_auth=object_auth,
+         url_couchdb=args.url_couchdb,
+         no_get_if_object=args.no_get_if_object)
+

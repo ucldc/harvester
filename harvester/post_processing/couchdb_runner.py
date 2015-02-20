@@ -51,7 +51,11 @@ class CouchDBWorker(object):
         self._config = config()
         url_couchdb = self._config.DPLA.get("CouchDb", "URL")
         couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
-        self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+        username = self._config.DPLA.get("CouchDb", "Username")
+        password = self._config.DPLA.get("CouchDb", "Password")
+        url = url_couchdb.split("//")
+        url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+        self._couchdb = couchdb.Server(url_server)[couchdb_name]
 
     def run_by_list_of_doc_ids(self, doc_ids, func, *args, **kwargs):
         '''For a list of ids, harvest images'''
@@ -87,7 +91,11 @@ class CouchDBJobEnqueue(object):
         self._config = config()
         url_couchdb = self._config.DPLA.get("CouchDb", "URL")
         couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
-        self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+        username = self._config.DPLA.get("CouchDb", "Username")
+        password = self._config.DPLA.get("CouchDb", "Password")
+        url = url_couchdb.split("//")
+        url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
+        self._couchdb = couchdb.Server(url_server)[couchdb_name]
         self._redis = Redis(host=self._config.redis_host,
                             port=self._config.redis_port,
                             password=self._config.redis_pswd,

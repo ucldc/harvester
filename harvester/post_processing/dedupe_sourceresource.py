@@ -1,6 +1,6 @@
+from harvester.post_processing.run_transform_on_couchdb_docs import run_on_couchdb_by_collection
+
 # pass in a Couchdb doc, get back one with de-duplicated sourceResource values
-
-
 def dedupe_sourceresource(doc):
     ''' Look for duplicate values in the doc['sourceResource'] and 
     remove.
@@ -15,3 +15,7 @@ def dedupe_sourceresource(doc):
                     new_list.append(item)
             doc['sourceResource'][key] = new_list
     return doc
+
+if __name__=='__main__':
+    doc_ids = run_on_couchdb_by_collection(dedup_sourceresource)
+    print "NUMBER OF DOCS DEDUPED:{}".format(len(doc_ids))

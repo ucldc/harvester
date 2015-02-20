@@ -125,6 +125,9 @@ class ApiCollectionTestCase(TestCase):
         self.assertEqual(c.url_oac, 'fixtures/testOAC.json')
         self.assertEqual(c.campus[0]['resource_uri'], '/api/v1/campus/6/')
         self.assertEqual(c.campus[0]['slug'], 'UCSD')
+        self.assertEqual(c.dcmi_type, 'I')
+        self.assertEqual(c.rights_statement, "a sample rights statement")
+        self.assertEqual(c.rights_status, "PD")
 
     @httpretty.activate
     def testCreateProfile(self):

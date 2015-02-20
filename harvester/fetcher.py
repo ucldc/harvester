@@ -67,7 +67,11 @@ class OAIFetcher(Fetcher):
         repo list
         collection name
         '''
-        sickle_rec = self.records.next()
+        while True:
+            sickle_rec = self.records.next()
+            if not sickle_rec.deleted:
+                break #good record to harvest, don't do deleted
+                      # update process looks for deletions
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier
@@ -556,6 +560,9 @@ class HarvestController(object):
                               'title': self.collection.name,
                               'ingestType': 'collection',
                               'description': self.collection.description,
+                              'dcmi_type': self.collection.dcmi_type,
+                              'rights_statement': self.collection.rights_statement,
+                              'rights_status': self.collection.rights_status,
                               }]
         obj['campus'] = []
         for c in self.collection.get('campus', []):
