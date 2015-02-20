@@ -16,9 +16,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.c
 cd $DIR
 
 . ~/.harvester-env
-if [ -f ./bin/activate ]; then
+if [ -f ../virtualenvs/harvester/bin/activate ]; then
 set +u
-. ./bin/activate
+. ../virtualenvs/harvester/bin/activate
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 else
     echo <<%%%
@@ -30,5 +30,5 @@ pip install -r requirements.txt
 %%%
     exit 13;
 fi
-# 3hr timeout = 10800 secs
-python harvester/queue_harvest.py --job_timeout=10800 --run_image_harvest=True ${@:1}
+# 8hr timeout = 28800 secs
+python harvester/queue_harvest.py --job_timeout=28800 --run_image_harvest=True ${@:1}
