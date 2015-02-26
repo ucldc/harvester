@@ -1,2 +1,4 @@
-wget --header "x-api-key: xxxyyyzzz" "https://registry.cdlib.org/solr/admin/cores?action=RELOAD&core=dc-collection
+#wget --header "x-api-key: xxxyyyzzz" "https://registry.cdlib.org/solr/admin/cores?action=RELOAD&core=dc-collection
+
+wget --header "x-api-key: xxxyyyzzz" "http://localhost:8080/solr/admin/cores?action=RELOAD&core=dc-collection"
 
