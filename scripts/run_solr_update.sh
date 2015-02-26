@@ -19,3 +19,5 @@ dt=`date '+%Y%m%d_%H%M%S'`
 
 python ~/code/harvester/harvester/solr_updater.py http://127.0.0.1:5984 ucldc \
   http://10.0.1.13:8080/solr &> /var/local/solr-indexes/log/solr-up-${dt}.out &
+
+disown
