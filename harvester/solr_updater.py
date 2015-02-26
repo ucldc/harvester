@@ -18,19 +18,7 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
-COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING = {
-    'campus'     : lambda d: {'campus': [c['@id'] for c in d['campus']],
-                              'campus_name': [c['name'] for c in d['campus']]},
-    'repository' : lambda d: {'repository': [r['@id'] for r in d['repository']],
-                              'repository_name': [r['name'] for r in d['repository']]},
-    # assuming one collection only, may need to change
-    'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
-                               'collection_name': [c['name'] for c in d['collection']]},
-}
-
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-    'collection'  : lambda d: {'collection': [c['@id'] for c in d['collection']],
-                               'collection_name': [c['name'] for c in d['collection']]},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
@@ -48,6 +36,50 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'extent'      : lambda d: {'extent': d.get('extent', None)},
 }
 
+def map_registry_data(collections):
+    '''Map the collections data to corresponding data fields in the solr doc
+    '''
+    collection_urls = []
+    collection_names = []
+    collection_datas = []
+    repository_urls = []
+    repository_names = []
+    repository_datas = []
+    campus_urls = []
+    campus_names = []
+    campus_datas = []
+    for collection in collections: #can have multiple collections
+        collection_urls.append(collection['@id'])
+        collection_names.append(collection['name'])
+        collection_datas.append('::'.join((collection['@id'],
+            collection['name'])))
+        campuses = collection['campus']
+        campus_urls.extend([campus['@id'] for campus in campuses])
+        campus_names.extend([campus['name'] for c in campuses])
+        campus_datas.extend(['::'.join((campus['@id'], campus['name']))
+            for campus in campuses])
+        repositories = collection['repository']
+        repository_urls.extend([repo['@id'] for repo in repositories])
+        repository_names.extend([repo['name'] for repo in repositories])
+        repo_datas = []
+        for repo in repositories:
+            if repo['campus']:
+                repo_data = '::'.join((repo['@id'], repo['name'],
+                    repo['campus'][0]['name']))
+            else:
+                repo_data = '::'.join((repo['@id'], repo['name']))
+            repo_datas.append(repo_data)
+        repository_datas.extend(repo_datas)
+    return dict(collection_url = collection_urls,
+                collection_name = collection_names,
+                collection_data = collection_datas,
+                repository_url = repository_urls,
+                repository_name = repository_names,
+                repository_data = repository_datas,
+                campus_url = campus_urls,
+                campus_name = campus_names,
+                campus_data = campus_datas
+                )
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
@@ -56,10 +88,7 @@ def map_couch_to_solr_doc(doc):
     for p in doc.keys():
         if p in COUCHDOC_TO_SOLR_MAPPING:
             solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
-    originalRecord = doc['originalRecord']
-    for p in originalRecord.keys():
-        if p in COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING:
-            solr_doc.update(COUCHDOC_ORG_RECORD_TO_SOLR_MAPPING[p](originalRecord))
+    solr_doc.update(map_registry_data(doc['originalRecord']['collection']))
     sourceResource = doc['sourceResource']
     for p in sourceResource.keys():
         if p in COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING:

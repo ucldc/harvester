@@ -65,21 +65,23 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'], [
-            {'@id': 'https://registry.cdlib.org/api/v1/collection/178/',
-             'name': 'Harry Crosby Collection',
-             'title': 'Harry Crosby Collection',
-             'id': '178',
-             'ingestType': 'collection',
-             'description': 'Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.',
-             'dcmi_type': 'I',
-             'rights_statement': 'a sample rights statement',
-             'rights_status': 'PD',
-        }])
-        self.assertIn('campus', obj)
-        self.assertEqual(obj['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
-        self.assertIn('repository', obj)
-        self.assertEqual(obj['repository'], [{u'@id': u'https://registry.cdlib.org/api/v1/repository/22/',
+        self.assertIn('@id', obj['collection'][0])
+        self.assertIn('title', obj['collection'][0])
+        self.assertIn('campus', obj['collection'][0])
+        self.assertIn('dcmi_type', obj['collection'][0])
+        self.assertIn('description', obj['collection'][0])
+        self.assertIn('enrichments_item', obj['collection'][0])
+        self.assertIn('name', obj['collection'][0])
+        self.assertIn('harvest_extra_data', obj['collection'][0])
+        self.assertIn('repository', obj['collection'][0])
+        self.assertIn('rights_statement', obj['collection'][0])
+        self.assertIn('rights_status', obj['collection'][0])
+        self.assertIn('url_harvest', obj['collection'][0])
+        self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/178/')
+        self.assertNotIn('campus', obj)
+        self.assertEqual(obj['collection'][0]['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
+        self.assertNotIn('repository', obj)
+        self.assertEqual(obj['collection'][0]['repository'], [{u'@id': u'https://registry.cdlib.org/api/v1/repository/22/',
             u'name': u'Mandeville Special Collections Library'}, {u'@id': u'https://registry.cdlib.org/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
 
 
@@ -151,30 +153,6 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         '''Check the correct object returned for type of harvest'''
         self.assertIsInstance(self.controller_oai.fetcher, fetcher.OAIFetcher)
         self.assertEqual(self.controller_oai.collection.campus[0]['slug'], 'UCDL')
-
-    @httpretty.activate
-    def testIDCreation(self):
-        '''Test how the id for the index is created'''
-        httpretty.register_uri(httpretty.GET,
-                "https://registry.cdlib.org/api/v1/collection/197/",
-                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
-        httpretty.register_uri(httpretty.GET,
-                re.compile("http://content.cdlib.org/oai?.*"),
-                body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
-        self.assertTrue(hasattr(self.controller_oai, 'create_id'))
-        identifier = 'x'
-        self.assertRaises(TypeError, self.controller_oai.create_id, identifier)
-        identifier = ['x', ]
-        sid = self.controller_oai.create_id(identifier)
-        self.assertIn(self.controller_oai.collection.slug, sid)
-        self.assertIn(self.controller_oai.collection.campus[0]['slug'], sid)
-        self.assertIn(self.controller_oai.collection.repository[0]['slug'], sid)
-        self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
-        collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
-        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
-        sid = controller.create_id(identifier)
-        self.assertEqual(sid, 'UCDL-Calisphere-calisphere-santa-clara-university-digital-objects-x')
-        shutil.rmtree(controller.dir_save)
 
     def testUpdateIngestDoc(self):
         '''Test that the update to the ingest doc in couch is called correctly
@@ -253,7 +231,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         # did it save?
         dir_list = os.listdir(self.controller_oai.dir_save)
         self.assertEqual(len(dir_list), 1)
-        objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
+        objset_saved = json.loads(
+            open(os.path.join(self.controller_oai.dir_save, dir_list[0])
+                ).read()
+            )
         self.assertEqual(self.objset_test_doc, objset_saved)
 
     @httpretty.activate
@@ -264,15 +245,21 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-2400-records.xml').read())
-        collection = Collection('https://registry.cdlib.org/api/v1/collection/198/')
-        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        collection = Collection(
+                'https://registry.cdlib.org/api/v1/collection/198/')
+        controller = fetcher.HarvestController('email@example.com', collection,
+                config_file=self.config_file, profile_path=self.profile_path)
         controller.harvest()
         self.assertEqual(len(self.test_log_handler.records), 13)
-        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 100 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[1],
+                '[INFO] HarvestController: 100 records harvested')
         shutil.rmtree(controller.dir_save)
-        self.assertEqual(self.test_log_handler.formatted_records[10], '[INFO] HarvestController: 1000 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[11], '[INFO] HarvestController: 2000 records harvested')
-        self.assertEqual(self.test_log_handler.formatted_records[12], '[INFO] HarvestController: 2400 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[10],
+                '[INFO] HarvestController: 1000 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[11],
+                '[INFO] HarvestController: 2000 records harvested')
+        self.assertEqual(self.test_log_handler.formatted_records[12],
+                '[INFO] HarvestController: 2400 records harvested')
 
     @httpretty.activate
     def testAddRegistryData(self):
@@ -284,20 +271,27 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
 
-        collection = Collection('https://registry.cdlib.org/api/v1/collection/197/')
+        collection = Collection(
+                'https://registry.cdlib.org/api/v1/collection/197/')
         self.tearDown_config()  # remove ones setup in setUp
         self.setUp_config(collection)
-        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        controller = fetcher.HarvestController('email@example.com', collection,
+                config_file=self.config_file, profile_path=self.profile_path)
         obj = {'id': 'fakey', 'otherdata': 'test'}
         self.assertNotIn('collection', obj)
         objnew = controller._add_registry_data(obj)
         self.assertIn('collection', obj)
-        self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/197/')
-        self.assertIn('campus', obj)
-        self.assertIn('repository', obj)
+        self.assertEqual(obj['collection'][0]['@id'],
+                'https://registry.cdlib.org/api/v1/collection/197/')
+        self.assertNotIn('campus', obj)
+        self.assertIn('campus', obj['collection'][0])
+        self.assertNotIn('repository', obj)
+        self.assertIn('repository', obj['collection'][0])
         # need to test one without campus
-        self.assertEqual(obj['campus'][0]['@id'], 'https://registry.cdlib.org/api/v1/campus/12/')
-        self.assertEqual(obj['repository'][0]['@id'], 'https://registry.cdlib.org/api/v1/repository/37/')
+        self.assertEqual(obj['collection'][0]['campus'][0]['@id'],
+                'https://registry.cdlib.org/api/v1/campus/12/')
+        self.assertEqual(obj['collection'][0]['repository'][0]['@id'],
+                'https://registry.cdlib.org/api/v1/repository/37/')
 
     def testObjectsHaveRegistryData(self):
         '''Test that the registry data is being attached to objects from
@@ -308,23 +302,20 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'], [
-            {'@id': 'https://registry.cdlib.org/api/v1/collection/197/',
-            'name': 'Calisphere - Santa Clara University: Digital Objects',
-            'title': 'Calisphere - Santa Clara University: Digital Objects',
-            'id': '197',
-            'ingestType': 'collection',
-            'description': '',
-            'dcmi_type': 'I',
-            'rights_statement': 'a sample rights statement',
-            'rights_status': 'PD',
-        }])
-        self.assertIn('campus', obj_saved)
-        self.assertEqual(obj_saved['campus'], [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
-            'name': 'California Digital Library'}])
-        self.assertIn('repository', obj_saved)
-        self.assertEqual(obj_saved['repository'], [{'@id': 'https://registry.cdlib.org/api/v1/repository/37/',
-            'name': 'Calisphere'}])
+        self.assertEqual(obj_saved['collection'][0]['@id'], 
+                    'https://registry.cdlib.org/api/v1/collection/197/')
+        self.assertEqual(obj_saved['collection'][0]['title'], 
+                    'Calisphere - Santa Clara University: Digital Objects')
+        self.assertEqual(obj_saved['collection'][0]['ingestType'], 
+                                    'collection')
+        self.assertNotIn('campus', obj_saved)
+        self.assertEqual(obj_saved['collection'][0]['campus'],
+                [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
+                  'name': 'California Digital Library'}])
+        self.assertNotIn('repository', obj_saved)
+        self.assertEqual(obj_saved['collection'][0]['repository'],
+                [{'@id': 'https://registry.cdlib.org/api/v1/repository/37/',
+                  'name': 'Calisphere'}])
 
 
 class FetcherClassTestCase(TestCase):
@@ -603,19 +594,17 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         fname = os.listdir(self.controller.dir_save)[0]
         saved_objset = json.load(open(os.path.join(self.controller.dir_save, fname)))
         saved_obj = saved_objset[0]
-        self.assertEqual(saved_obj['collection'], [
-            {u'@id': u'http://registry.cdlib.org/api/v1/collection/19/',
-                u'name': u'Cochems (Edward W.) Photographs',
-                u'title': u'Cochems (Edward W.) Photographs',
-                u'id': u'19',
-                u'ingestType': u'collection',
-                u'description': u'This collection is comprised of approximately 1,200 photographs taken by Edward W. Cochems, a prominent commercial photographer in Santa Ana, California, between ca. 1919-ca. 1949. The images are principally views of Southern California, primarily Orange County locations.',
-            'dcmi_type': 'I',
-            'rights_statement': 'a sample rights statement',
-            'rights_status': 'PD',
-            }]
-        )
-        self.assertEqual(saved_obj['campus'], [{u'@id': u'http://registry.cdlib.org/api/v1/campus/3/', u'name': u'UC Irvine'}])
+        self.assertEqual(saved_obj['collection'][0]['@id'],
+                u'http://registry.cdlib.org/api/v1/collection/19/')
+        self.assertEqual(saved_obj['collection'][0]['name'], 
+                u'Cochems (Edward W.) Photographs')
+        self.assertEqual(saved_obj['collection'][0]['title'],
+                u'Cochems (Edward W.) Photographs')
+        self.assertEqual(saved_obj['collection'][0]['id'], u'19')
+        self.assertEqual(saved_obj['collection'][0]['dcmi_type'], 'I')
+        self.assertEqual(saved_obj['collection'][0]['rights_statement'],
+                'a sample rights statement')
+        self.assertEqual(saved_obj['collection'][0]['rights_status'], 'PD')
         self.assertEqual(saved_obj['state'], 'project')
         self.assertEqual(saved_obj['title'], 'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')
 

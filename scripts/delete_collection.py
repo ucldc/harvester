@@ -12,12 +12,21 @@ password = os.environ.get('COUCHDB_PASSWORD', None)
 url = COUCHDB_URL.split("//")
 url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
 
+def confirm_deletion(cid):
+    prompt = "Are you sure you want to delete all couchdb " + \
+             "documents for %s? yes to confirm\n" % cid
+    while True:
+        ans = raw_input(prompt).lower()
+        if ans == "yes":
+            return True
+        else:
+            return False
+
 def delete_collection(cid):
     _couchdb = couchdb.Server(url_server)[COUCHDB_DB]
     rows = CouchDBCollectionFilter(collection_key=cid,
                                         couchdb_obj=_couchdb
                                         )
-
     deleted = []
     num_deleted = 0
     for row in rows:
@@ -33,7 +42,10 @@ if __name__=='__main__':
     parser.add_argument('collection_id',
                         help='Registry id for the collection')
     args = parser.parse_args(sys.argv[1:])
-    num, deleted_ids = delete_collection(args.collection_id)
-    print "DELTED {} DOCS".format(num)
-    print "DELETED IDS: {}".format(deleted_ids)
-    print "DELTED {} DOCS".format(num)
+    if confirm_deletion(args.collection_id):
+        num, deleted_ids = delete_collection(args.collection_id)
+        print "DELTED {} DOCS".format(num)
+        print "DELETED IDS: {}".format(deleted_ids)
+        print "DELTED {} DOCS".format(num)
+    else:
+        print "Exiting without deleting"

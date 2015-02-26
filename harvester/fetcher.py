@@ -461,21 +461,6 @@ class HarvestController(object):
         self.couch = None
         self.num_records = 0
 
-    def create_id(self, identifier):
-        '''Create an id that is good for items. Take campus, repo and collection
-        name to form prefix to individual item id. Ensures unique ids in db,
-        in case any local ids are identical.
-        May do something smarter when known GUIDs (arks, doi, etc) are in use.
-        Takes a list of possible identifiers and creates a string id.
-        '''
-        if not isinstance(identifier, list):
-            raise TypeError('Identifier field should be a list')
-        campusStr = '-'.join([x['slug'] for x in self.collection.campus])
-        repoStr = '-'.join([x['slug'] for x in self.collection.repository])
-        sID = '-'.join((campusStr, repoStr, self.collection.slug,
-                        identifier[0].replace(' ', '-')))
-        return sID
-
     @staticmethod
     def dt_json_handler(obj):
         '''The json package cannot deal with datetimes.
@@ -554,24 +539,22 @@ class HarvestController(object):
         # get base registry URL
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
-        obj['collection'] = [{'@id': self.collection.url,
-                              'id': self.collection.url.strip('/').rsplit('/', 1)[1],
-                              'name': self.collection.name,
-                              'title': self.collection.name,
-                              'ingestType': 'collection',
-                              'description': self.collection.description,
-                              'dcmi_type': self.collection.dcmi_type,
-                              'rights_statement': self.collection.rights_statement,
-                              'rights_status': self.collection.rights_status,
-                              }]
-        obj['campus'] = []
+        self.collection['@id'] = self.collection.url
+        self.collection['id'] = self.collection.url.strip('/').rsplit('/', 1)[1]
+        self.collection['ingestType'] = 'collection'
+        self.collection['title'] = self.collection.name
+        obj['collection'] = dict(self.collection)
+        campus = []
         for c in self.collection.get('campus', []):
-            obj['campus'].append({'@id': ''.join((base_url, c['resource_uri'])),
+            campus.append({'@id': ''.join((base_url, c['resource_uri'])),
                                   'name': c['name']})
-        obj['repository'] = []
+        obj['collection']['campus'] = campus
+        repository = []
         for r in self.collection['repository']:
-            obj['repository'].append({'@id': ''.join((base_url, r['resource_uri'])),
+            repository.append({'@id': ''.join((base_url, r['resource_uri'])),
                                       'name': r['name']})
+        obj['collection']['repository'] = repository
+        obj['collection'] = [obj['collection']]  # in future may be more than one
         return obj
 
     def harvest(self):
