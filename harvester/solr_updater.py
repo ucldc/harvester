@@ -114,6 +114,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None):
     db = server[dbname]
     since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
+    print('Getting changes since:{}'.format(since))
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
@@ -138,10 +139,12 @@ def main(url_couchdb=None, dbname=None, url_solr=None):
                 print('TypeError for {0} : {1}'.format(cur_id, e))
                 continue
         n_up += 1
+        if n_up % 100 == 0:
+            print "Updated {} so far".format(n_up)
     solr_db.commit() #commit updates
     set_couchdb_last_seq(last_seq)
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
-    print("Last SEQ:{0}".format(last_seq))
+    print("LAST SEQ:{0}".format(last_seq))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
