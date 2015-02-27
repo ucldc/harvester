@@ -209,7 +209,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             self.assertEqual(instance.update_ingestion_doc.call_count, 1)
             call_args = unicode(instance.update_ingestion_doc.call_args)
             self.assertIn('test-ingest-doc', call_args)
-            self.assertIn("fetch_process/data_dir=u'/tmp/", call_args)
+            self.assertIn("fetch_process/data_dir", call_args)
             self.assertIn("santa-clara-university-digital-objects", call_args)
             self.assertIn("fetch_process/end_time=None", call_args)
             self.assertIn("fetch_process/status='running'", call_args)
