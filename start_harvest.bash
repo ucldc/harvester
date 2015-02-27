@@ -16,9 +16,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" # http://stackoverflow.c
 cd $DIR
 
 . ~/.harvester-env
-if [ -f ../virtualenvs/harvester/bin/activate ]; then
+if [ -f ./bin/activate ]; then
 set +u
-. ../virtualenvs/harvester/bin/activate
+. ./bin/activate
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 else
     echo <<%%%
