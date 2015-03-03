@@ -1,0 +1,2 @@
+wget --header "x-api-key: xxxyyyzzz" "https://registry.cdlib.org/solr/query?q=-reference_image_md5:[* TO *]&rows=1"
+
