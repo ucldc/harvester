@@ -139,7 +139,7 @@ def get_couchdb_last_seq():
     return int(k.get_contents_as_string())
 
 
-def main(url_couchdb=None, dbname=None, url_solr=None):
+def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     '''Use the _changes feed with a "since" parameter to only catch new 
     changes to docs. The _changes feed will only have the *last* event on
     a document and does not retain intermediate changes.
@@ -150,8 +150,10 @@ def main(url_couchdb=None, dbname=None, url_solr=None):
     sys.stdout.flush() # put pd
     server = Server(url_couchdb)
     db = server[dbname]
-    since = get_couchdb_last_seq()
+    if not since:
+        since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
+    print('Changes since:{}'.format(since))
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
@@ -188,8 +190,11 @@ if __name__ == '__main__':
                         help='URL to couchdb (http://127.0.0.1:5984)')
     parser.add_argument('dbname', help='Couchdb database name')
     parser.add_argument('url_solr', help='URL to writeable solr instance')
+    parser.add_argument('--since',
+            help='Since parameter for update. Defaults to value stored in S3')
 
     args = parser.parse_args()
     print('Warning: this may take some time')
     main(url_couchdb=args.url_couchdb, dbname=args.dbname,
-         url_solr=args.url_solr)
+         url_solr=args.url_solr,
+         since=args.since)
