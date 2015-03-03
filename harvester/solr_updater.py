@@ -45,28 +45,30 @@ def map_registry_data(collections):
     repository_urls = []
     repository_names = []
     repository_datas = []
-    campus_urls = []
-    campus_names = []
-    campus_datas = []
+    campus_urls = campus_names = campus_datas = None
     for collection in collections: #can have multiple collections
         collection_urls.append(collection['@id'])
         collection_names.append(collection['name'])
         collection_datas.append('::'.join((collection['@id'],
             collection['name'])))
-        campuses = collection['campus']
-        campus_urls.extend([campus['@id'] for campus in campuses])
-        campus_names.extend([campus['name'] for c in campuses])
-        campus_datas.extend(['::'.join((campus['@id'], campus['name']))
-            for campus in campuses])
+        if 'campus' in collection:
+            campus_urls = []
+            campus_names = []
+            campus_datas = []
+            campuses = collection['campus']
+            campus_urls.extend([campus['@id'] for campus in campuses])
+            campus_names.extend([campus['name'] for c in campuses])
+            campus_datas.extend(['::'.join((campus['@id'], campus['name']))
+                for campus in campuses])
         repositories = collection['repository']
         repository_urls.extend([repo['@id'] for repo in repositories])
         repository_names.extend([repo['name'] for repo in repositories])
         repo_datas = []
         for repo in repositories:
-            if repo['campus']:
+            try:
                 repo_data = '::'.join((repo['@id'], repo['name'],
                     repo['campus'][0]['name']))
-            else:
+            except KeyError:
                 repo_data = '::'.join((repo['@id'], repo['name']))
             repo_datas.append(repo_data)
         repository_datas.extend(repo_datas)
@@ -79,7 +81,14 @@ def map_registry_data(collections):
                 campus_url = campus_urls,
                 campus_name = campus_names,
                 campus_data = campus_datas
+                ) if campus_urls else dict(collection_url = collection_urls,
+                collection_name = collection_names,
+                collection_data = collection_datas,
+                repository_url = repository_urls,
+                repository_name = repository_names,
+                repository_data = repository_datas,
                 )
+                                    
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
