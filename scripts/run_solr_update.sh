@@ -23,9 +23,9 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 
 . ~/.harvester-env
 
-###set +o nounset
-###. ~/workers_local/bin/activate
-###set -o nounset
+set +o nounset
+. ~/workers_local/bin/activate
+set -o nounset
 
 dt=`date '+%Y%m%d_%H%M%S'`
 
