@@ -617,7 +617,8 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
-         dir_profile='profiles', profile_path=None, config_file='akara.ini'):
+         dir_profile='profiles', profile_path=None,
+         config_file=os.environ.get('DPLA_CONFIG_FILE', 'akara.ini')):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.
