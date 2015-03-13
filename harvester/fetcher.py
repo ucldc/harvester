@@ -546,13 +546,13 @@ class HarvestController(object):
         obj['collection'] = dict(self.collection)
         campus = []
         for c in self.collection.get('campus', []):
-            campus.append({'@id': ''.join((base_url, c['resource_uri'])),
-                                  'name': c['name']})
+            c.update({'@id': ''.join((base_url, c['resource_uri']))})
+            campus.append(c)
         obj['collection']['campus'] = campus
         repository = []
         for r in self.collection['repository']:
-            repository.append({'@id': ''.join((base_url, r['resource_uri'])),
-                                      'name': r['name']})
+            r.update({'@id': ''.join((base_url, r['resource_uri']))})
+            repository.append(r)
         obj['collection']['repository'] = repository
         obj['collection'] = [obj['collection']]  # in future may be more than one
         return obj

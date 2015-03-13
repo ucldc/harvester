@@ -79,10 +79,59 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         self.assertIn('url_harvest', obj['collection'][0])
         self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/178/')
         self.assertNotIn('campus', obj)
-        self.assertEqual(obj['collection'][0]['campus'], [{u'@id': u'https://registry.cdlib.org/api/v1/campus/6/', u'name': u'UC San Diego'}, {u'@id': u'https://registry.cdlib.org/api/v1/campus/1/', u'name': u'UC Berkeley'}])
+        self.assertEqual(obj['collection'][0]['campus'], 
+                            [
+                               {
+                                   '@id': 'https://registry.cdlib.org/api/v1/campus/6/',
+                                 'slug': 'UCSD',
+                                 'resource_uri': '/api/v1/campus/6/',
+                                 'position': 6,
+                                 'name': 'UC San Diego'
+                               },
+                               {
+                                 '@id': 'https://registry.cdlib.org/api/v1/campus/1/',
+                                 'slug': 'UCB',
+                                 'resource_uri': '/api/v1/campus/1/',
+                                 'position': 0,
+                                 'name': 'UC Berkeley'
+                               }
+                             ])
         self.assertNotIn('repository', obj)
-        self.assertEqual(obj['collection'][0]['repository'], [{u'@id': u'https://registry.cdlib.org/api/v1/repository/22/',
-            u'name': u'Mandeville Special Collections Library'}, {u'@id': u'https://registry.cdlib.org/api/v1/repository/36/', u'name': u'UCB Department of Statistics'}])
+        self.assertEqual(obj['collection'][0]['repository'], 
+                        [
+                          {
+                            '@id': 'https://registry.cdlib.org/api/v1/repository/22/',
+                            'resource_uri': '/api/v1/repository/22/',
+                            'name': 'Mandeville Special Collections Library',
+                            'slug': 'Mandeville-Special-Collections-Library',
+                            'campus': [
+                              {
+                                'slug': 'UCSD',
+                                'resource_uri': '/api/v1/campus/6/',
+                                'position': 6,
+                                'name': 'UC San Diego'
+                              },
+                              {
+                                'slug': 'UCB',
+                                'resource_uri': '/api/v1/campus/1/',
+                                'position': 0,
+                                'name': 'UC Berkeley'
+                              }
+                            ]
+                          },
+                          {
+                            '@id': 'https://registry.cdlib.org/api/v1/repository/36/',
+                            'resource_uri': '/api/v1/repository/36/',
+                            'name': 'UCB Department of Statistics',
+                            'slug': 'UCB-Department-of-Statistics',
+                            'campus': {
+                                'slug': 'UCB',
+                                'resource_uri': '/api/v1/campus/1/',
+                                'position': 0,
+                                'name': 'UC Berkeley'
+                              }
+                          }
+                        ])
 
 
 class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
@@ -311,11 +360,27 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         self.assertNotIn('campus', obj_saved)
         self.assertEqual(obj_saved['collection'][0]['campus'],
                 [{'@id': 'https://registry.cdlib.org/api/v1/campus/12/',
-                  'name': 'California Digital Library'}])
+                  "slug": "UCDL",
+                  "resource_uri": "/api/v1/campus/12/",
+                  "position": 11,
+                  "name": "California Digital Library"
+                            }
+                        ])
         self.assertNotIn('repository', obj_saved)
         self.assertEqual(obj_saved['collection'][0]['repository'],
                 [{'@id': 'https://registry.cdlib.org/api/v1/repository/37/',
-                  'name': 'Calisphere'}])
+                  "resource_uri": "/api/v1/repository/37/",
+                  "name": "Calisphere",
+                  "slug": "Calisphere",
+                  "campus": [
+                                {
+                                    "slug": "UCDL",
+                                    "resource_uri": "/api/v1/campus/12/",
+                                    "position": 11,
+                                    "name": "California Digital Library"
+                                }
+                            ]
+                    }])
 
 
 class FetcherClassTestCase(TestCase):
