@@ -20,6 +20,10 @@ if [ -f ./bin/activate ]; then
 set +u
 . ./bin/activate
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
+elif [ -f ~/workers_local/bin/activate ]; then
+set +u
+. ~/workers_local/bin/activate
+set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 else
     echo <<%%%
 NO ./bin/activate. You need to run
