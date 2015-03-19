@@ -131,8 +131,8 @@ class Collection(dict):
         profile['contributor'] = self._build_contributor_list()
         profile['enrichments_coll'] = ['/compare_with_schema', ]
         profile['thresholds'] = {
-            "added": 5000,
-            "changed": 1000,
+            "added": 100000,
+            "changed": 100000,
             "deleted": 1000
         }
         profile['enrichments_item'] = [s.strip() for s in
