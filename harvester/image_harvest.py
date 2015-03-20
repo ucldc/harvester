@@ -32,11 +32,15 @@ class ImageHarvester(object):
         else:
             cfg = config()
             if not url_couchdb:
-                url_couchdb = cfg.DPLA.get("CouchDb", "URL")
+                url_couchdb = os.environ.get('COUCHDB_URL',
+                                            cfg.DPLA.get("CouchDb", "URL"))
             if not couchdb_name:
-                couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
-            username = cfg.DPLA.get("CouchDb", "Username")
-            password = cfg.DPLA.get("CouchDb", "Password")
+                couchdb_name = os.environ.get('COUCHDB_DBNAME',
+                                    cfg.DPLA.get("CouchDb", "ItemDatabase"))
+            username = os.environ.get('COUCHDB_USER',
+                                    cfg.DPLA.get("CouchDb", "Username"))
+            password = os.environ.get('COUCHDB_PASSWORD',
+                                    cfg.DPLA.get("CouchDb", "Password"))
             url = url_couchdb.split("//")
             url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
             self._couchdb = couchdb.Server(url=url_server)[couchdb_name]

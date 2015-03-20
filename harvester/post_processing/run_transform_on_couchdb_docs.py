@@ -23,6 +23,7 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     '''If collection_key is none, trying to grab all of docs and modify
     func is a function that takes a couchdb doc in and returns it modified.
     (can take long time - not recommended)
+    Function should return new document or None if no changes made
     '''
     print("URL: {} DB: {}".format(url_server, COUCHDB_DB))
     _couchdb = couchdb.Server(url_server)[COUCHDB_DB]
@@ -35,8 +36,9 @@ def run_on_couchdb_by_collection(func, collection_key=None):
         n += 1
         #dt_start = dt_end = datetime.datetime.now()
         doc_new = func(r.doc)
-        _couchdb.save(doc_new)
-        doc_ids.append(r.doc['_id'])
+        if doc_new:
+            _couchdb.save(doc_new)
+            doc_ids.append(r.doc['_id'])
         #dt_end = datetime.datetime.now()
         #time.sleep((dt_end-dt_start).total_seconds())
         if n % 100  == 0:
