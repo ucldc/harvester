@@ -20,6 +20,7 @@ import solr
 from collection_registry_client import Collection
 import config
 from pymarc import MARCReader
+import pymarc
 import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
@@ -414,6 +415,29 @@ class OAC_JSON_Fetcher(Fetcher):
             self.objset = n_objset
         return cur_objset
 
+class AlephMARCXMLFetcher(Fetcher):
+    '''Harvest a MARC XML feed from Aleph. Currently used for the 
+    UCSB cylinders project'''
+    def __init__(self, url_harvest, extra_data):
+        '''Grab file and copy to local temp file'''
+        super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data)
+        self.url_marc_xml = url_harvest
+        self.marc_xml_file = tempfile.TemporaryFile()
+        self.marc_xml_file.write(urllib.urlopen(self.url_marc_xml).read())
+        self.marc_xml_file.seek(0)
+        self.recs=[rec for rec in pymarc.parse_xml_to_array(self.marc_xml_file) if rec is not None]
+        self.index = -1
+
+    def next(self):
+        '''Return MARC record by record to the controller'''
+        while self.index + 1 < len(self.recs):
+            self.index += 1
+            return self.recs[self.index]
+        raise StopIteration
+###        while self.index < len(self.recs):
+###            print "INDEX:{}".format(self.index)
+###            yield self.recs[self.index]
+###            self.index += 1
 
 HARVEST_TYPES = {'OAI': OAIFetcher,
                  'OAJ': OAC_JSON_Fetcher,
@@ -421,6 +445,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'SLR': SolrFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
+                 'ALX': AlephMARCXMLFetcher,
 }
 
 

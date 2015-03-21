@@ -503,6 +503,21 @@ class MARCFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(len(rec['fields']), 21)
 
 
+class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
+    def testInit(self):
+        h = fetcher.AlephMARCXMLFetcher('file:'+DIR_FIXTURES+'/ucsb_aleph_cylinders', None)
+        self.assertTrue(hasattr(h, 'url_marc_xml'))
+        self.assertTrue(hasattr(h, 'marc_xml_file'))
+        self.assertIsInstance(h.marc_xml_file, file)
+        self.assertTrue(hasattr(h, 'recs'))
+        self.assertEqual(type(h.recs), list)
+        self.assertEqual(len(h.recs), 3)
+        n = 0
+        for obj in h:
+            n += 1
+        self.assertEqual(3, n)
+
+
 class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an MARC harvest controller'''
     def setUp(self):
