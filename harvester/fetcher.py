@@ -432,7 +432,7 @@ class AlephMARCXMLFetcher(Fetcher):
         '''Return MARC record by record to the controller'''
         while self.index + 1 < len(self.recs):
             self.index += 1
-            return self.recs[self.index]
+            return self.recs[self.index].as_dict()
         raise StopIteration
 ###        while self.index < len(self.recs):
 ###            print "INDEX:{}".format(self.index)
