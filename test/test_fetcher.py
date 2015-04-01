@@ -505,7 +505,7 @@ class MARCFetcherTestCase(LogOverrideMixin, TestCase):
 
 class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
     def testInit(self):
-        h = fetcher.AlephMARCXMLFetcher('file:'+DIR_FIXTURES+'/ucsb_aleph_cylinders', None)
+        h = fetcher.AlephMARCXMLFetcher('file:'+DIR_FIXTURES+'/ucsb_aleph_cylinders.xml', None)
         self.assertTrue(hasattr(h, 'url_marc_xml'))
         self.assertTrue(hasattr(h, 'marc_xml_file'))
         self.assertIsInstance(h.marc_xml_file, file)
