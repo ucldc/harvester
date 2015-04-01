@@ -59,12 +59,16 @@ class SolrUpdaterTestCase(TestCase):
                   'Uchida (Yoshiko) photograph collection']
         self.assertEqual(sdoc['collection_data'], c_data)
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
-        self.assertTrue('contributor' not in sdoc)
-        self.assertTrue('coverage' not in sdoc)
-        self.assertTrue('creator' not in sdoc)
-        self.assertTrue('description' not in sdoc)
-        self.assertTrue('date' not in sdoc)
-        self.assertTrue('language' not in sdoc)
+        self.assertEqual(sdoc['contributor'], ['contrib 1', 'contrib 2'])
+        self.assertEqual(sdoc['coverage'][0], {'text': 'Palm Springs (Calif.)',
+                                                "attrib": { "q": "spatial" } })
+        self.assertEqual(sdoc['coverage'][3], {"text": "Tahquitz Canyon",
+                                                "attrib": {"q": "spatial"}})
+        self.assertEqual(sdoc['creator'], [u'creator 1', u'creator 2'])
+        self.assertEqual(sdoc['description'], [u'description 1',
+                                        u'description 2', u'description 3'])
+        self.assertEqual(sdoc['date'], {u'begin': u'1885', u'end': u'1890', u'displayDate': u'between 1885-1890'})
+        self.assertEqual(sdoc['language'], [{u'name': u'English', u'iso639_3': u'en'}])
         self.assertEqual(sdoc['publisher'], u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/'),
         self.assertEqual(sdoc['relation'], [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'])
         self.assertEqual(sdoc['rights'], [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'])

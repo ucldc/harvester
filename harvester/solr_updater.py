@@ -20,7 +20,8 @@ COUCHDOC_TO_SOLR_MAPPING = {
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
-    'coverage'    : lambda d: {'spatial': d.get('spatial', None)},
+    'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
+    'spatial'     : lambda d: {'coverage': d.get('spatial', None)},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
     'description' : lambda d: {'description': d.get('description', None)},
     'date'        : lambda d: {'date': d.get('date', None)},
