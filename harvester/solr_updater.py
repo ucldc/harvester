@@ -37,6 +37,9 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'extent'      : lambda d: {'extent': d.get('extent', None)},
 }
 
+class OldCollectionException(Exception):
+    pass
+
 def map_registry_data(collections):
     '''Map the collections data to corresponding data fields in the solr doc
     '''
@@ -61,7 +64,10 @@ def map_registry_data(collections):
             campus_names.extend([campus['name'] for c in campuses])
             campus_datas.extend(['::'.join((campus['@id'], campus['name']))
                 for campus in campuses])
-        repositories = collection['repository']
+        try:
+            repositories = collection['repository']
+        except KeyError:
+            raise OldCollectionException
         repository_urls.extend([repo['@id'] for repo in repositories])
         repository_names.extend([repo['name'] for repo in repositories])
         repo_datas = []
@@ -173,7 +179,11 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
         else:
             doc = db.get(cur_id)
             try:
-                solr_doc = map_couch_to_solr_doc(doc)
+                try:
+                    solr_doc = map_couch_to_solr_doc(doc)
+                except OldCollectionException:
+                    print('OLD COLLECTION FOR:{}'.format(cur_id))
+                    continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
             except TypeError, e:
                 print('TypeError for {0} : {1}'.format(cur_id, e))
