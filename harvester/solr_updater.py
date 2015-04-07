@@ -9,6 +9,7 @@ import requests
 import boto
 from solr import Solr, SolrException
 from couchdb import Server, Database, Document
+from facet_decade import facet_decade
 
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
 
@@ -96,6 +97,13 @@ def map_registry_data(collections):
                 repository_data = repository_datas,
                 )
                                     
+def add_facet_decade(couch_doc, solr_doc):
+    '''Add the facet_decade field to the solr_doc dictionary'''
+    display_date = ''
+    if 'date' in couch_doc['sourceResource']:
+        display_date = couch_doc['sourceResource']['date'].get('displayDate', '')
+    facet_decade_list = facet_decade(display_date)
+    solr_doc['facet_decade'] = facet_decade_list
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
@@ -113,6 +121,7 @@ def map_couch_to_solr_doc(doc):
             except TypeError, e:
                 print('TypeError for doc {} on sourceResource {}'.format(doc['_id'], p))
                 raise e
+    add_facet_decade(doc, solr_doc)
     return solr_doc
 
 

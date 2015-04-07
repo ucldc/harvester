@@ -78,6 +78,18 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['format'], 'mods')
         self.assertTrue('extent' not in sdoc)
 
+    def test_decade_facet(self):
+        '''Test generation of decade facet
+        Currently generated from sourceResource.date.displayDate
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['facet_decade'], ['1880s','1890s'])
+        # no "date" in sourceResource
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_nocampus.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['facet_decade'], [])
+
     @patch('boto.connect_s3', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
