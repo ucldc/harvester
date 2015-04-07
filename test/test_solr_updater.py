@@ -6,6 +6,7 @@ from test.utils import DIR_FIXTURES
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
+from harvester.solr_updater import OldCollectionException
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
@@ -84,11 +85,11 @@ class SolrUpdaterTestCase(TestCase):
         '''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['facet_decade'], ['1880s','1890s'])
+        self.assertEqual(sdoc['facet_decade'], set(['1880s','1890s']))
         # no "date" in sourceResource
         doc = json.load(open(DIR_FIXTURES+'/couchdb_nocampus.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['facet_decade'], [])
+        self.assertEqual(sdoc['facet_decade'], set([]))
 
     @patch('boto.connect_s3', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
@@ -107,6 +108,10 @@ class SolrUpdaterTestCase(TestCase):
         mock_boto().get_bucket.assert_called_with('ucldc')
         mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
+
+    def test_old_collection(self):
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_norepo.json'))
+        self.assertRaises(OldCollectionException, map_couch_to_solr_doc, doc )
 
 
 class GrabSolrIndexTestCase(TestCase):

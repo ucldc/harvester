@@ -97,13 +97,31 @@ def map_registry_data(collections):
                 repository_data = repository_datas,
                 )
                                     
+
+def get_facet_decades(date):
+    '''Return set of decade string for given date structure.
+    date is a dict with a "displayDate" key.
+    '''
+    facet_decades = facet_decade(date.get('displayDate', ''))
+    facet_decade_set = set() #don't repeat values
+    for decade in facet_decades:
+        facet_decade_set.add(decade)
+    return facet_decade_set
+
+
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
-    display_date = ''
     if 'date' in couch_doc['sourceResource']:
-        display_date = couch_doc['sourceResource']['date'].get('displayDate', '')
-    facet_decade_list = facet_decade(display_date)
-    solr_doc['facet_decade'] = facet_decade_list
+        date_field = couch_doc['sourceResource']['date']
+        if isinstance(date_field, list):
+            for date in date_field:
+                facet_decades = get_facet_decades(date)
+        else:
+            facet_decades = get_facet_decades(date_field)
+        solr_doc['facet_decade'] = facet_decades
+    else:
+        solr_doc['facet_decade'] = set()
+
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
