@@ -111,16 +111,23 @@ def get_facet_decades(date):
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
+    solr_doc['facet_decade'] = set()
     if 'date' in couch_doc['sourceResource']:
         date_field = couch_doc['sourceResource']['date']
         if isinstance(date_field, list):
             for date in date_field:
-                facet_decades = get_facet_decades(date)
+                try:
+                    facet_decades = get_facet_decades(date)
+                    solr_doc['facet_decade'] = facet_decades
+                except AttributeError, e:
+                    print('Attr Error for doc:{} ERROR:{}'.format(
+                            couch_doc['_id'],e))
         else:
-            facet_decades = get_facet_decades(date_field)
-        solr_doc['facet_decade'] = facet_decades
-    else:
-        solr_doc['facet_decade'] = set()
+            try:
+                facet_decades = get_facet_decades(date_field)
+                solr_doc['facet_decade'] = facet_decades
+            except AttributeError, e:
+                print('Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],e))
 
 
 def map_couch_to_solr_doc(doc):
