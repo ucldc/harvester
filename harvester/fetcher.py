@@ -415,29 +415,61 @@ class OAC_JSON_Fetcher(Fetcher):
             self.objset = n_objset
         return cur_objset
 
+
+
 class AlephMARCXMLFetcher(Fetcher):
     '''Harvest a MARC XML feed from Aleph. Currently used for the 
     UCSB cylinders project'''
-    def __init__(self, url_harvest, extra_data):
+    def __init__(self, url_harvest, extra_data, page_size=500):
         '''Grab file and copy to local temp file'''
         super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data)
-        self.url_marc_xml = url_harvest
-        self.marc_xml_file = tempfile.TemporaryFile()
-        self.marc_xml_file.write(urllib.urlopen(self.url_marc_xml).read())
-        self.marc_xml_file.seek(0)
-        self.recs=[rec for rec in pymarc.parse_xml_to_array(self.marc_xml_file) if rec is not None]
-        self.index = -1
+        self.ns={'zs':"http://www.loc.gov/zing/srw/"}
+        self.page_size = page_size
+        self.url_base = url_harvest + '&maximumRecords=' + str(self.page_size)
+        self.current_record = 1
+        url_current = ''.join((self.url_base, '&startRecord=',
+                                   str(self.current_record)))
+        
+        tree_current = self.get_current_xml_tree()
+        self.num_records = self.get_total_records(tree_current)
+
+    def get_url_current_chunk(self):
+        '''Set the next URL to retrieve according to page size and current
+        record'''
+        return ''.join((self.url_base, '&startRecord=',
+                                   str(self.current_record)))
+
+    def get_current_xml_tree(self):
+        '''Return an ElementTree for the next xml_page'''
+        url = self.get_url_current_chunk()
+        print "URL --->{}".format(url)
+        return ET.fromstring(urllib.urlopen(url).read())
+
+    def get_total_records(self, tree):
+        '''Return the total number of records from the etree passed in'''
+        return int(tree.find('.//zs:numberOfRecords', self.ns).text)
 
     def next(self):
-        '''Return MARC record by record to the controller'''
-        while self.index + 1 < len(self.recs):
-            self.index += 1
-            return self.recs[self.index].as_dict()
-        raise StopIteration
-###        while self.index < len(self.recs):
-###            print "INDEX:{}".format(self.index)
-###            yield self.recs[self.index]
-###            self.index += 1
+        '''Return MARC records in sets to controller.
+        Break when last record position == num_records
+        '''
+        if self.current_record >= self.num_records:
+            raise StopIteration
+        #get chunk from self.current_record to self.current_record + page_size
+        tree = self.get_current_xml_tree()
+        recs_xml=tree.findall('.//zs:record', self.ns)
+        #advance current record to end of set
+        self.current_record = int(recs_xml[-1].find(
+                                './/zs:recordPosition', self.ns).text)
+        self.current_record += 1
+        #translate to pymarc records & return
+        marc_xml_file = tempfile.TemporaryFile()
+        marc_xml_file.write(ET.tostring(tree))
+        marc_xml_file.seek(0)
+        recs=[rec.as_dict() for rec in pymarc.parse_xml_to_array(marc_xml_file) if rec is not None]
+        return recs
+
+
 
 HARVEST_TYPES = {'OAI': OAIFetcher,
                  'OAJ': OAC_JSON_Fetcher,

@@ -504,19 +504,34 @@ class MARCFetcherTestCase(LogOverrideMixin, TestCase):
 
 
 class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
-    def testInit(self):
-        h = fetcher.AlephMARCXMLFetcher('file:'+DIR_FIXTURES+'/ucsb_aleph_cylinders.xml', None)
-        self.assertTrue(hasattr(h, 'url_marc_xml'))
-        self.assertTrue(hasattr(h, 'marc_xml_file'))
-        self.assertIsInstance(h.marc_xml_file, file)
-        self.assertTrue(hasattr(h, 'recs'))
-        self.assertEqual(type(h.recs), list)
-        self.assertEqual(len(h.recs), 3)
-        n = 0
-        for obj in h:
-            n += 1
-        self.assertEqual(3, n)
 
+    @httpretty.activate
+    def testInit(self):
+        httpretty.register_uri(httpretty.GET,
+                'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
+                body=open(DIR_FIXTURES+'/ucsb-aleph-resp-1-3.xml').read())
+        h = fetcher.AlephMARCXMLFetcher('http://ucsb-fake-aleph/endpoint', None, page_size=3)
+        self.assertTrue(hasattr(h, 'ns'))
+        self.assertTrue(hasattr(h, 'url_base'))
+        self.assertEqual(h.page_size, 3)
+        self.assertEqual(h.num_records, 8)
+
+    @httpretty.activate
+    def testFetching(self):
+        httpretty.register_uri(httpretty.GET,
+                'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
+                body=open(DIR_FIXTURES+'/ucsb-aleph-resp-1-3.xml').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=4',
+                body=open(DIR_FIXTURES+'/ucsb-aleph-resp-4-6.xml').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=7',
+                body=open(DIR_FIXTURES+'/ucsb-aleph-resp-7-8.xml').read())
+        h = fetcher.AlephMARCXMLFetcher('http://ucsb-fake-aleph/endpoint', None, page_size=3)
+        num_fetched = 0
+        for objset in h:
+            num_fetched += len(objset)
+        self.assertEqual(num_fetched, 8)
 
 class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an MARC harvest controller'''

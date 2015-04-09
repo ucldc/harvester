@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<zs:searchRetrieveResponse xmlns:zs="http://www.loc.gov/zing/srw/"><zs:version>1.1</zs:version><zs:numberOfRecords>10199</zs:numberOfRecords><zs:records><zs:record><zs:recordSchema>info:srw/schema/1/marcxml-v1.1</zs:recordSchema><zs:recordPacking>xml</zs:recordPacking><zs:recordData><record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>01485njm a2200385 a 4500</leader>
+  <controlfield tag="001">002145839</controlfield>
+  <controlfield tag="004">ALL8076</controlfield>
+  <controlfield tag="005">20131221201825.0</controlfield>
+  <controlfield tag="007">se hmssnnmwhna</controlfield>
+  <controlfield tag="007">cr|nn||||a|ump</controlfield>
+  <controlfield tag="008">990630s1905    njuwzn g                d</controlfield>
+  <datafield tag="028" ind1="0" ind2="0">
+    <subfield code="a">9169</subfield>
+    <subfield code="b">Edison Gold Moulded Record</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(OCoLC)ocm41631439</subfield>
+  </datafield>
+  <datafield tag="035" ind1="9" ind2=" ">
+    <subfield code="a">ALL8076</subfield>
+    <subfield code="b">MA</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">SYB</subfield>
+    <subfield code="c">SYB</subfield>
+    <subfield code="d">CU-SB</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="0">
+    <subfield code="a">Good-night waltz</subfield>
+    <subfield code="h">[sound recording].</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Orange, N.J. :</subfield>
+    <subfield code="b">National Phonograph Co.,</subfield>
+    <subfield code="c">[1905]</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">1 cylinder (ca. 2 min.) :</subfield>
+    <subfield code="b">160 rpm ;</subfield>
+    <subfield code="c">2 1/4 x 4 in.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Edison Gold Moulded Record: 9169.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="a">Todd collection.</subfield>
+    <subfield code="5">CU-SB</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Year of release from "The Edison Phonograph Monthly," v.3 (1905/1906).</subfield>
+  </datafield>
+  <datafield tag="511" ind1="0" ind2=" ">
+    <subfield code="a">Edison Military Band.</subfield>
+  </datafield>
+  <datafield tag="520" ind1="8" ind2=" ">
+    <subfield code="a">Dance music.</subfield>
+  </datafield>
+  <datafield tag="505" ind1="0" ind2=" ">
+    <subfield code="a">Medley includes "My dream" waltz, "Auld lang syne", "Good night ladies", "Merrily we roll along", and "Home, sweet home."</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Also available online via the Internet.</subfield>
+  </datafield>
+  <datafield tag="650" ind1=" " ind2="0">
+    <subfield code="a">Band music.</subfield>
+  </datafield>
+  <datafield tag="655" ind1=" " ind2="0">
+    <subfield code="a">Waltzes.</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Edison Military Band.</subfield>
+    <subfield code="4">prf</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="3">Audio files:</subfield>
+    <subfield code="u">http://www.library.ucsb.edu/OBJID/Cylinder0004</subfield>
+  </datafield>
+  <datafield tag="852" ind1="4" ind2="0">
+    <subfield code="a">CU-SB</subfield>
+    <subfield code="b">MAIN</subfield>
+    <subfield code="c">SPPA</subfield>
+    <subfield code="j">Cylinder 0004</subfield>
+    <subfield code="n">us</subfield>
+    <subfield code="9">1</subfield>
+    <subfield code="4">Main Library</subfield>
+    <subfield code="5">Special Coll., Performing Arts</subfield>
+  </datafield>
+  <datafield tag="852" ind1="4" ind2="0">
+    <subfield code="a">CU-SB</subfield>
+    <subfield code="b">MAIN</subfield>
+    <subfield code="c">SPPA</subfield>
+    <subfield code="j">Cylinder 6786</subfield>
+    <subfield code="t">2</subfield>
+    <subfield code="z">Copy 2</subfield>
+    <subfield code="n">us</subfield>
+    <subfield code="x">dcs 2004 cat</subfield>
+    <subfield code="4">Main Library</subfield>
+    <subfield code="5">Special Coll., Performing Arts</subfield>
+  </datafield>
+  <datafield tag="940" ind1=" " ind2=" ">
+    <subfield code="a">OCLC</subfield>
+  </datafield>
+  <datafield tag="945" ind1=" " ind2=" ">
+    <subfield code="d">01/26/00</subfield>
+    <subfield code="n">dcs 2/2/00 cat</subfield>
+  </datafield>
+  <datafield tag="948" ind1=" " ind2=" ">
+    <subfield code="a">LTI 01/18/2015</subfield>
+  </datafield>
+  <datafield tag="049" ind1=" " ind2=" ">
+    <subfield code="a">CUTM</subfield>
+  </datafield>
+</record></zs:recordData><zs:recordPosition>4</zs:recordPosition></zs:record><zs:record><zs:recordSchema>info:srw/schema/1/marcxml-v1.1</zs:recordSchema><zs:recordPacking>xml</zs:recordPacking><zs:recordData><record xmlns="http://www.loc.gov/MARC21/slim">
+<!-- Length implementation at offset 22 should hold a digit. Assuming 0 -->
+  <leader>01419cjm a2200397 a 4500</leader>
+  <controlfield tag="001">002145840</controlfield>
+  <controlfield tag="004">ALL8077</controlfield>
+  <controlfield tag="005">20131221201825.0</controlfield>
+  <controlfield tag="007">se immznnmphna</controlfield>
+  <controlfield tag="007">cr|nn||||a|ump</controlfield>
+  <controlfield tag="008">980701s1914    njusgn g            eng d</controlfield>
+  <datafield tag="028" ind1="0" ind2="0">
+    <subfield code="a">2197</subfield>
+    <subfield code="b">Edison Blue Amberol</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(OCoLC)ocm39375964</subfield>
+  </datafield>
+  <datafield tag="035" ind1="9" ind2=" ">
+    <subfield code="a">ALL8077</subfield>
+    <subfield code="b">MA</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">SYB</subfield>
+    <subfield code="c">SYB</subfield>
+    <subfield code="d">CUT</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Daly, Jos. M.</subfield>
+    <subfield code="q">(Joseph M.)</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="4">
+    <subfield code="a">The pussy cat rag</subfield>
+    <subfield code="h">[sound recording] /</subfield>
+    <subfield code="c">Daly and Allen.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Orange, N.J. :</subfield>
+    <subfield code="b">Edison Blue Amberol,</subfield>
+    <subfield code="c">[1914]</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">1 cylinder (ca. 4 min.) :</subfield>
+    <subfield code="b">160 rpm ;</subfield>
+    <subfield code="c">2 1/4 x 4 in.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="a">Blanche Browning Rich collection.</subfield>
+    <subfield code="5">CU-SB</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Edison Blue Amberol: 2197.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Year of release from "The Edison Phonograph Monthly," v.12 (1914).</subfield>
+  </datafield>
+  <datafield tag="511" ind1="0" ind2=" ">
+    <subfield code="a">Peerless Quartet and Ada Jones.</subfield>
+  </datafield>
+  <datafield tag="520" ind1="8" ind2=" ">
+    <subfield code="a">Comic song, orchestra accompaniment.</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Also available online via the Internet.</subfield>
+  </datafield>
+  <datafield tag="650" ind1=" " ind2="0">
+    <subfield code="a">Popular music</subfield>
+    <subfield code="y">1911-1920.</subfield>
+  </datafield>
+  <datafield tag="655" ind1=" " ind2="0">
+    <subfield code="a">Humorous songs.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Allen, Thos. S.,</subfield>
+    <subfield code="d">1876-1919.</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Peerless Quartet.</subfield>
+    <subfield code="4">prf</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Jones, Ada.</subfield>
+    <subfield code="4">voc</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="3">Audio files:</subfield>
+    <subfield code="u">http://www.library.ucsb.edu/OBJID/Cylinder0331</subfield>
+  </datafield>
+  <datafield tag="852" ind1="4" ind2="0">
+    <subfield code="a">CU-SB</subfield>
+    <subfield code="b">MAIN</subfield>
+    <subfield code="c">SPPA</subfield>
+    <subfield code="j">Cylinder 0331</subfield>
+    <subfield code="z">Take 1</subfield>
+    <subfield code="n">us</subfield>
+    <subfield code="x">lwh 2/02/2004 item</subfield>
+    <subfield code="9">1</subfield>
+    <subfield code="4">Main Library</subfield>
+    <subfield code="5">Special Coll., Performing Arts</subfield>
+  </datafield>
+  <datafield tag="940" ind1=" " ind2=" ">
+    <subfield code="a">OCLC</subfield>
+  </datafield>
+  <datafield tag="945" ind1=" " ind2=" ">
+    <subfield code="d">01/26/00</subfield>
+  </datafield>
+  <datafield tag="948" ind1=" " ind2=" ">
+    <subfield code="a">LTI 01/18/2015</subfield>
+  </datafield>
+  <datafield tag="049" ind1=" " ind2=" ">
+    <subfield code="a">CUTM</subfield>
+  </datafield>
+</record></zs:recordData><zs:recordPosition>5</zs:recordPosition></zs:record><zs:record><zs:recordSchema>info:srw/schema/1/marcxml-v1.1</zs:recordSchema><zs:recordPacking>xml</zs:recordPacking><zs:recordData><record xmlns="http://www.loc.gov/MARC21/slim">
+<!-- Length implementation at offset 22 should hold a digit. Assuming 0 -->
+  <leader>01662cjm a2200421 a 4500</leader>
+  <controlfield tag="001">002145841</controlfield>
+  <controlfield tag="004">ALL8078</controlfield>
+  <controlfield tag="005">20131221201825.0</controlfield>
+  <controlfield tag="007">se immznnmwhna</controlfield>
+  <controlfield tag="007">cr|nn||||a|ump</controlfield>
+  <controlfield tag="008">990329s1909    njusgn g            eng d</controlfield>
+  <datafield tag="028" ind1="0" ind2="0">
+    <subfield code="a">354</subfield>
+    <subfield code="b">Edison Amberol</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(OCoLC)ocm41062946</subfield>
+  </datafield>
+  <datafield tag="035" ind1="9" ind2=" ">
+    <subfield code="a">ALL8078</subfield>
+    <subfield code="b">MA</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">SYB</subfield>
+    <subfield code="c">SYB</subfield>
+    <subfield code="d">CUT</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Von Tilzer, Harry,</subfield>
+    <subfield code="d">1872-1946.</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Ireland isn't Ireland anymore</subfield>
+    <subfield code="h">[sound recording] /</subfield>
+    <subfield code="c">Harry Von Tilzer.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Orange, N.J. :</subfield>
+    <subfield code="b">Edison Amberol,</subfield>
+    <subfield code="c">[1909]</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">1 cylinder (ca. 4 min.) :</subfield>
+    <subfield code="b">160 rpm ;</subfield>
+    <subfield code="c">2 1/4 x 4 in.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="a">Todd collection.</subfield>
+    <subfield code="5">CU-SB</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Edison Amberol: 354.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Words by Vincent Bryan.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Year of release and writing credit from "The Edison Phonograph Monthly," v.7 (1909).</subfield>
+  </datafield>
+  <datafield tag="511" ind1="0" ind2=" ">
+    <subfield code="a">Edward M. Favor.</subfield>
+  </datafield>
+  <datafield tag="520" ind1="8" ind2=" ">
+    <subfield code="a">Comic song. Male vocal with orchestra accompaniment.</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Also available online via the Internet.</subfield>
+  </datafield>
+  <datafield tag="650" ind1=" " ind2="0">
+    <subfield code="a">Popular music</subfield>
+    <subfield code="y">1901-1910.</subfield>
+  </datafield>
+  <datafield tag="655" ind1=" " ind2="0">
+    <subfield code="a">Humorous songs.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Bryan, Vincent,</subfield>
+    <subfield code="d">1883-1937.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Favor, Edward M.,</subfield>
+    <subfield code="d">1856-1936.</subfield>
+    <subfield code="4">voc</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="3">Audio files:</subfield>
+    <subfield code="u">http://www.library.ucsb.edu/OBJID/Cylinder2118</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="3">Audio files:</subfield>
+    <subfield code="u">http://www.library.ucsb.edu/OBJID/Cylinder2119</subfield>
+  </datafield>
+  <datafield tag="852" ind1="4" ind2="0">
+    <subfield code="a">CU-SB</subfield>
+    <subfield code="b">MAIN</subfield>
+    <subfield code="c">SPPA</subfield>
+    <subfield code="j">Cylinder 2119</subfield>
+    <subfield code="t">2</subfield>
+    <subfield code="z">Copy 2</subfield>
+    <subfield code="z">Take 2</subfield>
+    <subfield code="n">us</subfield>
+    <subfield code="9">1</subfield>
+    <subfield code="4">Main Library</subfield>
+    <subfield code="5">Special Coll., Performing Arts</subfield>
+  </datafield>
+  <datafield tag="852" ind1="4" ind2="0">
+    <subfield code="a">CU-SB</subfield>
+    <subfield code="b">MAIN</subfield>
+    <subfield code="c">SPPA</subfield>
+    <subfield code="j">Cylinder 2118</subfield>
+    <subfield code="z">Copy 1</subfield>
+    <subfield code="z">Take 1</subfield>
+    <subfield code="n">us</subfield>
+    <subfield code="x">lwh 2/02/2004 item</subfield>
+    <subfield code="9">1</subfield>
+    <subfield code="4">Main Library</subfield>
+    <subfield code="5">Special Coll., Performing Arts</subfield>
+  </datafield>
+  <datafield tag="940" ind1=" " ind2=" ">
+    <subfield code="a">OCLC</subfield>
+  </datafield>
+  <datafield tag="945" ind1=" " ind2=" ">
+    <subfield code="d">01/26/00</subfield>
+    <subfield code="n">dcs 2/2/00 cat</subfield>
+  </datafield>
+  <datafield tag="948" ind1=" " ind2=" ">
+    <subfield code="a">LTI 01/18/2015</subfield>
+  </datafield>
+  <datafield tag="049" ind1=" " ind2=" ">
+    <subfield code="a">CUTM</subfield>
+  </datafield>
+</record></zs:recordData><zs:recordPosition>6</zs:recordPosition></zs:record></zs:records></zs:searchRetrieveResponse>
