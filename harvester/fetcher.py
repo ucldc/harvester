@@ -442,7 +442,6 @@ class AlephMARCXMLFetcher(Fetcher):
     def get_current_xml_tree(self):
         '''Return an ElementTree for the next xml_page'''
         url = self.get_url_current_chunk()
-        print "URL --->{}".format(url)
         return ET.fromstring(urllib.urlopen(url).read())
 
     def get_total_records(self, tree):
