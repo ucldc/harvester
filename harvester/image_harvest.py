@@ -79,16 +79,21 @@ class ImageHarvester(object):
         if isinstance(url_image, list): # need to fix marc map_is_shown_at
             url_image = url_image[0]
         # for some OAC objects, the reference image is not a url but a path.
-        if 'http' != url_image[:4]:
+        if 'http' != url_image[:4] and 'https' != url_image[:5]:
             # not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-        # print >> sys.stderr,("For {} url image is:{}".format(doc['_id'], url_image))
+            else:
+                print >> sys.stderr, 'Link not http URL for {} - {}'.format(
+                                      doc['_id'], url_image)
+                return None
         if link_is_to_image(url_image):
             return md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,
                                          url_auth=self._auth)
         else:
+            print >> sys.stderr, 'Not an image for {} - {}'.format(
+                                      doc['_id'], url_image)
             return None
 
     def update_doc_object(self, doc, report):

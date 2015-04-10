@@ -44,13 +44,13 @@ class ImageHarvestTestCase(TestCase):
 
     def test_update_doc_object(self):
         '''Test call to couchdb, right data'''
-        doc = {}
+        doc = {'_id': 'TESTID'}
         r = self.report('s3 test2 url', 'md5 test value')
         db = MagicMock()
         ret = image_harvest.ImageHarvester(cdb=db).update_doc_object(doc, r)
         self.assertEqual('md5 test value', ret)
         self.assertEqual('md5 test value', doc['object'])
-        db.save.assert_called_with({'object': 'md5 test value'})
+        db.save.assert_called_with({'_id': 'TESTID', 'object': 'md5 test value'})
     
     @httpretty.activate
     def test_link_is_to_image(self):
@@ -82,7 +82,7 @@ class ImageHarvestTestCase(TestCase):
         type is not a image
         '''
         url = 'http://getthisimage/notanimage'
-        doc = { 'isShownBy':url }
+        doc = {'_id': 'TESTID', 'isShownBy':url }
         httpretty.register_uri(httpretty.HEAD,
                 url,
                 body='',
