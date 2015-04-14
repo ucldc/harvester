@@ -20,6 +20,7 @@ import solr
 from collection_registry_client import Collection
 import config
 from pymarc import MARCReader
+import pymarc
 import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
@@ -415,12 +416,67 @@ class OAC_JSON_Fetcher(Fetcher):
         return cur_objset
 
 
+
+class AlephMARCXMLFetcher(Fetcher):
+    '''Harvest a MARC XML feed from Aleph. Currently used for the 
+    UCSB cylinders project'''
+    def __init__(self, url_harvest, extra_data, page_size=500):
+        '''Grab file and copy to local temp file'''
+        super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data)
+        self.ns={'zs':"http://www.loc.gov/zing/srw/"}
+        self.page_size = page_size
+        self.url_base = url_harvest + '&maximumRecords=' + str(self.page_size)
+        self.current_record = 1
+        url_current = ''.join((self.url_base, '&startRecord=',
+                                   str(self.current_record)))
+        
+        tree_current = self.get_current_xml_tree()
+        self.num_records = self.get_total_records(tree_current)
+
+    def get_url_current_chunk(self):
+        '''Set the next URL to retrieve according to page size and current
+        record'''
+        return ''.join((self.url_base, '&startRecord=',
+                                   str(self.current_record)))
+
+    def get_current_xml_tree(self):
+        '''Return an ElementTree for the next xml_page'''
+        url = self.get_url_current_chunk()
+        return ET.fromstring(urllib.urlopen(url).read())
+
+    def get_total_records(self, tree):
+        '''Return the total number of records from the etree passed in'''
+        return int(tree.find('.//zs:numberOfRecords', self.ns).text)
+
+    def next(self):
+        '''Return MARC records in sets to controller.
+        Break when last record position == num_records
+        '''
+        if self.current_record >= self.num_records:
+            raise StopIteration
+        #get chunk from self.current_record to self.current_record + page_size
+        tree = self.get_current_xml_tree()
+        recs_xml=tree.findall('.//zs:record', self.ns)
+        #advance current record to end of set
+        self.current_record = int(recs_xml[-1].find(
+                                './/zs:recordPosition', self.ns).text)
+        self.current_record += 1
+        #translate to pymarc records & return
+        marc_xml_file = tempfile.TemporaryFile()
+        marc_xml_file.write(ET.tostring(tree))
+        marc_xml_file.seek(0)
+        recs=[rec.as_dict() for rec in pymarc.parse_xml_to_array(marc_xml_file) if rec is not None]
+        return recs
+
+
+
 HARVEST_TYPES = {'OAI': OAIFetcher,
                  'OAJ': OAC_JSON_Fetcher,
                  'OAC': OAC_XML_Fetcher,
                  'SLR': SolrFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
+                 'ALX': AlephMARCXMLFetcher,
 }
 
 
@@ -460,21 +516,6 @@ class HarvestController(object):
         self.ingestion_doc = None
         self.couch = None
         self.num_records = 0
-
-    def create_id(self, identifier):
-        '''Create an id that is good for items. Take campus, repo and collection
-        name to form prefix to individual item id. Ensures unique ids in db,
-        in case any local ids are identical.
-        May do something smarter when known GUIDs (arks, doi, etc) are in use.
-        Takes a list of possible identifiers and creates a string id.
-        '''
-        if not isinstance(identifier, list):
-            raise TypeError('Identifier field should be a list')
-        campusStr = '-'.join([x['slug'] for x in self.collection.campus])
-        repoStr = '-'.join([x['slug'] for x in self.collection.repository])
-        sID = '-'.join((campusStr, repoStr, self.collection.slug,
-                        identifier[0].replace(' ', '-')))
-        return sID
 
     @staticmethod
     def dt_json_handler(obj):
@@ -554,24 +595,22 @@ class HarvestController(object):
         # get base registry URL
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
-        obj['collection'] = [{'@id': self.collection.url,
-                              'id': self.collection.url.strip('/').rsplit('/', 1)[1],
-                              'name': self.collection.name,
-                              'title': self.collection.name,
-                              'ingestType': 'collection',
-                              'description': self.collection.description,
-                              'dcmi_type': self.collection.dcmi_type,
-                              'rights_statement': self.collection.rights_statement,
-                              'rights_status': self.collection.rights_status,
-                              }]
-        obj['campus'] = []
+        self.collection['@id'] = self.collection.url
+        self.collection['id'] = self.collection.url.strip('/').rsplit('/', 1)[1]
+        self.collection['ingestType'] = 'collection'
+        self.collection['title'] = self.collection.name
+        obj['collection'] = dict(self.collection)
+        campus = []
         for c in self.collection.get('campus', []):
-            obj['campus'].append({'@id': ''.join((base_url, c['resource_uri'])),
-                                  'name': c['name']})
-        obj['repository'] = []
+            c.update({'@id': ''.join((base_url, c['resource_uri']))})
+            campus.append(c)
+        obj['collection']['campus'] = campus
+        repository = []
         for r in self.collection['repository']:
-            obj['repository'].append({'@id': ''.join((base_url, r['resource_uri'])),
-                                      'name': r['name']})
+            r.update({'@id': ''.join((base_url, r['resource_uri']))})
+            repository.append(r)
+        obj['collection']['repository'] = repository
+        obj['collection'] = [obj['collection']]  # in future may be more than one
         return obj
 
     def harvest(self):
@@ -634,7 +673,8 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
-         dir_profile='profiles', profile_path=None, config_file='akara.ini'):
+         dir_profile='profiles', profile_path=None,
+         config_file=os.environ.get('DPLA_CONFIG_FILE', 'akara.ini')):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.

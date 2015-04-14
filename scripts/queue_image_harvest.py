@@ -48,7 +48,7 @@ def def_args():
 
 
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
-                        collection_key, url_couchdb, object_auth=None,
+                        collection_key, url_couchdb=None, object_auth=None,
                         no_get_if_object=False,
                         harvest_timeout=IMAGE_HARVEST_TIMEOUT):
     rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
@@ -93,13 +93,11 @@ def main(user_email, url_api_collection, log_handler=None,
 
     print log_handler
     log_handler.push_application()
-    url_couchdb = 'http://localhost:5984'
     print config
     # the image_harvest should be a separate job, with a long timeout
     job = queue_image_harvest(config.redis_host, config.redis_port,
                               config.redis_pswd, config.redis_timeout,
                               collection_key=collection.provider,
-                              url_couchdb=url_couchdb,
                               object_auth=collection.auth,
                               **kwargs)
 
@@ -113,10 +111,8 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     kwargs = {}
-###    if args.object_auth:
-###        kwargs['object_auth'] = args.object_auth
-###    if args.url_couchdb:
-###        kwargs['url_couchdb'] = args.url_couchdb
+    if args.object_auth:
+        kwargs['object_auth'] = args.object_auth
     if args.timeout:
         kwargs['harvest_timeout'] = int(args.timeout)
     if args.no_get_if_object:

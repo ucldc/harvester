@@ -8,8 +8,9 @@ import os
 import sys
 import datetime
 import time
-import md5s3stash
 import couchdb
+import requests
+import md5s3stash
 from harvester.config import config
 
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
@@ -17,6 +18,19 @@ COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
+
+def link_is_to_image(url):
+    '''Check if the link points to an image content type.
+    Return True or False accordingly
+    '''
+    response = requests.head(url)
+    if response.status_code != 200:
+        return False
+    content_type = response.headers.get('content-type', None)
+    if not content_type:
+        return False
+    reg_type = content_type.split('/', 1)[0].lower()
+    return reg_type == 'image'
 
 class ImageHarvester(object):
     '''Useful to cache couchdb, authentication info and such'''
@@ -32,11 +46,15 @@ class ImageHarvester(object):
         else:
             cfg = config()
             if not url_couchdb:
-                url_couchdb = cfg.DPLA.get("CouchDb", "URL")
+                url_couchdb = os.environ.get('COUCHDB_URL',
+                                            cfg.DPLA.get("CouchDb", "URL"))
             if not couchdb_name:
-                couchdb_name = cfg.DPLA.get("CouchDb", "ItemDatabase")
-            username = cfg.DPLA.get("CouchDb", "Username")
-            password = cfg.DPLA.get("CouchDb", "Password")
+                couchdb_name = os.environ.get('COUCHDB_DBNAME',
+                                    cfg.DPLA.get("CouchDb", "ItemDatabase"))
+            username = os.environ.get('COUCHDB_USER',
+                                    cfg.DPLA.get("CouchDb", "Username"))
+            password = os.environ.get('COUCHDB_PASSWORD',
+                                    cfg.DPLA.get("CouchDb", "Password"))
             url = url_couchdb.split("//")
             url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
             self._couchdb = couchdb.Server(url=url_server)[couchdb_name]
@@ -48,7 +66,10 @@ class ImageHarvester(object):
 
     # Need to make each download a separate job.
     def stash_image(self, doc):
-        '''Stash the images in s3, using md5s3stash'''
+        '''Stash the images in s3, using md5s3stash
+        Return md5s3stash report if image found
+        If link is not an image type, don't stash & return None
+        '''
         try:
             url_image = doc['isShownBy']
             if not url_image:
@@ -58,13 +79,22 @@ class ImageHarvester(object):
         if isinstance(url_image, list): # need to fix marc map_is_shown_at
             url_image = url_image[0]
         # for some OAC objects, the reference image is not a url but a path.
-        if 'http' != url_image[:4]:
+        if 'http' != url_image[:4] and 'https' != url_image[:5]:
             # not a URL....
             if 'ark:' in url_image:
                 url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-        # print >> sys.stderr,("For {} url image is:{}".format(doc['_id'], url_image))
-        return md5s3stash.md5s3stash(url_image, bucket_base=self._bucket_base,
-                                     url_auth=self._auth)
+            else:
+                print >> sys.stderr, 'Link not http URL for {} - {}'.format(
+                                      doc['_id'], url_image)
+                return None
+        if link_is_to_image(url_image):
+            return md5s3stash.md5s3stash(url_image,
+                                         bucket_base=self._bucket_base,
+                                         url_auth=self._auth)
+        else:
+            print >> sys.stderr, 'Not an image for {} - {}'.format(
+                                      doc['_id'], url_image)
+            return None
 
     def update_doc_object(self, doc, report):
         '''Update the object field to point to an s3 bucket'''
@@ -81,7 +111,8 @@ class ImageHarvester(object):
                 return
         try:
             report = self.stash_image(doc)
-            obj_val = self.update_doc_object(doc, report)
+            if report != None:
+                obj_val = self.update_doc_object(doc, report)
         except KeyError, e:
             if 'isShownBy' in e.message:
                  print >> sys.stderr, e

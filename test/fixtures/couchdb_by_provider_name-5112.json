@@ -4,14 +4,6 @@
       "doc": {
         "@type": "ore:Aggregation",
         "dataProvider": [
-          {
-            "name": "Coronado Local History Photograph and Map Collection",
-            "id": "5112",
-            "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
-            "ingestType": "collection",
-            "title": "Coronado Local History Photograph and Map Collection",
-            "description": ""
-          },
           "Coronado Public Library"
         ],
         "isShownAt": "http://www.coronado.ca.us/library/",
@@ -149,7 +141,6 @@
           ],
           "year": "1930",
           "sort-title": "saratoga refueling a destroyer while at sea 1930",
-          "campus": [],
           "subject": [
             "Saratoga (Aircraft carrier)",
             "United States. Navy -- Provisioning",
@@ -366,12 +357,6 @@
             "Y": 804
           },
           "description": "This fire-fighting apparatus is a Mack quadruple combination, with 360-foot ladders, 1000-foot hose body, and 100-gallon booster tank and 750-gallon pump. The City of Coronado paid $13,400 for this fire engine in 1928.",
-          "repository": [
-            {
-              "name": "Coronado Public Library",
-              "@id": "https://registry.cdlib.org/api/v1/repository/64/"
-            }
-          ],
           "format": [
             "1 photographic print : b 24 x 19 cm.",
             "jp2"
@@ -381,12 +366,42 @@
           "sort-creator": "Unknown",
           "collection": [
             {
-              "name": "Coronado Local History Photograph and Map Collection",
               "id": "5112",
               "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
               "ingestType": "collection",
               "title": "Coronado Local History Photograph and Map Collection",
-              "description": ""
+              "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+              "url_local": "",
+              "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt4n39r09j",
+              "staging_notes": "",
+              "slug": "coronado-local-history-photograph-and-map-collecti",
+              "rights_status": "X",
+              "rights_statement": "",
+              "harvest_extra_data": "",
+              "files_in_hand": false,
+              "files_in_dams": false,
+              "extent": null,
+              "enrichments_item": "/select-oac-id,\n/dpla_mapper?mapper_type=oac_dc,\n/strip_html,\n/set_context,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/capitalize_value?exclude=sourceResource%2Frelation,\n/enrich-subject,\n/enrich_earliest_date,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&skip_if_exists=True,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource",
+              "description": "",
+              "dcmi_type": "X",
+              "campus": [],
+              "harvest_type": "OAC",
+              "hosted": "",
+              "metadata_in_dams": false,
+              "name": "Coronado Local History Photograph and Map Collection",
+              "qa_completed": false,
+              "ready_for_publication": false,
+              "repository": [
+                {
+                  "slug": "coronado-public-library",
+                  "resource_uri": "/api/v1/repository/64/",
+                  "@id": "https://registry.cdlib.org/api/v1/repository/64/",
+                  "name": "Coronado Public Library",
+                  "campus": [],
+                  "ark": "ark:/13030/kt25803396"
+                }
+              ],
+              "resource_uri": "/api/v1/collection/5112/"
             }
           ],
           "date": "circa 1935",
@@ -480,12 +495,42 @@
           ],
           "collection": [
             {
-              "name": "Coronado Local History Photograph and Map Collection",
               "id": "5112",
               "@id": "https://registry.cdlib.org/api/v1/collection/5112/",
               "ingestType": "collection",
               "title": "Coronado Local History Photograph and Map Collection",
-              "description": ""
+              "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt4n39r09j",
+              "url_local": "",
+              "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/kt4n39r09j",
+              "staging_notes": "",
+              "slug": "coronado-local-history-photograph-and-map-collecti",
+              "rights_status": "X",
+              "rights_statement": "",
+              "harvest_extra_data": "",
+              "files_in_hand": false,
+              "files_in_dams": false,
+              "extent": null,
+              "enrichments_item": "/select-oac-id,\n/dpla_mapper?mapper_type=oac_dc,\n/strip_html,\n/set_context,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/capitalize_value?exclude=sourceResource%2Frelation,\n/enrich-subject,\n/enrich_earliest_date,\n/enrich_date,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&skip_if_exists=True,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource",
+              "description": "",
+              "dcmi_type": "X",
+              "campus": [],
+              "harvest_type": "OAC",
+              "hosted": "",
+              "metadata_in_dams": false,
+              "name": "Coronado Local History Photograph and Map Collection",
+              "qa_completed": false,
+              "ready_for_publication": false,
+              "repository": [
+                {
+                  "slug": "coronado-public-library",
+                  "resource_uri": "/api/v1/repository/64/",
+                  "@id": "https://registry.cdlib.org/api/v1/repository/64/",
+                  "name": "Coronado Public Library",
+                  "campus": [],
+                  "ark": "ark:/13030/kt25803396"
+                }
+              ],
+              "resource_uri": "/api/v1/collection/5112/"
             }
           ],
           "stateLocatedIn": [
@@ -574,12 +619,6 @@
             "Y": 779
           },
           "description": "A damaged Navy Plane sits on the deck of the USS Saratoga, May 3 1930.",
-          "repository": [
-            {
-              "name": "Coronado Public Library",
-              "@id": "https://registry.cdlib.org/api/v1/repository/64/"
-            }
-          ],
           "format": [
             "1 photograph : b 21 x 26 cm.",
             "jp2"

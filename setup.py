@@ -35,6 +35,7 @@ setup(
         'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
         'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
+        'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-1.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
     ],
     install_requires=[
@@ -57,6 +58,7 @@ setup(
         'md5s3stash',
         'pymarc>=3.0',
         'pynux',
+        'facet_decade',
         ],
     test_suite='test',
     tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],
