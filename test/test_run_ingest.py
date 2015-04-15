@@ -158,7 +158,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
+            self.assertRaises(Exception, fetcher.main,
+#            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,

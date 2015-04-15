@@ -29,6 +29,8 @@ EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
 
+class NoRecordsFetchedException(Exception):
+    pass
 
 class Fetcher(object):
     '''Base class for harvest objects.'''
@@ -84,6 +86,7 @@ class SolrFetcher(Fetcher):
         super(SolrFetcher, self).__init__(url_harvest, query)
         self.solr = solr.Solr(url_harvest)  # , debug=True)
         self.query = query
+        print "QUERY:::: {}"
         self.resp = self.solr.select(self.query)
         self.numFound = self.resp.numFound
         self.index = 0
@@ -637,6 +640,8 @@ class HarvestController(object):
                     interval = 10*interval
                 next_log_n += interval
 
+        if self.num_records == 0:
+            raise NoRecordsFetchedException
         msg = ' '.join((str(self.num_records), 'records harvested'))
         self.logger.info(msg)
         return self.num_records
@@ -767,6 +772,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
         logger.error(error_msg)
         harvester.update_ingest_doc('error', error_msg=error_msg,
                                     items=num_recs)
+        raise e 
     if my_log_handler:
         my_log_handler.pop_application()
     if my_mail_handler:

@@ -382,6 +382,27 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                             ]
                     }])
 
+    @httpretty.activate
+    #@patch('harvester.fetcher.OAIFetcher', autospec=True)# spec='fetcher.OAIFetcher')
+#    @patch('harvester.fetcher.OAIFetcher', spec=fetcher.OAIFetcher,
+#            __class__=fetcher.OAIFetcher)
+#    @patch.object(fetcher.OAIFetcher, 'next')
+    def testFailsIfNoRecords(self):#, mock_OAIFetcher):
+        '''Test that the Controller throws an error if no records come back
+        from fetcher
+        '''
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/101/",
+                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
+        httpretty.register_uri(httpretty.GET,
+                re.compile("http://content.cdlib.org/oai?.*"),
+                body=open(DIR_FIXTURES+'/testOAI-no-records.xml').read())
+###        nxt = mock_OAIFetcher.return_value
+###        nxt.side_effect = StopIteration('No RECS')
+        collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
+        controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
+        self.assertRaises(fetcher.NoRecordsFetchedException, controller.harvest)
+
 
 class FetcherClassTestCase(TestCase):
     '''Test the abstract Fetcher class'''
