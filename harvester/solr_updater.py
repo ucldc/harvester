@@ -8,7 +8,6 @@ from collections import defaultdict
 import requests
 import boto
 from solr import Solr, SolrException
-from couchdb import Server, Database, Document
 from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 

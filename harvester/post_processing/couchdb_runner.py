@@ -26,7 +26,7 @@ class CouchDBCollectionFilter(object):
         if couchdb_obj is None:
             if not url_couchdb or not couchdb_name:
                 raise ValueError('Need url and name to couch database')
-            self._couchdb = couchdb.Server(url=url_couchdb)[couchdb_name]
+            self._couchdb = get_couchdb(url=url_couchdb, dbname=couchdb_name)
         else:
             self._couchdb = couchdb_obj
         self._view = couch_view

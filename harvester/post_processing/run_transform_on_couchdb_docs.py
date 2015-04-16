@@ -9,14 +9,9 @@ import datetime
 import time
 import couchdb
 from harvester.collection_registry_client import Collection
+from harvestet.couchdb_init import get_couchdb
 
-COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://127.0.0.1:5984')
-COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
-username = os.environ.get('COUCHDB_USER', None)
-password = os.environ.get('COUCHDB_PASSWORD', None)
-url = COUCHDB_URL.split("//")
-url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
 
 
 def run_on_couchdb_by_collection(func, collection_key=None):
@@ -25,8 +20,7 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     (can take long time - not recommended)
     Function should return new document or None if no changes made
     '''
-    print("URL: {} DB: {}".format(url_server, COUCHDB_DB))
-    _couchdb = couchdb.Server(url_server)[COUCHDB_DB]
+    _couchdb = get_couchdb()
     v = _couchdb.view(COUCHDB_VIEW, include_docs='true',
                            key=collection_key) if collection_key else \
                            _couchdb.view(COUCHDB_VIEW, include_docs='true')
