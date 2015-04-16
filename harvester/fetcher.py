@@ -501,12 +501,11 @@ class HarvestController(object):
         self.collection = collection
         self.profile_path = profile_path
         self.config_file = config_file
-        self.config_dpla = config.config(config_file).DPLA
-        self.couch_db_name = self.config_dpla.get("CouchDb", "ItemDatabase")
+        self.config = config.config(config_file)
+        self.couch_db_name = self.config.get('couchdb_dbname', None)
         if not self.couch_db_name:
             self.couch_db_name = 'ucldc'
-        self.couch_dashboard_name = self.config_dpla.get("CouchDb",
-                                                         "DashboardDatabase")
+        self.couch_dashboard_name = self.config.get('couchdb_dashboard')
         if not self.couch_dashboard_name:
             self.couch_dashboard_name = 'dashboard'
 
@@ -547,7 +546,7 @@ class HarvestController(object):
                                 dpla_db_name=self.couch_db_name,
                                 dashboard_db_name=self.couch_dashboard_name
                                 )
-        uri_base = "http://localhost:" + self.config_dpla.get("Akara", "Port")
+        uri_base = "http://localhost:" + self.config['DPLA'].get("Akara", "Port")
         self.ingest_doc_id = self.couch._create_ingestion_document(
             self.collection.provider, uri_base, self.profile_path,
             self.collection.dpla_profile_obj['thresholds'])

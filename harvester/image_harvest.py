@@ -11,30 +11,12 @@ import time
 import couchdb
 import requests
 import md5s3stash
-from harvester.config import config
+from harvester.couchdb_init import get_couchdb
 
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
-
-def get_couchdatabase(url_couchdb=None,
-                      couchdb_name='ucldc'):
-    '''Return the couchdb server object'''
-    cfg = config()
-    if not url_couchdb:
-        url_couchdb = os.environ.get('COUCHDB_URL',
-                                    cfg.DPLA.get("CouchDb", "URL"))
-    if not couchdb_name:
-        couchdb_name = os.environ.get('COUCHDB_DBNAME',
-                            cfg.DPLA.get("CouchDb", "ItemDatabase"))
-    username = os.environ.get('COUCHDB_USER',
-                            cfg.DPLA.get("CouchDb", "Username"))
-    password = os.environ.get('COUCHDB_PASSWORD',
-                            cfg.DPLA.get("CouchDb", "Password"))
-    url = url_couchdb.split("//")
-    url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
-    return couchdb.Server(url=url_server)[couchdb_name]
 
 def link_is_to_image(url):
     '''Check if the link points to an image content type.
@@ -61,8 +43,8 @@ class ImageHarvester(object):
         if cdb:
             self._couchdb = cdb
         else:
-            self._couchdb = get_couchdatabase(url_couchdb,
-                                              couchdb_name)
+            self._couchdb = get_couchdb(url=url_couchdb,
+                                        dbname=couchdb_name)
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password

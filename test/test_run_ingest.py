@@ -280,14 +280,13 @@ class ConfigTestCase(TestCase):
         self.assertEqual(cm.exception.message,
                 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
-        redis_host, redis_port, redis_pswd, redis_connect_timeout, \
-            id_ec2_ingest, id_ec2_solr_build, DPLA = config()
-        self.assertEqual(redis_host, 'redis_host_ip')
-        self.assertEqual(redis_port, '6379')
-        self.assertEqual(redis_pswd, 'XX')
-        self.assertEqual(redis_connect_timeout, 10)
-        self.assertEqual(id_ec2_ingest, 'INGEST')
-        self.assertEqual(id_ec2_solr_build, 'BUILD')
+        conf = config()
+        self.assertEqual(conf['redis_host'], 'redis_host_ip')
+        self.assertEqual(conf['redis_port'], '6379')
+        self.assertEqual(conf['redis_password'], 'XX')
+        self.assertEqual(conf['redis_connect_timeout'], 10)
+        self.assertEqual(conf['id_ec2_ingest'], 'INGEST')
+        self.assertEqual(conf['id_ec2_solr_build'], 'BUILD')
 
 
 class RunIngestTestCase(LogOverrideMixin, TestCase):

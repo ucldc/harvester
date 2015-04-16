@@ -125,11 +125,11 @@ def main(user_email, url_api_collection, log_handler=None,
         logger.error("Error cleaning up dashboard {0}".format(resp))
         raise Exception("Error cleaning up dashboard {0}".format(resp))
 
-    url_couchdb = harvester.config_dpla.get("CouchDb", "URL")
+    url_couchdb = harvester.config['DPLA'].get("CouchDb", "URL")
     # the image_harvest should be a separate job, with a long timeout
     if run_image_harvest:
-        job = queue_image_harvest(config.redis_host, config.redis_port,
-                                  config.redis_pswd, config.redis_timeout,
+        job = queue_image_harvest(config['redis_host'], config['redis_port'],
+                                  config['redis_passwordd'], config['redis_connect_timeout'],
                                   collection_key=collection.provider,
                                   url_couchdb=url_couchdb,
                                   object_auth=collection.auth)
@@ -144,12 +144,12 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         sys.exit(27)
-    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build, DPLA = config()
-    print("HOST:{0}  PORT:{1}".format(redis_host, redis_port, ))
+    conf = config_harvest()
+    print("HOST:{0}  PORT:{1}".format(conf['redis_host'], conf['redis_port'], ))
     print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email,
             args.url_api_collection,
-            redis_host=redis_host,
-            redis_port=redis_port,
-            redis_pswd=redis_pswd,
-            redis_timeout=redis_connect_timeout)
+            redis_host=conf['redis_host'],
+            redis_port=conf['redis_port'],
+            redis_pswd=conf['redis_password'],
+            redis_timeout=conf['redis_connect_timeout'])

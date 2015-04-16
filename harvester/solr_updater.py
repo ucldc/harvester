@@ -9,6 +9,7 @@ import requests
 import boto
 from solr import Solr, SolrException
 from couchdb import Server, Database, Document
+from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
@@ -189,8 +190,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     '''
     print('Solr update PID:{}'.format(os.getpid()))
     sys.stdout.flush() # put pd
-    server = Server(url_couchdb)
-    db = server[dbname]
+    db = get_couchdb(url=url_couchdb, dname=dbname)
     if not since:
         since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))

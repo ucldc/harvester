@@ -6,6 +6,7 @@ from redis import Redis
 from rq import Queue
 
 from harvester.config import config
+from harvester.couchdb_init import get_couchdb
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
@@ -48,14 +49,7 @@ class CouchDBWorker(object):
     functions should have call signature of (doc, *args, **kwargs)
     '''
     def __init__(self):
-        self._config = config()
-        url_couchdb = self._config.DPLA.get("CouchDb", "URL")
-        couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
-        username = self._config.DPLA.get("CouchDb", "Username")
-        password = self._config.DPLA.get("CouchDb", "Password")
-        url = url_couchdb.split("//")
-        url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
-        self._couchdb = couchdb.Server(url_server)[couchdb_name]
+        self._couchdb = get_couchdb()
 
     def run_by_list_of_doc_ids(self, doc_ids, func, *args, **kwargs):
         '''For a list of ids, harvest images'''
@@ -89,17 +83,11 @@ class CouchDBJobEnqueue(object):
     '''
     def __init__(self):
         self._config = config()
-        url_couchdb = self._config.DPLA.get("CouchDb", "URL")
-        couchdb_name = self._config.DPLA.get("CouchDb", "ItemDatabase")
-        username = self._config.DPLA.get("CouchDb", "Username")
-        password = self._config.DPLA.get("CouchDb", "Password")
-        url = url_couchdb.split("//")
-        url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
-        self._couchdb = couchdb.Server(url_server)[couchdb_name]
-        self._redis = Redis(host=self._config.redis_host,
-                            port=self._config.redis_port,
-                            password=self._config.redis_pswd,
-                            socket_connect_timeout=self._config.redis_timeout)
+        self._couchdb = get_couchdb()
+        self._redis = Redis(host=self._config['redis_host'],
+                            port=self._config['redis_port'],
+                            password=self._config['redis_password'],
+                            socket_connect_timeout=self._config['redis_connect_timeout'])
         self._rQ = Queue(connection=self._redis)
 
     def queue_collection(self, collection_key, job_timeout, func,
