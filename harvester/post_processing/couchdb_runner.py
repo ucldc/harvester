@@ -116,4 +116,6 @@ class CouchDBJobEnqueue(object):
                                      kwargs=kwargs,
                                      timeout=job_timeout)
             results.append(result)
+        if not results:
+            print "NO RESULTS FOR COLLECTION: {}".format(collection_key)
         return results

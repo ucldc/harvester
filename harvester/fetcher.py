@@ -86,7 +86,6 @@ class SolrFetcher(Fetcher):
         super(SolrFetcher, self).__init__(url_harvest, query)
         self.solr = solr.Solr(url_harvest)  # , debug=True)
         self.query = query
-        print "QUERY:::: {}"
         self.resp = self.solr.select(self.query)
         self.numFound = self.resp.numFound
         self.index = 0
@@ -501,11 +500,11 @@ class HarvestController(object):
         self.collection = collection
         self.profile_path = profile_path
         self.config_file = config_file
-        self.config = config.config(config_file)
-        self.couch_db_name = self.config.get('couchdb_dbname', None)
+        self._config = config.config(config_file)
+        self.couch_db_name = self._config.get('couchdb_dbname', None)
         if not self.couch_db_name:
             self.couch_db_name = 'ucldc'
-        self.couch_dashboard_name = self.config.get('couchdb_dashboard')
+        self.couch_dashboard_name = self._config.get('couchdb_dashboard')
         if not self.couch_dashboard_name:
             self.couch_dashboard_name = 'dashboard'
 
@@ -546,7 +545,7 @@ class HarvestController(object):
                                 dpla_db_name=self.couch_db_name,
                                 dashboard_db_name=self.couch_dashboard_name
                                 )
-        uri_base = "http://localhost:" + self.config['DPLA'].get("Akara", "Port")
+        uri_base = "http://localhost:" + self._config['DPLA'].get("Akara", "Port")
         self.ingest_doc_id = self.couch._create_ingestion_document(
             self.collection.provider, uri_base, self.profile_path,
             self.collection.dpla_profile_obj['thresholds'])
@@ -678,11 +677,13 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
          dir_profile='profiles', profile_path=None,
-         config_file=os.environ.get('DPLA_CONFIG_FILE', 'akara.ini')):
+         config_file=None):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.
     '''
+    if not config_file:
+         config_file=os.environ.get('DPLA_CONFIG_FILE', 'akara.ini')
     num_recs = -1
     my_mail_handler = None
     if not mail_handler:

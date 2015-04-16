@@ -61,19 +61,16 @@ def parse_env(DPLA, redis_required=False, ec2_required=False):
     env['couchdb_password'] = os.environ.get('COUCHDB_PASSWORD', None)
     env['couchdb_dbname'] = os.environ.get('COUCHDB_DB', None)
     env['couchdb_dashboard'] = os.environ.get('COUCHDB_DASHBOARD', None)
-    if not (env['couchdb_url'] and 
-            env['couchdb_username'] and
-            env['password']): #try config file
-        if not env['couchdb_url']:
-            env['couchdb_url'] = DPLA.get("CouchDb", "URL")
-        if not env['couchdb_username']:
-            env['couchdb_username'] = DPLA.get("CouchDb", "Username")
-        if not env['couchdb_password']:
-            env['couchdb_password'] = DPLA.get("CouchDb", "Password")
-        if not env['couchdb_dbname']:
-            env['couchdb_dbname'] = DPLA.get("CouchDb", "ItemDatabase")
-        if not env['couchdb_dashboard']:
-            env['couchdb_dashboard'] = DPLA.get("CouchDb", "DashboardDatabase")
+    if not env['couchdb_url']:
+        env['couchdb_url'] = DPLA.get("CouchDb", "URL")
+    if not env['couchdb_username']:
+        env['couchdb_username'] = DPLA.get("CouchDb", "Username")
+    if not env['couchdb_password']:
+        env['couchdb_password'] = DPLA.get("CouchDb", "Password")
+    if not env['couchdb_dbname']:
+        env['couchdb_dbname'] = DPLA.get("CouchDb", "ItemDatabase")
+    if not env['couchdb_dashboard']:
+        env['couchdb_dashboard'] = DPLA.get("CouchDb", "DashboardDatabase")
     if not env['couchdb_url']:
         env['couchdb_url'] = 'http://127.0.0.1:5984'
     if not env['couchdb_dbname']:

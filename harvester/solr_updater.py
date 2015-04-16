@@ -73,11 +73,10 @@ def map_registry_data(collections):
         repository_names.extend([repo['name'] for repo in repositories])
         repo_datas = []
         for repo in repositories:
-            try:
+            repo_data = '::'.join((repo['@id'], repo['name']))
+            if 'campus' in repo and len(repo['campus']):
                 repo_data = '::'.join((repo['@id'], repo['name'],
-                    repo['campus'][0]['name']))
-            except KeyError:
-                repo_data = '::'.join((repo['@id'], repo['name']))
+                            repo['campus'][0]['name']))
             repo_datas.append(repo_data)
         repository_datas.extend(repo_datas)
     return dict(collection_url = collection_urls,

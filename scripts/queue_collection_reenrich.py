@@ -12,18 +12,20 @@ def main(args):
                 collection.')
     parser.add_argument('collection_id',
                         help='Registry id for the collection')
-    parser.add_argument('enrichment', help='enrichment chain to run')
+    parser.add_argument('enrichment', help='File of enrichment chain to run')
 
     args = parser.parse_args(args)
-    print(args.collection_id)
-    print(args.enrichment)
+    print "CID:{}".format(args.collection_id)
+    print "ENRICH FILE:{}".format(args.enrichment)
+    with open(args.enrichment) as enrichfoo:
+        enrichments = enrichfoo.read() 
     enq = CouchDBJobEnqueue()
     timeout = 10000
     enq.queue_collection(args.collection_id, timeout,
                      harvester.post_processing.enrich_existing_couch_doc.main,
-                     args.enrichment
+                     enrichments
                      )
 
 
 if __name__=='__main__':
-    main(sys.argv)
+    main(sys.argv[1:])

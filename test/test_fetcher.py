@@ -228,7 +228,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         '''Test the integration of the DPLA couch lib'''
         self.assertTrue(hasattr(self.controller_oai, 'ingest_doc_id'))
         self.assertTrue(hasattr(self.controller_oai, 'create_ingest_doc'))
-        self.assertTrue(hasattr(self.controller_oai, 'config'))
+        self.assertTrue(hasattr(self.controller_oai, '_config'))
         ingest_doc_id = self.controller_oai.create_ingest_doc()
         mock_couch.assert_called_with(config_file=self.config_file, dashboard_db_name=TEST_COUCH_DASHBOARD, dpla_db_name=TEST_COUCH_DB)
 
