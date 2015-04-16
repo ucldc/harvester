@@ -9,7 +9,7 @@ import datetime
 import time
 import couchdb
 from harvester.collection_registry_client import Collection
-from harvestet.couchdb_init import get_couchdb
+from harvester.couchdb_init import get_couchdb
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
