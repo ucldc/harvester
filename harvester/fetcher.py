@@ -208,12 +208,13 @@ class OAC_XML_Fetcher(Fetcher):
         ids = docHit.find('meta').findall('identifier')
         ark = None
         for i in ids:
-            try:
-                split = i.text.split('ark:')
-            except AttributeError:
-                continue
-            if len(split) > 1:
-                ark = ''.join(('ark:', split[1]))
+            if i.attrib.get('q', None) != 'local':
+                try:
+                    split = i.text.split('ark:')
+                except AttributeError:
+                    continue
+                if len(split) > 1:
+                    ark = ''.join(('ark:', split[1]))
         return ark
 
     def _docHits_to_objset(self, docHits):

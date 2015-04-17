@@ -9,9 +9,11 @@
                <date q="created">7/21/42</date>
                <date q="published">7/21/72</date>
                <type q="mods">still image</type>
-               <identifier>http://ark.cdlib.org/ark:/13030/kt40000501</identifier>
+               <identifier>http://ark.cdlib.org/ark:/13030/kt40000501</identifier> <!-- tests problem that occurred with Berkele local ARKS getting put in
+               thumbnail field-->
                <identifier q="mods">[15]</identifier>
                <identifier q="mods">brk00000755_7a.tif</identifier>
+               <identifier q='local'>ark:/bogus/local/ark</identifier>
                <relation>
                   <snippet rank="1" score="100">http://www.oac.cdlib.org/findaid/<hit>
                         <term>ark</term>:/<term>13030/tf0c600134</term>
