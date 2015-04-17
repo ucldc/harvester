@@ -13,6 +13,7 @@ import urlparse
 import urllib
 import tempfile
 from sickle import Sickle
+import urllib
 import requests
 import logbook
 from logbook import FileHandler
@@ -298,7 +299,8 @@ class OAC_XML_Fetcher(Fetcher):
         pause = 5 
         while True:
             try:
-                resp = requests.get(self._url_current)
+                #resp = requests.get(self._url_current)
+                resp = urllib.urlopen(self._url_current)
                 break
             except DecodeError, e:
                 n_tries += 1
@@ -307,8 +309,9 @@ class OAC_XML_Fetcher(Fetcher):
                 #backoff
                 time.sleep(pause)
                 pause = pause*2
-        resp.encoding = 'utf-8'  # thinks it's ISO-8859-1
-        crossQueryResult = ET.fromstring(resp.text.encode('utf-8'))
+        #resp.encoding = 'utf-8'  # thinks it's ISO-8859-1
+        crossQueryResult = ET.fromstring(resp.read())
+        #crossQueryResult = ET.fromstring(resp.text.encode('utf-8'))
         return crossQueryResult.find('facet')
 
     def next(self):
