@@ -131,7 +131,7 @@ def main(user_email, url_api_collection, log_handler=None,
     # the image_harvest should be a separate job, with a long timeout
     if run_image_harvest:
         job = queue_image_harvest(config['redis_host'], config['redis_port'],
-                                  config['redis_passwordd'], config['redis_connect_timeout'],
+                                  config['redis_password'], config['redis_connect_timeout'],
                                   collection_key=collection.provider,
                                   url_couchdb=url_couchdb,
                                   object_auth=collection.auth)
