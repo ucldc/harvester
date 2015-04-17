@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<search-results xmlns="http://legacy.library.ucsf.edu/search/1.0" timeMillis="239">
+  <search-query>
+    <query>ddu:20*</query>
+    <page-size>3</page-size>
+    <default-field>er</default-field>
+    <field-display>1</field-display>
+    <sort-field/>
+    <reverse-sort>false</reverse-sort>
+    <add-to-history>true</add-to-history>
+    <date-range-field>ndd</date-range-field>
+    <start-date/>
+    <end-date/>
+    <added-since-field>ddu</added-since-field>
+    <added-since-date/>
+    <collections>[ga]</collections>
+    <page0>2</page0>
+    <person-name/>
+    <exclude-folders>true</exclude-folders>
+  </search-query>
+  <search-hits pages="3" page="3" total="7">
+    <search-hit number="7">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="ngg13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/ngg13j00</uri>
+        <metadata>
+          <ti>[A Letter from Ambrose Cooke to Niger Espin regarding urgent request for cigarette analysis and customer information-CTIT]</ti>
+          <aup>Cooke, Ambrose</aup>
+          <dd>20050512 (May 12, 2005) </dd>
+          <dt>letter</dt>
+          <bn>GA11239</bn>
+          <cn>Gallaher</cn>
+          <pg>2</pg>
+          <rco>Gallaher Ltd</rco>
+          <rcp>Espin, Nigel; Nigel</rcp>
+          <meno>HM Revenue &amp; customs</meno>
+          <brd>Dorchester International</brd>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>ngg13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+  </search-hits>
+</search-results>

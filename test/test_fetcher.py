@@ -579,6 +579,49 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.tearDown_config()
 
 
+class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the fetcher for the UCSF xml search interface'''
+    @httpretty.activate
+    def testInit(self):
+        '''Basic tdd start'''
+        url = 'https://example.edu/action/search/xml?q=ddu%3A20*&asf=ddu&asd=&fd=1&_hd=&hd=on&sf=&_rs=&_ef=&ef=on&sd=&ed=&c=ga'
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body=open(DIR_FIXTURES+'/ucsf-page-1.xml').read())
+        h = fetcher.UCSF_XML_Fetcher(url, None, page_size=3)
+        self.assertEqual(h.url_base, url)
+        self.assertEqual(h.page_size, 3)
+        self.assertEqual(h.page_current, 1)
+        self.assertEqual(h.url_current, url+'&ps=3&p=1')
+        self.assertEqual(h.total_docs, 7)
+
+    @httpretty.activate
+    def testFetch(self):
+        '''Test the httpretty mocked fetching of documents'''
+        url = 'https://example.edu/action/search/xml?q=ddu%3A20*&asf=ddu&asd=&fd=1&_hd=&hd=on&sf=&_rs=&_ef=&ef=on&sd=&ed=&c=ga'
+        httpretty.register_uri(httpretty.GET,
+                url,
+                responses=[
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-1.xml').read(),
+                        status=200),
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-2.xml').read(),
+                        status=200),
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-3.xml').read(),
+                        status=200),
+                ]
+        )
+        h = fetcher.UCSF_XML_Fetcher(url, None, page_size=3)
+        docs = []
+        for d in h:
+            docs.append(d)
+        print docs
+        self.assertEqual(len(docs), 7)
+
+
+
 class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.

@@ -12,6 +12,7 @@ from xml.etree import ElementTree as ET
 import urlparse
 import urllib
 import tempfile
+import re
 from sickle import Sickle
 import urllib
 import requests
@@ -337,6 +338,42 @@ class OAC_XML_Fetcher(Fetcher):
         self.groups[self.currentGroup]['currentDoc'] += len(objset)
         self.logger.debug('++++++++++++++ curDoc'+str(self.currentDoc))
         return objset
+
+
+class UCSF_XML_Fetcher(Fetcher):
+    def __init__(self, url_harvest, extra_data, page_size=100):
+        self.url_base = url_harvest
+        self.page_size = page_size
+        self.page_current = 1
+        self.doc_current = 1
+        xml = urllib.urlopen(self.url_current).read()
+        total = re.search('search-hits pages="(?P<pages>\d+)" page="(?P<page>\d+)" total="(?P<total>\d+)"', xml)
+        self.total_docs = int(total.group('total'))
+
+    @property
+    def url_current(self):
+        return '{0}&ps={1}&p={2}'.format(self.url_base, self.page_size,
+                                         self.page_current)
+
+    def _dochits_to_objset(self, docHits):
+        objset = []
+        for d in docHits:
+            obj = defaultdict(list)
+            doc = d.find('./document')
+            print doc
+            objset.append(doc)
+        return objset
+
+    def next(self):
+        '''get next objset, use etree to pythonize'''
+        if self.doc_current == self.total_docs:
+            raise StopIteration
+        tree = ET.fromstring(urllib.urlopen(self.url_current).read())
+        hits=tree.findall(".//{http://legacy.library.ucsf.edu/search/1.0}search-hit")
+        self.page_current += 1
+        self.doc_current = int(hits[-1].attrib['number'])
+        return self._dochits_to_objset(hits)
+
 
 
 class OAC_JSON_Fetcher(Fetcher):
