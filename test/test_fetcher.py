@@ -846,21 +846,22 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-    @patch('requests.get', side_effect=DecodeError())
-    @patch('time.sleep')
-    def testDecodeErrorHandling(self, mock_sleep, mock_get):
-        '''Test that the requests download tries 5 times if 
-        it gets a DecodeError when decoding the gzip'd content.
-        This occaisionally crops up when harvesting from OAC
-        '''
-        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
-        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100')]
-                                  )
+#Removed since not using requests, urllib works fine.
+###    @patch('requests.get', side_effect=DecodeError())
+###    @patch('time.sleep')
+###    def testDecodeErrorHandling(self, mock_sleep, mock_get):
+###        '''Test that the requests download tries 5 times if 
+###        it gets a DecodeError when decoding the gzip'd content.
+###        This occaisionally crops up when harvesting from OAC
+###        '''
+###        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
+###        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100')]
+###                                  )
 
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
