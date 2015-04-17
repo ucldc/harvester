@@ -152,7 +152,7 @@ def harvest_image_for_doc(doc_id,
                                object_auth=object_auth, 
                                no_get_if_object=no_get_if_object)
     #get doc from couchdb
-    couchdb = get_couchdatabase(url_couchdb=url_couchdb)
+    couchdb = get_couchdb(url_couchdb=url_couchdb)
     doc = couchdb[doc_id]
     harvester.harvest_image_for_doc(doc)
 
