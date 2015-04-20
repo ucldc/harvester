@@ -346,9 +346,11 @@ class UCSF_XML_Fetcher(Fetcher):
         self.page_size = page_size
         self.page_current = 1
         self.doc_current = 1
+        self.docs_fetched = 0
         xml = urllib.urlopen(self.url_current).read()
         total = re.search('search-hits pages="(?P<pages>\d+)" page="(?P<page>\d+)" total="(?P<total>\d+)"', xml)
-        self.total_docs = int(total.group('total'))
+        self.docs_total = int(total.group('total'))
+        self.re_ns_strip = re.compile('{.*}(?P<tag>.*)$')
 
     @property
     def url_current(self):
@@ -356,18 +358,40 @@ class UCSF_XML_Fetcher(Fetcher):
                                          self.page_current)
 
     def _dochits_to_objset(self, docHits):
+        '''Returns list of objecs.
+        Objects are dictionary with tid, uri & metadata keys.
+        tid & uri are strings
+        metadata is a dict with keys matching UCSF xml metadata tags.
+        '''
         objset = []
         for d in docHits:
-            obj = defaultdict(list)
-            doc = d.find('./document')
-            print doc
-            objset.append(doc)
+            doc = d.find('./{http://legacy.library.ucsf.edu/document/1.1}document')
+            obj = {}
+            obj['tid'] = doc.attrib['tid']
+            obj['uri'] = doc.find('./{http://legacy.library.ucsf.edu/document/1.1}uri').text
+            mdata = doc.find('./{http://legacy.library.ucsf.edu/document/1.1}metadata')
+            obj_mdata = defaultdict(list)
+            for md in mdata:
+                # strip namespace
+                key = self.re_ns_strip.match(md.tag).group('tag')
+                obj_mdata[key].append(md.text)
+            obj['metadata'] = obj_mdata
+            self.docs_fetched += 1
+            objset.append(obj)
         return objset
 
     def next(self):
         '''get next objset, use etree to pythonize'''
-        if self.doc_current == self.total_docs:
-            raise StopIteration
+        if self.doc_current == self.docs_total:
+            if self.docs_fetched != self.docs_total:
+                raise ValueError(
+                   "Number of documents fetched ({0}) doesn't match \
+                    total reported by server ({1})".format(
+                        self.docs_fetched,
+                        self.docs_total)
+                    )
+            else:
+                raise StopIteration
         tree = ET.fromstring(urllib.urlopen(self.url_current).read())
         hits=tree.findall(".//{http://legacy.library.ucsf.edu/search/1.0}search-hit")
         self.page_current += 1
@@ -520,6 +544,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
                  'ALX': AlephMARCXMLFetcher,
+                 'SFX': UCSF_XML_Fetcher,
 }
 
 
@@ -666,6 +691,7 @@ class HarvestController(object):
         for objset in self.fetcher:
             if isinstance(objset, list):
                 self.num_records += len(objset)
+                #TODO: use map here
                 for obj in objset:
                     self._add_registry_data(obj)
             else:

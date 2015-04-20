@@ -593,7 +593,7 @@ class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.page_size, 3)
         self.assertEqual(h.page_current, 1)
         self.assertEqual(h.url_current, url+'&ps=3&p=1')
-        self.assertEqual(h.total_docs, 7)
+        self.assertEqual(h.docs_total, 7)
 
     @httpretty.activate
     def testFetch(self):
@@ -602,6 +602,9 @@ class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 url,
                 responses=[
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-1.xml').read(),
+                        status=200),
                     httpretty.Response(
                         open(DIR_FIXTURES+'/ucsf-page-1.xml').read(),
                         status=200),
@@ -616,9 +619,15 @@ class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
         h = fetcher.UCSF_XML_Fetcher(url, None, page_size=3)
         docs = []
         for d in h:
-            docs.append(d)
-        print docs
+            docs.extend(d)
         self.assertEqual(len(docs), 7)
+        testy = docs[0]
+        self.assertIn('tid', testy)
+        self.assertEqual(testy['tid'], "nga13j00")
+        self.assertEqual(testy['uri'],
+                                'http://legacy.library.ucsf.edu/tid/nga13j00')
+        self.assertIn('aup', testy['metadata'])
+        self.assertEqual(testy['metadata']['aup'], ['Whent, Peter'])
 
 
 
