@@ -18,14 +18,26 @@
       command: chown ec2-user:ec2-user solr-index.{{ datetime }}.tar
     - name: bzip index file
       command: bzip2 solr-index.{{ datetime }}.tar
-    - name: fetch index tarball
-      fetch: src=solr-index.{{ datetime }}.tar.bz2
-             dest=/var/local/solr-indexes/ flat=yes
+    - name: push index tarball to s3
+      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
+### NOTE: s3 module not working, gets a connection reset by peer
+###      s3:
+###        bucket: solr.ucldc
+###        mode: put
+###        src: solr-index.{{ datetime }}.tar.bz2
+###        object: solr-index.{{ datetime }}.tar.bz2
+        #metadata: 'Content-Encoding=bzip2'
+        #        ###    - name: fetch index tarball
+        #                ###fetch: src=solr-index.{{ datetime }}.tar.bz2
+        #                        ###     dest=/var/local/solr-indexes/ flat=yes
+        #                          
     - name: remove artifacts on remote
-      command: rm /home/ec2-user/solr-index.{{ datetime }}.tar.bz2
-    - name: email note of new index (right now only manual index overwrite)-
-      local_action: mail
-                    from="ucldc@example.edu"
-                    to={{ email_to }}
-                    subject="New solr index tarball ready"
-                    body="New solr index ready for download-> /var/local/solr-indexes/solr-index.{{datetime}}.tar.bz2"
+      file:
+        state: absent
+        path: /home/ec2-user/solr-index.{{ datetime }}.tar.bz2
+###    - name: email note of new index (right now only manual index overwrite)-
+###      local_action: mail
+###                    from="ucldc@example.edu"
+###                    to={{ email_to }}
+###                    subject="New solr index tarball ready"
+###                    body="New solr index ready for download-> /var/local/solr-indexes/solr-index.{{datetime}}.tar.bz2"
