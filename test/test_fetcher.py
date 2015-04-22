@@ -579,6 +579,58 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.tearDown_config()
 
 
+class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the fetcher for the UCSF xml search interface'''
+    @httpretty.activate
+    def testInit(self):
+        '''Basic tdd start'''
+        url = 'https://example.edu/action/search/xml?q=ddu%3A20*&asf=ddu&asd=&fd=1&_hd=&hd=on&sf=&_rs=&_ef=&ef=on&sd=&ed=&c=ga'
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body=open(DIR_FIXTURES+'/ucsf-page-1.xml').read())
+        h = fetcher.UCSF_XML_Fetcher(url, None, page_size=3)
+        self.assertEqual(h.url_base, url)
+        self.assertEqual(h.page_size, 3)
+        self.assertEqual(h.page_current, 1)
+        self.assertEqual(h.url_current, url+'&ps=3&p=1')
+        self.assertEqual(h.docs_total, 7)
+
+    @httpretty.activate
+    def testFetch(self):
+        '''Test the httpretty mocked fetching of documents'''
+        url = 'https://example.edu/action/search/xml?q=ddu%3A20*&asf=ddu&asd=&fd=1&_hd=&hd=on&sf=&_rs=&_ef=&ef=on&sd=&ed=&c=ga'
+        httpretty.register_uri(httpretty.GET,
+                url,
+                responses=[
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-1.xml').read(),
+                        status=200),
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-1.xml').read(),
+                        status=200),
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-2.xml').read(),
+                        status=200),
+                    httpretty.Response(
+                        open(DIR_FIXTURES+'/ucsf-page-3.xml').read(),
+                        status=200),
+                ]
+        )
+        h = fetcher.UCSF_XML_Fetcher(url, None, page_size=3)
+        docs = []
+        for d in h:
+            docs.extend(d)
+        self.assertEqual(len(docs), 7)
+        testy = docs[0]
+        self.assertIn('tid', testy)
+        self.assertEqual(testy['tid'], "nga13j00")
+        self.assertEqual(testy['uri'],
+                                'http://legacy.library.ucsf.edu/tid/nga13j00')
+        self.assertIn('aup', testy['metadata'])
+        self.assertEqual(testy['metadata']['aup'], ['Whent, Peter'])
+
+
+
 class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.
@@ -846,21 +898,22 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
 
-    @patch('requests.get', side_effect=DecodeError())
-    @patch('time.sleep')
-    def testDecodeErrorHandling(self, mock_sleep, mock_get):
-        '''Test that the requests download tries 5 times if 
-        it gets a DecodeError when decoding the gzip'd content.
-        This occaisionally crops up when harvesting from OAC
-        '''
-        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
-        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100'),
-                                   call('http://bogus&docsPerPage=100')]
-                                  )
+#Removed since not using requests, urllib works fine.
+###    @patch('requests.get', side_effect=DecodeError())
+###    @patch('time.sleep')
+###    def testDecodeErrorHandling(self, mock_sleep, mock_get):
+###        '''Test that the requests download tries 5 times if 
+###        it gets a DecodeError when decoding the gzip'd content.
+###        This occaisionally crops up when harvesting from OAC
+###        '''
+###        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
+###        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100'),
+###                                   call('http://bogus&docsPerPage=100')]
+###                                  )
 
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
