@@ -18,8 +18,10 @@
       command: chown ec2-user:ec2-user solr-index.{{ datetime }}.tar
     - name: bzip index file
       command: bzip2 solr-index.{{ datetime }}.tar
-    - name: push index tarball to s3
-      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
+    - name: push index tarball to s3 for server_role
+      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ server_role }}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
+    - name: push index tarball to s3 for server_role to the latest bucket
+      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ server_role }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
 ###      s3:
 ###        bucket: solr.ucldc
