@@ -8,7 +8,13 @@
       datetime: >
         {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
       email_to: "{{ lookup('env', 'EMAIL_SYS_ADMINS') }}"
+      server_roles:
+        - production
+        - stage
+        - dev
     tasks:
+    - fail: msg="Define server_role to one of production, stage or dev"
+      when: server_role not in  server_roles
     - name: tar up latest solr index directoy
       sudo: yes
       command: tar --force-local -cvf solr-index.{{ datetime }}.tar

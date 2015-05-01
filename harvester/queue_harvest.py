@@ -95,7 +95,7 @@ if __name__ == '__main__':
     main(args.user_email, args.url_api_collection.strip(),
          redis_host=env['redis_host'],
          redis_port=env['redis_port'],
-         redis_pswd=env['redis_pswd'],
+         redis_pswd=env['redis_password'],
          id_ec2_ingest=env['id_ec2_ingest'],
          id_ec2_solr=env['id_ec2_solr_build'],
          job_timeout=args.job_timeout,

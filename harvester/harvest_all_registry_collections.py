@@ -10,7 +10,7 @@ for c in ResourceIterator(url_base, api_path+'collection', 'collection'):
         queue_harvest('mark.redar@ucop.edu', url_base+c.resource_uri,
                       redis_host=env['redis_host'],
                       redis_port=env['redis_port'],
-                      redis_pswd=env['redis_pswd'],
+                      redis_pswd=env['redis_password'],
                       id_ec2_ingest=env['id_ec2_ingest'],
                       id_ec2_solr=env['id_ec2_solr_build'],
                       job_timeout=6000
