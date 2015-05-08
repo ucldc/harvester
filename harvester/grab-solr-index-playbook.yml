@@ -18,7 +18,9 @@
     - name: tar up latest solr index directoy
       sudo: yes
       command: tar --force-local -cvf solr-index.{{ datetime }}.tar
-               {{ dir_solr }}/dc-collection/data/index
+               index/
+      args:
+        chdir: "{{ dir_solr }}/dc-collection/data/"
     - name: chown back to ec2-user
       sudo: yes
       command: chown ec2-user:ec2-user solr-index.{{ datetime }}.tar
