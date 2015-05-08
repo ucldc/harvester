@@ -15,18 +15,20 @@
       s3_bucket: solr.ucldc
       s3_root_path: "indexes/{{ server_role }}"
       region: us-west-2
+      remote_user: ec2-user
     tasks:
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
     - name: tar up latest solr index directoy
       sudo: yes
-      command: tar --force-local -cvf solr-index.{{ datetime }}.tar
-               index/
+      command: tar --force-local -cvf /home/{{ remote_user }}/solr-index.{{ datetime }}.tar index/
       args:
         chdir: "{{ dir_solr }}/dc-collection/data/"
-    - name: chown back to ec2-user
+    - name: chown back to {{ remote_user }}
       sudo: yes
-      command: chown ec2-user:ec2-user solr-index.{{ datetime }}.tar
+      file:
+        owner: "{{ remote_user }}"
+        path: /home/{{ remote_user }}/solr-index.{{ datetime }}.tar
     - name: bzip index file
       command: bzip2 solr-index.{{ datetime }}.tar
     - name: push index tarball to s3 for server_role
@@ -47,7 +49,7 @@
     - name: remove artifacts on remote
       file:
         state: absent
-        path: /home/ec2-user/solr-index.{{ datetime }}.tar.bz2
+        path: /home/{{ remote_user }}/solr-index.{{ datetime }}.tar.bz2
 ###    - name: email note of new index (right now only manual index overwrite)-
 ###      local_action: mail
 ###                    from="ucldc@example.edu"
