@@ -12,6 +12,9 @@
         - production
         - stage
         - dev
+      s3_bucket: solr.ucldc
+      s3_root_path: "indexes/{{ server_role }}"
+      region: us-west-2
     tasks:
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
@@ -27,9 +30,9 @@
     - name: bzip index file
       command: bzip2 solr-index.{{ datetime }}.tar
     - name: push index tarball to s3 for server_role
-      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ server_role }}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
+      shell: aws --region={{ region }} s3 cp solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
     - name: push index tarball to s3 for server_role to the latest bucket
-      shell: aws s3 cp --region=us-west-2 solr-index.{{ datetime}}.tar.bz2 s3://solr.ucldc/{{ server_role }}/solr-index.tar.bz2
+      shell: aws s3 cp --region={{ region }} solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
 ###      s3:
 ###        bucket: solr.ucldc
