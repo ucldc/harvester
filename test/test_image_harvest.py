@@ -73,6 +73,21 @@ class ImageHarvestTestCase(TestCase):
                 connection='close',
                 )
         self.assertTrue(image_harvest.link_is_to_image(url))
+        url_redirect = 'http://gethisimage/redirect'
+        httpretty.register_uri(httpretty.HEAD,
+                url,
+                body='',
+                status=301,
+                location=url_redirect
+                )
+        httpretty.register_uri(httpretty.HEAD,
+                url_redirect,
+                body='',
+                content_length='0',
+                content_type='image/jpeg; charset=utf-8',
+                connection='close',
+                )
+        self.assertTrue(image_harvest.link_is_to_image(url))
 
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))

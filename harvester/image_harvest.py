@@ -22,7 +22,7 @@ def link_is_to_image(url):
     '''Check if the link points to an image content type.
     Return True or False accordingly
     '''
-    response = requests.head(url)
+    response = requests.head(url, allow_redirects=True)
     if response.status_code != 200:
         return False
     content_type = response.headers.get('content-type', None)
