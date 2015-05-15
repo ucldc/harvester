@@ -11,12 +11,13 @@ class ImageHarvestTestCase(TestCase):
     '''Test the md5 s3 image harvesting calls.....
     TODO: Increase test coverage
     '''
+    @patch('harvester.image_harvest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True,
             return_value=StashReport('test url', 'md5 test value',
                 's3 url object', 'mime_type', 'dimensions'))
     @httpretty.activate
-    def test_stash_image(self, mock_stash, mock_couch):
+    def test_stash_image(self, mock_stash, mock_couch, mock_redis):
         '''Test the stash image calls are correct'''
         doc = {'_id': 'TESTID'}
         self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
@@ -32,16 +33,28 @@ class ImageHarvestTestCase(TestCase):
                 connection='close',
                 )
         ret = image_harvest.ImageHarvester().stash_image(doc)
-        mock_stash.assert_called_with('http://content.cdlib.org/test_local_url_ark:', url_auth=None, bucket_base='ucldc')
+        mock_stash.assert_called_with(
+                'http://content.cdlib.org/test_local_url_ark:',
+                url_auth=None,
+                bucket_base='ucldc',
+                hash_cache={},
+                url_cache={})
         self.assertEqual('s3 url object', ret.s3_url)
         ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
-        mock_stash.assert_called_with('http://content.cdlib.org/test_local_url_ark:', url_auth=None, bucket_base='x')
+        mock_stash.assert_called_with(
+                'http://content.cdlib.org/test_local_url_ark:',
+                url_auth=None,
+                bucket_base='x',
+                hash_cache={},
+                url_cache={})
         ret = image_harvest.ImageHarvester(bucket_base='x',
                            object_auth=('tstuser', 'tstpswd')).stash_image(doc)
         mock_stash.assert_called_with(
                 'http://content.cdlib.org/test_local_url_ark:',
                 url_auth=('tstuser', 'tstpswd'),
-                bucket_base='x')
+                bucket_base='x',
+                hash_cache={},
+                url_cache={})
 
     def test_update_doc_object(self):
         '''Test call to couchdb, right data'''

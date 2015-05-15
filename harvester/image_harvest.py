@@ -12,6 +12,9 @@ import couchdb
 import requests
 import md5s3stash
 from harvester.couchdb_init import get_couchdb
+from harvester.config import config
+from redis import Redis
+import redis_collections
 
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
@@ -50,6 +53,16 @@ class ImageHarvester(object):
         # auth is a tuple of username, password
         self._auth = object_auth
         self.no_get_if_object = no_get_if_object # if object field exists, try to get
+        
+        self._config = config()
+        self._redis = Redis(host=self._config['redis_host'],
+                            port=self._config['redis_port'],
+                            password=self._config['redis_password'],
+                            socket_connect_timeout=self._config['redis_connect_timeout'])
+        self._url_cache = redis_collections.Dict(key='ucldc-image-url-cache',
+                redis=self._redis)
+        self._hash_cache = redis_collections.Dict(key='ucldc-image-hash-cache',
+                redis=self._redis)
 
     # Need to make each download a separate job.
     def stash_image(self, doc):
@@ -77,7 +90,9 @@ class ImageHarvester(object):
         if link_is_to_image(url_image):
             return md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,
-                                         url_auth=self._auth)
+                                         url_auth=self._auth,
+                                         url_cache=self._url_cache,
+                                         hash_cache=self._hash_cache)
         else:
             print >> sys.stderr, 'Not an image for {} - {}'.format(
                                       doc['_id'], url_image)
