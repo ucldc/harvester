@@ -5,15 +5,16 @@ from mock import MagicMock
 import httpretty
 from harvester import image_harvest
 
+#TODO: make this importable from md5s3stash
+StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type, dimensions')
 class ImageHarvestTestCase(TestCase):
     '''Test the md5 s3 image harvesting calls.....
     TODO: Increase test coverage
     '''
-    report = namedtuple('Report', 's3_url, md5')
-    # StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type')
-
     @patch('couchdb.Server')
-    @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))
+    @patch('md5s3stash.md5s3stash', autospec=True,
+            return_value=StashReport('test url', 'md5 test value',
+                's3 url object', 'mime_type', 'dimensions'))
     @httpretty.activate
     def test_stash_image(self, mock_stash, mock_couch):
         '''Test the stash image calls are correct'''
@@ -32,7 +33,7 @@ class ImageHarvestTestCase(TestCase):
                 )
         ret = image_harvest.ImageHarvester().stash_image(doc)
         mock_stash.assert_called_with('http://content.cdlib.org/test_local_url_ark:', url_auth=None, bucket_base='ucldc')
-        self.assertEqual('s3 test url', ret.s3_url)
+        self.assertEqual('s3 url object', ret.s3_url)
         ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
         mock_stash.assert_called_with('http://content.cdlib.org/test_local_url_ark:', url_auth=None, bucket_base='x')
         ret = image_harvest.ImageHarvester(bucket_base='x',
@@ -45,12 +46,16 @@ class ImageHarvestTestCase(TestCase):
     def test_update_doc_object(self):
         '''Test call to couchdb, right data'''
         doc = {'_id': 'TESTID'}
-        r = self.report('s3 test2 url', 'md5 test value')
+        r = StashReport('s3 test2 url', 'md5 test value', 's3 url', 'mime_type',
+                'dimensions-x:y')
         db = MagicMock()
         ret = image_harvest.ImageHarvester(cdb=db).update_doc_object(doc, r)
         self.assertEqual('md5 test value', ret)
         self.assertEqual('md5 test value', doc['object'])
-        db.save.assert_called_with({'_id': 'TESTID', 'object': 'md5 test value'})
+        self.assertEqual(doc['object_dimensions'], 'dimensions-x:y')
+        db.save.assert_called_with({'_id': 'TESTID',
+            'object': 'md5 test value',
+            'object_dimensions': 'dimensions-x:y'})
     
     @httpretty.activate
     def test_link_is_to_image(self):
@@ -90,7 +95,9 @@ class ImageHarvestTestCase(TestCase):
         self.assertTrue(image_harvest.link_is_to_image(url))
 
     @patch('couchdb.Server')
-    @patch('md5s3stash.md5s3stash', autospec=True, return_value=report('s3 test url', 'md5 test value'))
+    @patch('md5s3stash.md5s3stash', autospec=True,
+            return_value=StashReport('test url', 'md5 test value',
+                's3 url object', 'mime_type', 'dimensions'))
     @httpretty.activate
     def test_check_content_type(self, mock_stash, mock_couch):
         '''Test that the check for content type correctly aborts if the 
@@ -114,7 +121,8 @@ class ImageHarvestTestCase(TestCase):
                 content_type='image/plain; charset=utf-8',
                 connection='close',
                 )
-        r = self.report('s3 test url', 'md5 test value')
+        r = StashReport('test url', 'md5 test value',
+                's3 url object', 'mime_type', 'dimensions')
         ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
         self.assertEqual(ret, r)
 

@@ -86,6 +86,7 @@ class ImageHarvester(object):
     def update_doc_object(self, doc, report):
         '''Update the object field to point to an s3 bucket'''
         doc['object'] = report.md5
+        doc['object_dimensions'] = report.dimensions
         self._couchdb.save(doc)
         return doc['object']
 
