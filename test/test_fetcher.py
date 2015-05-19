@@ -575,7 +575,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, '_children'))
         self.assertTrue(hasattr(h, 'next'))
         self.assertTrue(hasattr(h, '_structmap_bucket'))
-
+        # TODO: verify that media.json files exist for this collection 
     @httpretty.activate
     def testFetch(self):
         '''Test the httpretty mocked fetching of documents'''
