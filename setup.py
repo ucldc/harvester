@@ -37,6 +37,7 @@ setup(
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-1.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
+         'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
     ],
     install_requires=[
         'Sickle==0.3',
@@ -59,6 +60,7 @@ setup(
         'pymarc>=3.0',
         'pynux',
         'facet_decade',
+        'redis_collections'
         ],
     test_suite='test',
     tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],

@@ -4,7 +4,7 @@ import httplib
 import json
 import argparse
 import couchdb
-from harvester.config import config
+from harvester.couchdb_init import get_couchdb
 
 def _get_source(doc):
     '''Return the "source". For us use the registry collection url.
@@ -63,14 +63,7 @@ def akara_enrich_doc(doc, enrichment, port=8889):
 
 def main(doc_id, enrichment, port=8889):
     '''Run akara_enrich_doc for one document and save result'''
-    _config = config()
-    url_couchdb = _config.DPLA.get("CouchDb", "URL")
-    couchdb_name = _config.DPLA.get("CouchDb", "ItemDatabase")
-    username = _config.DPLA.get("CouchDb", "Username")
-    password = _config.DPLA.get("CouchDb", "Password")
-    url = url_couchdb.split("//")
-    url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
-    _couchdb = couchdb.Server(url_server)[couchdb_name]
+    _couchdb = get_couchdb()
     indoc = _couchdb.get(doc_id)
     doc = akara_enrich_doc(indoc, enrichment, port)
     _couchdb[doc_id] = doc

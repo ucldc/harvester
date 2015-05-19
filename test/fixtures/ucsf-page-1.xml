@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<search-results xmlns="http://legacy.library.ucsf.edu/search/1.0" timeMillis="213">
+  <search-query>
+    <query>ddu:20*</query>
+    <page-size>3</page-size>
+    <default-field>er</default-field>
+    <field-display>1</field-display>
+    <sort-field/>
+    <reverse-sort>false</reverse-sort>
+    <add-to-history>true</add-to-history>
+    <date-range-field>ndd</date-range-field>
+    <start-date/>
+    <end-date/>
+    <added-since-field>ddu</added-since-field>
+    <added-since-date/>
+    <collections>[ga]</collections>
+    <page0>0</page0>
+    <person-name/>
+    <exclude-folders>true</exclude-folders>
+  </search-query>
+  <search-hits pages="3" page="1" total="7">
+    <search-hit number="1">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="nga13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/nga13j00</uri>
+        <metadata>
+          <ti>[Memo from Peter Whent to Simon Faith regarding reimbursing instructions]</ti>
+          <aup>Whent, Peter</aup>
+          <dd>20030410 (April 10, 2003) </dd>
+          <dt>memo</dt>
+          <bn>GA07179</bn>
+          <cn>Gallaher</cn>
+          <pg>1</pg>
+          <rcp>Farah, Simon; Simon</rcp>
+          <meno>Gallaher International Limited</meno>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>nga13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+    <search-hit number="2">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="ngb13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/ngb13j00</uri>
+        <metadata>
+          <ti>[Appointment to conduct a field visit to Lebanon 20030820 1200 hrs to 20030821 1200 hrs]</ti>
+          <dd>00000000</dd>
+          <dt>agenda</dt>
+          <bn>GA07855</bn>
+          <ct>Lebanon</ct>
+          <cn>Gallaher</cn>
+          <pg>1</pg>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>ngb13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+    <search-hit number="3">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="ngc13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/ngc13j00</uri>
+        <metadata>
+          <ti>[Letter from Norman Jack to Nicolas Senic regarding marketing budget allocations Middle East]</ti>
+          <dd>20031031 (October 31, 2003) </dd>
+          <dt>letter</dt>
+          <bn>GA08532</bn>
+          <ct>Iran; Iraq</ct>
+          <cn>Gallaher</cn>
+          <pg>2</pg>
+          <menp>Gerry; Jack, Norman; Senic, Nicolas</menp>
+          <brd>Memphis; Red; Sobranie; State Line</brd>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>ngc13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+  </search-hits>
+</search-results>

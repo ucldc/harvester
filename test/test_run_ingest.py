@@ -158,7 +158,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
-            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
+            self.assertRaises(Exception, fetcher.main,
+#            ingest_doc_id, num, self.dir_save, self.harvester = fetcher.main(
                     self.user_email,
                     self.url_api_collection,
                     log_handler=self.test_log_handler,
@@ -279,14 +280,13 @@ class ConfigTestCase(TestCase):
         self.assertEqual(cm.exception.message,
                 'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
-        redis_host, redis_port, redis_pswd, redis_connect_timeout, \
-            id_ec2_ingest, id_ec2_solr_build, DPLA = config()
-        self.assertEqual(redis_host, 'redis_host_ip')
-        self.assertEqual(redis_port, '6379')
-        self.assertEqual(redis_pswd, 'XX')
-        self.assertEqual(redis_connect_timeout, 10)
-        self.assertEqual(id_ec2_ingest, 'INGEST')
-        self.assertEqual(id_ec2_solr_build, 'BUILD')
+        conf = config()
+        self.assertEqual(conf['redis_host'], 'redis_host_ip')
+        self.assertEqual(conf['redis_port'], '6379')
+        self.assertEqual(conf['redis_password'], 'XX')
+        self.assertEqual(conf['redis_connect_timeout'], 10)
+        self.assertEqual(conf['id_ec2_ingest'], 'INGEST')
+        self.assertEqual(conf['id_ec2_solr_build'], 'BUILD')
 
 
 class RunIngestTestCase(LogOverrideMixin, TestCase):
@@ -298,6 +298,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         os.environ['REDIS_PASSWORD'] = 'XX'
         os.environ['ID_EC2_INGEST'] = 'INGEST'
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
+	os.environ['DPLA_CONFIG_FILE'] = 'akara.ini'
 
     def tearDown(self):
         # remove env vars if created?
@@ -305,6 +306,8 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['REDIS_PASSWORD']
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
+        if 'DPLA_CONFIG_FILE' in os.environ:
+	    del os.environ['DPLA_CONFIG_FILE']
 
     @patch('harvester.run_ingest.Redis', autospec=True)
     @patch('couchdb.Server')
@@ -320,15 +323,16 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         # this next is because the redis client unpickles....
         mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
         mail_handler = MagicMock()
+        url_api_collection = 'https://registry.cdlib.org/api/v1/collection/178/'
         httpretty.enable()
         httpretty.register_uri(httpretty.GET,
-                'https://registry.cdlib.org/api/v1/collection/178/',
+                url_api_collection,
                 body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
         httpretty.register_uri(httpretty.GET,
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
         run_ingest.main('mark.redar@ucop.edu',
-                'https://registry.cdlib.org/api/v1/collection/178/',
+                url_api_collection,
                 log_handler=self.test_log_handler,
                 mail_handler=mail_handler)
         mock_couch.assert_called_with(config_file='akara.ini', dashboard_db_name='dashboard', dpla_db_name='ucldc')

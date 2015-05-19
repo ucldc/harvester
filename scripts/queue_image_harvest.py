@@ -47,12 +47,12 @@ def def_args():
     return parser
 
 
-def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
+def queue_image_harvest(redis_host, redis_port, redis_password, redis_timeout,
                         collection_key, url_couchdb=None, object_auth=None,
                         no_get_if_object=False,
                         harvest_timeout=IMAGE_HARVEST_TIMEOUT):
     rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
-                                password=redis_pswd,
+                                password=redis_password,
                                 socket_connect_timeout=redis_timeout)
     )
     job = rQ.enqueue_call(func=harvester.image_harvest.main,
@@ -95,8 +95,9 @@ def main(user_email, url_api_collection, log_handler=None,
     log_handler.push_application()
     print config
     # the image_harvest should be a separate job, with a long timeout
-    job = queue_image_harvest(config.redis_host, config.redis_port,
-                              config.redis_pswd, config.redis_timeout,
+    job = queue_image_harvest(config['redis_host'], config['redis_port'],
+                              config['redis_password'],
+                              config['redis_connect_timeout'],
                               collection_key=collection.provider,
                               object_auth=collection.auth,
                               **kwargs)

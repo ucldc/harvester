@@ -57,7 +57,7 @@ def get_id_on_queue_and_run(queue):
 if __name__=='__main__':
     queue = Queue.Queue()
     num_threads = 2
-    for l in  open('cids-20150226.list'):
+    for l in  open('collections-new-fix-stg.list'):
         cid = l.strip()
         #fill q, not parallel yet
         queue.put(cid)
