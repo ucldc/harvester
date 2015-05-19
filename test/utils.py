@@ -57,7 +57,16 @@ class ConfigFileOverrideMixin(object):
     '''Create temporary config and profile files for use by the DPLA couch
     module when creating the ingest doc.
     Returns names of 2 tempfiles for use as config and profile.'''
+    
+    env_list = ['COUCHDB_URL', 'COUCHDB_DB', 'COUCHDB_DASHBOARD',
+                'DPLA_CONFIG_FILE']
+
     def setUp_config(self, collection):
+        self.env_saved = {}
+	for envvar in self.env_list:
+            if envvar in os.environ:
+            	self.env_saved[envvar] = os.environ[envvar]
+                del os.environ[envvar]
         f, self.config_file = tempfile.mkstemp()
         with open(self.config_file, 'w') as f:
             f.write(CONFIG_FILE_DPLA)
@@ -67,6 +76,8 @@ class ConfigFileOverrideMixin(object):
         return self.config_file, self.profile_path
 
     def tearDown_config(self):
+        for envvar in self.env_saved.keys():
+            os.environ[envvar] = self.env_saved[envvar]
         os.remove(self.config_file)
         os.remove(self.profile_path)
 

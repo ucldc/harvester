@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<search-results xmlns="http://legacy.library.ucsf.edu/search/1.0" timeMillis="195">
+  <search-query>
+    <query>ddu:20*</query>
+    <page-size>3</page-size>
+    <default-field>er</default-field>
+    <field-display>1</field-display>
+    <sort-field/>
+    <reverse-sort>false</reverse-sort>
+    <add-to-history>true</add-to-history>
+    <date-range-field>ndd</date-range-field>
+    <start-date/>
+    <end-date/>
+    <added-since-field>ddu</added-since-field>
+    <added-since-date/>
+    <collections>[ga]</collections>
+    <page0>1</page0>
+    <person-name/>
+    <exclude-folders>true</exclude-folders>
+  </search-query>
+  <search-hits pages="3" page="2" total="7">
+    <search-hit number="4">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="ngd13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/ngd13j00</uri>
+        <metadata>
+          <ti>[Letter from Norman Jack to John Smith, Baker Barry regarding production destruction]</ti>
+          <aup>Jack, Norman; Norman</aup>
+          <dd>20040213 (February 13, 2004) </dd>
+          <dt>letter</dt>
+          <bn>GA09208</bn>
+          <ct>UAE</ct>
+          <cn>Gallaher</cn>
+          <pg>1</pg>
+          <rcp>Baker, Barry; Smith, John; Barry; John</rcp>
+          <ccp>Ben; Hartley, Ben</ccp>
+          <menp>Brian</menp>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>ngd13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+    <search-hit number="5">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="nge13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/nge13j00</uri>
+        <metadata>
+          <ti>[Email from Duncan McCallum to Jeff Jeffery regarding Portuguese Request]</ti>
+          <aup>Duncan; McCallum, Duncan; Couto, Judite</aup>
+          <dd>20040607 (June 7, 2004) </dd>
+          <dt>email</dt>
+          <bn>GA09884</bn>
+          <ct>Cyprus; Dubai</ct>
+          <cn>Gallaher</cn>
+          <pg>2</pg>
+          <rcp>Jeff</rcp>
+          <menp>ComRog; Sofia, Ana</menp>
+          <brd>Sovereign</brd>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>nge13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+    <search-hit number="6">
+      <document xmlns="http://legacy.library.ucsf.edu/document/1.1" tid="ngf13j00">
+        <uri>http://legacy.library.ucsf.edu/tid/ngf13j00</uri>
+        <metadata>
+          <ti>[ An Email from Robin Miller to Nigel Espin regarding Counterfeit cigarettes]</ti>
+          <aup>Miller, Robin; Robin</aup>
+          <dd>20040924 (September 24, 2004) </dd>
+          <dt>email</dt>
+          <bn>GA10560</bn>
+          <ct>Cyprus; Surrey; UK</ct>
+          <cn>Gallaher</cn>
+          <pg>2</pg>
+          <rcp>Espin, Nigel; Nigel; McDermott, Sandy</rcp>
+          <ccp>Fordham, Sue; Lumesberger, Johannes; McDermott, Sandy; Perks, Stephen</ccp>
+          <menp>Galatia; Sandy</menp>
+          <brd>Dorchester; Sovereign</brd>
+          <usage>Gallaher v Tlais 2005 Folio 185</usage>
+          <ddu>20130221 (February 21, 2013) </ddu>
+          <tid>ngf13j00</tid>
+        </metadata>
+        <data/>
+      </document>
+    </search-hit>
+  </search-hits>
+</search-results>

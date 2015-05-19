@@ -8,7 +8,7 @@ from collections import defaultdict
 import requests
 import boto
 from solr import Solr, SolrException
-from couchdb import Server, Database, Document
+from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 
 COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
@@ -73,11 +73,10 @@ def map_registry_data(collections):
         repository_names.extend([repo['name'] for repo in repositories])
         repo_datas = []
         for repo in repositories:
-            try:
+            repo_data = '::'.join((repo['@id'], repo['name']))
+            if 'campus' in repo and len(repo['campus']):
                 repo_data = '::'.join((repo['@id'], repo['name'],
-                    repo['campus'][0]['name']))
-            except KeyError:
-                repo_data = '::'.join((repo['@id'], repo['name']))
+                            repo['campus'][0]['name']))
             repo_datas.append(repo_data)
         repository_datas.extend(repo_datas)
     return dict(collection_url = collection_urls,
@@ -189,8 +188,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     '''
     print('Solr update PID:{}'.format(os.getpid()))
     sys.stdout.flush() # put pd
-    server = Server(url_couchdb)
-    db = server[dbname]
+    db = get_couchdb(url=url_couchdb, dname=dbname)
     if not since:
         since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))

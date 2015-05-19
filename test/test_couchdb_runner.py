@@ -16,8 +16,8 @@ class CouchDBWorkerTestCase(TestCase):
     @httpretty.activate
     def setUp(self):
         conf = config()
-        self.url_couch_base = conf.DPLA.get('CouchDb', 'URL')
-        self.cdb = conf.DPLA.get('CouchDb', 'ItemDatabase')
+        self.url_couch_base = conf['couchdb_url']
+        self.cdb = conf['couchdb_dbname']
         url_head = os.path.join(self.url_couch_base, self.cdb)
         httpretty.register_uri(httpretty.HEAD,
                 url_head,
@@ -64,8 +64,8 @@ class CouchDBJobEnqueueTestCase(TestCase):
     @httpretty.activate
     def setUp(self, mock_redis):
         conf = config()
-        self.url_couch_base = conf.DPLA.get('CouchDb', 'URL')
-        self.cdb = conf.DPLA.get('CouchDb', 'ItemDatabase')
+        self.url_couch_base = conf['couchdb_url']
+        self.cdb = conf['couchdb_dbname']
         url_head = os.path.join(self.url_couch_base, self.cdb)
         httpretty.register_uri(httpretty.HEAD,
                 url_head,

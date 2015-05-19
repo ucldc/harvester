@@ -91,13 +91,13 @@ if __name__ == '__main__':
     if not args.user_email or not args.url_api_collection:
         parser.print_help()
         raise Exception('Need to pass in user email and collection api URL')
-    redis_host, redis_port, redis_pswd, redis_connect_timeout, id_ec2_ingest, id_ec2_solr_build, DPLA = config()
+    env = config()
     main(args.user_email, args.url_api_collection.strip(),
-         redis_host=redis_host,
-         redis_port=redis_port,
-         redis_pswd=redis_pswd,
-         id_ec2_ingest=id_ec2_ingest,
-         id_ec2_solr=id_ec2_solr_build,
+         redis_host=env['redis_host'],
+         redis_port=env['redis_port'],
+         redis_pswd=env['redis_password'],
+         id_ec2_ingest=env['id_ec2_ingest'],
+         id_ec2_solr=env['id_ec2_solr_build'],
          job_timeout=args.job_timeout,
          run_image_harvest=args.run_image_harvest
          )
