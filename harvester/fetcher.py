@@ -21,6 +21,7 @@ from logbook import FileHandler
 import solr
 from collection_registry_client import Collection
 import config
+from urlparse import parse_qs
 from pymarc import MARCReader
 import pymarc
 import dplaingestion.couch
@@ -57,11 +58,20 @@ class OAIFetcher(Fetcher):
         super(OAIFetcher, self).__init__(url_harvest, extra_data)
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
+        self._metadataPrefix = 'oai_dc'
         if extra_data: # extra data is set spec
-            self.records = self.oai_client.ListRecords(metadataPrefix='oai_dc',
-                                                    set=extra_data)
+            if 'set' in extra_data:
+                params = parse_qs(extra_data)
+                self._set = params['set'][0]
+                self._metadataPrefix = params.get('metadataPrefix', ['oai_dc'])[0]
+            else:
+                self._set = extra_data
+            self.records = self.oai_client.ListRecords(
+                                    metadataPrefix=self._metadataPrefix,
+                                                    set=self._set)
         else:
-            self.records = self.oai_client.ListRecords(metadataPrefix='oai_dc')
+            self.records = self.oai_client.ListRecords(
+                                    metadataPrefix=self._metadataPrefix)
 
 
     def next(self):
