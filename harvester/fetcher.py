@@ -31,6 +31,7 @@ from requests.packages.urllib3.exceptions import DecodeError
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
+STRUCTMAP_S3_BUCKET = 'static.ucldc.cdlib.org/media_json'
 
 class NoRecordsFetchedException(Exception):
     pass
@@ -150,12 +151,25 @@ class NuxeoFetcher(Fetcher):
         self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
         self._nx.conf['api'] = self._url
         self._children = self._nx.children(self._path)
+        self._structmap_bucket = STRUCTMAP_S3_BUCKET
+        # TODO: create media.json files for collection if they don't already exist
+
+    def _get_structmap_url(self, bucket, obj_key):
+        '''Get structmap_url property for object'''
+        structmap_url = "s3://{0}/{1}".format(bucket, obj_key) # get this from somewhere else?
+        return structmap_url
+
+    def _get_structmap_text(self):
+        '''Get structmap_text for object. This is all the words from 'label' in the json.'''
+        pass
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
-        return self._nx.get_metadata(uid=doc['uid'])
-
+        self.metadata = self._nx.get_metadata(uid=doc['uid'])
+        self.metadata['structmap_url'] = self._get_structmap_url(self._structmap_bucket, doc['uid']) 
+        # TODO: self.metadata['structmap_text'] = self._get_structmap_text() 
+        return self.metadata
 
 class UCLDCNuxeoFetcher(NuxeoFetcher):
     '''A nuxeo fetcher that verifies headers required for UCLDC metadata
