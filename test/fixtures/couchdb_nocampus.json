@@ -70,14 +70,14 @@
     "collection": [
       {
         "name": "Uchida (Yoshiko) photograph collection",
-        "@id": "https://registry.cdlib.org/api/v1/collection/23066/",
-        "resource_uri": "/api/v1/collection/23066/",
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066",
+        "resource_uri": "/api/v1/collection/23066",
         "repository": [
           {
             "ark": "ark:/13030/tf7r29p8s0",
             "name": "Bancroft Library",
             "resource_uri": "/api/v1/repository/4/",
-            "@id": "https://registry.cdlib.org/api/v1/repository/4/",
+            "@id": "https://registry.cdlib.org/api/v1/repository/4",
             "slug": "bancroft-library"
           }
         ],
@@ -156,7 +156,7 @@
     "collection": [
       {
         "name": "Uchida (Yoshiko) photograph collection",
-        "@id": "https://registry.cdlib.org/api/v1/collection/23066/"
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066"
       }
     ],
     "relation": [

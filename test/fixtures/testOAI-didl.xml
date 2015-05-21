@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2015-05-20T20:30:26Z</responseDate>
+  <request metadataPrefix="didl" verb="ListRecords" set="hdl_10575_7">http://ucispace-prod.lib.uci.edu:8080/oai/request</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:ucispace-prod.lib.uci.edu:10575/25</identifier>
+        <datestamp>2015-05-20T11:04:23Z</datestamp>
+        <setSpec>hdl_10575_10</setSpec>
+      </header>
+      <metadata>
+        <didl:DIDL xmlns:didl="urn:mpeg:mpeg21:2002:02-DIDL-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:mpeg21:2002:02-DIDL-NS http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-21_schema_files/did/didl.xsd ">
+          <didl:DIDLInfo>
+            <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://purl.org/dc/terms/ ">2015-05-20T20:30:26Z</dcterms:created>
+          </didl:DIDLInfo>
+          <didl:Item id="uuid-640925bd-9cdf-46be-babb-b2138c3fce9c">
+            <didl:Descriptor>
+              <didl:Statement mimeType="application/xml; charset=utf-8">
+                <dii:Identifier xmlns:dii="urn:mpeg:mpeg21:2002:01-DII-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:mpeg21:2002:01-DII-NS http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-21_schema_files/dii/dii.xsd">urn:hdl:10575/25</dii:Identifier>
+              </didl:Statement>
+            </didl:Descriptor>
+            <didl:Descriptor>
+              <didl:Statement mimeType="application/xml; charset=utf-8">
+                <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+                  <dc:title>Schedule of lectures</dc:title>
+                  <dc:creator>Rorty, Richard</dc:creator>
+                  <dc:subject>Rorty, Richard</dc:subject>
+                  <dc:description>Original file location on Richard Rorty's disk: MS-C017-FD032/!COLLOQU.IA</dc:description>
+                  <dc:description>File transferred from Richard Rorty's original floppy disk and converted to PDF for access.</dc:description>
+                  <dc:publisher>University of California, Irvine Libraries. Special Collections and Archives. Critical Theory Archive. Irvine, California 92623-9557. http://special.lib.uci.edu. email: spcoll@uci.edu</dc:publisher>
+                  <dc:date>2010-02-11T22:41:34Z</dc:date>
+                  <dc:type>Archives and Manuscripts</dc:type>
+                  <dc:format>application/pdf</dc:format>
+                  <dc:identifier>http://hdl.handle.net/10575/25</dc:identifier>
+                  <dc:language>en_US</dc:language>
+                  <dc:relation>Richard Rorty Papers. MS-C017. University of California, Irvine Libraries. Special Collections and Archives. Finding aid for entire collection available at:  http://www.oac.cdlib.org/findaid/ark:/13030/kt9p3038mq/</dc:relation>
+                  <dc:rights>This material is provided for private study, scholarship, or research. Transmission or reproduction of any material protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. The authors or their heirs retain their copyrights to the material. Contact the University of California, Irvine Libraries, Special Collections and Archives for more information (spcoll@uci.edu).</dc:rights>
+                  <dc:rights>To access this item, interested researchers should submit an application online at http://special.lib.uci.edu/using/virtual-reading-room-application-form.html. Access may be granted in less than 5 business days.</dc:rights>
+                </oai_dc:dc>
+              </didl:Statement>
+            </didl:Descriptor>
+            <didl:Component id="uuid-897984d8-9392-4a68-912f-ffdf6fd7ce59">
+              <didl:Resource ref="http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/25/1/!COLLOQU.IA.pdf" mimeType="application/pdf"/>
+            </didl:Component>
+          </didl:Item>
+        </didl:DIDL>
+      </metadata>
+    </record>
+    <resumptionToken expirationDate="2015-05-20T21:30:26Z">0001-01-01T00:00:00Z/9999-12-31T23:59:59Z/hdl_10575_7/didl/100</resumptionToken>
+  </ListRecords>
+</OAI-PMH>

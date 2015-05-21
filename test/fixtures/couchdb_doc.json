@@ -70,7 +70,7 @@
     "collection": [
       {
         "name": "Uchida (Yoshiko) photograph collection",
-        "@id": "https://registry.cdlib.org/api/v1/collection/23066/",
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066",
         "resource_uri": "/api/v1/collection/23066/",
         "repository": [
           {
@@ -81,13 +81,13 @@
                 "name": "UC Berkeley",
                 "position": 0,
                 "resource_uri": "/api/v1/campus/1/",
-                "@id": "https://registry.cdlib.org/api/v1/campus/1/",
+                "@id": "https://registry.cdlib.org/api/v1/campus/1",
                 "slug": "UCB"
               }
             ],
             "name": "Bancroft Library",
             "resource_uri": "/api/v1/repository/4/",
-            "@id": "https://registry.cdlib.org/api/v1/repository/4/",
+            "@id": "https://registry.cdlib.org/api/v1/repository/4",
             "slug": "bancroft-library"
           }
         ],
@@ -116,7 +116,7 @@
             "name": "UC Berkeley",
             "position": 0,
             "resource_uri": "/api/v1/campus/1/",
-            "@id": "https://registry.cdlib.org/api/v1/campus/1/",
+            "@id": "https://registry.cdlib.org/api/v1/campus/1",
             "slug": "UCB"
           }
         ],
@@ -176,7 +176,7 @@
     "collection": [
       {
         "name": "Uchida (Yoshiko) photograph collection",
-        "@id": "https://registry.cdlib.org/api/v1/collection/23066/"
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066"
       }
     ],
     "relation": [
