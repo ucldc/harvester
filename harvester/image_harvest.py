@@ -15,6 +15,7 @@ from harvester.couchdb_init import get_couchdb
 from harvester.config import config
 from redis import Redis
 import redis_collections
+from harvester.couchdb_pager import couchdb_pager
 
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
@@ -144,10 +145,13 @@ class ImageHarvester(object):
         recommended)
         '''
         if collection_key:
-            v = self._couchdb.view(self._view, include_docs='true',
-                                   key=collection_key)
+            v = couchdb_pager(self._couchdb, view_name=self._view,
+                    startkey=[collection_key],
+                    endkey=[collection_key, {}],
+                    include_docs='true')
         else:
-            v = self._couchdb.view(self._view, include_docs='true')
+            #use _all_docs view
+            v = couchdb_pager(self._couchdb, include_docs='true')
         doc_ids = []
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
