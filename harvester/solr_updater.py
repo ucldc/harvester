@@ -38,6 +38,10 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'extent'      : lambda d: {'extent': d.get('extent', None)},
 }
 
+def add_slash(url):
+    '''Add slash to url is it is not there.'''
+    return os.path.join(url, '')
+
 class OldCollectionException(Exception):
     pass
 
@@ -52,30 +56,31 @@ def map_registry_data(collections):
     repository_datas = []
     campus_urls = campus_names = campus_datas = None
     for collection in collections: #can have multiple collections
-        collection_urls.append(collection['@id'])
+        collection_urls.append(add_slash(collection['@id']))
         collection_names.append(collection['name'])
-        collection_datas.append('::'.join((collection['@id'],
+        collection_datas.append('::'.join((add_slash(collection['@id']),
             collection['name'])))
         if 'campus' in collection:
             campus_urls = []
             campus_names = []
             campus_datas = []
             campuses = collection['campus']
-            campus_urls.extend([campus['@id'] for campus in campuses])
+            campus_urls.extend([add_slash(campus['@id']) for campus in campuses])
             campus_names.extend([campus['name'] for c in campuses])
-            campus_datas.extend(['::'.join((campus['@id'], campus['name']))
+            campus_datas.extend(['::'.join((add_slash(campus['@id']),
+                                            campus['name']))
                 for campus in campuses])
         try:
             repositories = collection['repository']
         except KeyError:
             raise OldCollectionException
-        repository_urls.extend([repo['@id'] for repo in repositories])
+        repository_urls.extend([add_slash(repo['@id']) for repo in repositories])
         repository_names.extend([repo['name'] for repo in repositories])
         repo_datas = []
         for repo in repositories:
-            repo_data = '::'.join((repo['@id'], repo['name']))
+            repo_data = '::'.join((add_slash(repo['@id']), repo['name']))
             if 'campus' in repo and len(repo['campus']):
-                repo_data = '::'.join((repo['@id'], repo['name'],
+                repo_data = '::'.join((add_slash(repo['@id']), repo['name'],
                             repo['campus'][0]['name']))
             repo_datas.append(repo_data)
         repository_datas.extend(repo_datas)
