@@ -418,7 +418,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
     def setUp(self):
         super(OAIFetcherTestCase, self).setUp()
         httpretty.register_uri(httpretty.GET,
-                'http://content.cdlib.org/oai?verb=ListRecords&metadataPrefix=oai_dc&set=oac:images',
+                'http://content.cdlib.org/oai',
                 body=open(DIR_FIXTURES+'/testOAI.xml').read())
         self.fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'oac:images')
 
@@ -450,6 +450,43 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
             recs.append(r)
         #skips over 5 "deleted" records
         self.assertEqual(len(recs), 3)
+
+    @httpretty.activate
+    def testOverrideMetadataPrefix(self):
+        '''test that the metadataPrefix for an OAI feed can be overridden.
+        The extra_data for OAI can be either just a set spec or a html query
+        string of set= &metadataPrefix=
+        '''
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAI.xml').read())
+        set_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'set=oac:images')
+        self.assertEqual(set_fetcher._set, 'oac:images')
+        rec = set_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], '13030/hb796nb5mn')
+        self.assertIn('datestamp', rec)
+        self.assertIn(rec['datestamp'], '2005-12-13')
+        self.assertEqual(httpretty.last_request().querystring,
+            {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
+            u'metadataPrefix': [u'oai_dc']})
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAI-didl.xml').read())
+        didl_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'set=oac:images&metadataPrefix=didl')
+        self.assertEqual(didl_fetcher._set, 'oac:images')
+        self.assertEqual(didl_fetcher._metadataPrefix, 'didl')
+        rec = didl_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], 'oai:ucispace-prod.lib.uci.edu:10575/25')
+        self.assertIn('datestamp', rec)
+        self.assertEqual(rec['datestamp'], '2015-05-20T11:04:23Z')
+        self.assertEqual(httpretty.last_request().querystring,
+            {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
+            u'metadataPrefix': [u'didl']})
+
 
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
@@ -647,7 +684,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIsInstance(h._nx, pynux.utils.Nuxeo)
         self.assertTrue(hasattr(h, '_children'))
         self.assertTrue(hasattr(h, 'next'))
-
+        self.assertTrue(hasattr(h, '_structmap_bucket'))
+        # TODO: verify that media.json files exist for this collection 
     @httpretty.activate
     def testFetch(self):
         '''Test the httpretty mocked fetching of documents'''
@@ -670,10 +708,11 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         for d in h:
             docs.append(d)
         self.assertEqual(10, len(docs))
-        self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
+        #self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
-
+        self.assertIn('structmap_url', docs[0])
+        #self.assertIn('structmap_text', docs[0])
 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
