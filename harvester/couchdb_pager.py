@@ -13,12 +13,13 @@ def couchdb_pager(db, view_name='_all_docs',
         if startkey_docid:
             options['startkey_docid'] = startkey_docid
     if endkey:
+        ###options['endkey'] = endkey
         options['end_key'] = endkey
         if endkey_docid:
             options['endkey_docid'] = endkey_docid
     done = False
-    print("OPTS:{}".format(options))
     while not done:
+        print("OPTS:{}".format(options))
         view = db.view(view_name, **options)
         rows = []
         # If we got a short result (< limit + 1), we know we are done.
@@ -29,7 +30,7 @@ def couchdb_pager(db, view_name='_all_docs',
             # Otherwise, continue at the new start position.
             rows = view.rows[:-1]
             last = view.rows[-1]
-            options['start_key'] = last.key
+            ###options['start_key'] = last.key
             options['startkey_docid'] = last.id
 
         for row in rows:
