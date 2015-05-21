@@ -146,8 +146,8 @@ class ImageHarvester(object):
         '''
         if collection_key:
             v = couchdb_pager(self._couchdb, view_name=self._view,
-                    startkey=[collection_key],
-                    endkey=[collection_key, {}],
+                    startkey='"{0}"'.format(collection_key),
+                    endkey='"{0}"'.format(collection_key),
                     include_docs='true')
         else:
             #use _all_docs view
