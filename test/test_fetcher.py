@@ -487,7 +487,16 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(httpretty.last_request().querystring,
             {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
             u'metadataPrefix': [u'didl']})
-
+        self.assertEqual(rec['Resource']['@ref'],
+                'http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/25/1/!COLLOQU.IA.pdf')
+        self.assertEqual(rec['Item']['@id'],
+                        'uuid-640925bd-9cdf-46be-babb-b2138c3fce9c')
+        self.assertEqual(rec['Component']['@id'],
+                        'uuid-897984d8-9392-4a68-912f-ffdf6fd7ce59')
+        self.assertIn('Descriptor', rec)
+        self.assertEqual(rec['Statement']['@mimeType'],
+                                        'application/xml; charset=utf-8')
+        self.assertEqual(rec['DIDLInfo']['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'], '2015-05-20T20:30:26Z')
 
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):

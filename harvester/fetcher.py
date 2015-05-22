@@ -54,6 +54,12 @@ class Fetcher(object):
         '''
         raise NotImplementedError
 
+def etree_to_dict(t):
+    d = {t.tag : map(etree_to_dict, t.iterchildren())}
+    d.update(('@' + k, v) for k, v in t.attrib.iteritems())
+    d['text'] = t.text
+    return d
+
 class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
     Fills in data for the didl specific values
@@ -64,39 +70,19 @@ class SickleDIDLRecord(SickleDCRecord):
     DIDLInfo contains created date for the data feed - drop
     Statement wraps the dc metadata
 
+    Only the Resource & Component have unique data in them
+
     '''
     def __init__(self, record_element, strip_ns=True):
-        super(SickleDIDLRecord, self).__init__(record_element, strip_ns=strip_ns)
-        for k in self.metadata.keys():
-            if not self.metadata[k][0]:
-                print "KEY:{} VAL:{}".format(k, str(self.metadata[k]))
+        super(SickleDIDLRecord, self).__init__(record_element,
+                                                strip_ns=strip_ns)
         #need to grab the didl components here
         if not self.deleted:
-            metadata = self.xml.find('.//' + self._oai_namespace + 'metadata')
             didl = self.xml.find('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDL')
-            didl_dict = xml_to_dict(didl, strip_ns=self._strip_ns)
-            didl_dict = xml_to_dict(didl,
-                #path='.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}*',
-                strip_ns=self._strip_ns)
-            print "\n\n\n"
-            print "{}".format(didl_dict)
             didls = didl.findall('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}*')
-            print "DIDLS:{}".format(didls)
-            for c in didl.getchildren():
-                print "CHILD:{0}".format(c)
-            # We want to get record/metadata/<container>/*
-            # <container> would be the element ``dc``
-            # in the ``oai_dc`` case.
-###            x = self.xml.find('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}metadata')
-###            x = self.xml.find('.//{didl}metadata')
-###            x = self.xml.find('.//metadata')
-###            print "XXXXX:{}".format(x)
-###            self.metadata.update(xml_to_dict(
-###                self.xml.find(
-###                    './/{' + "urn:mpeg:mpeg21:2002:02-DIDL-NS" + '}metadata'
-###
-###                ).getchildren()[0], strip_ns=self._strip_ns)
-###            )
+            for element in didls:
+                tag = re.sub(r'\{.*\}', '', element.tag)
+                self.metadata[tag] = etree_to_dict(element)
 
 
 class OAIFetcher(Fetcher):
