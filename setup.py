@@ -67,5 +67,5 @@ setup(
 )
 
 pip_main(['install', 'ansible'])
-pip_main(['install',
-         'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])
+###pip_main(['install',
+###         'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])

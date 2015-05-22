@@ -481,6 +481,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('id', rec)
         self.assertEqual(rec['id'], 'oai:ucispace-prod.lib.uci.edu:10575/25')
+        self.assertEqual(rec['title'], ['Schedule of lectures'])
         self.assertIn('datestamp', rec)
         self.assertEqual(rec['datestamp'], '2015-05-20T11:04:23Z')
         self.assertEqual(httpretty.last_request().querystring,
