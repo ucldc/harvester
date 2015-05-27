@@ -784,8 +784,10 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    def testNuxeoHarvest(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testNuxeoHarvest(self, mock_boto):
         '''Test the function of the Nuxeo harvest'''
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value='testing testing'
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
                 body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())

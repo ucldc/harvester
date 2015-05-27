@@ -93,6 +93,9 @@ class OAIFetcher(Fetcher):
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
         self._metadataPrefix = 'oai_dc'
+        # ensure not cached in module?
+        self.oai_client.class_mapping['ListRecords'] = SickleDCRecord
+        self.oai_client.class_mapping['GetRecord'] = SickleDCRecord
         if extra_data: # extra data is set spec
             if 'set' in extra_data:
                 params = parse_qs(extra_data)
