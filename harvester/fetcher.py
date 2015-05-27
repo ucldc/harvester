@@ -29,6 +29,7 @@ import pymarc
 import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
+import boto
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -188,23 +189,37 @@ class NuxeoFetcher(Fetcher):
         self._nx.conf['api'] = self._url
         self._children = self._nx.children(self._path)
         self._structmap_bucket = STRUCTMAP_S3_BUCKET
-        # TODO: create media.json files for collection if they don't already exist
+        # TODO: create media.json files and stash jp2000 where applicable for collection if they don't already exist
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
         structmap_url = "s3://{0}/{1}".format(bucket, obj_key) # get this from somewhere else?
         return structmap_url
 
-    def _get_structmap_text(self):
+    def _get_structmap_text(self, structmap_url):
         '''Get structmap_text for object. This is all the words from 'label' in the json.'''
-        pass
+        structmap_text = ""
+        
+        parts = urlparse.urlsplit(structmap_url)
+        conn = boto.connect_s3()
+        #bucket = conn.get_bucket(bucketbase)
+        #key = Key(bucket)
+        #k.key = parts.path 
+        #structmap = k.get_contents_as_string()            
+        #self.logger.debug(''.join(('===== structmap -->', structmap)))
+
+        # get media.json file contents as text
+        # concatenate all of the words from 'label' in the json
+
+        return structmap_text 
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
         self.metadata = self._nx.get_metadata(uid=doc['uid'])
-        self.metadata['structmap_url'] = self._get_structmap_url(self._structmap_bucket, doc['uid']) 
-        # TODO: self.metadata['structmap_text'] = self._get_structmap_text() 
+        self.structmap_url = self._get_structmap_url(self._structmap_bucket, doc['uid'])
+        self.metadata['structmap_url'] = self.structmap_url 
+        self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
         return self.metadata
 
 class UCLDCNuxeoFetcher(NuxeoFetcher):

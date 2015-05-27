@@ -696,6 +696,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, 'next'))
         self.assertTrue(hasattr(h, '_structmap_bucket'))
         # TODO: verify that media.json files exist for this collection 
+
     @httpretty.activate
     def testFetch(self):
         '''Test the httpretty mocked fetching of documents'''
@@ -722,7 +723,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
         self.assertIn('structmap_url', docs[0])
-        #self.assertIn('structmap_text', docs[0])
+        self.assertIn('structmap_text', docs[0])
 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
