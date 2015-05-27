@@ -677,7 +677,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.
     @httpretty.activate
-    def testInit(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testInit(self, mock_boto):
         '''Basic tdd start'''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -693,7 +694,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         # TODO: verify that media.json files exist for this collection 
 
     @httpretty.activate
-    def testFetch(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testFetch(self, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -768,7 +770,8 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    def testNuxeoHarvest(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testNuxeoHarvest(self, mock_boto):
         '''Test the function of the Nuxeo harvest'''
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
