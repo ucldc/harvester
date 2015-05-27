@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from unittest import skip
 import shutil
 import re
 from xml.etree import ElementTree as ET
@@ -286,6 +287,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             )
         self.assertEqual(self.objset_test_doc, objset_saved)
 
+    @skip('Takes too long')
     @httpretty.activate
     def testLoggingMoreThan1000(self):
         httpretty.register_uri(httpretty.GET,
@@ -693,6 +695,18 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, '_structmap_bucket'))
         # TODO: verify that media.json files exist for this collection 
 
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_get_structmap_text(self, mock_boto):
+        '''Mock test s3 structmap_text getting'''
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value='testing testing'
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('static.ucldc.cdlib.org/media_json')
+        mock_boto().get_bucket().get_key.assert_called_with('/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+        self.assertEqual(structmap_text, 'testing testing')
+
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
     def testFetch(self, mock_boto):
@@ -770,8 +784,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    @patch('boto.connect_s3', autospec=True)
-    def testNuxeoHarvest(self, mock_boto):
+    def testNuxeoHarvest(self):
         '''Test the function of the Nuxeo harvest'''
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',

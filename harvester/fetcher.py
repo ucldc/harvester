@@ -93,9 +93,6 @@ class OAIFetcher(Fetcher):
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
         self._metadataPrefix = 'oai_dc'
-        # ensure not cached in module?
-        self.oai_client.class_mapping['ListRecords'] = SickleDCRecord
-        self.oai_client.class_mapping['GetRecord'] = SickleDCRecord
         if extra_data: # extra data is set spec
             if 'set' in extra_data:
                 params = parse_qs(extra_data)
@@ -203,18 +200,23 @@ class NuxeoFetcher(Fetcher):
         '''Get structmap_text for object. This is all the words from 'label' in the json.'''
         structmap_text = ""
         
+        bucketpath = self._structmap_bucket.strip("/")
+        bucketbase = bucketpath.split("/")[0]
+
+        #structmap_url = 's3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json'
         parts = urlparse.urlsplit(structmap_url)
+
         conn = boto.connect_s3()
-        #bucket = conn.get_bucket(bucketbase)
-        #key = Key(bucket)
-        #k.key = parts.path 
-        #structmap = k.get_contents_as_string()            
+        #bucketpath = 'static.ucldc.cdlib.org/media_json'
+        bucket = conn.get_bucket(bucketpath)
+        key = bucket.get_key(parts.path)
+        structmap = key.get_contents_as_string()            
         #self.logger.debug(''.join(('===== structmap -->', structmap)))
 
         # get media.json file contents as text
         # concatenate all of the words from 'label' in the json
 
-        return structmap_text 
+        return structmap 
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
