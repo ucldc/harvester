@@ -191,13 +191,14 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     Setting the "since" to 0 will result in getting a _changes record for 
     each document, essentially dumping the db to solr
     '''
-    print('Solr update PID:{}'.format(os.getpid()))
+    print('Solr update PID: {}'.format(os.getpid()))
     sys.stdout.flush() # put pd
-    db = get_couchdb(url=url_couchdb, dbname=dbname)
     if not since:
         since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
+    sys.stdout.flush() # put pd
+    db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']
