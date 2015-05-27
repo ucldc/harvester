@@ -383,10 +383,6 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                     }])
 
     @httpretty.activate
-    #@patch('harvester.fetcher.OAIFetcher', autospec=True)# spec='fetcher.OAIFetcher')
-#    @patch('harvester.fetcher.OAIFetcher', spec=fetcher.OAIFetcher,
-#            __class__=fetcher.OAIFetcher)
-#    @patch.object(fetcher.OAIFetcher, 'next')
     def testFailsIfNoRecords(self):#, mock_OAIFetcher):
         '''Test that the Controller throws an error if no records come back
         from fetcher
@@ -772,13 +768,9 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         super(Harvest_UCLDCNuxeo_ControllerTestCase, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
-    # need to mock out ConfigParser to override pynuxrc
-    @patch('ConfigParser.SafeConfigParser', autospec=True)
     @httpretty.activate
-    def testNuxeoHarvest(self, mock_configparser):
+    def testNuxeoHarvest(self):
         '''Test the function of the Nuxeo harvest'''
-        config_inst = mock_configparser.return_value
-        config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
                 body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())
@@ -797,13 +789,17 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
                 re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
-        self.setUp_config(self.collection)
-        self.controller = fetcher.HarvestController(
+        # need to mock out ConfigParser to override pynuxrc
+        with patch('ConfigParser.SafeConfigParser', autospec=True) as mock_configparser:
+            config_inst = mock_configparser.return_value
+            config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
+            self.setUp_config(self.collection)
+            self.controller = fetcher.HarvestController(
                 'email@example.com',
                 self.collection,
                 config_file=self.config_file,
                 profile_path=self.profile_path
-        )
+            )
         self.assertTrue(hasattr(self.controller, 'harvest'))
         num = self.controller.harvest()
         self.assertEqual(num, 10)
