@@ -383,7 +383,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                     }])
 
     @httpretty.activate
-    def testFailsIfNoRecords(self):#, mock_OAIFetcher):
+    def testFailsIfNoRecords(self):
         '''Test that the Controller throws an error if no records come back
         from fetcher
         '''
@@ -393,8 +393,6 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-no-records.xml').read())
-###        nxt = mock_OAIFetcher.return_value
-###        nxt.side_effect = StopIteration('No RECS')
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertRaises(fetcher.NoRecordsFetchedException, controller.harvest)
@@ -420,6 +418,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
 
     def tearDown(self):
         super(OAIFetcherTestCase, self).tearDown()
+        httpretty.disable()
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.fetcher, '__iter__'))
@@ -493,7 +492,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(rec['Statement']['@mimeType'],
                                         'application/xml; charset=utf-8')
         self.assertEqual(rec['DIDLInfo']['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'], '2015-05-20T20:30:26Z')
-
+        del didl_fetcher
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
@@ -789,7 +788,6 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
                 re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
-        # need to mock out ConfigParser to override pynuxrc
         with patch('ConfigParser.SafeConfigParser', autospec=True) as mock_configparser:
             config_inst = mock_configparser.return_value
             config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
@@ -943,23 +941,6 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         recs = self.fetcher.next()
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
-
-#Removed since not using requests, urllib works fine.
-###    @patch('requests.get', side_effect=DecodeError())
-###    @patch('time.sleep')
-###    def testDecodeErrorHandling(self, mock_sleep, mock_get):
-###        '''Test that the requests download tries 5 times if 
-###        it gets a DecodeError when decoding the gzip'd content.
-###        This occaisionally crops up when harvesting from OAC
-###        '''
-###        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
-###        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100')]
-###                                  )
 
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''
