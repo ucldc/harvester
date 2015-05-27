@@ -481,12 +481,22 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('id', rec)
         self.assertEqual(rec['id'], 'oai:ucispace-prod.lib.uci.edu:10575/25')
+        self.assertEqual(rec['title'], ['Schedule of lectures'])
         self.assertIn('datestamp', rec)
         self.assertEqual(rec['datestamp'], '2015-05-20T11:04:23Z')
         self.assertEqual(httpretty.last_request().querystring,
             {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
             u'metadataPrefix': [u'didl']})
-
+        self.assertEqual(rec['Resource']['@ref'],
+                'http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/25/1/!COLLOQU.IA.pdf')
+        self.assertEqual(rec['Item']['@id'],
+                        'uuid-640925bd-9cdf-46be-babb-b2138c3fce9c')
+        self.assertEqual(rec['Component']['@id'],
+                        'uuid-897984d8-9392-4a68-912f-ffdf6fd7ce59')
+        self.assertIn('Descriptor', rec)
+        self.assertEqual(rec['Statement']['@mimeType'],
+                                        'application/xml; charset=utf-8')
+        self.assertEqual(rec['DIDLInfo']['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'], '2015-05-20T20:30:26Z')
 
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
@@ -686,6 +696,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, 'next'))
         self.assertTrue(hasattr(h, '_structmap_bucket'))
         # TODO: verify that media.json files exist for this collection 
+
     @httpretty.activate
     def testFetch(self):
         '''Test the httpretty mocked fetching of documents'''
@@ -712,7 +723,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
         self.assertIn('structmap_url', docs[0])
-        #self.assertIn('structmap_text', docs[0])
+        self.assertIn('structmap_text', docs[0])
 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
