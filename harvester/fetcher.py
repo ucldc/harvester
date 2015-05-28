@@ -200,26 +200,30 @@ class NuxeoFetcher(Fetcher):
         return structmap_url
 
     def _get_structmap_text(self, structmap_url):
-        '''Get structmap_text for object. This is all the words from 'label' in the json.'''
+        '''
+           Get structmap_text for object. This is all the words from 'label' in the json.
+           See https://github.com/ucldc/ucldc-docs/wiki/media.json 
+        '''
         structmap_text = ""
         
         bucketpath = self._structmap_bucket.strip("/")
         bucketbase = bucketpath.split("/")[0]
-
-        #structmap_url = 's3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json'
         parts = urlparse.urlsplit(structmap_url)
 
+        # get contents of <nuxeo_id>-media.json file
         conn = boto.connect_s3()
-        #bucketpath = 'static.ucldc.cdlib.org/media_json'
-        bucket = conn.get_bucket(bucketpath)
+        bucket = conn.get_bucket(bucketbase)
         key = bucket.get_key(parts.path)
-        structmap = key.get_contents_as_string()            
-        #self.logger.debug(''.join(('===== structmap -->', structmap)))
+        mediajson = key.get_contents_as_string()            
+        mediajson_dict = json.loads(mediajson)
 
-        # get media.json file contents as text
         # concatenate all of the words from 'label' in the json
-
-        return structmap 
+        labels = []
+        labels.append(mediajson_dict['label'])
+        if 'structMap' in mediajson_dict:
+            labels.extend([sm['label'] for sm in mediajson_dict['structMap']])
+        structmap_text = ' '.join(labels)
+        return structmap_text
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
