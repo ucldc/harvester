@@ -8,6 +8,7 @@ import os
 import sys
 import datetime
 import time
+import urlparse
 import couchdb
 import requests
 import md5s3stash
@@ -79,15 +80,15 @@ class ImageHarvester(object):
             raise KeyError("isShownBy missing for {0}".format(doc['_id']))
         if isinstance(url_image, list): # need to fix marc map_is_shown_at
             url_image = url_image[0]
-        # for some OAC objects, the reference image is not a url but a path.
-        if 'http' != url_image[:4] and 'https' != url_image[:5]:
-            # not a URL....
-            if 'ark:' in url_image:
-                url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
-            else:
-                print >> sys.stderr, 'Link not http URL for {} - {}'.format(
+        #try to parse url, check values of scheme & netloc at least
+        url_parsed = urlparse.urlsplit(url_image)
+        if url_parsed.scheme == 'ark':
+            # for some OAC objects, the reference image is not a url but a path.
+            url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
+        elif not url_parsed.scheme or not url_parsed.netloc:
+            print >> sys.stderr, 'Link not http URL for {} - {}'.format(
                                       doc['_id'], url_image)
-                return None
+            return None
         if link_is_to_image(url_image):
             return md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,

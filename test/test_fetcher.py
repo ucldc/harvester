@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from unittest import skip
 import shutil
 import re
 from xml.etree import ElementTree as ET
@@ -286,6 +287,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             )
         self.assertEqual(self.objset_test_doc, objset_saved)
 
+    @skip('Takes too long')
     @httpretty.activate
     def testLoggingMoreThan1000(self):
         httpretty.register_uri(httpretty.GET,
@@ -677,7 +679,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.
     @httpretty.activate
-    def testInit(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testInit(self, mock_boto):
         '''Basic tdd start'''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -692,9 +695,26 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, '_structmap_bucket'))
         # TODO: verify that media.json files exist for this collection 
 
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_get_structmap_text(self, mock_boto):
+        '''Mock test s3 structmap_text getting'''
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('static.ucldc.cdlib.org')
+        mock_boto().get_bucket().get_key.assert_called_with('/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+        self.assertEqual(structmap_text, "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
+
     @httpretty.activate
-    def testFetch(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testFetch(self, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 responses=[
@@ -714,12 +734,12 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         for d in h:
             docs.append(d)
         self.assertEqual(10, len(docs))
-        #self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
         self.assertIn('structmap_url', docs[0])
         self.assertIn('structmap_text', docs[0])
-
+        self.assertEqual(docs[0]['structmap_text'], "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
+ 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
     Nuxeo document schema header property not set.
@@ -768,8 +788,11 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    def testNuxeoHarvest(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testNuxeoHarvest(self, mock_boto):
         '''Test the function of the Nuxeo harvest'''
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
                 body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())

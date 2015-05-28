@@ -196,31 +196,41 @@ class NuxeoFetcher(Fetcher):
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
-        structmap_url = "s3://{0}/{1}".format(bucket, obj_key) # get this from somewhere else?
+        structmap_url = "s3://{0}/{1}{2}".format(bucket, obj_key, '-media.json') # get this from somewhere else?
         return structmap_url
 
     def _get_structmap_text(self, structmap_url):
-        '''Get structmap_text for object. This is all the words from 'label' in the json.'''
+        '''
+           Get structmap_text for object. This is all the words from 'label' in the json.
+           See https://github.com/ucldc/ucldc-docs/wiki/media.json 
+        '''
         structmap_text = ""
         
+        bucketpath = self._structmap_bucket.strip("/")
+        bucketbase = bucketpath.split("/")[0]
         parts = urlparse.urlsplit(structmap_url)
+
+        # get contents of <nuxeo_id>-media.json file
         conn = boto.connect_s3()
-        #bucket = conn.get_bucket(bucketbase)
-        #key = Key(bucket)
-        #k.key = parts.path 
-        #structmap = k.get_contents_as_string()            
-        #self.logger.debug(''.join(('===== structmap -->', structmap)))
+        bucket = conn.get_bucket(bucketbase)
+        key = bucket.get_key(parts.path)
+        mediajson = key.get_contents_as_string()            
+        mediajson_dict = json.loads(mediajson)
 
-        # get media.json file contents as text
         # concatenate all of the words from 'label' in the json
-
-        return structmap_text 
+        labels = []
+        labels.append(mediajson_dict['label'])
+        if 'structMap' in mediajson_dict:
+            labels.extend([sm['label'] for sm in mediajson_dict['structMap']])
+        structmap_text = ' '.join(labels)
+        return structmap_text
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
         self.metadata = self._nx.get_metadata(uid=doc['uid'])
-        self.structmap_url = self._get_structmap_url(self._structmap_bucket, doc['uid'])
+        self.structmap_url = self._get_structmap_url(self._structmap_bucket,
+                                            doc['uid'])
         self.metadata['structmap_url'] = self.structmap_url 
         self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
         return self.metadata
