@@ -23,8 +23,8 @@ class ImageHarvestTestCase(TestCase):
         self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
         doc['isShownBy'] = None
         self.assertRaises(ValueError, image_harvest.ImageHarvester().stash_image, doc)
-        doc['isShownBy'] = 'test_local_url_ark:'
-        url_test = 'http://content.cdlib.org/test_local_url_ark:'
+        doc['isShownBy'] = 'ark:/test_local_url_ark:'
+        url_test = 'http://content.cdlib.org/ark:/test_local_url_ark:'
         httpretty.register_uri(httpretty.HEAD,
                 url_test,
                 body='',
@@ -34,7 +34,7 @@ class ImageHarvestTestCase(TestCase):
                 )
         ret = image_harvest.ImageHarvester().stash_image(doc)
         mock_stash.assert_called_with(
-                'http://content.cdlib.org/test_local_url_ark:',
+                url_test,
                 url_auth=None,
                 bucket_base='ucldc',
                 hash_cache={},
@@ -42,7 +42,7 @@ class ImageHarvestTestCase(TestCase):
         self.assertEqual('s3 url object', ret.s3_url)
         ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
         mock_stash.assert_called_with(
-                'http://content.cdlib.org/test_local_url_ark:',
+                url_test,
                 url_auth=None,
                 bucket_base='x',
                 hash_cache={},
@@ -50,7 +50,7 @@ class ImageHarvestTestCase(TestCase):
         ret = image_harvest.ImageHarvester(bucket_base='x',
                            object_auth=('tstuser', 'tstpswd')).stash_image(doc)
         mock_stash.assert_called_with(
-                'http://content.cdlib.org/test_local_url_ark:',
+                url_test,
                 url_auth=('tstuser', 'tstpswd'),
                 bucket_base='x',
                 hash_cache={},
@@ -139,3 +139,15 @@ class ImageHarvestTestCase(TestCase):
         ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
         self.assertEqual(ret, r)
 
+    def test_url_missing_schema(self):
+        '''Test when the url is malformed and doesn't have a proper http
+        schema. The LAPL photo feed has URLs like this:
+
+        http:/jpg1.lapl.org/pics47/00043006.jpg
+        
+        The code was choking complaining about a "MissingSchema" 
+        exception.
+        '''
+        pass
+
+        
