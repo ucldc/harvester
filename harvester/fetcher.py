@@ -196,7 +196,7 @@ class NuxeoFetcher(Fetcher):
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
-        structmap_url = "s3://{0}/{1}".format(bucket, obj_key) # get this from somewhere else?
+        structmap_url = "s3://{0}/{1}{2}".format(bucket, obj_key, '-media.json') # get this from somewhere else?
         return structmap_url
 
     def _get_structmap_text(self, structmap_url):
@@ -229,7 +229,8 @@ class NuxeoFetcher(Fetcher):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
         self.metadata = self._nx.get_metadata(uid=doc['uid'])
-        self.structmap_url = self._get_structmap_url(self._structmap_bucket, doc['uid'])
+        self.structmap_url = self._get_structmap_url(self._structmap_bucket,
+                                            doc['uid'])
         self.metadata['structmap_url'] = self.structmap_url 
         self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
         return self.metadata
