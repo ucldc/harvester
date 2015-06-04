@@ -1,16 +1,11 @@
 import sys
 import argparse
 import os
+from harvester.couchdb_init import get_couchdb
 import couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 
-COUCHDB_URL = os.environ.get('COUCHDB_URL', 'http://127.0.0.1:5984')
-COUCHDB_DB = os.environ.get('COUCHDB_DB', 'ucldc')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
-username = os.environ.get('COUCHDB_USER', None)
-password = os.environ.get('COUCHDB_PASSWORD', None)
-url = COUCHDB_URL.split("//")
-url_server = "{0}//{1}:{2}@{3}".format(url[0], username, password, url[1])
 
 def confirm_deletion(cid):
     prompt = "Are you sure you want to delete all couchdb " + \
@@ -23,7 +18,7 @@ def confirm_deletion(cid):
             return False
 
 def delete_collection(cid):
-    _couchdb = couchdb.Server(url_server)[COUCHDB_DB]
+    _couchdb = get_couchdb()
     rows = CouchDBCollectionFilter(collection_key=cid,
                                         couchdb_obj=_couchdb
                                         )
