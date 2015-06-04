@@ -30,6 +30,7 @@ class SolrUpdaterTestCase(TestCase):
         repo_data = ['https://registry.cdlib.org/api/v1/repository/4/::'
                      'Bancroft Library']
         self.assertEqual(sdoc['repository_data'], repo_data)
+        self.assertEqual(sdoc['sort_title'], u'Neighbor')
 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
@@ -70,14 +71,21 @@ class SolrUpdaterTestCase(TestCase):
                                         u'description 2', u'description 3'])
         self.assertEqual(sdoc['date'], {u'begin': u'1885', u'end': u'1890', u'displayDate': u'between 1885-1890'})
         self.assertEqual(sdoc['language'], [{u'name': u'English', u'iso639_3': u'en'}])
-        self.assertEqual(sdoc['publisher'], u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/'),
-        self.assertEqual(sdoc['relation'], [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'])
+        self.assertEqual(sdoc['publisher'], [u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/']),
+        self.assertEqual(sdoc['relation'], [
+            u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc',
+            u'http://bancroft.berkeley.edu/collections/jarda.html',
+            u'hb158005k9',
+            u'BANC PIC 1986.059--PIC',
+            u'http://calisphere.universityofcalifornia.edu/',
+            u'http://bancroft.berkeley.edu/'])
         self.assertEqual(sdoc['rights'], [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'])
         self.assertEqual(sdoc['subject'], [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive'])
-        self.assertEqual(sdoc['title'], u'Neighbor')
+        self.assertEqual(sdoc['title'], [u'Neighbor'])
         self.assertEqual(sdoc['type'], u'image')
         self.assertEqual(sdoc['format'], 'mods')
         self.assertTrue('extent' not in sdoc)
+        self.assertEqual(sdoc['sort_title'], u'neighbor')
 
     def test_decade_facet(self):
         '''Test generation of decade facet
