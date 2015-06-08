@@ -740,6 +740,41 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('structmap_text', docs[0])
         self.assertEqual(docs[0]['structmap_text'], "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
  
+    @httpretty.activate
+    @patch('boto.connect_s3', autospec=True)
+    def testFetch_missing_media_json(self, mock_boto):
+        '''Test the httpretty mocked fetching of documents'''
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value = None
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/path-to-asset/here/@children',
+                responses=[
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder.json').read(),
+                        status=200),
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder-1.json').read(),
+                        status=200),
+                ]
+        )
+        httpretty.register_uri(httpretty.GET,
+                re.compile('https://example.edu/api/v1/id/.*'),
+                body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        docs = []
+        for d in h:
+            docs.append(d)
+        self.assertEqual(docs[0]['structmap_text'], '')
+        self.assertEqual(docs[1]['structmap_text'], '')
+        self.assertEqual(docs[2]['structmap_text'], '')
+        self.assertEqual(len(self.test_log_handler.records), 10)
+        self.assertEqual(self.test_log_handler.formatted_records[1],
+                ('[ERROR] FetcherBaseClass: Media json at: '
+                  '/media_json/efd1db5c-808b-4bbe-8ef1-ab543dc68bac-media.json '
+                  'missing.'
+                )
+            )
+
+
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
     Nuxeo document schema header property not set.

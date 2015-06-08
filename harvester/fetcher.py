@@ -214,6 +214,10 @@ class NuxeoFetcher(Fetcher):
         conn = boto.connect_s3()
         bucket = conn.get_bucket(bucketbase)
         key = bucket.get_key(parts.path)
+        if not key: # media_json hasn't been harvested yet for this record
+            self.logger.error(
+                'Media json at: {} missing.'.format(parts.path))
+            return structmap_text
         mediajson = key.get_contents_as_string()            
         mediajson_dict = json.loads(mediajson)
 
