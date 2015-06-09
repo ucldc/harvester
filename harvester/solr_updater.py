@@ -20,23 +20,37 @@ COUCHDOC_TO_SOLR_MAPPING = {
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
+    'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
-    'spatial'     : lambda d: {'coverage': d.get('spatial', None)},
+    'spatial'     : lambda d: {'coverage': [c['text'] if isinstance(c, dict) else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'description' : lambda d: {'description': d.get('description', None)},
-    'date'        : lambda d: {'date': d.get('date', None)},
+    'date'        : lambda d: {'date': [dt['displayDate'] if isinstance(dt, dict) else dt for dt in d['date']]},
+    'description' : lambda d: {'description': [ds for ds in d['description']]},
+    'extent'      : lambda d: {'extent': d.get('extent', None)},
+    'format'      : lambda d: {'format': d.get('format', None)},
+    'genre'       : lambda d: {'genre': d.get('genre', None)},
     'identifier'  : lambda d: {'identifier': d.get('identifier', None)},
-    'language'    : lambda d: {'language': d.get('language', None)},
+    'language'    : lambda d: {'language': [l['iso639_3'] if isinstance(l, dict) else l for l in d['language']]},
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
     'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else s for s in d['subject']]},
+    'temporalCoverage'    : lambda d: {'temporal': d.get('temporalCoverage', None)},
     'title'       : lambda d: {'title': d.get('title', None)},
-    'alternative_title'   : lambda d: {'alternative_title': d.get('alternative_title', None)},
     'type'        : lambda d: {'type': d.get('type', None)},
-    'format'      : lambda d: {'format': d.get('format', None)},
-    'extent'      : lambda d: {'extent': d.get('extent', None)},
+}
+
+COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
+    'location'        : lambda d: {'location': d.get('location', None)},
+    'provenance'      : lambda d: {'provenance': d.get('provenance', None)},
+    'dateCopyrighted' : lambda d: {'rights_date': d.get('dateCopyrighted')},
+    'rightsHolder'    : lambda d: {'rights_holder': d.get('rightsHolder')},
+    'rightsNote'      : lambda d: {'rights_note': d.get('rightsNote')},
+    'source'          : lambda d: {'source': d.get('source')},
+    'structmap_text'  : lambda d: {'structmap_text': d.get('structmap_text')},
+    'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
+    'transcription'   : lambda d: {'transcription': d.get('transcription')},
 }
 
 def add_slash(url):
@@ -166,6 +180,14 @@ def map_couch_to_solr_doc(doc):
                 solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](sourceResource))
             except TypeError, e:
                 print('TypeError for doc {} on sourceResource {}'.format(doc['_id'], p))
+                raise e
+    originalRecord = doc['originalRecord']
+    for p in originalRecord.keys():
+        if p in COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING:
+            try:
+                solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[p](originalRecord))
+            except TypeError, e:
+                print('TypeError for doc {} on originalRecord {}'.format(doc['_id'], p))
                 raise e
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
