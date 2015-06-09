@@ -16,11 +16,13 @@
         "name": "Japanese American Relocation Digital Archive"
       }
     ],
-        "date": {
-           "begin": "1885",
-           "end": "1890",
-           "displayDate": "between 1885-1890"
-        },
+    "date": [
+      {
+        "begin": "1885",
+        "end": "1890",
+        "displayDate": "between 1885-1890"
+      }
+    ],
        "publisher": [
            "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/"
        ],
@@ -90,11 +92,6 @@
         "description 2",
         "description 3"
     ],
-    "date": {
-           "begin": "1885",
-           "end": "1890",
-           "displayDate": "between 1885-1890"
-    },
     "language": [
       { "name": "English", "iso639_3": "en" }
     ],

@@ -11,12 +11,25 @@
            "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user."
        ],
        "title": "Gold Coast.  Chicago, Illinois, 1940",
-       "type": "image",
+       "alternativeTitle": ["test alt title"],
+       "type": "image", 
        "format": "1 slide :  b&w",
        "date": [
            {
                "displayDate": "1940"
            }
+       ],
+       "description": [
+           "test description"
+       ],
+       "spatial": [
+
+           {
+               "text": "place1"
+           },
+           {
+               "text": "place2"
+           } 
        ],
        "stateLocatedIn": [
            {
@@ -28,7 +41,19 @@
        ],
        "creator": [
            "Halberstadt, Milton"
-       ]
+       ],
+       "contributor": [
+           "contributor1", "contributor2"
+       ],
+       "language": [
+           {
+               "iso639_3": "testlang"
+           }
+       ],
+       "subject": [
+           "subject1", "subject2", "subject3"
+       ],
+       "temporalCoverage": ["test temporal coverage"]
    },
    "ingestDate": "2015-06-08T21:03:57.000451Z",
    "id": "9b25596d561d3ee3dc48ffa0e8c8bf79",
@@ -43,6 +68,10 @@
        "repository": "default",
        "title": "Gold Coast.  Chicago, Illinois, 1940",
        "structmap_url": "s3://static.ucldc.cdlib.org/media_json/01db4725-3676-4c47-9bef-d93bc084827a-media.json",
+       "location": "test location",
+       "transcription": "this is a test transcription for this here object",
+       "source": "test source",
+       "dateCopyrighted": "test copyright date",
        "lastModified": "2014-08-06T14:44:01.58Z",
        "facets": [
            "Picture",
@@ -56,6 +85,7 @@
            "Orderable"
        ],
        "provenance": [
+           "test provenance"
        ],
        "entity-type": "document",
        "collection": [
