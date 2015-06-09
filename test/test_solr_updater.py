@@ -32,6 +32,47 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['repository_data'], repo_data)
         self.assertEqual(sdoc['sort_title'], u'Neighbor')
 
+    def test_map_couch_to_solr_nuxeo_doc(self):
+        '''Test the mapping of a couch db source json doc from Nuxeo
+        to a solr schema compatible doc
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/nuxeo_couchdb_doc.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        import pprint
+        pp = pprint.PrettyPrinter()
+        print '\n'
+        pp.pprint(sdoc)
+        self.assertEqual(sdoc['id'], doc['_id'])
+        self.assertEqual(sdoc['id'], '2--01db4725-3676-4c47-9bef-d93bc084827a')
+        self.assertEqual(sdoc['title'], 'Gold Coast.  Chicago, Illinois, 1940')
+        self.assertEqual(sdoc['alternative_title'], ['test alt title'])
+        self.assertEqual(sdoc['contributor'], ['contributor1', 'contributor2'])
+        self.assertEqual(sdoc['coverage'], ['place1', 'place2'])
+        self.assertEqual(sdoc['creator'], ['Halberstadt, Milton'])
+        self.assertEqual(sdoc['date'], ['1940'])
+        self.assertEqual(sdoc['description'], ['test description'])
+        # dimensions - not sure where to get this from
+        self.assertNotIn('extent', sdoc)
+        self.assertEqual(sdoc['format'], '1 slide :  b&w')
+        self.assertEqual(sdoc['genre'], ['graphic'])
+        self.assertNotIn('identifier', sdoc)        
+        self.assertEqual(sdoc['language'], ['testlang'])
+        self.assertEqual(sdoc['location'], 'test location')
+        self.assertEqual(sdoc['provenance'], ['test provenance'])
+        self.assertNotIn('publisher', sdoc)
+        self.assertNotIn('relation', sdoc)
+        self.assertEqual(sdoc['rights'], ['copyrighted', 'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.'])
+        self.assertEqual(sdoc['rights_date'], 'test copyright date')
+        self.assertEqual(sdoc['rights_holder'], ["University of California Regents", "Department of Special Collections, Shields Library, University of California, 100 N.W. Quad, Davis, CA, 95616-5292. (530) 752-1621; Fax (530) 754-5758. speccoll@ucdavis.edu"])
+        self.assertEqual(sdoc['rights_note'], ['From the Milton Halberstadt Papers and Photographs , Dept. of Special Collections, General Library, University of California, Davis. The collection is the property of the Regents of the University of California; no part may be reproduced or used without permission of the Dept. of Special Collections. Permissions for use must be submitted in writing to: The Head of the Dept. of Special Collections, General Library, University of California, Davis 95616-5292'])
+        self.assertEqual(sdoc['source'], 'test source')
+        self.assertEqual(sdoc['structmap_text'], 'Gold Coast.  Chicago, Illinois, 1940')
+        self.assertEqual(sdoc['structmap_url'], 's3://static.ucldc.cdlib.org/media_json/01db4725-3676-4c47-9bef-d93bc084827a-media.json')
+        self.assertEqual(sdoc['subject'], ['subject1', 'subject2', 'subject3'])
+        self.assertEqual(sdoc['temporal'], ['test temporal coverage'])
+        self.assertEqual(sdoc['transcription'], 'this is a test transcription for this here object')
+        self.assertEqual(sdoc['type'], 'image')
+ 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
@@ -62,15 +103,12 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['collection_data'], c_data)
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['contributor'], ['contrib 1', 'contrib 2'])
-        self.assertEqual(sdoc['coverage'][0], {'text': 'Palm Springs (Calif.)',
-                                                "attrib": { "q": "spatial" } })
-        self.assertEqual(sdoc['coverage'][3], {"text": "Tahquitz Canyon",
-                                                "attrib": {"q": "spatial"}})
+        self.assertEqual(sdoc['coverage'], ['Palm Springs (Calif.)', 'San Jacinto Mountains (Calif.)', 'Tahquitz Stream', 'Tahquitz Canyon'])
         self.assertEqual(sdoc['creator'], [u'creator 1', u'creator 2'])
         self.assertEqual(sdoc['description'], [u'description 1',
                                         u'description 2', u'description 3'])
-        self.assertEqual(sdoc['date'], {u'begin': u'1885', u'end': u'1890', u'displayDate': u'between 1885-1890'})
-        self.assertEqual(sdoc['language'], [{u'name': u'English', u'iso639_3': u'en'}])
+        self.assertEqual(sdoc['date'], ['between 1885-1890'])
+        self.assertEqual(sdoc['language'], ['en'])
         self.assertEqual(sdoc['publisher'], [u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/']),
         self.assertEqual(sdoc['relation'], [
             u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc',

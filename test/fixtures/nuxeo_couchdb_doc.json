@@ -1,0 +1,375 @@
+{
+   "_id": "2--01db4725-3676-4c47-9bef-d93bc084827a",
+   "_rev": "7-1b1a69124bbdcec89f2efb7d18321848",
+   "admin": {
+       "validation_message": "Additional properties are not allowed (u'genre' was unexpected)",
+       "valid_after_enrich": false
+   },
+   "sourceResource": {
+       "rights": [
+           "copyrighted",
+           "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user."
+       ],
+       "title": "Gold Coast.  Chicago, Illinois, 1940",
+       "alternativeTitle": ["test alt title"],
+       "type": "image", 
+       "format": "1 slide :  b&w",
+       "date": [
+           {
+               "displayDate": "1940"
+           }
+       ],
+       "description": [
+           "test description"
+       ],
+       "spatial": [
+
+           {
+               "text": "place1"
+           },
+           {
+               "text": "place2"
+           } 
+       ],
+       "stateLocatedIn": [
+           {
+               "name": "California"
+           }
+       ],
+       "genre": [
+           "graphic"
+       ],
+       "creator": [
+           "Halberstadt, Milton"
+       ],
+       "contributor": [
+           "contributor1", "contributor2"
+       ],
+       "language": [
+           {
+               "iso639_3": "testlang"
+           }
+       ],
+       "subject": [
+           "subject1", "subject2", "subject3"
+       ],
+       "temporalCoverage": ["test temporal coverage"]
+   },
+   "ingestDate": "2015-06-08T21:03:57.000451Z",
+   "id": "9b25596d561d3ee3dc48ffa0e8c8bf79",
+   "originalRecord": {
+       "versionLabel": "0.0",
+       "rightsHolder": [
+           "University of California Regents",
+           "Department of Special Collections, Shields Library, University of California, 100 N.W. Quad, Davis, CA, 95616-5292. (530) 752-1621; Fax (530) 754-5758. speccoll@ucdavis.edu"
+       ],
+       "changeToken": "1407336241586",
+       "uid": "01db4725-3676-4c47-9bef-d93bc084827a",
+       "repository": "default",
+       "title": "Gold Coast.  Chicago, Illinois, 1940",
+       "structmap_url": "s3://static.ucldc.cdlib.org/media_json/01db4725-3676-4c47-9bef-d93bc084827a-media.json",
+       "location": "test location",
+       "transcription": "this is a test transcription for this here object",
+       "source": "test source",
+       "dateCopyrighted": "test copyright date",
+       "lastModified": "2014-08-06T14:44:01.58Z",
+       "facets": [
+           "Picture",
+           "Commentable",
+           "MultiviewPicture",
+           "Versionable",
+           "Publishable",
+           "HasRelatedText",
+           "Folderish",
+           "NotCollectionMember",
+           "Orderable"
+       ],
+       "provenance": [
+           "test provenance"
+       ],
+       "entity-type": "document",
+       "collection": [
+           {
+               "dcmi_type": "X",
+               "qa_completed": false,
+               "featured": false,
+               "ready_for_publication": false,
+               "hosted": "",
+               "campus": [
+                   {
+                       "name": "UC Davis",
+                       "position": 1,
+                       "ark": "ark:/13030/tf6p3013t7",
+                       "@id": "https://registry.cdlib.org/api/v1/campus/2/",
+                       "slug": "UCD",
+                       "google_analytics_tracking_code": "",
+                       "resource_uri": "/api/v1/campus/2/"
+                   }
+               ],
+               "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt3j49s14x",
+               "metadata_in_dams": false,
+               "url_harvest": "https://nuxeo.cdlib.org/Nuxeo/site/api/v1",
+               "id": "2",
+               "files_in_dams": false,
+               "files_in_hand": false,
+               "ingestType": "collection",
+               "description": "Selections of photographs, proofs, transparencies, and negatives of Milton \"Hal\" Halberstadt commericial and artistic photography.",
+               "repository": [
+                   {
+                       "name": "Special Collections",
+                       "campus": [
+                           {
+                               "name": "UC Davis",
+                               "position": 1,
+                               "ark": "ark:/13030/tf6p3013t7",
+                               "slug": "UCD",
+                               "google_analytics_tracking_code": "",
+                               "resource_uri": "/api/v1/campus/2/"
+                           }
+                       ],
+                       "ark": "ark:/13030/tf1489p250",
+                       "@id": "https://registry.cdlib.org/api/v1/repository/12/",
+                       "slug": "special-collections",
+                       "google_analytics_tracking_code": "",
+                       "resource_uri": "/api/v1/repository/12/"
+                   }
+               ],
+               "url_local": "",
+               "extent": null,
+               "rights_status": "X",
+               "@id": "https://registry.cdlib.org/api/v1/collection/2/",
+               "slug": "halberstadt-collection-selections-of-photographs-p",
+               "name": "Halberstadt (Milton) Papers and Photographs.",
+               "enrichments_item": "/select-id?prop=uid,\r\n/dpla_mapper?mapper_type=ucldc_nuxeo,\r\n/required-values-from-collection-registry?field=rights&mode=fill,\r\n/required-values-from-collection-registry?field=type&mode=fill,\r\n/set-ucldc-dataprovider,\r\n/dedupe-sourceresource,\r\n/validate_mapv3",
+               "harvest_type": "NUX",
+               "harvest_extra_data": "asset-library/UCD/Halberstadt",
+               "rights_statement": "",
+               "staging_notes": "",
+               "local_id": "halberstadt-collection-selections-of-photographs-p",
+               "title": "Halberstadt (Milton) Papers and Photographs.",
+               "resource_uri": "/api/v1/collection/2/"
+           }
+       ],
+       "structmap_text": "Gold Coast.  Chicago, Illinois, 1940",
+       "state": "project",
+       "isCheckedOut": true,
+       "parentRef": "52ed1025-c812-4138-b181-b256339949db",
+       "contextParameters": {
+       },
+       "path": "/asset-library/UCD/Halberstadt/GoldCoast.tif",
+       "rightsNote": [
+           "From the Milton Halberstadt Papers and Photographs , Dept. of Special Collections, General Library, University of California, Davis. The collection is the property of the Regents of the University of California; no part may be reproduced or used without permission of the Dept. of Special Collections. Permissions for use must be submitted in writing to: The Head of the Dept. of Special Collections, General Library, University of California, Davis 95616-5292"
+       ],
+       "type": "SampleCustomPicture",
+       "properties": {
+           "ucldc_schema:identifier": "ark:/13030/kt8v19s3ws",
+           "dc:coverage": null,
+           "dc:valid": null,
+           "ucldc_schema:date": [
+               {
+                   "inclusivestart": null,
+                   "date": "1940",
+                   "single": "1940-00-00",
+                   "datetype": "created",
+                   "inclusiveend": null
+               }
+           ],
+           "dc:subjects": [
+           ],
+           "picture:genre": null,
+           "ucldc_schema:contributor": [
+           ],
+           "dc:title": "Gold Coast.  Chicago, Illinois, 1940",
+           "dc:language": null,
+           "picture:cropCoords": null,
+           "dc:lastContributor": "Administrator",
+           "dc:created": "2014-02-27T08:50:25.12Z",
+           "ucldc_schema:extent": null,
+           "dc:contributors": [
+               "system",
+               "Administrator"
+           ],
+           "dc:publisher": null,
+           "dc:creator": "system",
+           "dc:source": null,
+           "ucldc_schema:creator": [
+               {
+                   "nametype": "persname",
+                   "authorityid": null,
+                   "role": "Photographer",
+                   "name": "Halberstadt, Milton",
+                   "source": null
+               }
+           ],
+           "ucldc_schema:description": [
+           ],
+           "picture:credit": null,
+           "ucldc_schema:localidentifier": [
+           ],
+           "ucldc_schema:publisher": [
+           ],
+           "dc:format": null,
+           "ucldc_schema:subjecttopic": [
+           ],
+           "ucldc_schema:accessrestrict": null,
+           "ucldc_schema:physdesc": "1 slide :  b&w",
+           "picture:typage": null,
+           "ucldc_schema:transcription": null,
+           "dc:description": null,
+           "dc:rights": null,
+           "picture:origin": null,
+           "ucldc_schema:rightsnotice": null,
+           "ucldc_schema:subjectname": [
+           ],
+           "picture:language": null,
+           "picture:source": null,
+           "ucldc_schema:collection": [
+               "https://registry.cdlib.org/api/v1/collection/2/"
+           ],
+           "ucldc_schema:campusunit": [
+               "https://registry.cdlib.org/api/v1/repository/12/"
+           ],
+           "picture:dateline": null,
+           "dc:expired": null,
+           "ucldc_schema:rightsdeterminationdate": null,
+           "picture:subheadline": null,
+           "picture:caption": null,
+           "ucldc_schema:provenance": [
+           ],
+           "dc:nature": null,
+           "ucldc_schema:rightsstatement": "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",
+           "ucldc_schema:place": [
+           ],
+           "picture:byline": null,
+           "dc:modified": "2014-08-06T14:44:01.58Z",
+           "ucldc_schema:rightsjurisdiction": null,
+           "ucldc_schema:rightsstatus": "copyrighted",
+           "picture:slugline": null,
+           "ucldc_schema:rightsnote": "From the Milton Halberstadt Papers and Photographs , Dept. of Special Collections, General Library, University of California, Davis. The collection is the property of the Regents of the University of California; no part may be reproduced or used without permission of the Dept. of Special Collections. Permissions for use must be submitted in writing to: The Head of the Dept. of Special Collections, General Library, University of California, Davis 95616-5292",
+           "ucldc_schema:rightscontact": "Department of Special Collections, Shields Library, University of California, 100 N.W. Quad, Davis, CA, 95616-5292. (530) 752-1621; Fax (530) 754-5758. speccoll@ucdavis.edu",
+           "ucldc_schema:alternativetitle": [
+           ],
+           "ucldc_schema:rightsstartdate": null,
+           "ucldc_schema:rightsenddate": null,
+           "dc:issued": null,
+           "ucldc_schema:temporalcoverage": [
+           ],
+           "ucldc_schema:rightsholder": [
+               {
+                   "nametype": "corpname",
+                   "authorityid": null,
+                   "name": "University of California Regents",
+                   "source": null
+               }
+           ],
+           "ucldc_schema:language": [
+           ],
+           "picture:headline": null,
+           "ucldc_schema:formgenre": [
+               {
+                   "source": null,
+                   "authorityid": null,
+                   "heading": "graphic"
+               }
+           ],
+           "ucldc_schema:source": null,
+           "ucldc_schema:relatedresource": [
+           ],
+           "ucldc_schema:type": "image",
+           "picture:views": [
+               {
+                   "description": "Medium Size",
+                   "title": "Medium",
+                   "height": 550,
+                   "content": {
+                       "name": "Medium_GoldCoast.jpg",
+                       "encoding": null,
+                       "mime-type": "image/jpeg",
+                       "length": "80753",
+                       "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/01db4725-3676-4c47-9bef-d93bc084827a/picture:views/0/content/Medium_GoldCoast.jpg",
+                       "digest": "dbf8632676f802e7d5acfe6110928fdb"
+                   },
+                   "width": 371,
+                   "tag": "medium",
+                   "filename": "Medium_GoldCoast.jpg"
+               },
+               {
+                   "description": null,
+                   "title": "Original",
+                   "height": 6000,
+                   "content": {
+                       "name": "Original_GoldCoast.tif",
+                       "encoding": null,
+                       "mime-type": "image/tiff",
+                       "length": "72890964",
+                       "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/01db4725-3676-4c47-9bef-d93bc084827a/picture:views/1/content/Original_GoldCoast.tif",
+                       "digest": "90ff5cb15e8334ea778af205d1cba106"
+                   },
+                   "width": 4048,
+                   "tag": "original",
+                   "filename": "Original_GoldCoast.tif"
+               },
+               {
+                   "description": "Small Size",
+                   "title": "Small",
+                   "height": 280,
+                   "content": {
+                       "name": "Small_GoldCoast.jpg",
+                       "encoding": null,
+                       "mime-type": "image/jpeg",
+                       "length": "42923",
+                       "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/01db4725-3676-4c47-9bef-d93bc084827a/picture:views/2/content/Small_GoldCoast.jpg",
+                       "digest": "195b30d717ebcf083e3f1128a0b90fa3"
+                   },
+                   "width": 188,
+                   "tag": "small",
+                   "filename": "Small_GoldCoast.jpg"
+               },
+               {
+                   "description": "Thumbnail Size",
+                   "title": "Thumbnail",
+                   "height": 100,
+                   "content": {
+                       "name": "Thumbnail_GoldCoast.jpg",
+                       "encoding": null,
+                       "mime-type": "image/jpeg",
+                       "length": "29411",
+                       "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/01db4725-3676-4c47-9bef-d93bc084827a/picture:views/3/content/Thumbnail_GoldCoast.jpg",
+                       "digest": "ae1b359103056e03f311783f1b9eb823"
+                   },
+                   "width": 67,
+                   "tag": "thumb",
+                   "filename": "Thumbnail_GoldCoast.jpg"
+               },
+               {
+                   "description": "Original Picture in JPEG format",
+                   "title": "OriginalJpeg",
+                   "height": 6000,
+                   "content": {
+                       "name": "OriginalJpeg_GoldCoast.jpg",
+                       "encoding": null,
+                       "mime-type": "image/jpeg",
+                       "length": "3083758",
+                       "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/01db4725-3676-4c47-9bef-d93bc084827a/picture:views/4/content/OriginalJpeg_GoldCoast.jpg",
+                       "digest": "4a979c7d246aadd9b56ab1d8f676c133"
+                   },
+                   "width": 4048,
+                   "tag": "originalJpeg",
+                   "filename": "OriginalJpeg_GoldCoast.jpg"
+               }
+           ],
+           "ucldc_schema:physlocation": null
+       }
+   },
+   "ingestionSequence": 22,
+   "isShownAt": "http://example.edu",
+   "provider": {
+       "@id": "https://registry.cdlib.org/api/v1/collection/2/",
+       "name": "UC Davis, Special Collections"
+   },
+   "@context": "http://dp.la/api/items/context",
+   "ingestType": "item",
+   "dataProvider": "UC Davis, Special Collections",
+   "@id": "http://ucldc.cdlib.org/api/items/9b25596d561d3ee3dc48ffa0e8c8bf79",
+   "isShownBy": "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/01db4725-3676-4c47-9bef-d93bc084827a/Medium:content/"
+}
