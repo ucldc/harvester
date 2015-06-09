@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from unittest import skip
 import shutil
 import re
 from xml.etree import ElementTree as ET
@@ -286,6 +287,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
             )
         self.assertEqual(self.objset_test_doc, objset_saved)
 
+    @skip('Takes too long')
     @httpretty.activate
     def testLoggingMoreThan1000(self):
         httpretty.register_uri(httpretty.GET,
@@ -383,11 +385,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
                     }])
 
     @httpretty.activate
-    #@patch('harvester.fetcher.OAIFetcher', autospec=True)# spec='fetcher.OAIFetcher')
-#    @patch('harvester.fetcher.OAIFetcher', spec=fetcher.OAIFetcher,
-#            __class__=fetcher.OAIFetcher)
-#    @patch.object(fetcher.OAIFetcher, 'next')
-    def testFailsIfNoRecords(self):#, mock_OAIFetcher):
+    def testFailsIfNoRecords(self):
         '''Test that the Controller throws an error if no records come back
         from fetcher
         '''
@@ -397,8 +395,6 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         httpretty.register_uri(httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-no-records.xml').read())
-###        nxt = mock_OAIFetcher.return_value
-###        nxt.side_effect = StopIteration('No RECS')
         collection = Collection('https://registry.cdlib.org/api/v1/collection/101/')
         controller = fetcher.HarvestController('email@example.com', collection, config_file=self.config_file, profile_path=self.profile_path)
         self.assertRaises(fetcher.NoRecordsFetchedException, controller.harvest)
@@ -424,6 +420,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
 
     def tearDown(self):
         super(OAIFetcherTestCase, self).tearDown()
+        httpretty.disable()
 
     def testHarvestIsIter(self):
         self.assertTrue(hasattr(self.fetcher, '__iter__'))
@@ -481,13 +478,23 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIsInstance(rec, dict)
         self.assertIn('id', rec)
         self.assertEqual(rec['id'], 'oai:ucispace-prod.lib.uci.edu:10575/25')
+        self.assertEqual(rec['title'], ['Schedule of lectures'])
         self.assertIn('datestamp', rec)
         self.assertEqual(rec['datestamp'], '2015-05-20T11:04:23Z')
         self.assertEqual(httpretty.last_request().querystring,
             {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
             u'metadataPrefix': [u'didl']})
-
-
+        self.assertEqual(rec['Resource']['@ref'],
+                'http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/25/1/!COLLOQU.IA.pdf')
+        self.assertEqual(rec['Item']['@id'],
+                        'uuid-640925bd-9cdf-46be-babb-b2138c3fce9c')
+        self.assertEqual(rec['Component']['@id'],
+                        'uuid-897984d8-9392-4a68-912f-ffdf6fd7ce59')
+        self.assertIn('Descriptor', rec)
+        self.assertEqual(rec['Statement']['@mimeType'],
+                                        'application/xml; charset=utf-8')
+        self.assertEqual(rec['DIDLInfo']['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'], '2015-05-20T20:30:26Z')
+        del didl_fetcher
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the harvesting of solr baed data.'''
@@ -672,7 +679,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.
     @httpretty.activate
-    def testInit(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testInit(self, mock_boto):
         '''Basic tdd start'''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -686,9 +694,27 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, 'next'))
         self.assertTrue(hasattr(h, '_structmap_bucket'))
         # TODO: verify that media.json files exist for this collection 
+
+
+    @patch('boto.connect_s3', autospec=True)
+    def test_get_structmap_text(self, mock_boto):
+        '''Mock test s3 structmap_text getting'''
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+
+        mock_boto.assert_called_with()
+        mock_boto().get_bucket.assert_called_with('static.ucldc.cdlib.org')
+        mock_boto().get_bucket().get_key.assert_called_with('/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
+        self.assertEqual(structmap_text, "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
+
     @httpretty.activate
-    def testFetch(self):
+    @patch('boto.connect_s3', autospec=True)
+    def testFetch(self, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 responses=[
@@ -708,11 +734,46 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         for d in h:
             docs.append(d)
         self.assertEqual(10, len(docs))
-        #self.assertEqual(docs[0], json.load(open(DIR_FIXTURES+'/nuxeo_doc.json')))
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
         self.assertIn('structmap_url', docs[0])
-        #self.assertIn('structmap_text', docs[0])
+        self.assertIn('structmap_text', docs[0])
+        self.assertEqual(docs[0]['structmap_text'], "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
+ 
+    @httpretty.activate
+    @patch('boto.connect_s3', autospec=True)
+    def testFetch_missing_media_json(self, mock_boto):
+        '''Test the httpretty mocked fetching of documents'''
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value = None
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/path-to-asset/here/@children',
+                responses=[
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder.json').read(),
+                        status=200),
+                    httpretty.Response(
+                        body=open(DIR_FIXTURES+'/nuxeo_folder-1.json').read(),
+                        status=200),
+                ]
+        )
+        httpretty.register_uri(httpretty.GET,
+                re.compile('https://example.edu/api/v1/id/.*'),
+                body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        docs = []
+        for d in h:
+            docs.append(d)
+        self.assertEqual(docs[0]['structmap_text'], '')
+        self.assertEqual(docs[1]['structmap_text'], '')
+        self.assertEqual(docs[2]['structmap_text'], '')
+        self.assertEqual(len(self.test_log_handler.records), 10)
+        self.assertEqual(self.test_log_handler.formatted_records[1],
+                ('[ERROR] FetcherBaseClass: Media json at: '
+                  '/media_json/efd1db5c-808b-4bbe-8ef1-ab543dc68bac-media.json '
+                  'missing.'
+                )
+            )
+
 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
@@ -761,13 +822,12 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         super(Harvest_UCLDCNuxeo_ControllerTestCase, self).tearDown()
         shutil.rmtree(self.controller.dir_save)
 
-    # need to mock out ConfigParser to override pynuxrc
-    @patch('ConfigParser.SafeConfigParser', autospec=True)
     @httpretty.activate
-    def testNuxeoHarvest(self, mock_configparser):
+    @patch('boto.connect_s3', autospec=True)
+    def testNuxeoHarvest(self, mock_boto):
         '''Test the function of the Nuxeo harvest'''
-        config_inst = mock_configparser.return_value
-        config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
+        media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         httpretty.register_uri(httpretty.GET,
                 'http://registry.cdlib.org/api/v1/collection/19/',
                 body=open(DIR_FIXTURES+'/collection_api_test_nuxeo.json').read())
@@ -786,13 +846,16 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
                 re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
-        self.setUp_config(self.collection)
-        self.controller = fetcher.HarvestController(
+        with patch('ConfigParser.SafeConfigParser', autospec=True) as mock_configparser:
+            config_inst = mock_configparser.return_value
+            config_inst.get.return_value = 'dublincore,ucldc_schema,picture'
+            self.setUp_config(self.collection)
+            self.controller = fetcher.HarvestController(
                 'email@example.com',
                 self.collection,
                 config_file=self.config_file,
                 profile_path=self.profile_path
-        )
+            )
         self.assertTrue(hasattr(self.controller, 'harvest'))
         num = self.controller.harvest()
         self.assertEqual(num, 10)
@@ -936,23 +999,6 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         recs = self.fetcher.next()
         self.assertEqual(self.fetcher.groups['image']['end'], 10)
         self.assertEqual(len(recs), 10)
-
-#Removed since not using requests, urllib works fine.
-###    @patch('requests.get', side_effect=DecodeError())
-###    @patch('time.sleep')
-###    def testDecodeErrorHandling(self, mock_sleep, mock_get):
-###        '''Test that the requests download tries 5 times if 
-###        it gets a DecodeError when decoding the gzip'd content.
-###        This occaisionally crops up when harvesting from OAC
-###        '''
-###        self.assertRaises(DecodeError, fetcher.OAC_XML_Fetcher, 'http://bogus', 'extra_data')
-###        mock_get.assert_has_calls([call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100'),
-###                                   call('http://bogus&docsPerPage=100')]
-###                                  )
 
 class OAC_XML_Fetcher_text_contentTestCase(LogOverrideMixin, TestCase):
     '''Test when results only contain texts'''

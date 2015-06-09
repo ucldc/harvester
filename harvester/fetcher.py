@@ -14,6 +14,8 @@ import urllib
 import tempfile
 import re
 from sickle import Sickle
+from sickle.models import Record as SickleDCRecord
+from sickle.utils import xml_to_dict
 import urllib
 import requests
 import logbook
@@ -27,6 +29,7 @@ import pymarc
 import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
+import boto
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -52,6 +55,36 @@ class Fetcher(object):
         '''
         raise NotImplementedError
 
+def etree_to_dict(t):
+    d = {t.tag : map(etree_to_dict, t.iterchildren())}
+    d.update(('@' + k, v) for k, v in t.attrib.iteritems())
+    d['text'] = t.text
+    return d
+
+class SickleDIDLRecord(SickleDCRecord):
+    '''Extend the Sickle Record to handle oai didl xml.
+    Fills in data for the didl specific values
+
+    After Record's __init__ runs, the self.metadata contains keys for the 
+    following DIDL data: DIDLInfo, Resource, Item, Component, Statement, 
+    Descriptor
+    DIDLInfo contains created date for the data feed - drop
+    Statement wraps the dc metadata
+
+    Only the Resource & Component have unique data in them
+
+    '''
+    def __init__(self, record_element, strip_ns=True):
+        super(SickleDIDLRecord, self).__init__(record_element,
+                                                strip_ns=strip_ns)
+        #need to grab the didl components here
+        if not self.deleted:
+            didl = self.xml.find('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDL')
+            didls = didl.findall('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}*')
+            for element in didls:
+                tag = re.sub(r'\{.*\}', '', element.tag)
+                self.metadata[tag] = etree_to_dict(element)
+
 
 class OAIFetcher(Fetcher):
     '''Fetcher for oai'''
@@ -60,6 +93,9 @@ class OAIFetcher(Fetcher):
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
         self._metadataPrefix = 'oai_dc'
+        # ensure not cached in module?
+        self.oai_client.class_mapping['ListRecords'] = SickleDCRecord
+        self.oai_client.class_mapping['GetRecord'] = SickleDCRecord
         if extra_data: # extra data is set spec
             if 'set' in extra_data:
                 params = parse_qs(extra_data)
@@ -67,6 +103,10 @@ class OAIFetcher(Fetcher):
                 self._metadataPrefix = params.get('metadataPrefix', ['oai_dc'])[0]
             else:
                 self._set = extra_data
+            #if metadataPrefix=didl, use didlRecord for parsing
+            if self._metadataPrefix.lower() == 'didl':
+                self.oai_client.class_mapping['ListRecords'] = SickleDIDLRecord
+                self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
             self.records = self.oai_client.ListRecords(
                                     metadataPrefix=self._metadataPrefix,
                                                     set=self._set)
@@ -152,23 +192,51 @@ class NuxeoFetcher(Fetcher):
         self._nx.conf['api'] = self._url
         self._children = self._nx.children(self._path)
         self._structmap_bucket = STRUCTMAP_S3_BUCKET
-        # TODO: create media.json files for collection if they don't already exist
+        # TODO: create media.json files and stash jp2000 where applicable for collection if they don't already exist
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
-        structmap_url = "s3://{0}/{1}".format(bucket, obj_key) # get this from somewhere else?
+        structmap_url = "s3://{0}/{1}{2}".format(bucket, obj_key, '-media.json') # get this from somewhere else?
         return structmap_url
 
-    def _get_structmap_text(self):
-        '''Get structmap_text for object. This is all the words from 'label' in the json.'''
-        pass
+    def _get_structmap_text(self, structmap_url):
+        '''
+           Get structmap_text for object. This is all the words from 'label' in the json.
+           See https://github.com/ucldc/ucldc-docs/wiki/media.json 
+        '''
+        structmap_text = ""
+        
+        bucketpath = self._structmap_bucket.strip("/")
+        bucketbase = bucketpath.split("/")[0]
+        parts = urlparse.urlsplit(structmap_url)
+
+        # get contents of <nuxeo_id>-media.json file
+        conn = boto.connect_s3()
+        bucket = conn.get_bucket(bucketbase)
+        key = bucket.get_key(parts.path)
+        if not key: # media_json hasn't been harvested yet for this record
+            self.logger.error(
+                'Media json at: {} missing.'.format(parts.path))
+            return structmap_text
+        mediajson = key.get_contents_as_string()            
+        mediajson_dict = json.loads(mediajson)
+
+        # concatenate all of the words from 'label' in the json
+        labels = []
+        labels.append(mediajson_dict['label'])
+        if 'structMap' in mediajson_dict:
+            labels.extend([sm['label'] for sm in mediajson_dict['structMap']])
+        structmap_text = ' '.join(labels)
+        return structmap_text
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
         self.metadata = self._nx.get_metadata(uid=doc['uid'])
-        self.metadata['structmap_url'] = self._get_structmap_url(self._structmap_bucket, doc['uid']) 
-        # TODO: self.metadata['structmap_text'] = self._get_structmap_text() 
+        self.structmap_url = self._get_structmap_url(self._structmap_bucket,
+                                            doc['uid'])
+        self.metadata['structmap_url'] = self.structmap_url 
+        self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
         return self.metadata
 
 class UCLDCNuxeoFetcher(NuxeoFetcher):

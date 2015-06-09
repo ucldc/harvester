@@ -33,6 +33,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'rights'      : lambda d: {'rights': d.get('rights', None)},
     'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else s for s in d['subject']]},
     'title'       : lambda d: {'title': d.get('title', None)},
+    'alternative_title'   : lambda d: {'alternative_title': d.get('alternative_title', None)},
     'type'        : lambda d: {'type': d.get('type', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
@@ -113,6 +114,22 @@ def get_facet_decades(date):
     return facet_decade_set
 
 
+def add_sort_title(couch_doc, solr_doc):
+    '''Add a sort title to the solr doc'''
+    sort_title = couch_doc['sourceResource']['title'][0]
+    if couch_doc['originalRecord'].has_key('sort-title'): #OAC mostly
+        sort_obj = couch_doc['originalRecord']['sort-title']
+        if isinstance(sort_obj, list):
+            sort_obj = sort_obj[0]
+            if isinstance(sort_obj, dict):
+                sort_title = sort_obj.get('text',
+                        couch_doc['sourceResource']['title'][0])
+            else:
+                sort_title = sort_obj
+        else: #assume flat string
+            sort_title = sort_obj
+    solr_doc['sort_title'] = sort_title
+
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
     solr_doc['facet_decade'] = set()
@@ -150,6 +167,7 @@ def map_couch_to_solr_doc(doc):
             except TypeError, e:
                 print('TypeError for doc {} on sourceResource {}'.format(doc['_id'], p))
                 raise e
+    add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
     return solr_doc
 
@@ -191,13 +209,15 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     Setting the "since" to 0 will result in getting a _changes record for 
     each document, essentially dumping the db to solr
     '''
-    print('Solr update PID:{}'.format(os.getpid()))
+    print('Solr update PID: {}'.format(os.getpid()))
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     if not since:
         since = get_couchdb_last_seq()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
+    sys.stdout.flush() # put pd
+    db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
     last_seq = int(changes['last_seq'])
     results = changes['results']

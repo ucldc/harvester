@@ -63,7 +63,7 @@ class ConfigFileOverrideMixin(object):
 
     def setUp_config(self, collection):
         self.env_saved = {}
-	for envvar in self.env_list:
+        for envvar in self.env_list:
             if envvar in os.environ:
             	self.env_saved[envvar] = os.environ[envvar]
                 del os.environ[envvar]

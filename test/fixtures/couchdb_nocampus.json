@@ -28,7 +28,6 @@
       "Yoshiko Uchida photograph collection",
       "Japanese American Relocation Digital Archive"
     ],
-    "sort-title": "neighbor",
     "relation": [
       "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
       "http://bancroft.berkeley.edu/collections/jarda.html",
@@ -152,7 +151,7 @@
       "University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu"
     ],
     "format": "mods",
-    "title": "Neighbor",
+    "title": ["Neighbor"],
     "collection": [
       {
         "name": "Uchida (Yoshiko) photograph collection",
