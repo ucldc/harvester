@@ -61,3 +61,32 @@ class QueueHarvestTestCase(TestCase):
         self.assertIn(results[0].id, mock_calls[5])
         self.assertIn("call().hmset('rq:job", mock_calls[8])
         self.assertIn(results[1].id, mock_calls[8])
+    
+    def testBadRQQueue(self):
+        with self.assertRaises(Exception) as cm:
+            with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
+                mock_redis().ping.return_value = True
+                results = queue_harvest_main('mark.redar@ucop.edu',
+                    'https://registry.cdlib.org/api/v1/collection/178/; \
+                                https://registry.cdlib.org/api/v1/collection/189',
+                    redis_host='127.0.0.1',
+                    redis_port='6379',
+                    redis_pswd='X',
+                    timeout=1,
+                    poll_interval=1
+                    )
+        self.assertEqual('None is not a valid RQ worker queue', cm.exception.message)
+        with self.assertRaises(Exception) as cm:
+            with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
+                mock_redis().ping.return_value = True
+                results = queue_harvest_main('mark.redar@ucop.edu',
+                    'https://registry.cdlib.org/api/v1/collection/178/; \
+                                https://registry.cdlib.org/api/v1/collection/189',
+                    redis_host='127.0.0.1',
+                    redis_port='6379',
+                    redis_pswd='X',
+                    timeout=1,
+                    rq_queue='bogus',
+                    poll_interval=1
+                    )
+        self.assertEqual('bogus is not a valid RQ worker queue', cm.exception.message)

@@ -8,6 +8,7 @@ from rq import Queue
 
 import harvester.run_ingest
 from harvester.config import config
+from harvester.config import RQ_Q_LIST
 
 ID_EC2_INGEST = ''
 ID_EC2_SOLR_BUILD = ''
@@ -58,6 +59,8 @@ def main(user_email, url_api_collection,
         if datetime.datetime.now() - start_time > timeout_dt:
             # TODO: email user
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE.'.format(timeout))
+    if rq_queue not in RQ_Q_LIST:
+        raise ValueError('{0} is not a valid RQ worker queue'.format(rq_queue))
     rQ = Queue(rq_queue, connection=get_redis_connection(redis_host, redis_port,
                                                redis_pswd))
     url_api_collection = [u.strip() for u in url_api_collection.split(';')]
