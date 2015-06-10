@@ -58,7 +58,6 @@ setup(
         'CouchDB==0.9',
         'md5s3stash',
         'pymarc>=3.0',
-        'pynux',
         'facet_decade',
         'redis_collections'
         ],
@@ -67,5 +66,7 @@ setup(
 )
 
 pip_main(['install', 'ansible'])
+pip_main(['install',
+'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
 ###pip_main(['install',
 ###         'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])
