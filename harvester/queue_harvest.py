@@ -68,7 +68,8 @@ def main(user_email, url_api_collection,
     for url in url_api_collection:
         result = rQ.enqueue_call(func=harvester.run_ingest.main,
                                  args=(user_email, url),
-                                 kwargs={'run_image_harvest':run_image_harvest},
+                                 kwargs={'run_image_harvest':run_image_harvest,
+                                         'rq_queue': rq_queue},
                                  timeout=job_timeout,
                                  )
         results.append(result)
