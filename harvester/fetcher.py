@@ -174,7 +174,7 @@ class MARCFetcher(Fetcher):
 
 class NuxeoFetcher(Fetcher):
     '''Harvest a Nuxeo FILE. Can be local or at a URL'''
-    def __init__(self, url_harvest, extra_data, conf_pynux=None):
+    def __init__(self, url_harvest, extra_data, conf_pynux={}):
         '''
         uses pynux (https://github.com/ucldc/pynux) to grab objects from
         the Nuxeo API
@@ -186,9 +186,6 @@ class NuxeoFetcher(Fetcher):
         and X-NXDocumemtProperties values filled in.
         '''
         super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
-        if not conf_pynux:
-            conf_pynux = {'X-NXDocumentProperties':
-            'dublincore,ucldc_schema,picture'}
         self._url = url_harvest
         self._path = extra_data
         self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
@@ -248,7 +245,7 @@ class UCLDCNuxeoFetcher(NuxeoFetcher):
     Essentially, this checks that the X-NXDocumentProperties is correct
     for the UCLDC
     '''
-    def __init__(self, url_harvest, extra_data, conf_pynux=None):
+    def __init__(self, url_harvest, extra_data, conf_pynux={}):
         '''Check that required UCLDC properties in conf setting'''
         super(UCLDCNuxeoFetcher, self).__init__(url_harvest,
                                                 extra_data, conf_pynux)
