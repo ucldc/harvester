@@ -239,12 +239,6 @@ class ConfigTestCase(TestCase):
         if 'REDIS_HOST' in os.environ:
             self.rhost = os.environ['REDIS_HOST']
             del os.environ['REDIS_HOST']
-        if 'ID_EC2_INGEST' in os.environ:
-            self.ec2ingest = os.environ['ID_EC2_INGEST']
-            del os.environ['ID_EC2_INGEST']
-        if 'ID_EC2_SOLR_BUILD' in os.environ:
-            self.ec2solr = os.environ['ID_EC2_SOLR_BUILD']
-            del os.environ['ID_EC2_SOLR_BUILD']
 
     def tearDown(self):
         # remove env vars if created?
@@ -254,14 +248,6 @@ class ConfigTestCase(TestCase):
             del os.environ['REDIS_PASSWORD']
         if self.rhost:
             os.environ['REDIS_HOST'] = self.rhost
-        if self.ec2ingest:
-            os.environ['ID_EC2_INGEST'] = self.ec2ingest
-        else:
-            del os.environ['ID_EC2_INGEST']
-        if self.ec2solr:
-            os.environ['ID_EC2_SOLR_BUILD'] = self.ec2solr
-        else:
-            del os.environ['ID_EC2_SOLR_BUILD']
 
     def testConfig(self):
         with self.assertRaises(KeyError) as cm:
@@ -270,23 +256,11 @@ class ConfigTestCase(TestCase):
                 'Please set environment variable REDIS_PASSWORD to redis password!')
         os.environ['REDIS_HOST'] = 'redis_host_ip'
         os.environ['REDIS_PASSWORD'] = 'XX'
-        with self.assertRaises(KeyError) as cm:
-            config(redis_required=True, ec2_required=True)
-        self.assertEqual(cm.exception.message,
-                'Please set environment variable ID_EC2_INGEST to main ingest ec2 instance id.')
-        os.environ['ID_EC2_INGEST'] = 'INGEST'
-        with self.assertRaises(KeyError) as cm:
-            config(redis_required=True, ec2_required=True)
-        self.assertEqual(cm.exception.message,
-                'Please set environment variable ID_EC2_SOLR_BUILD to ingest solr instance id.')
-        os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
         conf = config()
         self.assertEqual(conf['redis_host'], 'redis_host_ip')
         self.assertEqual(conf['redis_port'], '6379')
         self.assertEqual(conf['redis_password'], 'XX')
         self.assertEqual(conf['redis_connect_timeout'], 10)
-        self.assertEqual(conf['id_ec2_ingest'], 'INGEST')
-        self.assertEqual(conf['id_ec2_solr_build'], 'BUILD')
 
 
 class RunIngestTestCase(LogOverrideMixin, TestCase):
