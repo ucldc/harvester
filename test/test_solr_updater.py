@@ -38,10 +38,6 @@ class SolrUpdaterTestCase(TestCase):
         '''
         doc = json.load(open(DIR_FIXTURES+'/nuxeo_couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        import pprint
-        pp = pprint.PrettyPrinter()
-        print '\n'
-        pp.pprint(sdoc)
         self.assertEqual(sdoc['id'], doc['_id'])
         self.assertEqual(sdoc['id'], '2--01db4725-3676-4c47-9bef-d93bc084827a')
         self.assertEqual(sdoc['title'], 'Gold Coast.  Chicago, Illinois, 1940')

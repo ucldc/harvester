@@ -35,14 +35,16 @@ def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ queue to put job on')
     parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
     return parser
 
 
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
-                        collection_key, url_couchdb, object_auth=None):
-    rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
+                        collection_key, url_couchdb, rq_queue,
+                        object_auth=None):
+    rQ = Queue(rq_queue, connection=Redis(host=redis_host, port=redis_port,
                                 password=redis_pswd,
                                 socket_connect_timeout=redis_timeout)
     )
@@ -62,6 +64,7 @@ def main(user_email, url_api_collection, log_handler=None,
          mail_handler=None, dir_profile='profiles', profile_path=None,
          config_file=None,
          redis_host=None, redis_port=None, redis_pswd=None, redis_timeout=600,
+         rq_queue=None,
          run_image_harvest=False):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
@@ -134,6 +137,7 @@ def main(user_email, url_api_collection, log_handler=None,
                                   config['redis_password'], config['redis_connect_timeout'],
                                   collection_key=collection.provider,
                                   url_couchdb=url_couchdb,
+                                  rq_queue=rq_queue,
                                   object_auth=collection.auth)
         logger.info("Started job for image_harvest:{}".format(job.result))
 
@@ -154,4 +158,5 @@ if __name__ == '__main__':
             redis_host=conf['redis_host'],
             redis_port=conf['redis_port'],
             redis_pswd=conf['redis_password'],
-            redis_timeout=conf['redis_connect_timeout'])
+            redis_timeout=conf['redis_connect_timeout'],
+            rq_queue=args.rq_queue)

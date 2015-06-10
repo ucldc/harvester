@@ -34,6 +34,7 @@ def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ queue to put job in')
     parser.add_argument('url_api_collection', type=str,
                         help='URL for the collection Django tastypie api resource')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
@@ -46,7 +47,8 @@ def def_args():
 def main(user_email, url_api_collection,
         redis_host=None, redis_port=None, redis_pswd=None,
         timeout=None, poll_interval=20,
-        job_timeout=10800, # 3 hrs
+        job_timeout=86400, # 24 hrs
+        rq_queue=None,
         run_image_harvest=False):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else \
                  datetime.timedelta(seconds=TIMEOUT)
@@ -56,7 +58,7 @@ def main(user_email, url_api_collection,
         if datetime.datetime.now() - start_time > timeout_dt:
             # TODO: email user
             raise Exception('TIMEOUT ({0}s) WAITING FOR QUEUE.'.format(timeout))
-    rQ = Queue(connection=get_redis_connection(redis_host, redis_port,
+    rQ = Queue(rq_queue, connection=get_redis_connection(redis_host, redis_port,
                                                redis_pswd))
     url_api_collection = [u.strip() for u in url_api_collection.split(';')]
     results = []
@@ -72,14 +74,15 @@ def main(user_email, url_api_collection,
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.user_email or not args.url_api_collection:
+    if not args.user_email or not args.url_api_collection or not args.rq_queue:
         parser.print_help()
-        raise Exception('Need to pass in user email and collection api URL')
+        raise Exception('Missing required parameters')
     env = config()
     main(args.user_email, args.url_api_collection.strip(),
          redis_host=env['redis_host'],
          redis_port=env['redis_port'],
          redis_pswd=env['redis_password'],
+         rq_queue=args.rq_queue,
          job_timeout=args.job_timeout,
          run_image_harvest=args.run_image_harvest
          )

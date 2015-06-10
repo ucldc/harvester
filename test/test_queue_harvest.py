@@ -43,6 +43,7 @@ class QueueHarvestTestCase(TestCase):
                 redis_host='127.0.0.1',
                 redis_port='6379',
                 redis_pswd='X',
+                rq_queue='normal-stage',
                 timeout=1,
                 poll_interval=1
                 )
@@ -52,10 +53,10 @@ class QueueHarvestTestCase(TestCase):
         #for i, call in enumerate(mock_calls):
         #    print str(i), call
         self.assertIn('call().ping()', mock_calls)
-        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls[4])
-        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:default')", mock_calls[7])
-        self.assertIn("call().rpush(u'rq:queue:default", mock_calls[6])
-        self.assertIn("call().rpush(u'rq:queue:default", mock_calls[9])
+        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:normal-stage')", mock_calls[4])
+        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:normal-stage')", mock_calls[7])
+        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls[6])
+        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls[9])
         self.assertIn("call().hmset('rq:job", mock_calls[5])
         self.assertIn(results[0].id, mock_calls[5])
         self.assertIn("call().hmset('rq:job", mock_calls[8])
