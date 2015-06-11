@@ -23,12 +23,12 @@ COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
-def link_is_to_image(url):
+def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
     Return True or False accordingly
     '''
     response = requests.head(url, allow_redirects=True,
-            auth=self.__auth)
+            auth=auth)
     if response.status_code != 200:
         return False
     content_type = response.headers.get('content-type', None)
@@ -90,7 +90,7 @@ class ImageHarvester(object):
             print >> sys.stderr, 'Link not http URL for {} - {}'.format(
                                       doc['_id'], url_image)
             return None
-        if link_is_to_image(url_image):
+        if link_is_to_image(url_image, self._auth):
             return md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,
                                          url_auth=self._auth,
