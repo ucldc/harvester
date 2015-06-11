@@ -28,7 +28,7 @@ def link_is_to_image(url):
     Return True or False accordingly
     '''
     response = requests.head(url, allow_redirects=True,
-            auth=requests.HTTPBasicAuth(self.__auth))
+            auth=requests.auth.HTTPBasicAuth(self.__auth))
     if response.status_code != 200:
         return False
     content_type = response.headers.get('content-type', None)
