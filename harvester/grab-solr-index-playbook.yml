@@ -3,7 +3,7 @@
     gather_facts: True         
     vars:
       dir_code_src: '~/code/'
-      dir_solr: '/opt/solr/'
+      dir_solr_data: '/opt/solr/data'
       # replace colons, scp doesn't play well with colons
       datetime: >
         {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
@@ -23,7 +23,7 @@
       sudo: yes
       command: tar --force-local -cvf /home/{{ remote_user }}/solr-index.{{ datetime }}.tar index/
       args:
-        chdir: "{{ dir_solr }}/dc-collection/data/"
+        chdir: "{{ dir_solr_data }}"
     - name: chown back to {{ remote_user }}
       sudo: yes
       file:
