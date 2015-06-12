@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase
 from collections import namedtuple
 from mock import patch
@@ -11,6 +12,14 @@ class ImageHarvestTestCase(TestCase):
     '''Test the md5 s3 image harvesting calls.....
     TODO: Increase test coverage
     '''
+    def setUp(self):
+        self.old_url_couchdb = os.environ.get('COUCHDB_URL', None)
+        os.environ['COUCHDB_URL'] = 'http://example.edu/test'
+
+    def tearDown(self):
+        if self.old_url_couchdb:
+            os.environ['COUCHDB_URL'] = self.old_url_couchdb
+
     @patch('harvester.image_harvest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True,

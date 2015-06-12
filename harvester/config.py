@@ -26,8 +26,10 @@ def config(config_file=None, redis_required=False):
     '''Return the HarvestConfig namedtuple for the harvester'''
     if not config_file:
         config_file = os.environ.get('DPLA_CONFIG_FILE', DPLA_CONFIG_FILE)
-    DPLA = ConfigParser.ConfigParser()
-    DPLA.readfp(open(config_file))
+    DPLA = {}
+    if os.path.isfile(config_file):
+    	DPLA = ConfigParser.ConfigParser()
+    	DPLA.readfp(open(config_file))
     env = parse_env(DPLA, redis_required=redis_required)
     env['DPLA'] = DPLA
     return env

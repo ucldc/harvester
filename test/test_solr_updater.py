@@ -148,8 +148,8 @@ class SolrUpdaterTestCase(TestCase):
         '''Mock test s3 last_since setting'''
         set_couchdb_last_since(5)
         mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('solr.ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since.test_branch')
+        mock_boto().get_bucket.assert_called_with('solr/ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
         mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
 
     @patch('boto.connect_s3', autospec=True)
@@ -157,8 +157,8 @@ class SolrUpdaterTestCase(TestCase):
         '''Mock test s3 last_since getting'''
         get_couchdb_last_since()
         mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('solr.ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since.test_branch')
+        mock_boto().get_bucket.assert_called_with('solr/ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
     def test_old_collection(self):
@@ -167,7 +167,7 @@ class SolrUpdaterTestCase(TestCase):
 
     def test_get_key_for_env(self):
         '''test correct key for env'''
-        self.assertEqual(get_key_for_env(), 'couchdb_since.test_branch')
+        self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
 
 
 class GrabSolrIndexTestCase(TestCase):

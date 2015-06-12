@@ -4,6 +4,7 @@ Preference the environment, fallback to ingest code akara.ini
 '''
 import couchdb
 import os
+import sys
 from harvester.config import config
 
 def get_couch_server(url=None, username=None, password=None):
