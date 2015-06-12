@@ -206,7 +206,7 @@ def push_doc_to_solr(solr_doc, solr_db):
 def set_couchdb_last_since(seq_num):
     '''Set the value fof the last sequence from couchdb _changes api'''
     conn = boto.connect_s3()
-    k = b.get_key(get_key_for_env())
+    k = boto,get_key(get_key_for_env())
     if not k:
         k = Key(b)
         k.key = get_key_for_env()
@@ -224,7 +224,7 @@ def get_couchdb_last_since():
     k = b.get_key(get_key_for_env())
     return int(k.get_contents_as_string())
 
-def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
+def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=None):
     '''Use the _changes feed with a "since" parameter to only catch new 
     changes to docs. The _changes feed will only have the *last* event on
     a document and does not retain intermediate changes.
@@ -234,6 +234,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     print('Solr update PID: {}'.format(os.getpid()))
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
+    if all_docs:
+        since = 0
     if not since:
         since = get_couchdb_last_since()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
@@ -272,7 +274,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
         if n_up % 100 == 0:
             print "Updated {} so far".format(n_up)
     solr_db.commit() #commit updates
-    set_couchdb_last_since(last_since)
+    if not all_docs:
+         set_couchdb_last_since(last_since)
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
     print("PREVIOUS SINCE:{0}".format(previous_since))
     print("LAST SINCE:{0}".format(last_since))
@@ -286,6 +289,9 @@ if __name__ == '__main__':
     parser.add_argument('url_solr', help='URL to writeable solr instance')
     parser.add_argument('--since',
             help='Since parameter for update. Defaults to value stored in S3')
+    parser.add_argument('--all_docs',
+            help=''.join(('Harvest all couchdb docs. Safest bet. ',
+                          'Will not set last sequence in s3')))
 
     args = parser.parse_args()
     print('Warning: this may take some time')
