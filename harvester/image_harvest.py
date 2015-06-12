@@ -46,9 +46,12 @@ class ImageHarvester(object):
                  bucket_base=BUCKET_BASE,
                  object_auth=None,
                  no_get_if_object=False):
+        self._config = config()
         if cdb:
             self._couchdb = cdb
         else:
+            if not url_couchdb:
+                url_couchdb = self._config['couchdb_url']
             self._couchdb = get_couchdb(url=url_couchdb,
                                         dbname=couchdb_name)
         self._bucket_base = bucket_base
@@ -57,7 +60,6 @@ class ImageHarvester(object):
         self._auth = object_auth
         self.no_get_if_object = no_get_if_object # if object field exists, try to get
         
-        self._config = config()
         self._redis = Redis(host=self._config['redis_host'],
                             port=self._config['redis_port'],
                             password=self._config['redis_password'],

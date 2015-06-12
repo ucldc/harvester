@@ -25,13 +25,15 @@ def get_couchdb(url=None, dbname=None, username=None, password=None):
     '''Get a couchdb library Server object
     returns a 
     '''
+    env = config()
+    if not url:
+        url = env['couchdb_url']
     if not dbname:
-        dbname = os.environ.get('COUCHDB_DB', None)
-    if not dbname:
-        _config = config()
-        dbname = _config['DPLA'].get("CouchDb", "ItemDatabase")
-    if not dbname:
-        dbname = 'ucldc'
+        dbname = env.get('couchdb_dbname', None)
+        if not dbname:
+            dbname = 'ucldc'
+    if not username:
+        username = env.get('couchdb_username', None)
     couchdb_server = get_couch_server(url=url, username=username,
                                       password=password)
     return couchdb_server[dbname]
