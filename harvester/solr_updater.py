@@ -11,7 +11,7 @@ from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 
-S3_BUCKET = 'solr/ucldc'
+S3_BUCKET = 'solr.ucldc'
 
 COUCHDOC_TO_SOLR_MAPPING = {
     'id'       : lambda d: {'id': d['_id']},
@@ -204,29 +204,31 @@ def push_doc_to_solr(solr_doc, solr_db):
             raise e
     return solr_doc
 
-
-def set_couchdb_last_since(seq_num):
-    '''Set the value fof the last sequence from couchdb _changes api'''
-    conn = boto.connect_s3()
-    b = conn.get_bucket(S3_BUCKET)
-    k = boto,get_key(get_key_for_env())
-    if not k:
-        k = Key(b)
-        k.key = get_key_for_env()
-    k.set_contents_from_string(seq_num)
-
 def get_key_for_env():
     '''Get key based on DATA_BRANCH env var'''
     if 'DATA_BRANCH' not in os.environ:
         raise ValueError('Please set DATA_BRANCH environment variable')
     return ''.join(('couchdb_since/', os.environ['DATA_BRANCH']))
 
-def get_couchdb_last_since():
-    '''Return the value stored in the s3 bucket'''
-    conn = boto.connect_s3()
-    b = conn.get_bucket(S3_BUCKET)
-    k = b.get_key(get_key_for_env())
-    return int(k.get_contents_as_string())
+class CouchdbLastSeq_S3(object):
+    '''store the last seq for only delta updates.
+    '''
+    def __init__(self):
+        self.conn = boto.connect_s3()
+        self.bucket =  self.conn.get_bucket(S3_BUCKET)
+        self.key =  self.bucket.get_key(get_key_for_env())
+        if not self.key:
+            self.key = Key(b)
+            self.key.key = get_key_for_env()
+
+    @property
+    def last_seq(self):
+        return int(self.key.get_contents_as_string())
+
+    @last_seq.setter
+    def last_seq(self, value):
+        '''value should be last_seq from couchdb _changes'''
+        self.key.set_contents_from_string(value) 
 
 def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=None):
     '''Use the _changes feed with a "since" parameter to only catch new 
@@ -245,6 +247,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
     sys.stdout.flush() # put pd
+    last_seq = CouchdbLastSeq_S3()
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
     previous_since = since
