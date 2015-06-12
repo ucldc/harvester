@@ -5,12 +5,22 @@ from mock import patch
 from test.utils import DIR_FIXTURES
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
-from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
+from harvester.solr_updater import set_couchdb_last_since, get_couchdb_last_since
 from harvester.solr_updater import OldCollectionException
+from harvester.solr_updater import get_couchdb_last_since
+from harvester.solr_updater import get_key_for_env
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
+    def setUp(self):
+        self.old_data_branch = os.environ.get('DATA_BRANCH', None)
+        os.environ['DATA_BRANCH'] = 'test_branch'
+
+    def tearDown(self):
+        if self.old_data_branch:
+            os.environ['DATA_BRANCH'] = self.old_data_branch
+        
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
@@ -134,26 +144,30 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['facet_decade'], set([]))
 
     @patch('boto.connect_s3', autospec=True)
-    def test_set_couchdb_last_seq(self, mock_boto):
-        '''Mock test s3 last_seq setting'''
-        set_couchdb_last_seq(5)
+    def test_set_couchdb_last_since(self, mock_boto):
+        '''Mock test s3 last_since setting'''
+        set_couchdb_last_since(5)
         mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket.assert_called_with('solr.ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since.test_branch')
         mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
 
     @patch('boto.connect_s3', autospec=True)
-    def test_get_couchdb_last_seq(self, mock_boto):
-        '''Mock test s3 last_seq getting'''
-        get_couchdb_last_seq()
+    def test_get_couchdb_last_since(self, mock_boto):
+        '''Mock test s3 last_since getting'''
+        get_couchdb_last_since()
         mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
+        mock_boto().get_bucket.assert_called_with('solr.ucldc')
+        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since.test_branch')
         mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_norepo.json'))
         self.assertRaises(OldCollectionException, map_couch_to_solr_doc, doc )
+
+    def test_get_key_for_env(self):
+        '''test correct key for env'''
+        self.assertEqual(get_key_for_env(), 'couchdb_since.test_branch')
 
 
 class GrabSolrIndexTestCase(TestCase):
@@ -182,6 +196,3 @@ class GrabSolrIndexTestCase(TestCase):
                                    )
         self.assertEqual(mock_pb.return_value.run.called, True)
         self.assertEqual(mock_pb.return_value.run.call_count, 1)
-
-
-
