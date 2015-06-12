@@ -28,6 +28,7 @@ def delete_collection(cid):
         doc = _couchdb.get(row['id'])
         deleted.append(row['id'])
         _couchdb.delete(doc)
+        print "DELETED: {0}".format(row['id'])
         num_deleted +=1
     return num_deleted, deleted 
 
@@ -40,7 +41,6 @@ if __name__=='__main__':
     if confirm_deletion(args.collection_id):
         num, deleted_ids = delete_collection(args.collection_id)
         print "DELTED {} DOCS".format(num)
-        print "DELETED IDS: {}".format(deleted_ids)
         print "DELTED {} DOCS".format(num)
     else:
         print "Exiting without deleting"
