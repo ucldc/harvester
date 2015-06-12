@@ -23,8 +23,8 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
-#'spatial'     : lambda d: {'coverage': [c['text'] if isinstance(c, dict) else c for c in d['spatial']]},
-    'spatial'     : lambda d: {'coverage': [c for c in d['spatial']]},
+    'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
+        and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
     'date'        : lambda d: {'date': [dt['displayDate'] if isinstance(dt, dict) else dt for dt in d['date']]},
     'description' : lambda d: {'description': [ds for ds in d['description']]},

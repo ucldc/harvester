@@ -12,8 +12,7 @@ from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
-    @patch('boto.connect_s3', autospec=True)
-    def setUp(self, mock_boto):
+    def setUp(self):
         self.old_data_branch = os.environ.get('DATA_BRANCH', None)
         os.environ['DATA_BRANCH'] = 'test_branch'
 
@@ -143,25 +142,25 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['facet_decade'], set([]))
 
-    @patch('boto.connect_s3', autospec=True)
+    @patch('boto.s3.connect_to_region', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq = 5
-        mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('solr.ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
-        mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
+        mock_boto.assert_called_with('us-west-2')
+        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
+        mock_boto('us-west-2').get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
+        mock_boto('us-west-2').get_bucket().get_key().set_contents_from_string.assert_called_with(5)
 
-    @patch('boto.connect_s3', autospec=True)
+    @patch('boto.s3.connect_to_region', autospec=True)
     def test_get_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq getting'''
         self.seq_obj = CouchdbLastSeq_S3()
         x = self.seq_obj.last_seq
-        mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('solr.ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
-        mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
+        mock_boto.assert_called_with('us-west-2')
+        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
+        mock_boto('us-west-2').get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
+        mock_boto('us-west-2').get_bucket().get_key().get_contents_as_string.assert_called_with()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_norepo.json'))
