@@ -26,7 +26,7 @@ def config(config_file=None, redis_required=False):
     '''Return the HarvestConfig namedtuple for the harvester'''
     if not config_file:
         config_file = os.environ.get('DPLA_CONFIG_FILE', DPLA_CONFIG_FILE)
-    DPLA = {}
+    DPLA = None
     if os.path.isfile(config_file):
     	DPLA = ConfigParser.ConfigParser()
     	DPLA.readfp(open(config_file))
@@ -55,16 +55,19 @@ def parse_env(DPLA, redis_required=False):
     env['couchdb_password'] = os.environ.get('COUCHDB_PASSWORD', None)
     env['couchdb_dbname'] = os.environ.get('COUCHDB_DB', None)
     env['couchdb_dashboard'] = os.environ.get('COUCHDB_DASHBOARD', None)
-    if not env['couchdb_url']:
-        env['couchdb_url'] = DPLA.get("CouchDb", "URL")
-    if not env['couchdb_username']:
-        env['couchdb_username'] = DPLA.get("CouchDb", "Username")
-    if not env['couchdb_password']:
-        env['couchdb_password'] = DPLA.get("CouchDb", "Password")
-    if not env['couchdb_dbname']:
-        env['couchdb_dbname'] = DPLA.get("CouchDb", "ItemDatabase")
-    if not env['couchdb_dashboard']:
-        env['couchdb_dashboard'] = DPLA.get("CouchDb", "DashboardDatabase")
+    env['akara_port'] = '8889'
+    if DPLA:
+        if not env['couchdb_url']:
+            env['couchdb_url'] = DPLA.get("CouchDb", "URL")
+        if not env['couchdb_username']:
+            env['couchdb_username'] = DPLA.get("CouchDb", "Username")
+        if not env['couchdb_password']:
+            env['couchdb_password'] = DPLA.get("CouchDb", "Password")
+        if not env['couchdb_dbname']:
+            env['couchdb_dbname'] = DPLA.get("CouchDb", "ItemDatabase")
+        if not env['couchdb_dashboard']:
+            env['couchdb_dashboard'] = DPLA.get("CouchDb", "DashboardDatabase")
+        env['akara_port'] = DPLA.get("Akara", "Port")
     if not env['couchdb_url']:
         env['couchdb_url'] = 'http://127.0.0.1:5984'
     if not env['couchdb_dbname']:
