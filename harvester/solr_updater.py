@@ -23,7 +23,8 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
-    'spatial'     : lambda d: {'coverage': [c['text'] if isinstance(c, dict) else c for c in d['spatial']]},
+#'spatial'     : lambda d: {'coverage': [c['text'] if isinstance(c, dict) else c for c in d['spatial']]},
+    'spatial'     : lambda d: {'coverage': [c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
     'date'        : lambda d: {'date': [dt['displayDate'] if isinstance(dt, dict) else dt for dt in d['date']]},
     'description' : lambda d: {'description': [ds for ds in d['description']]},
@@ -214,11 +215,12 @@ class CouchdbLastSeq_S3(object):
     '''store the last seq for only delta updates.
     '''
     def __init__(self):
-        self.conn = boto.connect_s3()
+        #self.conn = boto.connect_s3()
+        self.conn = boto.s3.connect_to_region('us-west-2')
         self.bucket =  self.conn.get_bucket(S3_BUCKET)
         self.key =  self.bucket.get_key(get_key_for_env())
         if not self.key:
-            self.key = Key(b)
+            self.key = boto.s3.key.Key(self.bucket)
             self.key.key = get_key_for_env()
 
     @property
