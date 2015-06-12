@@ -11,6 +11,8 @@ from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 
+S3_BUCKET = 'solr/ucldc'
+
 COUCHDOC_TO_SOLR_MAPPING = {
     'id'       : lambda d: {'id': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
@@ -206,6 +208,7 @@ def push_doc_to_solr(solr_doc, solr_db):
 def set_couchdb_last_since(seq_num):
     '''Set the value fof the last sequence from couchdb _changes api'''
     conn = boto.connect_s3()
+    b = conn.get_bucket(S3_BUCKET)
     k = boto,get_key(get_key_for_env())
     if not k:
         k = Key(b)
@@ -221,6 +224,7 @@ def get_key_for_env():
 def get_couchdb_last_since():
     '''Return the value stored in the s3 bucket'''
     conn = boto.connect_s3()
+    b = conn.get_bucket(S3_BUCKET)
     k = b.get_key(get_key_for_env())
     return int(k.get_contents_as_string())
 
@@ -235,7 +239,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     if all_docs:
-        since = 0
+        since = '0'
     if not since:
         since = get_couchdb_last_since()
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
@@ -289,7 +293,7 @@ if __name__ == '__main__':
     parser.add_argument('url_solr', help='URL to writeable solr instance')
     parser.add_argument('--since',
             help='Since parameter for update. Defaults to value stored in S3')
-    parser.add_argument('--all_docs',
+    parser.add_argument('--all_docs', action='store_true',
             help=''.join(('Harvest all couchdb docs. Safest bet. ',
                           'Will not set last sequence in s3')))
 
@@ -297,4 +301,5 @@ if __name__ == '__main__':
     print('Warning: this may take some time')
     main(url_couchdb=args.url_couchdb, dbname=args.dbname,
          url_solr=args.url_solr,
+         all_docs=args.all_docs,
          since=args.since)
