@@ -8,6 +8,7 @@ from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
 from harvester.solr_updater import get_key_for_env
+from harvester.solr_updater import has_required_fields
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
@@ -169,6 +170,15 @@ class SolrUpdaterTestCase(TestCase):
     def test_get_key_for_env(self):
         '''test correct key for env'''
         self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
+
+    def test_check_required_fields(self):
+        doc = {'id':'test-id'}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'sourceResource':{}}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'sourceResource':{'title':'test-title'}}
+        ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
 
 
 class GrabSolrIndexTestCase(TestCase):

@@ -54,6 +54,14 @@ COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
     'transcription'   : lambda d: {'transcription': d.get('transcription')},
 }
 
+def has_required_fields(doc):
+    '''Check the couchdb doc has requireed fields'''
+    if 'sourceResource' not in doc:
+        raise KeyError('+++++OMITTED: Doc:{0} has no sourceResource.'.format(doc['id']))
+    if 'title' not in doc['sourceResource']:
+        raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['id']))
+    return True
+
 def add_slash(url):
     '''Add slash to url is it is not there.'''
     return os.path.join(url, '')
@@ -269,6 +277,11 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
             n_delete += 1
         else:
             doc = db.get(cur_id)
+            try:
+                has_required_fields(doc)
+            except ValueError, e:
+                print(e.msg)
+                continue
             try:
                 try:
                     solr_doc = map_couch_to_solr_doc(doc)
