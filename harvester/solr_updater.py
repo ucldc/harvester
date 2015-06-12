@@ -250,14 +250,14 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     print('Solr update PID: {}'.format(os.getpid()))
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
+    s3_seq_cache = CouchdbLastSeq_S3()
     if all_docs:
         since = '0'
     if not since:
-        since = get_couchdb_last_since()
+        since = s3_seq_cache.last_seq
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
     sys.stdout.flush() # put pd
-    last_seq = CouchdbLastSeq_S3()
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
     previous_since = since
@@ -297,7 +297,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
             print "Updated {} so far".format(n_up)
     solr_db.commit() #commit updates
     if not all_docs:
-         set_couchdb_last_since(last_since)
+        s3_seq_cache.last_seq = last_since
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
     print("PREVIOUS SINCE:{0}".format(previous_since))
     print("LAST SINCE:{0}".format(last_since))
