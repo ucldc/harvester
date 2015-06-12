@@ -209,7 +209,7 @@ def set_couchdb_last_since(seq_num):
     '''Set the value fof the last sequence from couchdb _changes api'''
     conn = boto.connect_s3()
     b = conn.get_bucket(S3_BUCKET)
-    k = boto,get_key(get_key_for_env())
+    k = b.get_key(get_key_for_env())
     if not k:
         k = Key(b)
         k.key = get_key_for_env()
