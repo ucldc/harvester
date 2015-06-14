@@ -42,7 +42,9 @@ def def_args():
 
 
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
-                        collection_key, url_couchdb, rq_queue,
+                        collection_key,
+                        url_couchdb,
+                        rq_queue,
                         object_auth=None):
     rQ = Queue(rq_queue, connection=Redis(host=redis_host, port=redis_port,
                                 password=redis_pswd,
@@ -134,8 +136,9 @@ def main(user_email, url_api_collection, log_handler=None,
     if run_image_harvest:
         job = queue_image_harvest(config['redis_host'], config['redis_port'],
                                   config['redis_password'], config['redis_connect_timeout'],
-                                  collection_key=collection.provider,
-                                  rq_queue=rq_queue,
+                                  config_harvest['couchdb_url']
+                                  collection.provider,
+                                  rq_queue,
                                   object_auth=collection.auth)
         logger.info("Started job for image_harvest:{}".format(job.result))
 
