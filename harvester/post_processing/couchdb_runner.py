@@ -90,6 +90,25 @@ class CouchDBJobEnqueue(object):
                             socket_connect_timeout=self._config['redis_connect_timeout'])
         self._rQ = Queue(connection=self._redis)
 
+    def queue_list_of_ids(self, id_list, job_timeout, func,
+                         *args, **kwargs):
+        '''Enqueue jobs in the ingest infrastructure for a list of ids'''
+        results = []
+        for doc_id in id_list:
+            this_args = [doc_id]
+            if args:
+                this_args.extend(args)
+            this_args = tuple(this_args)
+            print('Enqueing doc {} args: {} kwargs:{}'.format(doc['_id'],
+                this_args, kwargs))
+            result = self._rQ.enqueue_call(func=func,
+                                     args=this_args,
+                                     kwargs=kwargs,
+                                     timeout=job_timeout)
+            results.append(result)
+        return results
+            
+
     def queue_collection(self, collection_key, job_timeout, func,
                          *args, **kwargs):
         '''Queue a job in the RQ queue for each document in the collection.
