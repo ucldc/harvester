@@ -4,6 +4,7 @@
 import sys
 import argparse
 from harvester.post_processing.couchdb_runner import CouchDBJobEnqueue
+from harvester.config import parse_env
 import harvester.post_processing.enrich_existing_couch_doc
 
 def main(args):

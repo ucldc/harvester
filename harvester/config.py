@@ -50,11 +50,12 @@ def parse_env(DPLA, redis_required=False):
         if redis_required:
             raise KeyError(''.join(('Please set environment variable ',
                                     'REDIS_PASSWORD to redis password!')))
-    env['couchdb_url'] = os.environ.get('COUCHDB_URL', None)
-    env['couchdb_username'] = os.environ.get('COUCHDB_USER', None)
-    env['couchdb_password'] = os.environ.get('COUCHDB_PASSWORD', None)
-    env['couchdb_dbname'] = os.environ.get('COUCHDB_DB', None)
-    env['couchdb_dashboard'] = os.environ.get('COUCHDB_DASHBOARD', None)
+    env['rq_queue'] = os.environ.get('RQ_QUEUE')
+    env['couchdb_url'] = os.environ.get('COUCHDB_URL')
+    env['couchdb_username'] = os.environ.get('COUCHDB_USER')
+    env['couchdb_password'] = os.environ.get('COUCHDB_PASSWORD')
+    env['couchdb_dbname'] = os.environ.get('COUCHDB_DB')
+    env['couchdb_dashboard'] = os.environ.get('COUCHDB_DASHBOARD')
     env['akara_port'] = '8889'
     if DPLA:
         if not env['couchdb_url']:

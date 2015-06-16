@@ -79,7 +79,7 @@ class CouchDBJobEnqueueTestCase(TestCase):
                 date='Mon, 24 Nov 2014 21:30:38 GMT'
                 )
 
-        self._cdbrunner = CouchDBJobEnqueue()
+        self._cdbrunner = CouchDBJobEnqueue(rq_queue='test-delete')
         def func_for_test(doc, *args, **kwargs):
             return doc, args, kwargs
         self.function = func_for_test

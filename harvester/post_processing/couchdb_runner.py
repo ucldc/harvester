@@ -81,14 +81,20 @@ class CouchDBJobEnqueue(object):
     Functions passed to this enqueuing object should take a CouchDB doc id
     and should do whatever work & saving it needs to do on it.
     '''
-    def __init__(self):
+    def __init__(self, rq_queue=None):
         self._config = config()
         self._couchdb = get_couchdb()
         self._redis = Redis(host=self._config['redis_host'],
                             port=self._config['redis_port'],
                             password=self._config['redis_password'],
                             socket_connect_timeout=self._config['redis_connect_timeout'])
-        self._rQ = Queue(connection=self._redis)
+        self.rqname = self._config['rq_queue']
+        if rq_queue:
+            self.rqname = rq_queue
+        if not self.rqname:
+            raise ValueError(''.join(('Must set RQ_QUEUE env var',
+                                ' or pass in rq_queue to CouchDBJobEnqueue')))
+        self._rQ = Queue(self.rqname, connection=self._redis)
 
     def queue_list_of_ids(self, id_list, job_timeout, func,
                          *args, **kwargs):

@@ -9,14 +9,13 @@ EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
 EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None)
 IMAGE_HARVEST_TIMEOUT = 144000
 
-
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
-    parser.add_argument('cid', type=str,
-            help='Collection ID')
+    parser.add_argument('doc_id_list_file', type=str,
+            help='File containing couchdb doc ids to process')
     parser.add_argument('--object_auth', nargs='?',
             help='HTTP Auth needed to download images - username:password')
     parser.add_argument('--url_couchdb', nargs='?',
@@ -28,19 +27,22 @@ def def_args():
             help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     return parser
 
-def main(user_email, cid, url_couchdb=None):
+def main(user_email, doc_id_list_file, url_couchdb=None):
     enq = CouchDBJobEnqueue()
-    timeout = 10000
-    enq.queue_collection(cid,
+    timeout = 10000000
+    with open(doc_id_list_file) as foo:
+        doc_id_list = [ l.strip() for l in foo.readlines()]
+    results = enq.queue_list_of_ids(doc_id_list,
                      timeout,
                      harvest_image_for_doc,
                      url_couchdb=url_couchdb,
                      )
+    print "Results:{}".format(results)
 
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.user_email or not args.cid:
+    if not args.user_email or not args.doc_id_list_file:
         parser.print_help()
         sys.exit(27)
     kwargs = {}
@@ -51,6 +53,7 @@ if __name__ == '__main__':
     if args.no_get_if_object:
         kwargs['no_get_if_object'] = args.no_get_if_object
     main(args.user_email,
-            args.cid,
+            args.doc_id_list_file,
             **kwargs)
+
 
