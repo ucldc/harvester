@@ -33,6 +33,7 @@ def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
     parser.add_argument('url_api_collection', type=str,
             help='URL for the collection Django tastypie api resource')
     parser.add_argument('--object_auth', nargs='?',
@@ -48,10 +49,11 @@ def def_args():
 
 
 def queue_image_harvest(redis_host, redis_port, redis_password, redis_timeout,
+                        rq_queue,
                         collection_key, url_couchdb=None, object_auth=None,
                         no_get_if_object=False,
                         harvest_timeout=IMAGE_HARVEST_TIMEOUT):
-    rQ = Queue(connection=Redis(host=redis_host, port=redis_port,
+    rQ = Queue(rq_queue, connection=Redis(host=redis_host, port=redis_port,
                                 password=redis_password,
                                 socket_connect_timeout=redis_timeout)
     )
@@ -68,6 +70,7 @@ def queue_image_harvest(redis_host, redis_port, redis_password, redis_timeout,
 def main(user_email, url_api_collection, log_handler=None,
          mail_handler=None, dir_profile='profiles', profile_path=None,
          config_file='akara.ini',
+         rq_queue=None,
          **kwargs):
     '''Runs a UCLDC ingest process for the given collection'''
     emails = [user_email]
@@ -91,14 +94,14 @@ def main(user_email, url_api_collection, log_handler=None,
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
 
-    print log_handler
     log_handler.push_application()
     print config
     # the image_harvest should be a separate job, with a long timeout
     job = queue_image_harvest(config['redis_host'], config['redis_port'],
                               config['redis_password'],
                               config['redis_connect_timeout'],
-                              collection_key=collection.provider,
+                              rq_queue=rq_queue,
+                              collection_key=collection.id,
                               object_auth=collection.auth,
                               **kwargs)
 
@@ -120,4 +123,5 @@ if __name__ == '__main__':
         kwargs['no_get_if_object'] = args.no_get_if_object
     main(args.user_email,
             args.url_api_collection,
+            rq_queue=args.rq_queue,
             **kwargs)
