@@ -19,7 +19,6 @@ def get_couch_server(url=None, username=None, password=None):
     if username:
         schema, uri = url.split("//")
         url = "{0}//{1}:{2}@{3}".format(schema, username, password, uri)
-    print >> sys.stderr, "COUCHDB URL:{}".format(url)
     return couchdb.Server(url)
 
 def get_couchdb(url=None, dbname=None, username=None, password=None):
