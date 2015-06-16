@@ -207,6 +207,7 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
+        print "+++ ADDED: {} +++".format(solr_doc['id'])
     except SolrException, e:
         print("ERROR for {0} : {1}".format(solr_doc['id'], e))
         if not e.httpcode == 400:
@@ -279,8 +280,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
             doc = db.get(cur_id)
             try:
                 has_required_fields(doc)
-            except ValueError, e:
-                print(e.msg)
+            except KeyError, e:
+                print(e.message)
                 continue
             try:
                 try:
