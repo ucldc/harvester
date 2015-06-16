@@ -19,6 +19,7 @@ def get_couch_server(url=None, username=None, password=None):
     if username:
         schema, uri = url.split("//")
         url = "{0}//{1}:{2}@{3}".format(schema, username, password, uri)
+    print >> sys.stderr, "COUCHDB URL:{}".format(url)
     return couchdb.Server(url)
 
 def get_couchdb(url=None, dbname=None, username=None, password=None):
@@ -26,14 +27,9 @@ def get_couchdb(url=None, dbname=None, username=None, password=None):
     returns a 
     '''
     env = config()
-    if not url:
-        url = env['couchdb_url']
     if not dbname:
         dbname = env.get('couchdb_dbname', None)
         if not dbname:
             dbname = 'ucldc'
-    if not username:
-        username = env.get('couchdb_username', None)
-    couchdb_server = get_couch_server(url=url, username=username,
-                                      password=password)
+    couchdb_server = get_couch_server(url, username, password)
     return couchdb_server[dbname]
