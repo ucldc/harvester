@@ -26,14 +26,9 @@ def get_couchdb(url=None, dbname=None, username=None, password=None):
     returns a 
     '''
     env = config()
-    if not url:
-        url = env['couchdb_url']
     if not dbname:
         dbname = env.get('couchdb_dbname', None)
         if not dbname:
             dbname = 'ucldc'
-    if not username:
-        username = env.get('couchdb_username', None)
-    couchdb_server = get_couch_server(url=url, username=username,
-                                      password=password)
+    couchdb_server = get_couch_server(url, username, password)
     return couchdb_server[dbname]
