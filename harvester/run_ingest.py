@@ -136,7 +136,7 @@ def main(user_email, url_api_collection, log_handler=None,
     if run_image_harvest:
         job = queue_image_harvest(config['redis_host'], config['redis_port'],
                                   config['redis_password'], config['redis_connect_timeout'],
-                                  config_harvest['couchdb_url'],
+                                  config['couchdb_url'],
                                   collection.id,
                                   rq_queue,
                                   object_auth=collection.auth)
