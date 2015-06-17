@@ -42,8 +42,8 @@ def def_args():
 
 
 def queue_image_harvest(redis_host, redis_port, redis_pswd, redis_timeout,
-                        collection_key,
                         url_couchdb,
+                        collection_key,
                         rq_queue,
                         object_auth=None):
     rQ = Queue(rq_queue, connection=Redis(host=redis_host, port=redis_port,
