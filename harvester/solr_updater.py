@@ -32,7 +32,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'format'      : lambda d: {'format': d.get('format', None)},
     'genre'       : lambda d: {'genre': d.get('genre', None)},
     'identifier'  : lambda d: {'identifier': d.get('identifier', None)},
-    'language'    : lambda d: {'language': [l['iso639_3'] if isinstance(l, dict) else l for l in d['language']]},
+    'language'    : lambda d: {'language': [l.get('iso639_3', l.get('name', None)) if isinstance(l, dict) else l for l in d['language']]},
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
