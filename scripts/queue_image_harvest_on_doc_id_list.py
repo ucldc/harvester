@@ -27,8 +27,8 @@ def def_args():
             help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     return parser
 
-def main(user_email, doc_id_list_file, url_couchdb=None):
-    enq = CouchDBJobEnqueue()
+def main(user_email, doc_id_list_file, rq_queue=None, url_couchdb=None):
+    enq = CouchDBJobEnqueue(rq_queue=rq_queue)
     timeout = 10000000
     with open(doc_id_list_file) as foo:
         doc_id_list = [ l.strip() for l in foo.readlines()]
@@ -52,8 +52,10 @@ if __name__ == '__main__':
         kwargs['harvest_timeout'] = int(args.timeout)
     if args.no_get_if_object:
         kwargs['no_get_if_object'] = args.no_get_if_object
+    
     main(args.user_email,
             args.doc_id_list_file,
+            rq_queue = args.rq_queue,
             **kwargs)
 
 
