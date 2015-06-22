@@ -7,6 +7,7 @@ from rq import Queue
 
 from harvester.config import config
 from harvester.couchdb_init import get_couchdb
+from harvester.couchdb_pager import couchdb_pager
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
@@ -30,8 +31,10 @@ class CouchDBCollectionFilter(object):
         else:
             self._couchdb = couchdb_obj
         self._view = couch_view
-        self._view_iter = self._couchdb.view(self._view, include_docs='true',
-                                             key=collection_key)
+        self._view_iter = couchdb_pager(self._couchdb, self._view,
+                key=collection_key, include_docs='true')
+        #self._view_iter = self._couchdb.view(self._view, include_docs='true',
+        #                                     key=collection_key)
 
     def __iter__(self):
         return self._view_iter.__iter__()

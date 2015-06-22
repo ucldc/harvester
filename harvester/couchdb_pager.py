@@ -1,6 +1,8 @@
 def couchdb_pager(db, view_name='_all_docs',
                   startkey=None, startkey_docid=None,
-                  endkey=None, endkey_docid=None, bulk=5000, **extra_options):
+                  endkey=None, endkey_docid=None,
+                  key=None,
+                  bulk=5000, **extra_options):
     # Request one extra row to resume the listing there later.
     options = {'limit': bulk + 1}
     print("EXTRA: {}".format(extra_options))
@@ -17,10 +19,13 @@ def couchdb_pager(db, view_name='_all_docs',
         options['end_key'] = endkey
         if endkey_docid:
             options['endkey_docid'] = endkey_docid
+    if key:
+        options['key'] = key
     done = False
     while not done:
         print("OPTS:{}".format(options))
         view = db.view(view_name, **options)
+        print("VIEW:{} LEN:{}".format(view, len(view)))
         rows = []
         # If we got a short result (< limit + 1), we know we are done.
         if len(view) <= bulk:
