@@ -19,6 +19,20 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
+def date_map(d):
+    date_source = d.get('date', None)
+    dates = []
+    if date_source:
+        if isinstance(date_source, dict):
+            try:
+                dates.append(date_source['displayDate'])
+            except KeyError:
+                pass
+        else: #should be list
+            dates.extend([dt['displayDate'] if isinstance(dt, dict) else dt for dt in date_source])
+    return dates
+        
+
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
@@ -26,7 +40,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
         and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d: {'date': [dt['displayDate'] if isinstance(dt, dict) else dt for dt in d['date']]},
+    'date'        : lambda d: {'date': date_map(d)},
     'description' : lambda d: {'description': [ds for ds in d['description']]},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
     'format'      : lambda d: {'format': d.get('format', None)},

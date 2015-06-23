@@ -42,6 +42,14 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['repository_data'], repo_data)
         self.assertEqual(sdoc['sort_title'], u'Neighbor')
 
+    def test_map_date_not_a_list(self):
+        '''Test how the mapping works when the sourceResource/date is a dict
+        not a list
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_solr_date_map.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['date'], ['between 1885-1890'])
+
     def test_map_couch_to_solr_nuxeo_doc(self):
         '''Test the mapping of a couch db source json doc from Nuxeo
         to a solr schema compatible doc
