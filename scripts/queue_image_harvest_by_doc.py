@@ -23,7 +23,7 @@ def def_args():
             help='Override url to couchdb')
     parser.add_argument('--timeout', nargs='?',
             help='set image harvest timeout in sec (14400 - 4hrs default)')
-    parser.add_argument('--no_get_if_object', action='store_true',
+    parser.add_argument('--get_if_object', action='store_true',
                         default=False,
             help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     return parser
@@ -48,8 +48,8 @@ if __name__ == '__main__':
         kwargs['object_auth'] = args.object_auth
     if args.timeout:
         kwargs['harvest_timeout'] = int(args.timeout)
-    if args.no_get_if_object:
-        kwargs['no_get_if_object'] = args.no_get_if_object
+    if args.get_if_object:
+        kwargs['get_if_object'] = args.get_if_object
     main(args.user_email,
             args.cid,
             **kwargs)
