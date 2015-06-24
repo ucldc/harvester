@@ -101,7 +101,7 @@ class ImageHarvester(object):
                                          hash_cache=self._hash_cache)
                 return report
             except TypeError, e:
-                print >> sys.stderr, 'Type error for doc:{} {} Msg: {} Args: {}'.formate(
+                print >> sys.stderr, 'TypeError for doc:{} {} Msg: {} Args: {}'.format(
                     doc['_id'], url_image, e.message, e.args)
         else:
             print >> sys.stderr, 'Not an image for {} - {}'.format(
