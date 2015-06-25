@@ -189,9 +189,9 @@ def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
          get_if_object=False):
-    print(ImageHarvester(url_couchdb=url_couchdb,
+    ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth,
-                         get_if_object=get_if_object).by_collection(collection_key))
+                         get_if_object=get_if_object).by_collection(collection_key)
 
 if __name__ == '__main__':
     import argparse
