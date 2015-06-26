@@ -69,11 +69,15 @@ COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
 }
 
 def has_required_fields(doc):
-    '''Check the couchdb doc has requireed fields'''
+    '''Check the couchdb doc has required fields'''
     if 'sourceResource' not in doc:
         raise KeyError('+++++OMITTED: Doc:{0} has no sourceResource.'.format(doc['id']))
     if 'title' not in doc['sourceResource']:
         raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['id']))
+    if 'image' == doc['sourceResource'].get('type', '').lower():
+        #if doesnt have a reference_image_md5, reject
+        if 'object' not in doc:
+            raise KeyError('+++++OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['id']))
     return True
 
 def add_slash(url):
