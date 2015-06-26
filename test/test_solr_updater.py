@@ -187,6 +187,15 @@ class SolrUpdaterTestCase(TestCase):
         doc = {'id':'test-id', 'sourceResource':{'title':'test-title'}}
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
+        doc = {'id':'test-id', 'sourceResource':{'title':'test-title',
+                                                'type': 'image'}}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'object':'hasobject',
+                'sourceResource':{'title':'test-title',
+                                  'type': 'image'}
+        }
+        ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
 
 
 class GrabSolrIndexTestCase(TestCase):
