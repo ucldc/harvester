@@ -108,7 +108,7 @@ class CouchDBJobEnqueue(object):
             if args:
                 this_args.extend(args)
             this_args = tuple(this_args)
-            print('Enqueing doc {} args: {} kwargs:{}'.format(doc['_id'],
+            print('Enqueing doc {} args: {} kwargs:{}'.format(doc_id,
                 this_args, kwargs))
             result = self._rQ.enqueue_call(func=func,
                                      args=this_args,
