@@ -5,12 +5,22 @@ from mock import patch
 from test.utils import DIR_FIXTURES
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
-from harvester.solr_updater import set_couchdb_last_seq, get_couchdb_last_seq
 from harvester.solr_updater import OldCollectionException
+from harvester.solr_updater import CouchdbLastSeq_S3
+from harvester.solr_updater import get_key_for_env
+from harvester.solr_updater import has_required_fields
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
+    def setUp(self):
+        self.old_data_branch = os.environ.get('DATA_BRANCH', None)
+        os.environ['DATA_BRANCH'] = 'test_branch'
+
+    def tearDown(self):
+        if self.old_data_branch:
+            os.environ['DATA_BRANCH'] = self.old_data_branch
+        
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
@@ -32,16 +42,20 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['repository_data'], repo_data)
         self.assertEqual(sdoc['sort_title'], u'Neighbor')
 
+    def test_map_date_not_a_list(self):
+        '''Test how the mapping works when the sourceResource/date is a dict
+        not a list
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_solr_date_map.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['date'], ['between 1885-1890'])
+
     def test_map_couch_to_solr_nuxeo_doc(self):
         '''Test the mapping of a couch db source json doc from Nuxeo
         to a solr schema compatible doc
         '''
         doc = json.load(open(DIR_FIXTURES+'/nuxeo_couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        import pprint
-        pp = pprint.PrettyPrinter()
-        print '\n'
-        pp.pprint(sdoc)
         self.assertEqual(sdoc['id'], doc['_id'])
         self.assertEqual(sdoc['id'], '2--01db4725-3676-4c47-9bef-d93bc084827a')
         self.assertEqual(sdoc['title'], 'Gold Coast.  Chicago, Illinois, 1940')
@@ -137,27 +151,51 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['facet_decade'], set([]))
 
-    @patch('boto.connect_s3', autospec=True)
+    @patch('boto.s3.connect_to_region', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
-        set_couchdb_last_seq(5)
-        mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
-        mock_boto().get_bucket().get_key().set_contents_from_string.assert_called_with(5)
+        self.seq_obj = CouchdbLastSeq_S3()
+        self.seq_obj.last_seq = 5
+        mock_boto.assert_called_with('us-west-2')
+        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
+        mock_boto('us-west-2').get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
+        mock_boto('us-west-2').get_bucket().get_key().set_contents_from_string.assert_called_with(5)
 
-    @patch('boto.connect_s3', autospec=True)
+    @patch('boto.s3.connect_to_region', autospec=True)
     def test_get_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq getting'''
-        get_couchdb_last_seq()
-        mock_boto.assert_called_with()
-        mock_boto().get_bucket.assert_called_with('ucldc')
-        mock_boto().get_bucket().get_key.assert_called_with('couchdb_last_seq')
-        mock_boto().get_bucket().get_key().get_contents_as_string.assert_called_with()
+        self.seq_obj = CouchdbLastSeq_S3()
+        x = self.seq_obj.last_seq
+        mock_boto.assert_called_with('us-west-2')
+        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
+        mock_boto('us-west-2').get_bucket().get_key.assert_called_with('couchdb_since/test_branch')
+        mock_boto('us-west-2').get_bucket().get_key().get_contents_as_string.assert_called_with()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_norepo.json'))
         self.assertRaises(OldCollectionException, map_couch_to_solr_doc, doc )
+
+    def test_get_key_for_env(self):
+        '''test correct key for env'''
+        self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
+
+    def test_check_required_fields(self):
+        doc = {'id':'test-id'}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'sourceResource':{}}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'sourceResource':{'title':'test-title'}}
+        ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
+        doc = {'id':'test-id', 'sourceResource':{'title':'test-title',
+                                                'type': 'image'}}
+        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id':'test-id', 'object':'hasobject',
+                'sourceResource':{'title':'test-title',
+                                  'type': 'image'}
+        }
+        ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
 
 
 class GrabSolrIndexTestCase(TestCase):
@@ -186,6 +224,3 @@ class GrabSolrIndexTestCase(TestCase):
                                    )
         self.assertEqual(mock_pb.return_value.run.called, True)
         self.assertEqual(mock_pb.return_value.run.call_count, 1)
-
-
-

@@ -3,7 +3,8 @@
     gather_facts: True         
     vars:
       dir_code_src: '~/code/'
-      dir_solr: '/opt/solr/'
+      dir_solr_data: '/opt/solr/data'
+      dir_tarball: '/opt/indexes/'
       # replace colons, scp doesn't play well with colons
       datetime: >
         {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
@@ -21,20 +22,20 @@
       when: server_role not in  server_roles
     - name: tar up latest solr index directoy
       sudo: yes
-      command: tar --force-local -cvf /home/{{ remote_user }}/solr-index.{{ datetime }}.tar index/
+      command: tar --force-local -cvf {{ dir_tarball }}/solr-index.{{ datetime }}.tar index/
       args:
-        chdir: "{{ dir_solr }}/dc-collection/data/"
+        chdir: "{{ dir_solr_data }}"
     - name: chown back to {{ remote_user }}
       sudo: yes
       file:
         owner: "{{ remote_user }}"
-        path: /home/{{ remote_user }}/solr-index.{{ datetime }}.tar
+        path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
     - name: bzip index file
-      command: bzip2 solr-index.{{ datetime }}.tar
+      command: bzip2 {{ dir_tarball }}/solr-index.{{ datetime }}.tar
     - name: push index tarball to s3 for server_role
-      shell: aws --region={{ region }} s3 cp solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
+      shell: aws --region={{ region }} s3 cp {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
     - name: push index tarball to s3 for server_role to the latest bucket
-      shell: aws s3 cp --region={{ region }} solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
+      shell: aws s3 cp --region={{ region }} {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
 ###      s3:
 ###        bucket: solr.ucldc
@@ -49,7 +50,7 @@
     - name: remove artifacts on remote
       file:
         state: absent
-        path: /home/{{ remote_user }}/solr-index.{{ datetime }}.tar.bz2
+        path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar.bz2"
 ###    - name: email note of new index (right now only manual index overwrite)-
 ###      local_action: mail
 ###                    from="ucldc@example.edu"

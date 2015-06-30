@@ -11,7 +11,7 @@ from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 
-COUCHDB_LAST_SEQ_KEY = 'couchdb_last_seq'
+S3_BUCKET = 'solr.ucldc'
 
 COUCHDOC_TO_SOLR_MAPPING = {
     'id'       : lambda d: {'id': d['_id']},
@@ -19,19 +19,34 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
+def date_map(d):
+    date_source = d.get('date', None)
+    dates = []
+    if date_source:
+        if isinstance(date_source, dict):
+            try:
+                dates.append(date_source['displayDate'])
+            except KeyError:
+                pass
+        else: #should be list
+            dates.extend([dt['displayDate'] if isinstance(dt, dict) else dt for dt in date_source])
+    return dates
+        
+
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
     'contributor' : lambda d: {'contributor': d.get('contributor', None)},
     'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
-    'spatial'     : lambda d: {'coverage': [c['text'] if isinstance(c, dict) else c for c in d['spatial']]},
+    'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
+        and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d: {'date': [dt['displayDate'] if isinstance(dt, dict) else dt for dt in d['date']]},
+    'date'        : lambda d: {'date': date_map(d)},
     'description' : lambda d: {'description': [ds for ds in d['description']]},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
     'genre'       : lambda d: {'genre': d.get('genre', None)},
     'identifier'  : lambda d: {'identifier': d.get('identifier', None)},
-    'language'    : lambda d: {'language': [l['iso639_3'] if isinstance(l, dict) else l for l in d['language']]},
+    'language'    : lambda d: {'language': [l.get('iso639_3', l.get('name', None)) if isinstance(l, dict) else l for l in d['language']]},
     'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
     'relation'    : lambda d: {'relation': d.get('relation', None)},
     'rights'      : lambda d: {'rights': d.get('rights', None)},
@@ -52,6 +67,20 @@ COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
     'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
     'transcription'   : lambda d: {'transcription': d.get('transcription')},
 }
+
+def has_required_fields(doc):
+    '''Check the couchdb doc has required fields'''
+    if 'sourceResource' not in doc:
+        raise KeyError(
+            '+++++OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
+    if 'title' not in doc['sourceResource']:
+        raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['_id']))
+    if 'image' == doc['sourceResource'].get('type', '').lower():
+        #if doesnt have a reference_image_md5, reject
+        if 'object' not in doc:
+            raise KeyError(
+                '+++++OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
+    return True
 
 def add_slash(url):
     '''Add slash to url is it is not there.'''
@@ -198,33 +227,41 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
+        print "+++ ADDED: {} +++".format(solr_doc['id'])
     except SolrException, e:
         print("ERROR for {0} : {1}".format(solr_doc['id'], e))
         if not e.httpcode == 400:
             raise e
     return solr_doc
 
+def get_key_for_env():
+    '''Get key based on DATA_BRANCH env var'''
+    if 'DATA_BRANCH' not in os.environ:
+        raise ValueError('Please set DATA_BRANCH environment variable')
+    return ''.join(('couchdb_since/', os.environ['DATA_BRANCH']))
 
-def set_couchdb_last_seq(seq_num):
-    '''Set the value fof the last sequence from couchdb _changes api'''
-    conn = boto.connect_s3()
-    b = conn.get_bucket('ucldc')
-    k = b.get_key(COUCHDB_LAST_SEQ_KEY)
-    if not k:
-        k = Key(b)
-        k.key = COUCHDB_LAST_SEQ_KEY
-    k.set_contents_from_string(seq_num)
+class CouchdbLastSeq_S3(object):
+    '''store the last seq for only delta updates.
+    '''
+    def __init__(self):
+        #self.conn = boto.connect_s3()
+        self.conn = boto.s3.connect_to_region('us-west-2')
+        self.bucket =  self.conn.get_bucket(S3_BUCKET)
+        self.key =  self.bucket.get_key(get_key_for_env())
+        if not self.key:
+            self.key = boto.s3.key.Key(self.bucket)
+            self.key.key = get_key_for_env()
 
+    @property
+    def last_seq(self):
+        return int(self.key.get_contents_as_string())
 
-def get_couchdb_last_seq():
-    '''Return the value stored in the s3 bucket'''
-    conn = boto.connect_s3()
-    b = conn.get_bucket('ucldc')
-    k = b.get_key(COUCHDB_LAST_SEQ_KEY)
-    return int(k.get_contents_as_string())
+    @last_seq.setter
+    def last_seq(self, value):
+        '''value should be last_seq from couchdb _changes'''
+        self.key.set_contents_from_string(value) 
 
-
-def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
+def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=None):
     '''Use the _changes feed with a "since" parameter to only catch new 
     changes to docs. The _changes feed will only have the *last* event on
     a document and does not retain intermediate changes.
@@ -233,14 +270,19 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
     '''
     print('Solr update PID: {}'.format(os.getpid()))
     sys.stdout.flush() # put pd
+    db = get_couchdb(url=url_couchdb, dbname=dbname)
+    s3_seq_cache = CouchdbLastSeq_S3()
+    if all_docs:
+        since = '0'
     if not since:
-        since = get_couchdb_last_seq()
+        since = s3_seq_cache.last_seq
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
-    last_seq = int(changes['last_seq'])
+    previous_since = since
+    last_since = int(changes['last_seq']) #get new last_since for changes feed
     results = changes['results']
     n_up = n_design = n_delete = 0
     solr_db = Solr(url_solr)
@@ -257,6 +299,11 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
         else:
             doc = db.get(cur_id)
             try:
+                has_required_fields(doc)
+            except KeyError, e:
+                print(e.message)
+                continue
+            try:
                 try:
                     solr_doc = map_couch_to_solr_doc(doc)
                 except OldCollectionException:
@@ -270,9 +317,11 @@ def main(url_couchdb=None, dbname=None, url_solr=None, since=None):
         if n_up % 100 == 0:
             print "Updated {} so far".format(n_up)
     solr_db.commit() #commit updates
-    set_couchdb_last_seq(last_seq)
+    if not all_docs:
+        s3_seq_cache.last_seq = last_since
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
-    print("LAST SEQ:{0}".format(last_seq))
+    print("PREVIOUS SINCE:{0}".format(previous_since))
+    print("LAST SINCE:{0}".format(last_since))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -283,9 +332,13 @@ if __name__ == '__main__':
     parser.add_argument('url_solr', help='URL to writeable solr instance')
     parser.add_argument('--since',
             help='Since parameter for update. Defaults to value stored in S3')
+    parser.add_argument('--all_docs', action='store_true',
+            help=''.join(('Harvest all couchdb docs. Safest bet. ',
+                          'Will not set last sequence in s3')))
 
     args = parser.parse_args()
     print('Warning: this may take some time')
     main(url_couchdb=args.url_couchdb, dbname=args.dbname,
          url_solr=args.url_solr,
+         all_docs=args.all_docs,
          since=args.since)

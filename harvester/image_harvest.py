@@ -23,11 +23,12 @@ COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
-def link_is_to_image(url):
+def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
     Return True or False accordingly
     '''
-    response = requests.head(url, allow_redirects=True)
+    response = requests.head(url, allow_redirects=True,
+            auth=auth)
     if response.status_code != 200:
         return False
     content_type = response.headers.get('content-type', None)
@@ -44,19 +45,21 @@ class ImageHarvester(object):
                  couch_view=COUCHDB_VIEW,
                  bucket_base=BUCKET_BASE,
                  object_auth=None,
-                 no_get_if_object=False):
+                 get_if_object=False):
+        self._config = config()
         if cdb:
             self._couchdb = cdb
         else:
+            if not url_couchdb:
+                url_couchdb = self._config['couchdb_url']
             self._couchdb = get_couchdb(url=url_couchdb,
                                         dbname=couchdb_name)
         self._bucket_base = bucket_base
         self._view = couch_view
         # auth is a tuple of username, password
         self._auth = object_auth
-        self.no_get_if_object = no_get_if_object # if object field exists, try to get
+        self.get_if_object = get_if_object # if object field exists, try to get
         
-        self._config = config()
         self._redis = Redis(host=self._config['redis_host'],
                             port=self._config['redis_port'],
                             password=self._config['redis_password'],
@@ -89,12 +92,17 @@ class ImageHarvester(object):
             print >> sys.stderr, 'Link not http URL for {} - {}'.format(
                                       doc['_id'], url_image)
             return None
-        if link_is_to_image(url_image):
-            return md5s3stash.md5s3stash(url_image,
+        if link_is_to_image(url_image, self._auth):
+            try:
+                report = md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,
                                          url_auth=self._auth,
                                          url_cache=self._url_cache,
                                          hash_cache=self._hash_cache)
+                return report
+            except TypeError, e:
+                print >> sys.stderr, 'TypeError for doc:{} {} Msg: {} Args: {}'.format(
+                    doc['_id'], url_image, e.message, e.args)
         else:
             print >> sys.stderr, 'Not an image for {} - {}'.format(
                                       doc['_id'], url_image)
@@ -110,10 +118,9 @@ class ImageHarvester(object):
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
         report = None
-        if self.no_get_if_object:
-            if doc.get('object', None):
-                print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
-                return
+        if not self.get_if_object and doc.get('object', False):
+            print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+            return
         try:
             report = self.stash_image(doc)
             if report != None:
@@ -165,13 +172,13 @@ class ImageHarvester(object):
 def harvest_image_for_doc(doc_id,
         url_couchdb=None,
         object_auth=None,
-        no_get_if_object=False):
+        get_if_object=False):
     '''Wrapper to call from rqworker.
     Creates ImageHarvester object & then calls harvest_image_for_doc
     '''
     harvester = ImageHarvester(url_couchdb=url_couchdb,
                                object_auth=object_auth, 
-                               no_get_if_object=no_get_if_object)
+                               get_if_object=get_if_object)
     #get doc from couchdb
     couchdb = get_couchdb(url=url_couchdb)
     doc = couchdb[doc_id]
@@ -181,10 +188,10 @@ def harvest_image_for_doc(doc_id,
 def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
-         no_get_if_object=False):
-    print(ImageHarvester(url_couchdb=url_couchdb,
+         get_if_object=False):
+    ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth,
-                         no_get_if_object=no_get_if_object).by_collection(collection_key))
+                         get_if_object=get_if_object).by_collection(collection_key)
 
 if __name__ == '__main__':
     import argparse
@@ -195,7 +202,7 @@ if __name__ == '__main__':
             help='HTTP Auth needed to download images - username:password')
     parser.add_argument('--url_couchdb', nargs='?',
             help='Override url to couchdb')
-    parser.add_argument('--no_get_if_object', action='store_true',
+    parser.add_argument('--get_if_object', action='store_true',
                         default=False,
             help='Should image harvester not get image if the object field exists for the doc (default: False, always get)')
     args = parser.parse_args()
@@ -207,5 +214,5 @@ if __name__ == '__main__':
     main(args.collection_key,
          object_auth=object_auth,
          url_couchdb=args.url_couchdb,
-         no_get_if_object=args.no_get_if_object)
+         get_if_object=args.get_if_object)
 

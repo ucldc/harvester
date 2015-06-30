@@ -15,9 +15,9 @@ class CouchDBWorkerTestCase(TestCase):
     '''
     @httpretty.activate
     def setUp(self):
-        conf = config()
-        self.url_couch_base = conf['couchdb_url']
-        self.cdb = conf['couchdb_dbname']
+        self.conf = config()
+        self.url_couch_base = self.conf['couchdb_url']
+        self.cdb = self.conf['couchdb_dbname']
         url_head = os.path.join(self.url_couch_base, self.cdb)
         httpretty.register_uri(httpretty.HEAD,
                 url_head,
@@ -63,9 +63,10 @@ class CouchDBJobEnqueueTestCase(TestCase):
     @patch('harvester.post_processing.couchdb_runner.Redis', autospec=True)
     @httpretty.activate
     def setUp(self, mock_redis):
-        conf = config()
-        self.url_couch_base = conf['couchdb_url']
-        self.cdb = conf['couchdb_dbname']
+        self.conf = config()
+        self.url_couch_base = self.conf['couchdb_url']
+        self.cdb = self.conf['couchdb_dbname']
+	print "+++++++++++++confg:{0}".format(self.conf)
         url_head = os.path.join(self.url_couch_base, self.cdb)
         httpretty.register_uri(httpretty.HEAD,
                 url_head,
@@ -78,7 +79,7 @@ class CouchDBJobEnqueueTestCase(TestCase):
                 date='Mon, 24 Nov 2014 21:30:38 GMT'
                 )
 
-        self._cdbrunner = CouchDBJobEnqueue()
+        self._cdbrunner = CouchDBJobEnqueue(rq_queue='test-delete')
         def func_for_test(doc, *args, **kwargs):
             return doc, args, kwargs
         self.function = func_for_test

@@ -7,6 +7,7 @@ from rq import Queue
 
 from harvester.config import config
 from harvester.couchdb_init import get_couchdb
+from harvester.couchdb_pager import couchdb_pager
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
@@ -30,8 +31,10 @@ class CouchDBCollectionFilter(object):
         else:
             self._couchdb = couchdb_obj
         self._view = couch_view
-        self._view_iter = self._couchdb.view(self._view, include_docs='true',
-                                             key=collection_key)
+        self._view_iter = couchdb_pager(self._couchdb, self._view,
+                key=collection_key, include_docs='true')
+        #self._view_iter = self._couchdb.view(self._view, include_docs='true',
+        #                                     key=collection_key)
 
     def __iter__(self):
         return self._view_iter.__iter__()
@@ -81,14 +84,39 @@ class CouchDBJobEnqueue(object):
     Functions passed to this enqueuing object should take a CouchDB doc id
     and should do whatever work & saving it needs to do on it.
     '''
-    def __init__(self):
+    def __init__(self, rq_queue=None):
         self._config = config()
         self._couchdb = get_couchdb()
         self._redis = Redis(host=self._config['redis_host'],
                             port=self._config['redis_port'],
                             password=self._config['redis_password'],
                             socket_connect_timeout=self._config['redis_connect_timeout'])
-        self._rQ = Queue(connection=self._redis)
+        self.rqname = self._config['rq_queue']
+        if rq_queue:
+            self.rqname = rq_queue
+        if not self.rqname:
+            raise ValueError(''.join(('Must set RQ_QUEUE env var',
+                                ' or pass in rq_queue to CouchDBJobEnqueue')))
+        self._rQ = Queue(self.rqname, connection=self._redis)
+
+    def queue_list_of_ids(self, id_list, job_timeout, func,
+                         *args, **kwargs):
+        '''Enqueue jobs in the ingest infrastructure for a list of ids'''
+        results = []
+        for doc_id in id_list:
+            this_args = [doc_id]
+            if args:
+                this_args.extend(args)
+            this_args = tuple(this_args)
+            print('Enqueing doc {} args: {} kwargs:{}'.format(doc_id,
+                this_args, kwargs))
+            result = self._rQ.enqueue_call(func=func,
+                                     args=this_args,
+                                     kwargs=kwargs,
+                                     timeout=job_timeout)
+            results.append(result)
+        return results
+            
 
     def queue_collection(self, collection_key, job_timeout, func,
                          *args, **kwargs):

@@ -28,6 +28,7 @@ def delete_collection(cid):
         doc = _couchdb.get(row['id'])
         deleted.append(row['id'])
         _couchdb.delete(doc)
+        print "DELETED: {0}".format(row['id'])
         num_deleted +=1
     return num_deleted, deleted 
 
@@ -36,11 +37,13 @@ if __name__=='__main__':
         description='Delete all documents in given collection')
     parser.add_argument('collection_id',
                         help='Registry id for the collection')
+    parser.add_argument('--yes', action='store_true',
+                     help="Don't prompt for deletion, just do it")
     args = parser.parse_args(sys.argv[1:])
-    if confirm_deletion(args.collection_id):
+    if args.yes or confirm_deletion(args.collection_id):
+        print 'DELETING COLLECTION {}'.format(args.collection_id)
         num, deleted_ids = delete_collection(args.collection_id)
         print "DELTED {} DOCS".format(num)
-        print "DELETED IDS: {}".format(deleted_ids)
         print "DELTED {} DOCS".format(num)
     else:
         print "Exiting without deleting"
