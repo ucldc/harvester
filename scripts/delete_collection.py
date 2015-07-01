@@ -37,8 +37,11 @@ if __name__=='__main__':
         description='Delete all documents in given collection')
     parser.add_argument('collection_id',
                         help='Registry id for the collection')
+    parser.add_argument('--yes', action='store_true',
+                     help="Don't prompt for deletion, just do it")
     args = parser.parse_args(sys.argv[1:])
-    if confirm_deletion(args.collection_id):
+    if args.yes or confirm_deletion(args.collection_id):
+        print 'DELETING COLLECTION {}'.format(args.collection_id)
         num, deleted_ids = delete_collection(args.collection_id)
         print "DELTED {} DOCS".format(num)
         print "DELTED {} DOCS".format(num)
