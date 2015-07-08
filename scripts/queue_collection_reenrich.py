@@ -14,13 +14,18 @@ def main(args):
     parser.add_argument('collection_id',
                         help='Registry id for the collection')
     parser.add_argument('enrichment', help='File of enrichment chain to run')
+    parser.add_argument('--rq_queue',
+			help='Override queue for jobs, normal-stage is default')
 
     args = parser.parse_args(args)
     print "CID:{}".format(args.collection_id)
     print "ENRICH FILE:{}".format(args.enrichment)
     with open(args.enrichment) as enrichfoo:
         enrichments = enrichfoo.read() 
-    enq = CouchDBJobEnqueue()
+    Q = 'normal-stage'
+    if args.rq_queue:
+        Q = args.rq_queue
+    enq = CouchDBJobEnqueue(Q)
     timeout = 10000
     enq.queue_collection(args.collection_id, timeout,
                      harvester.post_processing.enrich_existing_couch_doc.main,

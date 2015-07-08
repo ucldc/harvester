@@ -44,7 +44,7 @@ setup(
         'argparse==1.2.1',
         'lxml==3.3.5',
         'requests==2.1.0',
-        'solrpy==0.9.6',
+        'solrpy>=0.9.7',
         'pilbox==1.0.3',
         'wsgiref==0.1.2',
         'Logbook==0.6.0',

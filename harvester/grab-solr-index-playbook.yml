@@ -20,16 +20,21 @@
     tasks:
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
-    - name: tar up latest solr index directoy
+    - name: create tarball target directory
       sudo: yes
+      file:
+        path: "{{ dir_tarball }}"
+        state: directory
+        mode: 0777
+    - name: tar up latest solr index directoy
       command: tar --force-local -cvf {{ dir_tarball }}/solr-index.{{ datetime }}.tar index/
       args:
         chdir: "{{ dir_solr_data }}"
-    - name: chown back to {{ remote_user }}
-      sudo: yes
-      file:
-        owner: "{{ remote_user }}"
-        path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
+#    - name: chown back to {{ remote_user }}
+#      sudo: yes
+#      file:
+#        owner: "{{ remote_user }}"
+#        path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
     - name: bzip index file
       command: bzip2 {{ dir_tarball }}/solr-index.{{ datetime }}.tar
     - name: push index tarball to s3 for server_role

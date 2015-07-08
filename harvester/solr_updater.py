@@ -10,6 +10,7 @@ import boto
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
+import datetime
 
 S3_BUCKET = 'solr.ucldc'
 
@@ -286,6 +287,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     results = changes['results']
     n_up = n_design = n_delete = 0
     solr_db = Solr(url_solr)
+    start_time = datetime.datetime.now()
     for row in results:
         cur_id = row['id']
         if '_design' in cur_id:
@@ -314,8 +316,9 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
                 print('TypeError for {0} : {1}'.format(cur_id, e))
                 continue
         n_up += 1
-        if n_up % 100 == 0:
-            print "Updated {} so far".format(n_up)
+        if n_up % 1000 == 0:
+            elapsed_time = datetime.datetime.now() - start_time
+            print "Updated {} so far in {}".format(n_up, elapsed_time)
     solr_db.commit() #commit updates
     if not all_docs:
         s3_seq_cache.last_seq = last_since

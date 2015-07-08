@@ -51,9 +51,13 @@ if __name__=='__main__':
     parser.add_argument('enrichment', help='enrichment chain to run')
     parser.add_argument('--threads', nargs='?', default=1, type=int,
             help='number of threads to run on (default:1)')
+    parser.add_argument('--rq_queue',
+			help='Override queue for jobs, normal-stage is default')
 
     args = parser.parse_args()
     print(args.collection_id_file)
-    print(args.enrichment)
-    main(args.collection_id_file, args.enrichment, args.threads)
+    print "ENRICH FILE:{}".format(args.enrichment)
+    with open(args.enrichment) as enrichfoo:
+        enrichments = enrichfoo.read() 
+    main(args.collection_id_file, enrichments, args.threads)
 
