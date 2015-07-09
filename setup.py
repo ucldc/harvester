@@ -38,6 +38,7 @@ setup(
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-1.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
+        'https://github.com/barbarahui/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester'
     ],
     install_requires=[
         'Sickle==0.3',
@@ -59,7 +60,8 @@ setup(
         'md5s3stash',
         'pymarc>=3.0',
         'facet_decade',
-        'redis_collections'
+        'redis_collections',
+        'UCLDC-Deep-Harvester'
         ],
     test_suite='test',
     tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],
