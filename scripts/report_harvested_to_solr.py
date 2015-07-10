@@ -5,10 +5,24 @@ from harvester.collection_registry_client import Collection
 import csv
 import codecs
 import cStringIO
+import datetime
+
+py_version = sys.version_info
+if py_version.major == 2 and py_version.minor == 7 and py_version.micro > 8:
+    #disable ssl verification
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
+   
+SOLR_URL = os.getenv('UCLDC_SOLR_URL',
+        'https://ucldc-solr-stage.elasticbeanstalk.com/solr/')
+
+'https://ucldc-solr-stage.elasticbeanstalk.com/solr/query?q=*:*&rows=0&facet=true&facet.field=collection_url&facet.limit=1000'
+
 class UnicodeWriter:
     """
     A CSV writer which will write rows to CSV file "f",
     which is encoded in the given encoding.
+    Needed for unicode input, sure hope they fixed this in py 3
     """
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
@@ -35,18 +49,6 @@ class UnicodeWriter:
             self.writerow(row)
 
 
-py_version = sys.version_info
-if py_version.major == 2 and py_version.minor == 7 and py_version.micro > 8:
-    #disable ssl verification
-    import ssl
-    ssl._create_default_https_context = ssl._create_unverified_context
-   
-
-SOLR_URL = os.getenv('UCLDC_SOLR_URL',
-        'https://ucldc-solr-stage.elasticbeanstalk.com/solr/')
-
-'https://ucldc-solr-stage.elasticbeanstalk.com/solr/query?q=*:*&rows=0&facet=true&facet.field=collection_url&facet.limit=1000'
-
 def get_indexed_collection_list(SOLR):
     '''Use the facet query to extract the collection urls for 
     collections in index.
@@ -60,8 +62,6 @@ def get_indexed_collection_list(SOLR):
         )
     collection_urls = query_results.facet_counts['facet_fields']['collection_url']
     return [(c_url, num) for c_url, num in collection_urls.items()]
-
-
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(
@@ -81,15 +81,17 @@ if __name__=="__main__":
             "/query"
     )
     collections = get_indexed_collection_list(SOLR)
-    with open('indexed_collections.csv', 'wb') as csvfile:
+    date_to_minute = datetime.datetime.now().strftime('%Y%m%d-%H%M')
+    fname = 'indexed_collections-{}.csv'.format(date_to_minute)
+    with open(fname, 'wb') as csvfile:
         csvwriter = UnicodeWriter(csvfile)
         csvwriter.writerow(('Collection Name', 'Collection URL',
                 'Number in index', 'Repository Name', 'Repository URL',
                 'Campus'))
         for c_url, num in collections:
             c = Collection(c_url)
-            #print c.repository[0]
             csvwriter.writerow((c['name'], c_url, str(num),
                 c.repository[0]['name'] if len(c.repository) else '',
                 c.repository[0]['resource_uri']if len(c.repository) else '',
                 c.campus[0]['name'] if len(c.campus) else ''))
+    print 'Created {}'.format(fname)
