@@ -192,12 +192,12 @@ class NuxeoFetcher(Fetcher):
         self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
         self._nx.conf['api'] = self._url
 
-        #self._children = self._nx.children(self._path)
         self._structmap_bucket = STRUCTMAP_S3_BUCKET
 
+        # get harvestable child objects
         self._dh = DeepHarvestNuxeo(self._path, '', conf=conf_pynux)
         self._dh.nx.conf['api'] = self._url
-        self._children = self._dh.fetch_objects()
+        self._children = iter(self._dh.fetch_objects())
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
