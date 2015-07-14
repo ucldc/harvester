@@ -30,6 +30,7 @@ import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
 import boto
+from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -190,9 +191,13 @@ class NuxeoFetcher(Fetcher):
         self._path = extra_data
         self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
         self._nx.conf['api'] = self._url
-        self._children = self._nx.children(self._path)
+
         self._structmap_bucket = STRUCTMAP_S3_BUCKET
-        # TODO: create media.json files and stash jp2000 where applicable for collection if they don't already exist
+
+        # get harvestable child objects
+        self._dh = DeepHarvestNuxeo(self._path, '', conf=conf_pynux)
+        self._dh.nx.conf['api'] = self._url
+        self._children = iter(self._dh.fetch_objects())
 
     def _get_structmap_url(self, bucket, obj_key):
         '''Get structmap_url property for object'''
