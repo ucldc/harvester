@@ -8,12 +8,14 @@ import json
 import solr
 import httpretty
 from mock import patch, call
+from mock import Mock
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES, TEST_COUCH_DASHBOARD, TEST_COUCH_DB
 import harvester.fetcher as fetcher
 from harvester.collection_registry_client import Collection
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
+import pickle
 
 class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of an OAC harvest controller'''
@@ -674,18 +676,31 @@ class UCSFXMLFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(testy['metadata']['aup'], ['Whent, Peter'])
 
 
+class Bunch(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+def deepharvest_mocker(mock_deepharvest):
+    ''' mock deepharvest class '''
+    dh_instance = mock_deepharvest.return_value
+    with open(DIR_FIXTURES+'/nuxeo_doc_pickled', 'r') as f:
+        dh_instance.fetch_objects.return_value = pickle.load(f)
+    dh_instance.nx = Bunch(conf={'api' : 'testapi'})
 
 class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test Nuxeo fetching'''
     # put httppretty here, have sample outputs.
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    def testInit(self, mock_boto):
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def testInit(self, mock_deepharvest, mock_boto):
         '''Basic tdd start'''
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
+        deepharvest_mocker(mock_deepharvest)
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
         self.assertTrue(hasattr(h, '_url'))  # assert in called next repeatedly
         self.assertEqual(h.url, 'https://example.edu/api/v1/')
         self.assertTrue(hasattr(h, '_nx'))
@@ -693,15 +708,16 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, '_children'))
         self.assertTrue(hasattr(h, 'next'))
         self.assertTrue(hasattr(h, '_structmap_bucket'))
-        # TODO: verify that media.json files exist for this collection 
-
 
     @patch('boto.connect_s3', autospec=True)
-    def test_get_structmap_text(self, mock_boto):
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def test_get_structmap_text(self, mock_deepharvest, mock_boto):
         '''Mock test s3 structmap_text getting'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        deepharvest_mocker(mock_deepharvest)
         mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
         structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
 
         mock_boto.assert_called_with()
@@ -711,9 +727,11 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    def testFetch(self, mock_boto):
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def testFetch(self, mock_deepharvest, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
+        deepharvest_mocker(mock_deepharvest)
         mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -730,10 +748,11 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
         docs = []
         for d in h:
             docs.append(d)
-        self.assertEqual(10, len(docs))
+        self.assertEqual(3, len(docs))
         self.assertIn('picture:views', docs[0]['properties'])
         self.assertIn('dc:subjects', docs[0]['properties'])
         self.assertIn('structmap_url', docs[0])
@@ -742,8 +761,10 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
  
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    def testFetch_missing_media_json(self, mock_boto):
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True) 
+    def testFetch_missing_media_json(self, mock_deepharvest, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
+        deepharvest_mocker(mock_deepharvest)
         mock_boto.return_value.get_bucket.return_value.get_key.return_value = None
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
@@ -760,16 +781,17 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
         docs = []
         for d in h:
             docs.append(d)
         self.assertEqual(docs[0]['structmap_text'], '')
         self.assertEqual(docs[1]['structmap_text'], '')
         self.assertEqual(docs[2]['structmap_text'], '')
-        self.assertEqual(len(self.test_log_handler.records), 10)
+        self.assertEqual(len(self.test_log_handler.records), 3)
         self.assertEqual(self.test_log_handler.formatted_records[1],
                 ('[ERROR] FetcherBaseClass: Media json at: '
-                  '/media_json/efd1db5c-808b-4bbe-8ef1-ab543dc68bac-media.json '
+                  '/media_json/d34ece39-a5f1-4448-b20c-1698637d4fbb-media.json '
                   'missing.'
                 )
             )
@@ -780,10 +802,12 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     Nuxeo document schema header property not set.
     '''
     @httpretty.activate
-    def testNuxeoPropHeader(self):
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def testNuxeoPropHeader(self, mock_deepharvest):
         '''Test that the Nuxeo document property header has necessary
         settings. This will test the base UCLDC schemas
         '''
+        deepharvest_mocker(mock_deepharvest)
         httpretty.register_uri(httpretty.GET,
                 'https://example.edu/api/v1/path/path-to-asset/here/@children',
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
@@ -808,6 +832,7 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 'path-to-asset/here',
                 conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'}
                 )
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
