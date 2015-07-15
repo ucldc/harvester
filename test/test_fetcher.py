@@ -700,7 +700,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
         deepharvest_mocker(mock_deepharvest)
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         self.assertTrue(hasattr(h, '_url'))  # assert in called next repeatedly
         self.assertEqual(h.url, 'https://example.edu/api/v1/')
         self.assertTrue(hasattr(h, '_nx'))
@@ -717,7 +717,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         deepharvest_mocker(mock_deepharvest)
         mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
 
         mock_boto.assert_called_with()
@@ -748,7 +748,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         docs = []
         for d in h:
             docs.append(d)
@@ -781,7 +781,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         docs = []
         for d in h:
             docs.append(d)
@@ -832,7 +832,7 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 'path-to-asset/here',
                 conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'}
                 )
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
