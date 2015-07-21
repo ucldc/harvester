@@ -151,7 +151,8 @@ def get_facet_decades(date):
     '''Return set of decade string for given date structure.
     date is a dict with a "displayDate" key.
     '''
-    facet_decades = facet_decade(date.get('displayDate', ''))
+    if isinstance(date, dict):
+        facet_decades = facet_decade(date.get('displayDate', ''))
     facet_decade_set = set() #don't repeat values
     for decade in facet_decades:
         facet_decade_set.add(decade)
@@ -185,7 +186,7 @@ def add_facet_decade(couch_doc, solr_doc):
                     facet_decades = get_facet_decades(date)
                     solr_doc['facet_decade'] = facet_decades
                 except AttributeError, e:
-                    print('Attr Error for doc:{} ERROR:{}'.format(
+                    print('Attr Error for facet_decades in doc:{} ERROR:{}'.format(
                             couch_doc['_id'],e))
         else:
             try:
