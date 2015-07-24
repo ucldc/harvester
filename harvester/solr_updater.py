@@ -19,7 +19,7 @@ S3_BUCKET = 'solr.ucldc'
 ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
 
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id'       : lambda d: {'id': d['_id']},
+    'id'       : lambda d: {'couch_id': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
@@ -277,6 +277,7 @@ def map_couch_to_solr_doc(doc):
                 raise e
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
+    solr_doc['id'] = get_solr_id(doc)
     return solr_doc
 
 
