@@ -1,0 +1,285 @@
+{
+  "@type": "ore:Aggregation",
+  "originalRecord": {
+    "unit_code_tesim": [
+      "dlp"
+    ],
+    "date_tesim": [
+      "between\n1885-1890",
+      "1885",
+      "1890",
+      "creation",
+      "w3cdtf"
+    ],
+    "object_profile_ssm": [
+      "{\"datastreams\":{\"DC\":{\"dsLabel\":null,\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+DC\",\"dsLocationType\":null,\"dsVersionID\":\"DC\",\"dsState\":\"A\",\"dsMIME\":\"application/rdf+xml\",\"dsSize\":54529,\"dsChecksumType\":\"DISABLED\",\"dsChecksum\":\"none\",\"dsCreateDate\":\"2013-09-09T21:04:57-07:00\"},\"RELS-EXT\":{\"dsLabel\":null,\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+RELS-EXT\",\"dsLocationType\":null,\"dsVersionID\":\"RELS-EXT\",\"dsState\":\"A\",\"dsMIME\":\"application/rdf+xml\",\"dsSize\":54529,\"dsChecksumType\":\"DISABLED\",\"dsChecksum\":\"none\",\"dsCreateDate\":\"2013-09-09T21:04:57-07:00\"},\"_rdf.xml\":{\"dsLabel\":\"/rdf.xml\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_rdf.xml\",\"dsLocationType\":null,\"dsVersionID\":\"_rdf.xml\",\"dsState\":\"A\"},\"_3.jpg\":{\"dsLabel\":\"/3.jpg\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_3.jpg\",\"dsLocationType\":null,\"dsVersionID\":\"_3.jpg\",\"dsState\":\"A\",\"dsCreateDate\":\"2013-05-10T05:45:14-07:00\",\"dsMIME\":\"image/jpeg\",\"dsSize\":122347,\"dsChecksumType\":\"25c3a6d4fca92bcad7dbd2558b482560495b46e7\",\"dsChecksum\":\"SHA-1\"},\"_2.jpg\":{\"dsLabel\":\"/2.jpg\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_2.jpg\",\"dsLocationType\":null,\"dsVersionID\":\"_2.jpg\",\"dsState\":\"A\",\"dsCreateDate\":\"2013-05-10T05:45:14-07:00\",\"dsMIME\":\"image/jpeg\",\"dsSize\":350485,\"dsChecksumType\":\"330285159fd6a25de1708d5b2296766b47490c23\",\"dsChecksum\":\"SHA-1\"},\"_1.tif\":{\"dsLabel\":\"/1.tif\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_1.tif\",\"dsLocationType\":null,\"dsVersionID\":\"_1.tif\",\"dsState\":\"A\",\"dsCreateDate\":\"2001-05-09T12:24:50-07:00\",\"dsMIME\":\"image/tiff\",\"dsSize\":36563820,\"dsChecksumType\":\"a10fe8a822853a636cfdcf8fa97f57404ec8c3fa\",\"dsChecksum\":\"SHA-1\"},\"_5.jpg\":{\"dsLabel\":\"/5.jpg\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_5.jpg\",\"dsLocationType\":null,\"dsVersionID\":\"_5.jpg\",\"dsState\":\"A\",\"dsCreateDate\":\"2013-05-10T05:45:14-07:00\",\"dsMIME\":\"image/jpeg\",\"dsSize\":3792,\"dsChecksumType\":\"0e5e0c351f308b789ba67dfe8106305dd37c01f5\",\"dsChecksum\":\"SHA-1\"},\"_4.jpg\":{\"dsLabel\":\"/4.jpg\",\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+_4.jpg\",\"dsLocationType\":null,\"dsVersionID\":\"_4.jpg\",\"dsState\":\"A\",\"dsCreateDate\":\"2013-05-10T05:45:14-07:00\",\"dsMIME\":\"image/jpeg\",\"dsSize\":15365,\"dsChecksumType\":\"ac2945eac3a8c3a19acb084b52d32ab2e9759975\",\"dsChecksum\":\"SHA-1\"},\"rightsMetadata\":{\"dsLabel\":null,\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+rightsMetadata\",\"dsLocationType\":null,\"dsVersionID\":\"rightsMetadata\",\"dsState\":\"A\",\"dsMIME\":\"application/rdf+xml\",\"dsSize\":54529,\"dsChecksumType\":\"DISABLED\",\"dsChecksum\":\"none\",\"dsCreateDate\":\"2013-09-09T21:04:57-07:00\"},\"damsMetadata\":{\"dsLabel\":null,\"dsFormatURI\":null,\"dsControlGroup\":\"X\",\"dsVersionable\":false,\"dsInfoType\":null,\"dsLocation\":\"bb0308012n+damsMetadata\",\"dsLocationType\":null,\"dsVersionID\":\"damsMetadata\",\"dsState\":\"A\",\"dsMIME\":\"application/rdf+xml\",\"dsSize\":54529,\"dsChecksumType\":\"DISABLED\",\"dsChecksum\":\"none\",\"dsCreateDate\":\"2013-09-09T21:04:57-07:00\"}},\"objLabel\":null,\"objOwnerId\":\"foo\",\"objModels\":[\"info:fedora/afmodel:Object\",\"info:fedora/fedora-system:FedoraObject-3.0\"],\"objCreateDate\":\"2013-06-30T21:49:07-07:00\",\"objLastModDate\":\"2013-06-30T21:49:07-07:00\",\"objDissIndexViewURL\":\"http://localhost:8080/dams/fedora/objects/bb0308012n/methods/fedora-system%3A3/viewMethodIndex\",\"objItemIndexViewURL\":\"http://localhost:8080/dams/fedora/objects/bb0308012n/methods/fedora-system%3A3/viewItemIndex\",\"objState\":\"A\"}"
+    ],
+    "discover_access_group_ssim": [
+      "public",
+      "dams-curator",
+      "dams-manager-admin"
+    ],
+    "complexSubject_tesim": [
+      "Missions--California--History",
+      "Spanish\nmission\nbuildings--California"
+    ],
+    "files_tesim": [
+      "{\"filestore\":\"localStore\",\"id\":\"1.tif\",\"quality\":\"3916x3112\",\"size\":\"36563820\",\"sourcePath\":\"/pub/data2/dams/localStore/bb/03/08/01/2n\",\"sourceFileName\":\"20775-bb0308012n-0-1.tif\",\"use\":\"image-source\",\"label\":\"\",\"dateCreated\":\"2001-05-09T12:24:50-07:00\",\"formatName\":\"TIFF\",\"mimeType\":\"image/tiff\",\"source_capture\":\"_:g70064917730860\",\"capture_source\":\"transmission\nscanner\",\"image_producer\":\"Mandeville Special Collections\nLibrary\",\"scanner_manufacturer\":\"Epson\",\"scanner_model_name\":\"Expression\n1600\",\"scanning_software\":\"Epson Twain\nPro\",\"scanning_software_version\":\"2.10E\",\"source_type\":\"albumen\nphotographs\"}",
+      "{\"filestore\":\"localStore\",\"id\":\"2.jpg\",\"quality\":\"768x610\",\"size\":\"350485\",\"sourcePath\":\"/pub/data2/dams/localStore/bb/03/08/01/2n\",\"sourceFileName\":\"20775-bb0308012n-0-2.jpg\",\"use\":\"image-service\",\"label\":\"\",\"dateCreated\":\"2013-05-10T05:45:14-0700\",\"formatName\":\"JPEG\",\"mimeType\":\"image/jpeg\"}",
+      "{\"filestore\":\"localStore\",\"id\":\"3.jpg\",\"quality\":\"450x358\",\"size\":\"122347\",\"sourcePath\":\"/pub/data2/dams/localStore/bb/03/08/01/2n\",\"sourceFileName\":\"20775-bb0308012n-0-3.jpg\",\"use\":\"image-preview\",\"label\":\"\",\"dateCreated\":\"2013-05-10T05:45:14-0700\",\"formatName\":\"JPEG\",\"mimeType\":\"image/jpeg\"}",
+      "{\"filestore\":\"localStore\",\"id\":\"4.jpg\",\"quality\":\"150x119\",\"size\":\"15365\",\"sourcePath\":\"/pub/data2/dams/localStore/bb/03/08/01/2n\",\"sourceFileName\":\"20775-bb0308012n-0-4.jpg\",\"use\":\"image-thumbnail\",\"label\":\"\",\"dateCreated\":\"2013-05-10T05:45:14-0700\",\"formatName\":\"JPEG\",\"mimeType\":\"image/jpeg\"}",
+      "{\"filestore\":\"localStore\",\"id\":\"5.jpg\",\"quality\":\"65x52\",\"size\":\"3792\",\"sourcePath\":\"/pub/data2/dams/localStore/bb/03/08/01/2n\",\"sourceFileName\":\"20775-bb0308012n-0-5.jpg\",\"use\":\"image-icon\",\"label\":\"\",\"dateCreated\":\"2013-05-10T05:45:14-0700\",\"formatName\":\"JPEG\",\"mimeType\":\"image/jpeg\"}"
+    ],
+    "rdfxml_ssi": "1885\nw3cdtf 1890 creation between 1885-1890 0 a8b6446b 2001-05-09T12:24:50-07:00\nlocalStore TIFF 5.0 4ac42ef67c1c067c25bfb34bca596ff1 image/tiff file full\n3916x3112 a10fe8a822853a636cfdcf8fa97f57404ec8c3fa 36563820\n20775-bb0308012n-0-1.tif /pub/data2/dams/localStore/bb/03/08/01/2n image-source\n0 b73340ac 2013-05-10T05:45:14-0700 localStore JPEG 1.01\n0fa54de1cd9842e10db22b83d4512c81 image/jpeg file full 768x610\n330285159fd6a25de1708d5b2296766b47490c23 350485 20775-bb0308012n-0-2.jpg\n/pub/data2/dams/localStore/bb/03/08/01/2n image-service 0 32e1a8d4\n2013-05-10T05:45:14-0700 localStore JPEG 1.01 368012ad981aae98fb7b2d8573f6c04a\nimage/jpeg file full 450x358 25c3a6d4fca92bcad7dbd2558b482560495b46e7 122347\n20775-bb0308012n-0-3.jpg /pub/data2/dams/localStore/bb/03/08/01/2n image-preview\n0 93d0a28e 2013-05-10T05:45:14-0700 localStore JPEG 1.01\n23efae09edd0a4e19f17a9ab690549f3 image/jpeg file full 150x119\nac2945eac3a8c3a19acb084b52d32ab2e9759975 15365 20775-bb0308012n-0-4.jpg\n/pub/data2/dams/localStore/bb/03/08/01/2n image-thumbnail 0 264de0eb\n2013-05-10T05:45:14-0700 localStore JPEG 1.01 ab0c86e5de4f3813bbcdd1d812bc83ec\nimage/jpeg file full 65x52 0e5e0c351f308b789ba67dfe8106305dd37c01f5 3792\n20775-bb0308012n-0-5.jpg /pub/data2/dams/localStore/bb/03/08/01/2n image-icon\nfilename identifier 6302 Mission San Carlos Mission San Carlos still image\ntransmission scanner Mandeville Special Collections Library Epson Expression\n1600 Epson Twain Pro 2.10E albumen\nphotographs",
+    "otherNote_json_tesim": [
+      "{\"id\":\"b\",\"type\":\"local\nattribution\",\"value\":\"Special Collections \\u0026 Archives, University of\nCalifornia, San Diego, La Jolla, 92093-0175\n(http://libraries.ucsd.edu/collections/sca/)\",\"displayLabel\":\"digital object\nmade available\nby\"}",
+      "{\"type\":\"identifier\",\"value\":\"6302\",\"displayLabel\":\"filename\"}"
+    ],
+    "file_4.jpg_filestore_tesim": [
+      "localStore"
+    ],
+    "collection_name_tesim": [
+      "The\nMissions of Alta\nCalifornia"
+    ],
+    "file_5.jpg_filestore_tesim": [
+      "localStore"
+    ],
+    "resource_type_tesim": [
+      "image"
+    ],
+    "file_1.tif_filestore_tesim": [
+      "localStore"
+    ],
+    "subject_tesim": [
+      "Missions--California--History",
+      "Spanish\nmission\nbuildings--California"
+    ],
+    "system_modified_dtsi": "2013-07-01T04:49:07+00:00",
+    "relationship_json_tesim": [
+      "{\"Collector\":[\"Hill,\nDorothy V.\",\"Hill, Kenneth E.\"],\"Creator\":[\"Jackson, William Henry,\n1843-1942\"]}"
+    ],
+    "file_2.jpg_filestore_tesim": [
+      "localStore"
+    ],
+    "file_3.jpg_filestore_tesim": [
+      "localStore"
+    ],
+    "object_state_ssi": "A",
+    "edit_access_group_ssim": [
+      "dams-curator",
+      "dams-manager-admin"
+    ],
+    "collections_tesim": [
+      "bb3038949s"
+    ],
+    "active_fedora_model_ssi": "DamsObject",
+    "all_fields_tesim": [
+      "Mission\nSan Carlos",
+      "between 1885-1890",
+      "1885",
+      "1890",
+      "creation",
+      "w3cdtf",
+      "Hill, Kenneth\nE.",
+      "Collector",
+      "Hill, Dorothy V.",
+      "Collector",
+      "Jackson, William Henry,\n1843-1942",
+      "Creator",
+      "Special Collections & Archives, University of California,\nSan Diego, La Jolla, 92093-0175\n(http://libraries.ucsd.edu/collections/sca/)",
+      "6302",
+      "Missions--California--History",
+      "Spanish\nmission buildings--California",
+      "Mission San Carlos",
+      "Library Digital\nCollections",
+      "dlp",
+      "The Missions of Alta\nCalifornia",
+      "image"
+    ],
+    "has_model_ssim": [
+      "info:fedora/afmodel:DamsObject"
+    ],
+    "title_tesim": [
+      "Mission\nSan\nCarlos"
+    ],
+    "thumbnail_tesim": [
+      "http://library.ucsd.edu/ark:/20775/bb0308012n/4.jpg"
+    ],
+    "title_ssi": "mission\nsan carlos",
+    "note_tesim": [
+      "Special Collections & Archives, University of\nCalifornia, San Diego, La Jolla, 92093-0175\n(http://libraries.ucsd.edu/collections/sca/)",
+      "6302"
+    ],
+    "copyright_tesim": [
+      "{\"id\":\"bb75782410\",\"status\":\"Public\nDomain\",\"jurisdiction\":\"\",\"purposeNote\":\"Use: This work is available\nfrom the UC San Diego Library. This digital copy of the work is intended to\nsupport research, teaching, and private study.\",\"note\":\"Constraint(s) on\nUse: This work may be used without prior\npermission.\",\"beginDate\":\"\",\"endDate\":\"\",\"date\":\"\"}"
+    ],
+    "id": "bb0308012n",
+    "score": 9.399254,
+    "id_t": "bb0308012n",
+    "read_access_group_ssim": [
+      "public",
+      "dams-curator",
+      "dams-manager-admin"
+    ],
+    "system_create_dtsi": "2013-07-01T04:49:07+00:00",
+    "title_json_tesim": [
+      "{\"name\":\"Mission\nSan Carlos\",\"external\":[],\"value\":\"Mission San\nCarlos\",\"nonSort\":\"\",\"partName\":\"\",\"partNumber\":\"\",\"subtitle\":\"\",\"variant\":\"\",\"translationVariant\":\"\",\"abbreviationVariant\":\"\",\"acronymVariant\":\"\",\"expansionVariant\":\"\"}"
+    ],
+    "otherNote_tesim": [
+      "Special\nCollections & Archives, University of California, San Diego, La Jolla,\n92093-0175\n(http://libraries.ucsd.edu/collections/sca/)",
+      "6302"
+    ],
+    "component_map_tesim": [
+      "{}"
+    ],
+    "timestamp": "2014-12-14T23:25:35.587000+00:00",
+    "unit_json_tesim": [
+      "{\"id\":\"bb09910635\",\"code\":\"dlp\",\"name\":\"Library\nDigital Collections\"}"
+    ],
+    "corporateName_tesim": [
+      "Mission San\nCarlos"
+    ],
+    "collection": [
+      {
+        "resource_uri": "/api/v1/collection/183/",
+        "title": "The\nMissions of Alta\nCalifornia",
+        "local_id": "missions-of-alta-california-images-from-the-series",
+        "staging_notes": "",
+        "rights_statement": "",
+        "name": "The\nMissions of Alta\nCalifornia",
+        "url_local": "http://library.ucsd.edu/dc/collection/bb3038949s",
+        "enrichments_item": "/select-id?prop=id,\n/jsonfy-prop, /dpla_mapper?mapper_type=ucsd_blacklight_dc, /strip_html,\n/set_context, /cleanup_value, /move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/capitalize_value?exclude=sourceResource%2Frelation, /enrich-subject,\n/enrich_earliest_date, /enrich_date, /enrich_date?prop=sourceResource%2Fdate,\n/enrich-type, /enrich-format,\n/copy_prop?prop=sourceResource%4Fpublisher&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&skip_if_exists=True,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/set-ucldc-dataprovider, /dedupe-sourceresource,\n/validate_mapv3",
+        "harvest_extra_data": "collections_tesim:bb3038949s",
+        "slug": "missions-of-alta-california-images-from-the-series",
+        "@id": "https://registry.cdlib.org/api/v1/collection/183/",
+        "rights_status": "X",
+        "extent": null,
+        "metadata_in_dams": false,
+        "url_oac": "",
+        "id": "183",
+        "hosted": "",
+        "ready_for_publication": false,
+        "featured": false,
+        "qa_completed": false,
+        "dcmi_type": "X",
+        "url_harvest": "http://lib-metadata.ucsd.edu/solr/blacklight/",
+        "campus": [
+          {
+            "resource_uri": "/api/v1/campus/6/",
+            "google_analytics_tracking_code": "",
+            "slug": "UCSD",
+            "@id": "https://registry.cdlib.org/api/v1/campus/6/",
+            "ark": "ark:/13030/tf5j49p47v",
+            "position": 6,
+            "name": "UC\nSan\nDiego"
+          }
+        ],
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "Images\ndocumenting the interiors and exteriors of missions in San Antonio, San Carlos,\nSan Diego, San Fernando, San Francisco, San Gabriel, San Juan, San Juan\nCapistrano, San Lus Rey, San Miguel, Santa Barbara, and Santa Ynez. The original\nalbumen photographs were taken by William Henry\nJackson.",
+        "repository": [
+          {
+            "resource_uri": "/api/v1/repository/22/",
+            "google_analytics_tracking_code": "",
+            "slug": "special-collections-and-archives",
+            "@id": "https://registry.cdlib.org/api/v1/repository/22/",
+            "ark": "ark:/13030/tf5r29p653",
+            "campus": [
+              {
+                "resource_uri": "/api/v1/campus/6/",
+                "google_analytics_tracking_code": "",
+                "slug": "UCSD",
+                "ark": "ark:/13030/tf5j49p47v",
+                "position": 6,
+                "name": "UC San\nDiego"
+              }
+            ],
+            "name": "Library, Special Collections and\nArchives"
+          }
+        ],
+        "harvest_type": "SLR"
+      }
+    ],
+    "name_tesim": [
+      "Hill,\nKenneth E.",
+      "Hill, Dorothy V.",
+      "Jackson, William Henry, 1843-1942",
+      "Mission San\nCarlos"
+    ],
+    "date_json_tesim": [
+      "{\"beginDate\":\"1885\",\"endDate\":\"1890\",\"value\":\"between\n1885-1890\",\"type\":\"creation\",\"encoding\":\"w3cdtf\"}"
+    ],
+    "collection_json_tesim": [
+      "{\"id\":\"bb3038949s\",\"name\":\"The\nMissions of Alta\nCalifornia\",\"type\":\"AssembledCollection\"}"
+    ],
+    "object_create_dtsi": "1885-01-01T00:00:00+00:00"
+  },
+  "ingestType": "item",
+  "isShownAt": "https://library.ucsd.edu/dc/object/bb0308012n",
+  "sourceResource": {
+    "subject": [
+      {
+        "name": "Missions--California--History"
+      },
+      {
+        "name": "Spanish\nmission\nbuildings--California"
+      }
+    ],
+    "type": "image",
+    "rights": [
+      "Public\nDomain",
+      "Constraint(s) on Use: This work may be used without prior\npermission.",
+      "Use: This work is available from the UC San Diego Library. This\ndigital copy of the work is intended to support research, teaching, and private\nstudy."
+    ],
+    "date": [
+      {
+        "displayDate": "between\n1885-1890",
+        "end": "1890",
+        "begin": "1885"
+      }
+    ],
+    "title": [
+      "Mission San\nCarlos"
+    ],
+    "@id": "http://ucldc.cdlib.org/api/items/5e17d851a42f2d7fcb98ab8f9a1f1c4b#sourceResource",
+    "creator": [
+      "Jackson,\nWilliam Henry, 1843-1942"
+    ],
+    "contributor": [
+      "Hill, Dorothy V",
+      "Hill, Kenneth\nE"
+    ],
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "identifier": [
+      "6302"
+    ]
+  },
+  "object_dimensions": [
+    768,
+    610
+  ],
+  "ingestDate": "2015-07-15T23:06:07.138212Z",
+  "aggregatedCHO": "#sourceResource",
+  "object": "0fa54de1cd9842e10db22b83d4512c81",
+  "_rev": "2-5bb27e975083aeabe2d0592247aa5d46",
+  "_id": "183--bb0308012n",
+  "dataProvider": "UC\nSan Diego, Library, Special Collections and\nArchives",
+  "@id": "http://ucldc.cdlib.org/api/items/5e17d851a42f2d7fcb98ab8f9a1f1c4b",
+  "id": "5e17d851a42f2d7fcb98ab8f9a1f1c4b",
+  "admin": {
+    "valid_after_enrich": true,
+    "validation_message": null
+  },
+  "isShownBy": "https://library.ucsd.edu/dc/object/bb0308012n/_2.jpg",
+  "ingestionSequence": 1,
+  "provider": {
+    "name": "UC\nSan Diego, Library, Special Collections and\nArchives",
+    "@id": "https://registry.cdlib.org/api/v1/collection/183/"
+  },
+  "@context": "http://dp.la/api/items/context"
+}

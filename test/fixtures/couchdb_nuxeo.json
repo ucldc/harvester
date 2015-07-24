@@ -1,0 +1,375 @@
+{
+  "id": "e83613900646508bdedbdf811a4a572b",
+  "ingestDate": "2015-07-16T01:19:29.011826Z",
+  "object": "35b4fc35b14c7510c12ebae46c9dd1c9",
+  "@id": "http://ucldc.cdlib.org/api/items/e83613900646508bdedbdf811a4a572b",
+  "admin": {
+    "valid_after_enrich": false,
+    "validation_message": "Additional\nproperties are not allowed (u'genre', u'alternativeTitle' were\nunexpected)"
+  },
+  "object_dimensions": [
+    993,
+    1200
+  ],
+  "@context": "http://dp.la/api/items/context",
+  "_rev": "4-49e6c344f9d6218b4ec3fcae125af7c9",
+  "_id": "26098--002c0501-26c6-4377-a0aa-5b30038c6edf",
+  "isShownBy": "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/Medium:content/",
+  "ingestionSequence": 2,
+  "isShownAt": "http://example.edu",
+  "provider": {
+    "name": "UC\nMerced, Library and Special\nCollections",
+    "@id": "https://registry.cdlib.org/api/v1/collection/26098/"
+  },
+  "sourceResource": {
+    "subject": [
+      null
+    ],
+    "type": "image",
+    "genre": [
+      "Drawing"
+    ],
+    "title": "Father (Weston), William\nAndrews",
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "rights": [
+      "copyrighted",
+      "Creative Commons\nAttribution - NonCommercial-NoDerivatives (CC BY-NC-ND\n4.0)"
+    ],
+    "description": [
+      {
+        "type": "marks",
+        "item": "\"FATHER _ WESTON\", \"Act 3\", \"Curse of the\nStarving Class\", \"New Cap\", \"Clean white shirt & old suit paints - slightly\nwrinkled\", \"Shined shoes - oxfords & socks\", \"Shaven\", \"Clean hair\"\nwritten on drawing.  Signed on back.  This is the final version of this\ndesign."
+      },
+      {
+        "type": "creationprod",
+        "item": "Director: Tony Giordano; Scene Designer: Randy\nDrake; Lighting Designer: John I Tissot; Producer: Yale Repertory Theater, New\nHaven, Connecticut"
+      },
+      {
+        "type": "venue",
+        "item": "Yale Repertory\nTheater"
+      }
+    ],
+    "language": [
+      {
+        "iso639_3": "English"
+      },
+      {
+        "iso639_3": "eng"
+      }
+    ],
+    "creator": [
+      "Dunya\nRamicova"
+    ],
+    "format": "Graphite and color pencils, and watercolor on Bristol Board\n(Vellum Finish)",
+    "alternativeTitle": [
+      "Act 3"
+    ],
+    "relation": [
+      "Curse of the Starving\nClass"
+    ],
+    "extent": "17\" x\n14\""
+  },
+  "ingestType": "item",
+  "dataProvider": "UC\nMerced, Library and Special\nCollections",
+  "originalRecord": {
+    "properties": {
+      "ucldc_schema:physlocation": null,
+      "picture:views": [
+        {
+          "filename": "Medium_ucm_dr_014_008_a.jpg",
+          "tag": "medium",
+          "width": 993,
+          "content": {
+            "digest": "35b4fc35b14c7510c12ebae46c9dd1c9",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/picture:views/0/content/Medium_ucm_dr_014_008_a.jpg",
+            "length": "192422",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Medium_ucm_dr_014_008_a.jpg"
+          },
+          "height": 1200,
+          "title": "Medium",
+          "description": "Medium\nSize"
+        },
+        {
+          "filename": "Original_ucm_dr_014_008_a.tif",
+          "tag": "original",
+          "width": 5632,
+          "content": {
+            "digest": "0a674ee9a21f49185ee359f1872dcf01",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/picture:views/1/content/Original_ucm_dr_014_008_a.tif",
+            "length": "63372054",
+            "mime-type": "image/tiff",
+            "encoding": null,
+            "name": "Original_ucm_dr_014_008_a.tif"
+          },
+          "height": 6806,
+          "title": "Original",
+          "description": null
+        },
+        {
+          "filename": "Small_ucm_dr_014_008_a.jpg",
+          "tag": "small",
+          "width": 289,
+          "content": {
+            "digest": "f3d2093162e7ac6e7c01fe92f8d0e448",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/picture:views/2/content/Small_ucm_dr_014_008_a.jpg",
+            "length": "18699",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Small_ucm_dr_014_008_a.jpg"
+          },
+          "height": 350,
+          "title": "Small",
+          "description": "Small\nSize"
+        },
+        {
+          "filename": "Thumbnail_ucm_dr_014_008_a.jpg",
+          "tag": "thumb",
+          "width": 124,
+          "content": {
+            "digest": "d3ecf5ce38417e38c090df318afc33ac",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/picture:views/3/content/Thumbnail_ucm_dr_014_008_a.jpg",
+            "length": "4654",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Thumbnail_ucm_dr_014_008_a.jpg"
+          },
+          "height": 150,
+          "title": "Thumbnail",
+          "description": "Thumbnail\nSize"
+        },
+        {
+          "filename": "OriginalJpeg_ucm_dr_014_008_a.jpg",
+          "tag": "originalJpeg",
+          "width": 5632,
+          "content": {
+            "digest": "d0f2a3f837fe5e790f7fcce1c04ca5c5",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/002c0501-26c6-4377-a0aa-5b30038c6edf/picture:views/4/content/OriginalJpeg_ucm_dr_014_008_a.jpg",
+            "length": "5975932",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "OriginalJpeg_ucm_dr_014_008_a.jpg"
+          },
+          "height": 6806,
+          "title": "OriginalJpeg",
+          "description": "Original\nPicture in JPEG\nformat"
+        }
+      ],
+      "ucldc_schema:type": "image",
+      "ucldc_schema:rightsnotice": null,
+      "picture:origin": null,
+      "dc:rights": null,
+      "picture:headline": null,
+      "dc:description": null,
+      "ucldc_schema:transcription": null,
+      "picture:typage": null,
+      "ucldc_schema:physdesc": "Graphite\nand color pencils, and watercolor on Bristol Board (Vellum\nFinish)",
+      "ucldc_schema:accessrestrict": "public",
+      "ucldc_schema:subjecttopic": [
+        {
+          "headingtype": null,
+          "heading": null,
+          "authorityid": null,
+          "source": null
+        }
+      ],
+      "dc:format": null,
+      "ucldc_schema:publisher": [],
+      "ucldc_schema:localidentifier": [],
+      "picture:credit": null,
+      "ucldc_schema:description": [
+        {
+          "type": "marks",
+          "item": "\"FATHER _\nWESTON\", \"Act 3\", \"Curse of the Starving Class\", \"New Cap\", \"Clean white\nshirt & old suit paints - slightly wrinkled\", \"Shined shoes - oxfords &\nsocks\", \"Shaven\", \"Clean hair\" written on drawing.  Signed on back.  This\nis the final version of this design."
+        },
+        {
+          "type": "creationprod",
+          "item": "Director: Tony\nGiordano; Scene Designer: Randy Drake; Lighting Designer: John I Tissot;\nProducer: Yale Repertory Theater, New Haven,\nConnecticut"
+        },
+        {
+          "type": "venue",
+          "item": "Yale Repertory\nTheater"
+        }
+      ],
+      "ucldc_schema:creator": [
+        {
+          "source": null,
+          "name": "Dunya\nRamicova",
+          "role": "persname",
+          "authorityid": null,
+          "nametype": null
+        }
+      ],
+      "dc:title": "Father\n(Weston), William\nAndrews",
+      "ucldc_schema:contributor": [],
+      "picture:genre": null,
+      "dc:subjects": [],
+      "ucldc_schema:date": [],
+      "dc:valid": null,
+      "dc:coverage": null,
+      "ucldc_schema:identifier": null,
+      "dc:language": null,
+      "picture:cropCoords": null,
+      "dc:lastContributor": "jshiroma@ucmerced.edu",
+      "dc:created": "2015-02-20T14:20:20.42Z",
+      "ucldc_schema:extent": "17\"\nx\n14\"",
+      "dc:contributors": [
+        "system",
+        "Administrator",
+        "jshiroma@ucmerced.edu"
+      ],
+      "dc:publisher": null,
+      "dc:source": null,
+      "ucldc_schema:subjectname": [],
+      "picture:language": null,
+      "picture:source": null,
+      "ucldc_schema:collection": [
+        "https://registry.cdlib.org/api/v1/collection/26098/"
+      ],
+      "ucldc_schema:campusunit": [
+        "https://registry.cdlib.org/api/v1/repository/18/"
+      ],
+      "picture:dateline": null,
+      "dc:expired": null,
+      "ucldc_schema:rightsdeterminationdate": null,
+      "picture:subheadline": null,
+      "picture:caption": null,
+      "ucldc_schema:provenance": [
+        "Gift\nof Dunya Ramicova,\n2014"
+      ],
+      "dc:nature": null,
+      "ucldc_schema:rightsstatement": "Creative Commons\nAttribution - NonCommercial-NoDerivatives (CC BY-NC-ND\n4.0)",
+      "ucldc_schema:place": [],
+      "picture:byline": null,
+      "dc:modified": "2015-05-29T18:16:51.63Z",
+      "ucldc_schema:rightsjurisdiction": null,
+      "ucldc_schema:rightsstatus": "copyrighted",
+      "picture:slugline": null,
+      "ucldc_schema:rightsnote": null,
+      "ucldc_schema:rightscontact": null,
+      "ucldc_schema:alternativetitle": [
+        "Act\n3"
+      ],
+      "ucldc_schema:rightsstartdate": null,
+      "ucldc_schema:rightsenddate": null,
+      "dc:issued": null,
+      "ucldc_schema:temporalcoverage": [],
+      "ucldc_schema:rightsholder": [],
+      "ucldc_schema:language": [
+        {
+          "language": "English",
+          "languagecode": "eng"
+        }
+      ],
+      "dc:creator": "system",
+      "ucldc_schema:formgenre": [
+        {
+          "heading": "Drawing",
+          "authorityid": null,
+          "source": null
+        }
+      ],
+      "ucldc_schema:source": null,
+      "ucldc_schema:relatedresource": [
+        "Curse\nof the Starving\nClass"
+      ]
+    },
+    "type": "SampleCustomPicture",
+    "path": "/asset-library/UCM/Ramicova/ucm_dr_014_008_a.tif",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Thumbnail",
+      "Folderish",
+      "NotCollectionMember",
+      "Orderable"
+    ],
+    "lastModified": "2015-05-29T18:16:51.63Z",
+    "structmap_url": "s3://static.ucldc.cdlib.org/media_json/002c0501-26c6-4377-a0aa-5b30038c6edf-media.json",
+    "title": "Father\n(Weston), William\nAndrews",
+    "repository": "default",
+    "uid": "002c0501-26c6-4377-a0aa-5b30038c6edf",
+    "changeToken": "1432923411638",
+    "versionLabel": "0.1+",
+    "provenance": [
+      "Gift\nof Dunya Ramicova,\n2014"
+    ],
+    "entity-type": "document",
+    "collection": [
+      {
+        "resource_uri": "/api/v1/collection/26098/",
+        "title": "Dunya\nRamicova costume design\ncollection",
+        "local_id": "dunya-ramicova-costume-design-collection",
+        "staging_notes": "Approximately\n1,000 images.  Simple\nobjects.",
+        "rights_statement": "",
+        "harvest_extra_data": "asset-library/UCM/Ramicova",
+        "harvest_type": "NUX",
+        "enrichments_item": "/select-id?prop=uid,\n/dpla_mapper?mapper_type=ucldc_nuxeo,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+        "name": "Dunya\nRamicova costume design\ncollection",
+        "slug": "dunya-ramicova-costume-design-collection",
+        "@id": "https://registry.cdlib.org/api/v1/collection/26098/",
+        "rights_status": "X",
+        "extent": null,
+        "metadata_in_dams": false,
+        "url_oac": "",
+        "campus": [
+          {
+            "resource_uri": "/api/v1/campus/4/",
+            "google_analytics_tracking_code": "",
+            "slug": "UCM",
+            "@id": "https://registry.cdlib.org/api/v1/campus/4/",
+            "ark": "ark:/13030/c8668fhk",
+            "position": 4,
+            "name": "UC\nMerced"
+          }
+        ],
+        "hosted": "Tab-delimited\nfiles",
+        "ready_for_publication": false,
+        "featured": true,
+        "qa_completed": false,
+        "dcmi_type": "X",
+        "url_harvest": "https://nuxeo.cdlib.org/Nuxeo/site/api/v1",
+        "id": "26098",
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "UC\nMerced faculty member Dunya Ramicova has designed costumes for hundreds of\nproductions of theater, opera, film, and television both in the United States\nand abroad. This collection of drawings spans the entirety of her oeuvre, and\nstands as one of the few complete collections of costume designs by a single\ndesigner held by an academic institution.",
+        "repository": [
+          {
+            "resource_uri": "/api/v1/repository/18/",
+            "google_analytics_tracking_code": "",
+            "slug": "library-and-special-collections",
+            "@id": "https://registry.cdlib.org/api/v1/repository/18/",
+            "ark": "ark:/13030/kt6n39q2pc",
+            "campus": [
+              {
+                "resource_uri": "/api/v1/campus/4/",
+                "google_analytics_tracking_code": "",
+                "slug": "UCM",
+                "ark": "ark:/13030/c8668fhk",
+                "position": 4,
+                "name": "UC\nMerced"
+              }
+            ],
+            "name": "Library and\nSpecial Collections"
+          }
+        ],
+        "url_local": ""
+      }
+    ],
+    "structmap_text": "Father\n(Weston), William\nAndrews",
+    "state": "project",
+    "isCheckedOut": true,
+    "parentRef": "afa37e7d-051f-4fbc-a5b4-e83aa6171aef",
+    "contextParameters": {}
+  }
+}
