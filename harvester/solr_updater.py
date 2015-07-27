@@ -213,6 +213,13 @@ def get_facet_decades(date):
         facet_decade_set.add(decade)
     return facet_decade_set
 
+def normalize_sort_title(sort_title):
+    sort_title = sort_title.lower()
+    words = sort_title.split()
+    if words[0] in ('the', 'a', 'an'):
+        sort_title = ''.join(words[1:])
+    #remove quotes
+    return sort_title
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
@@ -228,7 +235,8 @@ def add_sort_title(couch_doc, solr_doc):
                 sort_title = sort_obj
         else: #assume flat string
             sort_title = sort_obj
-    solr_doc['sort_title'] = sort_title
+    #strip intial articles the, a, an
+    solr_doc['sort_title'] = normalize_sort_title(sort_title)
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''

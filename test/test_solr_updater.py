@@ -10,6 +10,7 @@ from harvester.solr_updater import CouchdbLastSeq_S3
 from harvester.solr_updater import get_key_for_env
 from harvester.solr_updater import has_required_fields
 from harvester.solr_updater import get_solr_id
+from harvester.solr_updater import normalize_sort_title
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
@@ -41,7 +42,16 @@ class SolrUpdaterTestCase(TestCase):
         repo_data = ['https://registry.cdlib.org/api/v1/repository/4/::'
                      'Bancroft Library']
         self.assertEqual(sdoc['repository_data'], repo_data)
-        self.assertEqual(sdoc['sort_title'], u'Neighbor')
+        self.assertEqual(sdoc['sort_title'], u'neighbor')
+
+    def test_normalize_sort_title(self):
+        self.assertEqual(normalize_sort_title('XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('The XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX The'), 'xxxxx the')
+        self.assertEqual(normalize_sort_title('A XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX A'), 'xxxxx a')
+        self.assertEqual(normalize_sort_title('An XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX An'), 'xxxxx an')
 
     def test_map_date_not_a_list(self):
         '''Test how the mapping works when the sourceResource/date is a dict
