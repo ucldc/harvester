@@ -42,7 +42,8 @@ class SolrUpdaterTestCase(TestCase):
         repo_data = ['https://registry.cdlib.org/api/v1/repository/4/::'
                      'Bancroft Library']
         self.assertEqual(sdoc['repository_data'], repo_data)
-        self.assertEqual(sdoc['sort_title'], u'neighbor')
+        self.assertEqual(sdoc['sort_title'],
+                u'neighbor my neighbor what a happy boy')
 
     def test_normalize_sort_title(self):
         self.assertEqual(normalize_sort_title('XXXXX'), 'xxxxx')

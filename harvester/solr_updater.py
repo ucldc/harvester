@@ -220,7 +220,7 @@ def normalize_sort_title(sort_title):
     sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
     words = sort_title.split()
     if words[0] in ('the', 'a', 'an'):
-        sort_title = ''.join(words[1:])
+        sort_title = ' '.join(words[1:])
     return sort_title
 
 def add_sort_title(couch_doc, solr_doc):
@@ -237,7 +237,7 @@ def add_sort_title(couch_doc, solr_doc):
                 sort_title = sort_obj
         else: #assume flat string
             sort_title = sort_obj
-    #strip intial articles the, a, an
+    sort_title = normalize_sort_title(sort_title)
     solr_doc['sort_title'] = normalize_sort_title(sort_title)
 
 def add_facet_decade(couch_doc, solr_doc):
