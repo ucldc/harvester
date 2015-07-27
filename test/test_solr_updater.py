@@ -52,6 +52,9 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(normalize_sort_title('XXXXX A'), 'xxxxx a')
         self.assertEqual(normalize_sort_title('An XXXXX'), 'xxxxx')
         self.assertEqual(normalize_sort_title('XXXXX An'), 'xxxxx an')
+        t_punc = '"This_ Title! has .punctuation$%%%)9 09qetk: YEAH!!'
+        self.assertEqual(normalize_sort_title(t_punc),
+                        'this title has punctuation9 09qetk yeah')
 
     def test_map_date_not_a_list(self):
         '''Test how the mapping works when the sourceResource/date is a dict

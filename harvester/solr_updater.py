@@ -16,7 +16,8 @@ import datetime
 
 S3_BUCKET = 'solr.ucldc'
 
-ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
+RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
+RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
 
 COUCHDOC_TO_SOLR_MAPPING = {
     'id'       : lambda d: {'couch_id': d['_id']},
@@ -77,7 +78,7 @@ def find_ark_in_identifiers(doc):
     identifiers = doc['sourceResource'].get('identifier', None)
     if identifiers:
         for identifier in identifiers:
-            match = ARK_FINDER.search(identifier)
+            match = RE_ARK_FINDER.search(identifier)
             if match:
                 return match.group(0)
     return None
@@ -215,10 +216,11 @@ def get_facet_decades(date):
 
 def normalize_sort_title(sort_title):
     sort_title = sort_title.lower()
+    #remove punctuation
+    sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
     words = sort_title.split()
     if words[0] in ('the', 'a', 'an'):
         sort_title = ''.join(words[1:])
-    #remove quotes
     return sort_title
 
 def add_sort_title(couch_doc, solr_doc):
