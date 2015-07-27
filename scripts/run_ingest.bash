@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
+
 if [[ -n "$DEBUG" ]]; then 
   set -x
+fi
+
+usage(){
+    echo "Usage: run_ingest.bash <email> <queue> <collection_url>"
+    exit 1
+}
+
+if [ $# -ne 3 ];
+  then
+    usage
 fi
 
 set -o pipefail  # trace ERR through pipes

@@ -4,6 +4,8 @@ import os
 import sys
 import urllib
 import argparse
+import re
+import hashlib
 from collections import defaultdict
 import requests
 import boto
@@ -14,8 +16,11 @@ import datetime
 
 S3_BUCKET = 'solr.ucldc'
 
+RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
+RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
+
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id'       : lambda d: {'id': d['_id']},
+    'id'       : lambda d: {'harvest_id_ss': get_solr_id(d)},
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
@@ -68,6 +73,57 @@ COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
     'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
     'transcription'   : lambda d: {'transcription': d.get('transcription')},
 }
+
+def find_ark_in_identifiers(doc):
+    identifiers = doc['sourceResource'].get('identifier', None)
+    if identifiers:
+        for identifier in identifiers:
+            match = RE_ARK_FINDER.search(identifier)
+            if match:
+                return match.group(0)
+    return None
+
+def uuid_if_nuxeo(doc):
+    collection = doc['originalRecord']['collection'][0]
+    harvest_type = collection['harvest_type']
+    if harvest_type == 'NUX':
+        return doc['originalRecord'].get('uid', None)
+    return None
+
+def ucsd_ark(doc):
+    #is this UCSD?
+    ark = None
+    collection = doc['originalRecord']['collection'][0]
+    campus = collection['campus'][0]['@id']
+    if campus == "https://registry.cdlib.org/api/v1/campus/6/":
+        #UCSD get ark id
+        ark_frag = doc['originalRecord'].get('id', None)
+        if ark_frag:
+            ark = 'ark:/20775/' + ark_frag
+    return ark
+
+def get_solr_id(couch_doc):
+    ''' Extract a good ID to use in the solr index.
+    see : https://github.com/ucldc/ucldc-docs/wiki/pretty_id
+    arks are always pulled if found, gets first.
+    Some institutions have known ark framents, arks are constructed
+    for these.
+    Nuxeo objects retain their UUID
+    All other objects the couchdb _id is sha256sum
+    '''
+    # look in sourceResoure.identifier for an ARK if found return it
+    solr_id = find_ark_in_identifiers(couch_doc)
+    # no ARK in identifiers. See if is a nuxeo object
+    if not solr_id:
+        solr_id = uuid_if_nuxeo(couch_doc)
+    if not solr_id:
+        solr_id = ucsd_ark(couch_doc)
+    if not solr_id:
+        # no recognized special id, just has couchdb id
+        hash_id = hashlib.sha256()
+        hash_id.update(couch_doc['_id'])
+        solr_id = hash_id.hexdigest()
+    return solr_id
 
 def has_required_fields(doc):
     '''Check the couchdb doc has required fields'''
@@ -151,12 +207,21 @@ def get_facet_decades(date):
     '''Return set of decade string for given date structure.
     date is a dict with a "displayDate" key.
     '''
-    facet_decades = facet_decade(date.get('displayDate', ''))
+    if isinstance(date, dict):
+        facet_decades = facet_decade(date.get('displayDate', ''))
     facet_decade_set = set() #don't repeat values
     for decade in facet_decades:
         facet_decade_set.add(decade)
     return facet_decade_set
 
+def normalize_sort_title(sort_title):
+    sort_title = sort_title.lower()
+    #remove punctuation
+    sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
+    words = sort_title.split()
+    if words[0] in ('the', 'a', 'an'):
+        sort_title = ' '.join(words[1:])
+    return sort_title
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
@@ -172,7 +237,8 @@ def add_sort_title(couch_doc, solr_doc):
                 sort_title = sort_obj
         else: #assume flat string
             sort_title = sort_obj
-    solr_doc['sort_title'] = sort_title
+    sort_title = normalize_sort_title(sort_title)
+    solr_doc['sort_title'] = normalize_sort_title(sort_title)
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
@@ -185,7 +251,7 @@ def add_facet_decade(couch_doc, solr_doc):
                     facet_decades = get_facet_decades(date)
                     solr_doc['facet_decade'] = facet_decades
                 except AttributeError, e:
-                    print('Attr Error for doc:{} ERROR:{}'.format(
+                    print('Attr Error for facet_decades in doc:{} ERROR:{}'.format(
                             couch_doc['_id'],e))
         else:
             try:
@@ -221,6 +287,7 @@ def map_couch_to_solr_doc(doc):
                 raise e
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
+    solr_doc['id'] = get_solr_id(doc)
     return solr_doc
 
 

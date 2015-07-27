@@ -1,0 +1,736 @@
+{
+  "id": "22a5713851ea0aca428adcf3caf4970b",
+  "object": "0cd90da82819eea2df86beebd91e4354",
+  "sourceResource": {
+    "format": "46 minutes",
+    "creator": [
+      "Nguyen, Paulette"
+    ],
+    "identifier": [
+      "http://hdl.handle.net/10575/11307"
+    ],
+    "date": [
+      {
+        "displayDate": "2013-09-30",
+        "end": "2013-09-30",
+        "begin": "2013-09-30"
+      }
+    ],
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "contributor": [
+      "Vo, Tram"
+    ],
+    "description": [
+      "Ms. Paulette Nguyen is a Vietnamese refugee born 1924 in Khanh Hoa Province of Vietnam. She is currently resettled with her entire family in the United States. This interview focused on her experience during and post-Vietnam War era in Vietnam. She left Vietnam and shared her experience of her family’s quest for freedom while trying to adjust to the new environment at the time.",
+      "Recorded Digitally"
+    ],
+    "language": [
+      {
+        "name": "English",
+        "iso639_3": "eng"
+      }
+    ],
+    "rights": [
+      "copyrighted"
+    ],
+    "type": "sound",
+    "temporal": [
+      {
+        "displayDate": "1920-1929",
+        "end": "1929",
+        "begin": "1920"
+      }
+    ],
+    "title": [
+      "Oral History of Paulette Nguyen"
+    ],
+    "subject": [
+      {
+        "name": "Buddhist"
+      },
+      {
+        "name": "Communism"
+      },
+      {
+        "name": "Family"
+      },
+      {
+        "name": "Prisoner"
+      },
+      {
+        "name": "Reeducation camp"
+      },
+      {
+        "name": "Sponsors or sponsorship"
+      },
+      {
+        "name": "Vietnam War"
+      },
+      {
+        "name": "Nha Trang (Vietnam)"
+      }
+    ],
+    "collection": [
+      {
+        "resource_uri": "/api/v1/collection/36/",
+        "title": "Vietnamese American Oral History project",
+        "local_id": "vietnamese-american-oral-history-project-the-vietn",
+        "staging_notes": "",
+        "rights_statement": "",
+        "harvest_extra_data": "set=hdl_10575_1614&metadataPrefix=didl",
+        "harvest_type": "OAI",
+        "enrichments_item": "/select-id?prop=id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich_date?prop=sourceResource%2Fdate,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/copy_prop?prop=originalRecord%2Fcollection&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/uci-object-urls,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+        "name": "Vietnamese American Oral History project",
+        "slug": "vietnamese-american-oral-history-project-the-vietn",
+        "@id": "https://registry.cdlib.org/api/v1/collection/36/",
+        "rights_status": "CR",
+        "extent": null,
+        "metadata_in_dams": false,
+        "url_oac": "",
+        "campus": [
+          {
+            "resource_uri": "/api/v1/campus/3/",
+            "google_analytics_tracking_code": "",
+            "slug": "UCI",
+            "@id": "https://registry.cdlib.org/api/v1/campus/3/",
+            "ark": "ark:/13030/tf3f59p4sv",
+            "position": 2,
+            "name": "UC Irvine"
+          }
+        ],
+        "hosted": "Locally (UCISpace dspace instance), CDL (Preserved in Merritt)",
+        "ready_for_publication": false,
+        "featured": false,
+        "qa_completed": false,
+        "dcmi_type": "X",
+        "url_harvest": "http://ucispace-prod.lib.uci.edu:8080/oai/request",
+        "id": "36",
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "The Vietnamese American Oral History Project (VAOHP) at UC Irvine collects, preserves, and disseminates the life stories of Vietnamese Americans in Southern California. Along with original audio-taped life stories, the VAOHP includes Vietnamese and/or English-language transcripts of the interviews, time log summaries, and photographs of each narrator.",
+        "repository": [
+          {
+            "resource_uri": "/api/v1/repository/15/",
+            "google_analytics_tracking_code": "",
+            "slug": "southeast-asian-archive",
+            "@id": "https://registry.cdlib.org/api/v1/repository/15/",
+            "ark": "ark:/13030/tf529010fv",
+            "campus": [
+              {
+                "resource_uri": "/api/v1/campus/3/",
+                "google_analytics_tracking_code": "",
+                "slug": "UCI",
+                "ark": "ark:/13030/tf3f59p4sv",
+                "position": 2,
+                "name": "UC Irvine"
+              }
+            ],
+            "name": "Libraries, Southeast Asian Archive"
+          }
+        ],
+        "url_local": "http://ucispace.lib.uci.edu/handle/10575/1614"
+      }
+    ]
+  },
+  "admin": {
+    "valid_after_enrich": true,
+    "validation_message": null
+  },
+  "object_dimensions": [
+    1537,
+    2063
+  ],
+  "dataProvider": "UC Irvine, Libraries, Southeast Asian Archive",
+  "@id": "http://dp.la/api/items/22a5713851ea0aca428adcf3caf4970b",
+  "_rev": "2-81797434c52cc5db621110790cff448b",
+  "_id": "36--oai:ucispace-prod.lib.uci.edu:10575/11307",
+  "ingestDate": "2015-07-15T22:18:56.518445Z",
+  "isShownBy": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/9/VAOHP0053_P05.jpg",
+  "ingestionSequence": 1,
+  "isShownAt": "http://hdl.handle.net/10575/11307",
+  "provider": {
+    "name": "UC Irvine, Libraries, Southeast Asian Archive",
+    "@id": "https://registry.cdlib.org/api/v1/collection/36/"
+  },
+  "@context": {
+    "LCSH": "http://id.loc.gov/authorities/subjects",
+    "provider": "edm:provider",
+    "originalRecord": "dpla:originalRecord",
+    "edm": "http://www.europeana.eu/schemas/edm/",
+    "collection": "dpla:aggregation",
+    "dpla": "http://dp.la/terms/",
+    "object": "edm:object",
+    "name": "xsd:string",
+    "hasView": "edm:hasView",
+    "@vocab": "http://purl.org/dc/terms/",
+    "begin": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeStart"
+    },
+    "end": {
+      "@type": "xsd:date",
+      "@id": "dpla:dateRangeEnd"
+    },
+    "state": "dpla:state",
+    "aggregatedDigitalResource": "dpla:aggregatedDigitalResource",
+    "coordinates": "dpla:coordinates",
+    "isShownAt": "edm:isShownAt",
+    "stateLocatedIn": "dpla:stateLocatedIn",
+    "sourceResource": "edm:sourceResource",
+    "dataProvider": "edm:dataProvider"
+  },
+  "ingestType": "item",
+  "originalRecord": {
+    "identifier": [
+      "http://hdl.handle.net/10575/11307"
+    ],
+    "created": [
+      "2015-07-15T22:18:20Z"
+    ],
+    "Item": {
+      "@id": "uuid-deeaa2c6-7ac4-417d-a78a-8f7de053c141",
+      "text": null,
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Item": [
+        {
+          "text": null,
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Descriptor": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Statement": [
+                {
+                  "{urn:mpeg:mpeg21:2002:01-DII-NS}Identifier": [],
+                  "@{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "urn:mpeg:mpeg21:2002:01-DII-NS http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-21_schema_files/dii/dii.xsd",
+                  "text": "urn:hdl:10575/11307"
+                }
+              ],
+              "@mimeType": "application/xml; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "text": null,
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Descriptor": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Statement": [
+                {
+                  "{http://www.openarchives.org/OAI/2.0/oai_dc/}dc": [
+                    {
+                      "{http://purl.org/dc/elements/1.1/}title": [],
+                      "text": "Oral History of Paulette Nguyen"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}creator": [],
+                      "text": "Nguyen, Paulette"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Buddhist"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Communism"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Family"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Prisoner"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Reeducation camp"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Sponsors or sponsorship"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Vietnam War"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}subject": [],
+                      "text": "Nha Trang (Vietnam)"
+                    },
+                    {
+                      "text": "Ms. Paulette Nguyen is a Vietnamese refugee born 1924 in Khanh Hoa Province of Vietnam. She is currently resettled with her entire family in the United States.  This interview focused on her experience during and post-Vietnam War era in Vietnam.  She left Vietnam and shared her experience of her family’s quest for freedom while trying to adjust to the new environment at the time.",
+                      "{http://purl.org/dc/elements/1.1/}description": []
+                    },
+                    {
+                      "text": "Recorded Digitally",
+                      "{http://purl.org/dc/elements/1.1/}description": []
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}contributor": [],
+                      "text": "Vo, Tram"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}date": [],
+                      "text": "2013-09-30"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}type": [],
+                      "text": "Sound"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}format": [],
+                      "text": "46 minutes"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}identifier": [],
+                      "text": "http://hdl.handle.net/10575/11307"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}language": [],
+                      "text": "English"
+                    },
+                    {
+                      "{http://purl.org/dc/elements/1.1/}coverage": [],
+                      "text": "1920-1929"
+                    }
+                  ],
+                  "@{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd",
+                  "text": null
+                }
+              ],
+              "@mimeType": "application/xml; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/1/VAOHP0053_T01.mp3",
+              "@mimeType": "audio/mpeg"
+            }
+          ],
+          "@id": "uuid-7f8326f9-05bb-4255-8121-fabab628ca6e",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/2/VAOHP0053_F01_Eng.pdf",
+              "@mimeType": "application/pdf"
+            }
+          ],
+          "@id": "uuid-2c0e3183-916f-4896-b4d8-f9babfd500e4",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/3/VAOHP0053_N01.pdf",
+              "@mimeType": "application/pdf"
+            }
+          ],
+          "@id": "uuid-a7cea612-3a28-4efe-a83d-c5b2818fa03a",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/4/VAOHP0053_L01.pdf",
+              "@mimeType": "application/pdf"
+            }
+          ],
+          "@id": "uuid-c351fc64-d2fb-420e-b6eb-b233ea95d3eb",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/5/VAOHP0053_P01.JPG",
+              "@mimeType": "image/jpeg"
+            }
+          ],
+          "@id": "uuid-2668046e-1b61-4734-9e90-8ff88b6e2261",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/6/VAOHP0053_P02.jpg",
+              "@mimeType": "image/jpeg"
+            }
+          ],
+          "@id": "uuid-a695fd92-7751-4add-b889-dc5fb7ce7cc1",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/7/VAOHP0053_P03.jpg",
+              "@mimeType": "image/jpeg"
+            }
+          ],
+          "@id": "uuid-e6f02a94-91b8-4086-9609-917447bfbb38",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/8/VAOHP0053_P04.JPG",
+              "@mimeType": "image/jpeg"
+            }
+          ],
+          "@id": "uuid-63b7b4ac-556a-49df-b9cf-ee9cc1f76e28",
+          "text": null
+        },
+        {
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+            {
+              "text": null,
+              "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+              "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/9/VAOHP0053_P05.jpg",
+              "@mimeType": "image/jpeg"
+            }
+          ],
+          "@id": "uuid-0a3a0bec-7791-44c8-b6ab-88066dad2f7f",
+          "text": null
+        }
+      ]
+    },
+    "language": [
+      "English"
+    ],
+    "Identifier": [
+      "urn:hdl:10575/11307"
+    ],
+    "date": [
+      "2013-09-30"
+    ],
+    "coverage": [
+      "1920-1929"
+    ],
+    "title": [
+      "Oral History of Paulette Nguyen"
+    ],
+    "subject": [
+      "Buddhist",
+      "Communism",
+      "Family",
+      "Prisoner",
+      "Reeducation camp",
+      "Sponsors or sponsorship",
+      "Vietnam War",
+      "Nha Trang (Vietnam)"
+    ],
+    "id": "oai:ucispace-prod.lib.uci.edu:10575/11307",
+    "DIDLInfo": {
+      "text": null,
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo": [
+        {
+          "{http://purl.org/dc/terms/}created": [],
+          "@{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://purl.org/dc/terms/ ",
+          "text": "2015-07-15T22:18:20Z"
+        }
+      ]
+    },
+    "datestamp": "2015-07-15T11:03:53Z",
+    "Statement": {
+      "text": null,
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Statement": [
+        {
+          "{http://www.openarchives.org/OAI/2.0/oai_dc/}dc": [
+            {
+              "{http://purl.org/dc/elements/1.1/}title": [],
+              "text": "Oral History of Paulette Nguyen"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}creator": [],
+              "text": "Nguyen, Paulette"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Buddhist"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Communism"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Family"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Prisoner"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Reeducation camp"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Sponsors or sponsorship"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Vietnam War"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}subject": [],
+              "text": "Nha Trang (Vietnam)"
+            },
+            {
+              "text": "Ms. Paulette Nguyen is a Vietnamese refugee born 1924 in Khanh Hoa Province of Vietnam. She is currently resettled with her entire family in the United States.  This interview focused on her experience during and post-Vietnam War era in Vietnam.  She left Vietnam and shared her experience of her family’s quest for freedom while trying to adjust to the new environment at the time.",
+              "{http://purl.org/dc/elements/1.1/}description": []
+            },
+            {
+              "text": "Recorded Digitally",
+              "{http://purl.org/dc/elements/1.1/}description": []
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}contributor": [],
+              "text": "Vo, Tram"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}date": [],
+              "text": "2013-09-30"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}type": [],
+              "text": "Sound"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}format": [],
+              "text": "46 minutes"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}identifier": [],
+              "text": "http://hdl.handle.net/10575/11307"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}language": [],
+              "text": "English"
+            },
+            {
+              "{http://purl.org/dc/elements/1.1/}coverage": [],
+              "text": "1920-1929"
+            }
+          ],
+          "@{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd",
+          "text": null
+        }
+      ],
+      "@mimeType": "application/xml; charset=utf-8"
+    },
+    "contributor": [
+      "Vo, Tram"
+    ],
+    "creator": [
+      "Nguyen, Paulette"
+    ],
+    "Component": {
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Component": [
+        {
+          "text": null,
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+          "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/9/VAOHP0053_P05.jpg",
+          "@mimeType": "image/jpeg"
+        }
+      ],
+      "@id": "uuid-0a3a0bec-7791-44c8-b6ab-88066dad2f7f",
+      "text": null
+    },
+    "type": [
+      "Sound"
+    ],
+    "Resource": {
+      "text": null,
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Resource": [],
+      "@ref": "http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/11307/9/VAOHP0053_P05.jpg",
+      "@mimeType": "image/jpeg"
+    },
+    "description": [
+      "Ms. Paulette Nguyen is a Vietnamese refugee born 1924 in Khanh Hoa Province of Vietnam. She is currently resettled with her entire family in the United States.  This interview focused on her experience during and post-Vietnam War era in Vietnam.  She left Vietnam and shared her experience of her family’s quest for freedom while trying to adjust to the new environment at the time.",
+      "Recorded Digitally"
+    ],
+    "format": [
+      "46 minutes"
+    ],
+    "dc": [
+      null
+    ],
+    "collection": [
+      {
+        "resource_uri": "/api/v1/collection/36/",
+        "title": "Vietnamese American Oral History project",
+        "local_id": "vietnamese-american-oral-history-project-the-vietn",
+        "staging_notes": "",
+        "rights_statement": "",
+        "harvest_extra_data": "set=hdl_10575_1614&metadataPrefix=didl",
+        "harvest_type": "OAI",
+        "enrichments_item": "/select-id?prop=id,\n/oai-to-dpla,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich_date?prop=sourceResource%2Fdate,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/copy_prop?prop=originalRecord%2Fcollection&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/uci-object-urls,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+        "name": "Vietnamese American Oral History project",
+        "slug": "vietnamese-american-oral-history-project-the-vietn",
+        "@id": "https://registry.cdlib.org/api/v1/collection/36/",
+        "rights_status": "CR",
+        "extent": null,
+        "metadata_in_dams": false,
+        "url_oac": "",
+        "campus": [
+          {
+            "resource_uri": "/api/v1/campus/3/",
+            "google_analytics_tracking_code": "",
+            "slug": "UCI",
+            "@id": "https://registry.cdlib.org/api/v1/campus/3/",
+            "ark": "ark:/13030/tf3f59p4sv",
+            "position": 2,
+            "name": "UC Irvine"
+          }
+        ],
+        "hosted": "Locally (UCISpace dspace instance), CDL (Preserved in Merritt)",
+        "ready_for_publication": false,
+        "featured": false,
+        "qa_completed": false,
+        "dcmi_type": "X",
+        "url_harvest": "http://ucispace-prod.lib.uci.edu:8080/oai/request",
+        "id": "36",
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "The Vietnamese American Oral History Project (VAOHP) at UC Irvine collects, preserves, and disseminates the life stories of Vietnamese Americans in Southern California. Along with original audio-taped life stories, the VAOHP includes Vietnamese and/or English-language transcripts of the interviews, time log summaries, and photographs of each narrator.",
+        "repository": [
+          {
+            "resource_uri": "/api/v1/repository/15/",
+            "google_analytics_tracking_code": "",
+            "slug": "southeast-asian-archive",
+            "@id": "https://registry.cdlib.org/api/v1/repository/15/",
+            "ark": "ark:/13030/tf529010fv",
+            "campus": [
+              {
+                "resource_uri": "/api/v1/campus/3/",
+                "google_analytics_tracking_code": "",
+                "slug": "UCI",
+                "ark": "ark:/13030/tf3f59p4sv",
+                "position": 2,
+                "name": "UC Irvine"
+              }
+            ],
+            "name": "Libraries, Southeast Asian Archive"
+          }
+        ],
+        "url_local": "http://ucispace.lib.uci.edu/handle/10575/1614"
+      }
+    ],
+    "Descriptor": {
+      "text": null,
+      "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Descriptor": [
+        {
+          "text": null,
+          "{urn:mpeg:mpeg21:2002:02-DIDL-NS}Statement": [
+            {
+              "{http://www.openarchives.org/OAI/2.0/oai_dc/}dc": [
+                {
+                  "{http://purl.org/dc/elements/1.1/}title": [],
+                  "text": "Oral History of Paulette Nguyen"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}creator": [],
+                  "text": "Nguyen, Paulette"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Buddhist"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Communism"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Family"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Prisoner"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Reeducation camp"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Sponsors or sponsorship"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Vietnam War"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}subject": [],
+                  "text": "Nha Trang (Vietnam)"
+                },
+                {
+                  "text": "Ms. Paulette Nguyen is a Vietnamese refugee born 1924 in Khanh Hoa Province of Vietnam. She is currently resettled with her entire family in the United States.  This interview focused on her experience during and post-Vietnam War era in Vietnam.  She left Vietnam and shared her experience of her family’s quest for freedom while trying to adjust to the new environment at the time.",
+                  "{http://purl.org/dc/elements/1.1/}description": []
+                },
+                {
+                  "text": "Recorded Digitally",
+                  "{http://purl.org/dc/elements/1.1/}description": []
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}contributor": [],
+                  "text": "Vo, Tram"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}date": [],
+                  "text": "2013-09-30"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}type": [],
+                  "text": "Sound"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}format": [],
+                  "text": "46 minutes"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}identifier": [],
+                  "text": "http://hdl.handle.net/10575/11307"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}language": [],
+                  "text": "English"
+                },
+                {
+                  "{http://purl.org/dc/elements/1.1/}coverage": [],
+                  "text": "1920-1929"
+                }
+              ],
+              "@{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd",
+              "text": null
+            }
+          ],
+          "@mimeType": "application/xml; charset=utf-8"
+        }
+      ]
+    }
+  }
+}

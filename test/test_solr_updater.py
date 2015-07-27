@@ -9,6 +9,8 @@ from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
 from harvester.solr_updater import get_key_for_env
 from harvester.solr_updater import has_required_fields
+from harvester.solr_updater import get_solr_id
+from harvester.solr_updater import normalize_sort_title
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
@@ -40,7 +42,20 @@ class SolrUpdaterTestCase(TestCase):
         repo_data = ['https://registry.cdlib.org/api/v1/repository/4/::'
                      'Bancroft Library']
         self.assertEqual(sdoc['repository_data'], repo_data)
-        self.assertEqual(sdoc['sort_title'], u'Neighbor')
+        self.assertEqual(sdoc['sort_title'],
+                u'neighbor my neighbor what a happy boy')
+
+    def test_normalize_sort_title(self):
+        self.assertEqual(normalize_sort_title('XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('The XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX The'), 'xxxxx the')
+        self.assertEqual(normalize_sort_title('A XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX A'), 'xxxxx a')
+        self.assertEqual(normalize_sort_title('An XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_title('XXXXX An'), 'xxxxx an')
+        t_punc = '"This_ Title! has .punctuation$%%%)9 09qetk: YEAH!!'
+        self.assertEqual(normalize_sort_title(t_punc),
+                        'this title has punctuation9 09qetk yeah')
 
     def test_map_date_not_a_list(self):
         '''Test how the mapping works when the sourceResource/date is a dict
@@ -56,8 +71,8 @@ class SolrUpdaterTestCase(TestCase):
         '''
         doc = json.load(open(DIR_FIXTURES+'/nuxeo_couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['id'], doc['_id'])
-        self.assertEqual(sdoc['id'], '2--01db4725-3676-4c47-9bef-d93bc084827a')
+        self.assertEqual(sdoc['id'], '01db4725-3676-4c47-9bef-d93bc084827a')
+        self.assertEqual(sdoc['harvest_id_ss'], '01db4725-3676-4c47-9bef-d93bc084827a')
         self.assertEqual(sdoc['title'], 'Gold Coast.  Chicago, Illinois, 1940')
         self.assertEqual(sdoc['alternative_title'], ['test alt title'])
         self.assertEqual(sdoc['contributor'], ['contributor1', 'contributor2'])
@@ -93,8 +108,8 @@ class SolrUpdaterTestCase(TestCase):
         '''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['id'], doc['_id'])
-        self.assertEqual(sdoc['id'], '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['harvest_id_ss'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('campus', sdoc)
         self.assertEqual(sdoc['campus_url'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
@@ -197,6 +212,27 @@ class SolrUpdaterTestCase(TestCase):
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
 
+    def test_solr_pretty_id(self):
+        '''Test the new solr id scheme on the various document types.
+        see : https://github.com/ucldc/ucldc-docs/wiki/pretty_id
+        arks are always pulled if found.
+        Some institutions have known ark framents, arks are constructed
+        for these.
+        Nuxeo objects retain their UUID
+        All other objects the harvest_id_ss _id is sha256sum
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_oac.json'))
+        sid = get_solr_id(doc)
+        self.assertEqual(sid, "ark:/13030/ft029002qb")
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_nuxeo.json'))
+        sid = get_solr_id(doc)
+        self.assertEqual(sid, "002c0501-26c6-4377-a0aa-5b30038c6edf")
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_ucsd.json'))
+        sid = get_solr_id(doc)
+        self.assertEqual(sid, "ark:/20775/bb0308012n")
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
+        sid = get_solr_id(doc)
+        self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
