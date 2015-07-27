@@ -20,7 +20,7 @@ RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
 RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
 
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id'       : lambda d: {'couch_id': d['_id']},
+    'id'       : lambda d: {'harvest_id_ss': get_solr_id(d)},
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
