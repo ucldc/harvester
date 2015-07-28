@@ -217,7 +217,7 @@ def get_facet_decades(date):
         facet_decade_set.add(decade)
     return facet_decade_set
 
-def normalize_sort_title(sort_title):
+def normalize_sort_field(sort_title):
     sort_title = sort_title.lower()
     #remove punctuation
     sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
@@ -244,7 +244,7 @@ def add_sort_title(couch_doc, solr_doc):
                 sort_title = sort_obj
         else: #assume flat string
             sort_title = sort_obj
-    sort_title = normalize_sort_title(sort_title)
+    sort_title = normalize_sort_field(sort_title)
     solr_doc['sort_title'] = sort_title
 
 def fill_in_title(couch_doc):

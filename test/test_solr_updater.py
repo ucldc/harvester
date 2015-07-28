@@ -10,7 +10,7 @@ from harvester.solr_updater import CouchdbLastSeq_S3
 from harvester.solr_updater import get_key_for_env
 from harvester.solr_updater import has_required_fields
 from harvester.solr_updater import get_solr_id
-from harvester.solr_updater import normalize_sort_title
+from harvester.solr_updater import normalize_sort_field
 from harvester import grab_solr_index
 
 class SolrUpdaterTestCase(TestCase):
@@ -45,16 +45,16 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_title'],
                 u'neighbor my neighbor what a happy boy')
 
-    def test_normalize_sort_title(self):
-        self.assertEqual(normalize_sort_title('XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('The XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX The'), 'xxxxx the')
-        self.assertEqual(normalize_sort_title('A XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX A'), 'xxxxx a')
-        self.assertEqual(normalize_sort_title('An XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX An'), 'xxxxx an')
+    def test_normalize_sort_field(self):
+        self.assertEqual(normalize_sort_field('XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('The XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX The'), 'xxxxx the')
+        self.assertEqual(normalize_sort_field('A XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX A'), 'xxxxx a')
+        self.assertEqual(normalize_sort_field('An XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX An'), 'xxxxx an')
         t_punc = '"This_ Title! has .punctuation$%%%)9 09qetk: YEAH!!'
-        self.assertEqual(normalize_sort_title(t_punc),
+        self.assertEqual(normalize_sort_field(t_punc),
                         'this title has punctuation9 09qetk yeah')
 
     def test_map_date_not_a_list(self):
