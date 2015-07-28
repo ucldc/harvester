@@ -73,7 +73,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/26098--0025ad8f-a44e-4f58-8238-c7b60b2fb850.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], '0025ad8f-a44e-4f58-8238-c7b60b2fb850')
-        self.assertEqual(sdoc['harvest_id_ss'], '0025ad8f-a44e-4f58-8238-c7b60b2fb850')
+        self.assertEqual(sdoc['harvest_id_s'], '0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['title'], ['Brag'])
         self.assertEqual(sdoc['sort_title'], 'brag')
         self.assertEqual(sdoc['alternative_title'], ['test alt title'])
@@ -106,7 +106,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
-        self.assertEqual(sdoc['harvest_id_ss'], 'ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['harvest_id_s'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('campus', sdoc)
         self.assertEqual(sdoc['campus_url'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
@@ -224,7 +224,7 @@ class SolrUpdaterTestCase(TestCase):
         Some institutions have known ark framents, arks are constructed
         for these.
         Nuxeo objects retain their UUID
-        All other objects the harvest_id_ss _id is sha256sum
+        All other objects the harvest_id_s _id is sha256sum
         '''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_oac.json'))
         sid = get_solr_id(doc)
