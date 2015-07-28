@@ -217,18 +217,18 @@ def get_facet_decades(date):
         facet_decade_set.add(decade)
     return facet_decade_set
 
-def normalize_sort_field(sort_title):
-    sort_title = sort_title.lower()
+def normalize_sort_field(sort_field, default_missing='~title unknown',
+        missing_equivalents=['title unknown']):
+    sort_field = sort_field.lower()
     #remove punctuation
-    sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
-    words = sort_title.split()
+    sort_field = RE_ALPHANUMSPACE.sub('', sort_field)
+    words = sort_field.split()
     if words:
         if words[0] in ('the', 'a', 'an'):
-            sort_title = ' '.join(words[1:])
-        #some titles are "???" see https://52.10.100.133/couchdb/_utils/document.html?ucldc/25267--http%3A%2F%2Fark.cdlib.org%2Fark%3A%2F13030%2Ftf087004dk 
-    if not sort_title or sort_title == 'title unknown':
-        sort_title = '~title unknown' #~ to sort last in asc sort
-    return sort_title
+            sort_field = ' '.join(words[1:])
+    if not sort_field or sort_field in missing_equivalents:
+        sort_field = default_missing
+    return sort_field
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
