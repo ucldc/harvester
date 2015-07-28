@@ -133,9 +133,12 @@ def has_required_fields(doc):
     if 'title' not in doc['sourceResource']:
         raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['_id']))
     if 'image' == doc['sourceResource'].get('type', '').lower():
-        #if doesnt have a reference_image_md5, reject
-        if 'object' not in doc:
-            raise KeyError(
+        collection = doc.get('originalRecord', {}).get(
+                'collection', [{'harvest_type':'NONE'}])[0]
+        if collection['harvest_type'] != 'NUX':
+            #if doesnt have a reference_image_md5, reject
+            if 'object' not in doc:
+                raise KeyError(
                 '+++++OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
     return True
 
