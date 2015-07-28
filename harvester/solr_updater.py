@@ -222,11 +222,9 @@ def normalize_sort_title(sort_title):
     if words:
         if words[0] in ('the', 'a', 'an'):
             sort_title = ' '.join(words[1:])
-    else:
         #some titles are "???" see https://52.10.100.133/couchdb/_utils/document.html?ucldc/25267--http%3A%2F%2Fark.cdlib.org%2Fark%3A%2F13030%2Ftf087004dk 
-        sort_title = '-title unknown'
-    if sort_title == 'title unknown':
-        sort_title = '-title unknown'
+    if not sort_title or sort_title == 'title unknown':
+        sort_title = '~title unknown' #~ to sort last in asc sort
     return sort_title
 
 def add_sort_title(couch_doc, solr_doc):

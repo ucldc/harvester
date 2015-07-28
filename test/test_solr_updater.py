@@ -157,7 +157,7 @@ class SolrUpdaterTestCase(TestCase):
         doc['sourceResource']['title'] = ['????$$%(@*#_!']
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], u'0025ad8f-a44e-4f58-8238-c7b60b2fb850')
-        self.assertEqual(sdoc['sort_title'], '-title unknown')
+        self.assertEqual(sdoc['sort_title'], '~title unknown')
 
     def test_decade_facet(self):
         '''Test generation of decade facet
