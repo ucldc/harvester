@@ -26,6 +26,7 @@ COUCHDOC_TO_SOLR_MAPPING = {
 }
 
 def date_map(d):
+    date_map = {}
     date_source = d.get('date', None)
     dates = []
     if date_source:
@@ -36,7 +37,8 @@ def date_map(d):
                 pass
         else: #should be list
             dates.extend([dt['displayDate'] if isinstance(dt, dict) else dt for dt in date_source])
-    return dates
+    date_map['date'] = dates
+    return date_map
         
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
@@ -46,7 +48,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
         and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d: {'date': date_map(d)},
+    'date'        : lambda d:  date_map(d),
     'description' : lambda d: {'description': [ds for ds in d['description']]},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
