@@ -13,6 +13,7 @@ from harvester.solr_updater import has_required_fields
 from harvester.solr_updater import get_solr_id
 from harvester.solr_updater import normalize_sort_field
 from harvester.solr_updater import get_sort_collection_data_string
+from harvester.solr_updater import map_registry_data
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -170,6 +171,14 @@ class SolrUpdaterTestCase(TestCase):
                 ':'.join(("uchida yoshiko photograph collection",
                   "Uchida (Yoshiko) photograph collection",
                   "https://registry.cdlib.org/api/v1/collection/23066/")))
+
+    def test_map_registry_data(self):
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        collections = doc['originalRecord']['collection']
+        reg_data = map_registry_data(collections)
+        print reg_data
+        self.assertEqual(reg_data['sort_collection_data'],
+                [u'uchida yoshiko photograph collection:Uchida (Yoshiko) photograph collection:https://registry.cdlib.org/api/v1/collection/23066/'])
 
     def test_decade_facet(self):
         '''Test generation of decade facet

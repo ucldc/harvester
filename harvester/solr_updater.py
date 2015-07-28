@@ -155,6 +155,7 @@ def map_registry_data(collections):
     collection_urls = []
     collection_names = []
     collection_datas = []
+    collection_sort_datas = []
     repository_urls = []
     repository_names = []
     repository_datas = []
@@ -164,6 +165,7 @@ def map_registry_data(collections):
         collection_names.append(collection['name'])
         collection_datas.append('::'.join((add_slash(collection['@id']),
             collection['name'])))
+        collection_sort_datas.append(get_sort_collection_data_string(collection))
         if 'campus' in collection:
             campus_urls = []
             campus_names = []
@@ -191,6 +193,7 @@ def map_registry_data(collections):
     return dict(collection_url = collection_urls,
                 collection_name = collection_names,
                 collection_data = collection_datas,
+                sort_collection_data = collection_sort_datas,
                 repository_url = repository_urls,
                 repository_name = repository_names,
                 repository_data = repository_datas,
