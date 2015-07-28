@@ -230,6 +230,18 @@ def normalize_sort_field(sort_field, default_missing='~title unknown',
         sort_field = default_missing
     return sort_field
 
+def get_sort_collection_data_string(collection):
+    '''Return the string form of the collection data.
+    sort_collection_data ->
+    [sort_collection_name::collection_name::collection_url, <>,<>]
+    '''
+    sort_name = normalize_sort_field(collection['name'], 
+            missing_equivalents=[])
+    sort_string = ':'.join((sort_name,
+                            collection['name'],
+                            collection['@id']))
+    return sort_string
+
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
     sort_title = couch_doc['sourceResource']['title'][0]

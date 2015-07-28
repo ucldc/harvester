@@ -3,6 +3,7 @@ from unittest import TestCase
 import json
 from mock import patch
 from test.utils import DIR_FIXTURES
+from harvester import grab_solr_index
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
@@ -11,7 +12,7 @@ from harvester.solr_updater import get_key_for_env
 from harvester.solr_updater import has_required_fields
 from harvester.solr_updater import get_solr_id
 from harvester.solr_updater import normalize_sort_field
-from harvester import grab_solr_index
+from harvester.solr_updater import get_sort_collection_data_string
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -158,6 +159,17 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], u'0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['sort_title'], '~title unknown')
+
+    def test_sort_collection_data_string(self):
+        '''
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        collection = doc['originalRecord']['collection'][0]
+        sort_data = get_sort_collection_data_string(collection)
+        self.assertEqual(sort_data,
+                ':'.join(("uchida yoshiko photograph collection",
+                  "Uchida (Yoshiko) photograph collection",
+                  "https://registry.cdlib.org/api/v1/collection/23066/")))
 
     def test_decade_facet(self):
         '''Test generation of decade facet
