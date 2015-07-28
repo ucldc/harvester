@@ -219,8 +219,14 @@ def normalize_sort_title(sort_title):
     #remove punctuation
     sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
     words = sort_title.split()
-    if words[0] in ('the', 'a', 'an'):
-        sort_title = ' '.join(words[1:])
+    if words:
+        if words[0] in ('the', 'a', 'an'):
+            sort_title = ' '.join(words[1:])
+    else:
+        #some titles are "???" see https://52.10.100.133/couchdb/_utils/document.html?ucldc/25267--http%3A%2F%2Fark.cdlib.org%2Fark%3A%2F13030%2Ftf087004dk 
+        sort_title = '-title unknown'
+    if sort_title == 'title unknown':
+        sort_title = '-title unknown'
     return sort_title
 
 def add_sort_title(couch_doc, solr_doc):
@@ -238,7 +244,16 @@ def add_sort_title(couch_doc, solr_doc):
         else: #assume flat string
             sort_title = sort_obj
     sort_title = normalize_sort_title(sort_title)
-    solr_doc['sort_title'] = normalize_sort_title(sort_title)
+    solr_doc['sort_title'] = sort_title
+
+def fill_in_title(couch_doc):
+    '''if title has no entries, set to ['Title unknown']
+    '''
+    if not couch_doc['sourceResource'].get('title', None):
+        couch_doc['sourceResource']['title'] = ['Title unknown']
+    elif not couch_doc['sourceResource'].get('title'): # empty string?
+        couch_doc['sourceResource']['title'] = ['Title unknown']
+    return couch_doc
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
@@ -259,7 +274,6 @@ def add_facet_decade(couch_doc, solr_doc):
                 solr_doc['facet_decade'] = facet_decades
             except AttributeError, e:
                 print('Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],e))
-
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
@@ -368,6 +382,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
         else:
             doc = db.get(cur_id)
             try:
+                doc = fill_in_title(doc)
                 has_required_fields(doc)
             except KeyError, e:
                 print(e.message)
