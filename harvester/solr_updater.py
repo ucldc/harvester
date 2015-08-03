@@ -20,12 +20,13 @@ RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
 RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
 
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id'       : lambda d: {'harvest_id_ss': get_solr_id(d)},
+    'id'       : lambda d: {'harvest_id_s': get_solr_id(d)},
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
 def date_map(d):
+    date_map = {}
     date_source = d.get('date', None)
     dates = []
     if date_source:
@@ -36,7 +37,8 @@ def date_map(d):
                 pass
         else: #should be list
             dates.extend([dt['displayDate'] if isinstance(dt, dict) else dt for dt in date_source])
-    return dates
+    date_map['date'] = dates
+    return date_map
         
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
@@ -46,7 +48,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
         and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d: {'date': date_map(d)},
+    'date'        : lambda d:  date_map(d),
     'description' : lambda d: {'description': [ds for ds in d['description']]},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
@@ -109,7 +111,7 @@ def get_solr_id(couch_doc):
     Some institutions have known ark framents, arks are constructed
     for these.
     Nuxeo objects retain their UUID
-    All other objects the couchdb _id is sha256sum
+    All other objects the couchdb _id is md5 sum
     '''
     # look in sourceResoure.identifier for an ARK if found return it
     solr_id = find_ark_in_identifiers(couch_doc)
@@ -120,7 +122,7 @@ def get_solr_id(couch_doc):
         solr_id = ucsd_ark(couch_doc)
     if not solr_id:
         # no recognized special id, just has couchdb id
-        hash_id = hashlib.sha256()
+        hash_id = hashlib.md5()
         hash_id.update(couch_doc['_id'])
         solr_id = hash_id.hexdigest()
     return solr_id
@@ -133,9 +135,12 @@ def has_required_fields(doc):
     if 'title' not in doc['sourceResource']:
         raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['_id']))
     if 'image' == doc['sourceResource'].get('type', '').lower():
-        #if doesnt have a reference_image_md5, reject
-        if 'object' not in doc:
-            raise KeyError(
+        collection = doc.get('originalRecord', {}).get(
+                'collection', [{'harvest_type':'NONE'}])[0]
+        if collection['harvest_type'] != 'NUX':
+            #if doesnt have a reference_image_md5, reject
+            if 'object' not in doc:
+                raise KeyError(
                 '+++++OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
     return True
 
@@ -152,6 +157,7 @@ def map_registry_data(collections):
     collection_urls = []
     collection_names = []
     collection_datas = []
+    collection_sort_datas = []
     repository_urls = []
     repository_names = []
     repository_datas = []
@@ -161,6 +167,7 @@ def map_registry_data(collections):
         collection_names.append(collection['name'])
         collection_datas.append('::'.join((add_slash(collection['@id']),
             collection['name'])))
+        collection_sort_datas.append(get_sort_collection_data_string(collection))
         if 'campus' in collection:
             campus_urls = []
             campus_names = []
@@ -188,6 +195,7 @@ def map_registry_data(collections):
     return dict(collection_url = collection_urls,
                 collection_name = collection_names,
                 collection_data = collection_datas,
+                sort_collection_data = collection_sort_datas,
                 repository_url = repository_urls,
                 repository_name = repository_names,
                 repository_data = repository_datas,
@@ -214,14 +222,30 @@ def get_facet_decades(date):
         facet_decade_set.add(decade)
     return facet_decade_set
 
-def normalize_sort_title(sort_title):
-    sort_title = sort_title.lower()
+def normalize_sort_field(sort_field, default_missing='~title unknown',
+        missing_equivalents=['title unknown']):
+    sort_field = sort_field.lower()
     #remove punctuation
-    sort_title = RE_ALPHANUMSPACE.sub('', sort_title)
-    words = sort_title.split()
-    if words[0] in ('the', 'a', 'an'):
-        sort_title = ' '.join(words[1:])
-    return sort_title
+    sort_field = RE_ALPHANUMSPACE.sub('', sort_field)
+    words = sort_field.split()
+    if words:
+        if words[0] in ('the', 'a', 'an'):
+            sort_field = ' '.join(words[1:])
+    if not sort_field or sort_field in missing_equivalents:
+        sort_field = default_missing
+    return sort_field
+
+def get_sort_collection_data_string(collection):
+    '''Return the string form of the collection data.
+    sort_collection_data ->
+    [sort_collection_name::collection_name::collection_url, <>,<>]
+    '''
+    sort_name = normalize_sort_field(collection['name'], 
+            missing_equivalents=[])
+    sort_string = ':'.join((sort_name,
+                            collection['name'],
+                            collection['@id']))
+    return sort_string
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
@@ -237,8 +261,17 @@ def add_sort_title(couch_doc, solr_doc):
                 sort_title = sort_obj
         else: #assume flat string
             sort_title = sort_obj
-    sort_title = normalize_sort_title(sort_title)
-    solr_doc['sort_title'] = normalize_sort_title(sort_title)
+    sort_title = normalize_sort_field(sort_title)
+    solr_doc['sort_title'] = sort_title
+
+def fill_in_title(couch_doc):
+    '''if title has no entries, set to ['Title unknown']
+    '''
+    if not couch_doc['sourceResource'].get('title', None):
+        couch_doc['sourceResource']['title'] = ['Title unknown']
+    elif not couch_doc['sourceResource'].get('title'): # empty string?
+        couch_doc['sourceResource']['title'] = ['Title unknown']
+    return couch_doc
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary'''
@@ -259,7 +292,6 @@ def add_facet_decade(couch_doc, solr_doc):
                 solr_doc['facet_decade'] = facet_decades
             except AttributeError, e:
                 print('Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],e))
-
 
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
@@ -368,6 +400,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
         else:
             doc = db.get(cur_id)
             try:
+                doc = fill_in_title(doc)
                 has_required_fields(doc)
             except KeyError, e:
                 print(e.message)
