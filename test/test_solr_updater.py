@@ -245,7 +245,7 @@ class SolrUpdaterTestCase(TestCase):
         Some institutions have known ark framents, arks are constructed
         for these.
         Nuxeo objects retain their UUID
-        All other objects the harvest_id_s _id is sha256sum
+        All other objects the harvest_id_s _id is md5sum
         '''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_oac.json'))
         sid = get_solr_id(doc)
@@ -258,7 +258,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sid, "ark:/20775/bb0308012n")
         doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
         sid = get_solr_id(doc)
-        self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
+        #sha256 self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
+        self.assertEqual(sid, '22a5713851ea0aca428adcf3caf4970b')
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked

@@ -111,7 +111,7 @@ def get_solr_id(couch_doc):
     Some institutions have known ark framents, arks are constructed
     for these.
     Nuxeo objects retain their UUID
-    All other objects the couchdb _id is sha256sum
+    All other objects the couchdb _id is md5 sum
     '''
     # look in sourceResoure.identifier for an ARK if found return it
     solr_id = find_ark_in_identifiers(couch_doc)
@@ -122,7 +122,7 @@ def get_solr_id(couch_doc):
         solr_id = ucsd_ark(couch_doc)
     if not solr_id:
         # no recognized special id, just has couchdb id
-        hash_id = hashlib.sha256()
+        hash_id = hashlib.md5()
         hash_id.update(couch_doc['_id'])
         solr_id = hash_id.hexdigest()
     return solr_id
