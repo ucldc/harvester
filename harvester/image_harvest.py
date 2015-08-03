@@ -59,7 +59,6 @@ class ImageHarvester(object):
         # auth is a tuple of username, password
         self._auth = object_auth
         self.get_if_object = get_if_object # if object field exists, try to get
-        
         self._redis = Redis(host=self._config['redis_host'],
                             port=self._config['redis_port'],
                             password=self._config['redis_password'],
@@ -182,7 +181,10 @@ def harvest_image_for_doc(doc_id,
     #get doc from couchdb
     couchdb = get_couchdb(url=url_couchdb)
     doc = couchdb[doc_id]
-    harvester.harvest_image_for_doc(doc)
+    if not get_if_object and 'object' in doc:
+        print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+    else:
+        harvester.harvest_image_for_doc(doc)
 
 
 def main(collection_key=None,
