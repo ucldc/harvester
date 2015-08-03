@@ -3,6 +3,7 @@ from unittest import TestCase
 import json
 from mock import patch
 from test.utils import DIR_FIXTURES
+from harvester import grab_solr_index
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
@@ -10,8 +11,9 @@ from harvester.solr_updater import CouchdbLastSeq_S3
 from harvester.solr_updater import get_key_for_env
 from harvester.solr_updater import has_required_fields
 from harvester.solr_updater import get_solr_id
-from harvester.solr_updater import normalize_sort_title
-from harvester import grab_solr_index
+from harvester.solr_updater import normalize_sort_field
+from harvester.solr_updater import get_sort_collection_data_string
+from harvester.solr_updater import map_registry_data
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -45,16 +47,16 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_title'],
                 u'neighbor my neighbor what a happy boy')
 
-    def test_normalize_sort_title(self):
-        self.assertEqual(normalize_sort_title('XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('The XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX The'), 'xxxxx the')
-        self.assertEqual(normalize_sort_title('A XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX A'), 'xxxxx a')
-        self.assertEqual(normalize_sort_title('An XXXXX'), 'xxxxx')
-        self.assertEqual(normalize_sort_title('XXXXX An'), 'xxxxx an')
+    def test_normalize_sort_field(self):
+        self.assertEqual(normalize_sort_field('XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('The XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX The'), 'xxxxx the')
+        self.assertEqual(normalize_sort_field('A XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX A'), 'xxxxx a')
+        self.assertEqual(normalize_sort_field('An XXXXX'), 'xxxxx')
+        self.assertEqual(normalize_sort_field('XXXXX An'), 'xxxxx an')
         t_punc = '"This_ Title! has .punctuation$%%%)9 09qetk: YEAH!!'
-        self.assertEqual(normalize_sort_title(t_punc),
+        self.assertEqual(normalize_sort_field(t_punc),
                         'this title has punctuation9 09qetk yeah')
 
     def test_map_date_not_a_list(self):
@@ -159,6 +161,25 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], u'0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['sort_title'], '~title unknown')
 
+    def test_sort_collection_data_string(self):
+        '''
+        '''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        collection = doc['originalRecord']['collection'][0]
+        sort_data = get_sort_collection_data_string(collection)
+        self.assertEqual(sort_data,
+                ':'.join(("uchida yoshiko photograph collection",
+                  "Uchida (Yoshiko) photograph collection",
+                  "https://registry.cdlib.org/api/v1/collection/23066/")))
+
+    def test_map_registry_data(self):
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        collections = doc['originalRecord']['collection']
+        reg_data = map_registry_data(collections)
+        print reg_data
+        self.assertEqual(reg_data['sort_collection_data'],
+                [u'uchida yoshiko photograph collection:Uchida (Yoshiko) photograph collection:https://registry.cdlib.org/api/v1/collection/23066/'])
+
     def test_decade_facet(self):
         '''Test generation of decade facet
         Currently generated from sourceResource.date.displayDate
@@ -224,7 +245,7 @@ class SolrUpdaterTestCase(TestCase):
         Some institutions have known ark framents, arks are constructed
         for these.
         Nuxeo objects retain their UUID
-        All other objects the harvest_id_s _id is sha256sum
+        All other objects the harvest_id_s _id is md5sum
         '''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_oac.json'))
         sid = get_solr_id(doc)
@@ -237,7 +258,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sid, "ark:/20775/bb0308012n")
         doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
         sid = get_solr_id(doc)
-        self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
+        #sha256 self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
+        self.assertEqual(sid, '22a5713851ea0aca428adcf3caf4970b')
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
