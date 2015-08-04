@@ -94,9 +94,12 @@ def uuid_if_nuxeo(doc):
 
 def ucsd_ark(doc):
     #is this UCSD?
+    campus = None
     ark = None
     collection = doc['originalRecord']['collection'][0]
-    campus = collection['campus'][0]['@id']
+    campus_list = collection.get('campus', None)
+    if campus_list:
+        campus = campus_list [0]['@id']
     if campus == "https://registry.cdlib.org/api/v1/campus/6/":
         #UCSD get ark id
         ark_frag = doc['originalRecord'].get('id', None)
@@ -167,7 +170,8 @@ def map_registry_data(collections):
         collection_names.append(collection['name'])
         collection_datas.append('::'.join((add_slash(collection['@id']),
             collection['name'])))
-        collection_sort_datas.append(get_sort_collection_data_string(collection))
+        scd = get_sort_collection_data_string(collection)
+        collection_sort_datas.append(scd)
         if 'campus' in collection:
             campus_urls = []
             campus_names = []
@@ -192,23 +196,21 @@ def map_registry_data(collections):
                             repo['campus'][0]['name']))
             repo_datas.append(repo_data)
         repository_datas.extend(repo_datas)
-    return dict(collection_url = collection_urls,
+    registry_dict = dict(collection_url = collection_urls,
                 collection_name = collection_names,
                 collection_data = collection_datas,
                 sort_collection_data = collection_sort_datas,
                 repository_url = repository_urls,
                 repository_name = repository_names,
                 repository_data = repository_datas,
-                campus_url = campus_urls,
-                campus_name = campus_names,
-                campus_data = campus_datas
-                ) if campus_urls else dict(collection_url = collection_urls,
-                collection_name = collection_names,
-                collection_data = collection_datas,
-                repository_url = repository_urls,
-                repository_name = repository_names,
-                repository_data = repository_datas,
                 )
+    if campus_urls:
+        registry_dict.update({'campus_url': campus_urls,
+                'campus_name': campus_names,
+                'campus_data': campus_datas
+            }
+        )
+    return registry_dict
                                     
 
 def get_facet_decades(date):
@@ -300,7 +302,8 @@ def map_couch_to_solr_doc(doc):
     for p in doc.keys():
         if p in COUCHDOC_TO_SOLR_MAPPING:
             solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
-    solr_doc.update(map_registry_data(doc['originalRecord']['collection']))
+    reg_data_dict = map_registry_data(doc['originalRecord']['collection'])
+    solr_doc.update(reg_data_dict)
     sourceResource = doc['sourceResource']
     for p in sourceResource.keys():
         if p in COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING:
@@ -329,7 +332,7 @@ def push_doc_to_solr(solr_doc, solr_db):
         solr_db.add(solr_doc)
         print "+++ ADDED: {} +++".format(solr_doc['id'])
     except SolrException, e:
-        print("ERROR for {0} : {1}".format(solr_doc['id'], e))
+        print("ERROR for {0} : {1} {2}".format(solr_doc['id'], e, solr_doc['collection_url']))
         if not e.httpcode == 400:
             raise e
     return solr_doc
@@ -409,7 +412,7 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
                 try:
                     solr_doc = map_couch_to_solr_doc(doc)
                 except OldCollectionException:
-                    print('OLD COLLECTION FOR:{}'.format(cur_id))
+                    print('---- ERROR: OLD COLLECTION FOR:{}'.format(cur_id))
                     continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
             except TypeError, e:
