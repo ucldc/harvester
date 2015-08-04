@@ -20,7 +20,7 @@ RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
 RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
 
 COUCHDOC_TO_SOLR_MAPPING = {
-    'id'       : lambda d: {'harvest_id_s': get_solr_id(d)},
+    '_id'       : lambda d: {'harvest_id_s': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
@@ -399,9 +399,9 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
-        print "+++ ADDED: {} +++".format(solr_doc['id'])
+        print "+++ ADDED: {} +++ {}".format(solr_doc['id'], solr_doc['harvest_id_s'])
     except SolrException, e:
-        print("ERROR for {0} : {1} {2}".format(solr_doc['id'], e, solr_doc['collection_url']))
+        print "ERROR for {} : {} {} {}".format(solr_doc['id'], e, solr_doc['collection_url'], solr_doc['harvest_id_s'])
         if not e.httpcode == 400:
             raise e
     return solr_doc
@@ -466,8 +466,11 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
             print("Skip {0}".format(cur_id))
             continue
         if row.get('deleted', False):
-            print('====DELETING: {0}'.format(cur_id))
-            solr_db.delete(id=cur_id)
+            #need to get the solr doc for this couch
+            #TODO: test for this?
+            sdoc = solr_db.select(q='harvest_id_s:cur_id')
+            print('====DELETING: {0} -- {1}'.format(cur_id, sdoc['id']))
+            solr_db.delete(id=sdoc['id'])
             n_delete += 1
         else:
             doc = db.get(cur_id)
