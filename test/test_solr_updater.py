@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase
 import json
+from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
 from harvester import grab_solr_index
@@ -176,7 +177,6 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         collections = doc['originalRecord']['collection']
         reg_data = map_registry_data(collections)
-        print reg_data
         self.assertEqual(reg_data['sort_collection_data'],
                 [u'uchida yoshiko photograph collection:Uchida (Yoshiko) photograph collection:https://registry.cdlib.org/api/v1/collection/23066/'])
 
@@ -260,6 +260,26 @@ class SolrUpdaterTestCase(TestCase):
         sid = get_solr_id(doc)
         #sha256 self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
         self.assertEqual(sid, '22a5713851ea0aca428adcf3caf4970b')
+
+    def test_sort_dates(self):
+        '''test the sort_date_start/end values'''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 1, 1))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 1, 1))
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(2013, 9, 30))
+        self.assertEqual(sdoc['sort_date_end'], DT(2013, 9, 30))
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_nocampus.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertNotIn('sort_date_start', sdoc)
+        self.assertNotIn('sort_date_end', sdoc)
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_solr_date_map.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 7, 4))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 8, 3))
+
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
