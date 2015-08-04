@@ -44,11 +44,15 @@ def make_datetime(dstring):
         dt = datetime.datetime(dint, 1, 1)
     except ValueError:
         pass
+    except TypeError, e:
+        print >> sys.stderr, 'Date type err:{} {}'.format(dstring, e)
     try:
         strfmt = '%Y-%m-%d'
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
+    except TypeError, e:
+        print >> sys.stderr, 'Date type err in strptime:{} {}'.format(dstring, e)
     # add UTC as timezone, solrpy looks for tzinfo
     if dt:
         dt = datetime.datetime(dt.year, dt.month, dt.day, tzinfo=UTC)
