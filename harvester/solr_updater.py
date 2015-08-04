@@ -25,19 +25,75 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
-def date_map(d):
+def make_datetime(dstring):
+    '''make a datetime from a valid date string
+    Right now formats are YYYY or YYYY-MM-DD
+    '''
+    dt = None
+    try:
+        dint = int(dstring)
+        dt = datetime.datetime(dint, 1, 1)
+    except ValueError:
+        pass
+    try:
+        strfmt = '%Y-%m-%d'
+        dt = datetime.datetime.strptime(dstring, strfmt)
+    except ValueError:
+        pass
+    return dt
+
+def get_dates_from_date_obj(date_obj):
+    '''Return list of display date, start dates, end dates'''
+    if isinstance(date_obj, dict):
+        date_start = make_datetime(date_obj.get('begin', None))
+        date_end = make_datetime(date_obj.get('end', None))
+        dates = (date_obj.get('displayDate', None),
+                date_start,
+                date_end
+                )
+        return dates
+    elif isinstance(date_obj, basestring):
+        return date_obj, None, None
+    else:
+        return None, None, None
+
+def map_date(d):
     date_map = {}
     date_source = d.get('date', None)
     dates = []
+    start_date = end_date = None
+    dates_start = []
+    dates_end = []
+    #print >> sys.stderr, 'date_source:{}'.format(date_source)
     if date_source:
         if isinstance(date_source, dict):
             try:
-                dates.append(date_source['displayDate'])
+                displayDate, dt_start, dt_end = get_dates_from_date_obj(date_source)
+                dates.append(displayDate)
+                dates_start.append(dt_start)
+                dates_end.append(dt_end)
             except KeyError:
                 pass
         else: #should be list
-            dates.extend([dt['displayDate'] if isinstance(dt, dict) else dt for dt in date_source])
+            for dt in date_source:
+                displayDate, dt_start, dt_end = get_dates_from_date_obj(dt)
+                dates.append(displayDate)
+                dates_start.append(dt_start)
+                dates_end.append(dt_end)
+
     date_map['date'] = dates
+
+    dates_start = sorted(dates_start)
+    dates_end = sorted(dates_end)
+    start_date = dates_start[0]
+    end_date = dates_end[0]
+    # fill in start_date == end_date if only one exists
+    start_date = end_date if not start_date else start_date
+    end_date = start_date if not end_date else end_date
+    if start_date:
+        date_map['sort_date_start'] = start_date
+        date_map['sort_date_end'] = end_date
+
     return date_map
         
 
@@ -48,7 +104,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
         and 'text' in c)  else c for c in d['spatial']]},
     'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d:  date_map(d),
+    'date'        : lambda d:  map_date(d),
     'description' : lambda d: {'description': [ds for ds in d['description']]},
     'extent'      : lambda d: {'extent': d.get('extent', None)},
     'format'      : lambda d: {'format': d.get('format', None)},
@@ -300,6 +356,7 @@ def map_couch_to_solr_doc(doc):
     for p in doc.keys():
         if p in COUCHDOC_TO_SOLR_MAPPING:
             solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
+
     solr_doc.update(map_registry_data(doc['originalRecord']['collection']))
     sourceResource = doc['sourceResource']
     for p in sourceResource.keys():
