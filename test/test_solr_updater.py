@@ -15,6 +15,7 @@ from harvester.solr_updater import get_solr_id
 from harvester.solr_updater import normalize_sort_field
 from harvester.solr_updater import get_sort_collection_data_string
 from harvester.solr_updater import map_registry_data
+from harvester.solr_updater import UTC
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -265,20 +266,20 @@ class SolrUpdaterTestCase(TestCase):
         '''test the sort_date_start/end values'''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['sort_date_start'], DT(1885, 1, 1))
-        self.assertEqual(sdoc['sort_date_end'], DT(1890, 1, 1))
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 1, 1, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 1, 1, tzinfo=UTC))
         doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['sort_date_start'], DT(2013, 9, 30))
-        self.assertEqual(sdoc['sort_date_end'], DT(2013, 9, 30))
+        self.assertEqual(sdoc['sort_date_start'], DT(2013, 9, 30, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(2013, 9, 30, tzinfo=UTC))
         doc = json.load(open(DIR_FIXTURES+'/couchdb_nocampus.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertNotIn('sort_date_start', sdoc)
         self.assertNotIn('sort_date_end', sdoc)
         doc = json.load(open(DIR_FIXTURES+'/couchdb_solr_date_map.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['sort_date_start'], DT(1885, 7, 4))
-        self.assertEqual(sdoc['sort_date_end'], DT(1890, 8, 3))
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 7, 4, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 8, 3, tzinfo=UTC))
 
 
 class GrabSolrIndexTestCase(TestCase):

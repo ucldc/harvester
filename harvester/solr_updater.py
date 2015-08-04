@@ -25,6 +25,15 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
+class UTCtz(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return datetime.timedelta(hours=0)
+    def tzname(self, dt):
+        return 'GMT'
+    def dst(self, dt):
+        return timedelta(0)
+UTC = UTCtz()
+
 def make_datetime(dstring):
     '''make a datetime from a valid date string
     Right now formats are YYYY or YYYY-MM-DD
@@ -40,6 +49,9 @@ def make_datetime(dstring):
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
+    # add UTC as timezone, solrpy looks for tzinfo
+    if dt:
+        dt = datetime.datetime(dt.year, dt.month, dt.day, tzinfo=UTC)
     return dt
 
 def get_dates_from_date_obj(date_obj):
@@ -91,6 +103,7 @@ def map_date(d):
     start_date = end_date if not start_date else start_date
     end_date = start_date if not end_date else end_date
     if start_date:
+        #add timezone as UTC, for solrpy (uses astimzone())
         date_map['sort_date_start'] = start_date
         date_map['sort_date_end'] = end_date
 
