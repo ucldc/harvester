@@ -87,38 +87,30 @@ def dejson(field, data):
     '''de-jsonfy the data.
     For valid json strings, unpack in sensible way?
     '''
-    print "{} data type:{}".format(field, type(data))
-    dejson_data = None
-    if not data:
-        return data
+    print "INCOMING DATA:{}".format(data)
+    dejson_data = data
+    if not dejson_data:
+        return dejson_data
     if isinstance(data, list):
         dejson_data = []
         for d in data:
              flatdata = unpack_if_json(field, d)
              if flatdata:
                  dejson_data.append(flatdata)
-                 json_str = unicode(json.dumps(j))
-            if not isinstance(d, unicode):
-                d = unicode(d, 'utf-8')
-            print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, d.encode( 'utf-8'))
+             else:
+                 dejson_data.append(d)
     elif isinstance(data, dict):
+        #already parsed json?
         print u"DICTIONARY DATA FIELD:{} DATA:{}".format(field, data) 
+        flatdata = data.get('item', None)
+        if flatdata:
+            dejson_data = flatdata
     else:
-        j = getjobj(data)
-        json_str = ''
-        if j:
-            json_str = unicode(json.dumps(j))
-        udata = data
-        if not isinstance(data, unicode):
-            udata = unicode(data, 'utf-8')
-        try:
-            print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str.encode('utf-8'), udata.encode('utf-8'))
-        except UnicodeEncodeError:
-            try:
-                print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, data.encode('latin-1'))
-            except UnicodeEncodeError:
-                print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, data)
-    return data
+        flatdata = unpack_if_json(field, data)
+        if flatdata:
+            dejson_data = flatdata
+    print "DEJSON DATA:{}".format(dejson_data)
+    return dejson_data
 
 class UTCtz(datetime.tzinfo):
     def utcoffset(self, dt):
