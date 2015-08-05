@@ -6,6 +6,7 @@ import urllib
 import argparse
 import re
 import hashlib
+import json
 from collections import defaultdict
 import requests
 import boto
@@ -14,6 +15,9 @@ from harvester.couchdb_init import get_couchdb
 from facet_decade import facet_decade
 import datetime
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+ 
 S3_BUCKET = 'solr.ucldc'
 
 RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
@@ -24,6 +28,97 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'object'   : lambda d: {'reference_image_md5': d['object']},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
+
+COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
+    'alternativeTitle'   : lambda d: {'alternative_title': dejson('alternativeTile', d.get('alternativeTitle', None))},
+    'contributor' : lambda d: {'contributor': dejson('contributor', d.get('contributor', None))},
+    'coverage'    : lambda d: {'coverage': dejson('coverage', d.get('coverage', None))},
+    'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
+        and 'text' in c)  else dejson('coverage', c) for c in d['spatial']]},
+    'creator'     : lambda d: {'creator': dejson('creator', d.get('creator', None))},
+    'date'        : lambda d:  map_date(d),
+    'description' : lambda d: {'description': [dejson('description', ds) for ds in d['description']]},
+    'extent'      : lambda d: {'extent': dejson('extent', d.get('extent', None))},
+    'format'      : lambda d: {'format': dejson('format', d.get('format', None))},
+    'genre'       : lambda d: {'genre': dejson('genre', d.get('genre', None))},
+    'identifier'  : lambda d: {'identifier': dejson('identifier', d.get('identifier', None))},
+    'language'    : lambda d: {'language': [l.get('iso639_3', l.get('name', None)) if isinstance(l, dict) else l for l in d['language']]},
+    'publisher'   : lambda d: {'publisher': dejson('publisher', d.get('publisher', None))},
+    'relation'    : lambda d: {'relation': dejson('relation', d.get('relation', None))},
+    'rights'      : lambda d: {'rights': dejson('rights', d.get('rights', None))},
+    'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else dejson('subject', s) for s in d['subject']]},
+    'temporalCoverage'    : lambda d: {'temporal': dejson('temporal', d.get('temporalCoverage', None))},
+    'title'       : lambda d: {'title': dejson('title', d.get('title', None))},
+    'type'        : lambda d: {'type': dejson('type', d.get('type', None))},
+}
+
+COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
+#    'location'        : lambda d: {'location': d.get('location', None)},
+    'provenance'      : lambda d: {'provenance': d.get('provenance', None)},
+    'dateCopyrighted' : lambda d: {'rights_date': d.get('dateCopyrighted')},
+    'rightsHolder'    : lambda d: {'rights_holder': d.get('rightsHolder')},
+    'rightsNote'      : lambda d: {'rights_note': d.get('rightsNote')},
+    'source'          : lambda d: {'source': d.get('source')},
+    'structmap_text'  : lambda d: {'structmap_text': d.get('structmap_text')},
+    'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
+    'transcription'   : lambda d: {'transcription': d.get('transcription')},
+}
+
+def getjobj(data):
+    jobj = None
+    try:
+        jobj = json.loads(data)
+    except ValueError:
+        pass
+    return jobj
+
+def unpack_if_json(field, data):
+    '''If data is a valid json object, attempt to flatten data to a string.
+    In general if there is a field 'name' that is the data
+    '''
+    flatdata = None
+    j = getjobj(data)
+    if j:
+        if 'name' in j:
+            flatdata = j['name']
+    return flatdata
+
+def dejson(field, data):
+    '''de-jsonfy the data.
+    For valid json strings, unpack in sensible way?
+    '''
+    print "{} data type:{}".format(field, type(data))
+    dejson_data = None
+    if not data:
+        return data
+    if isinstance(data, list):
+        dejson_data = []
+        for d in data:
+             flatdata = unpack_if_json(field, d)
+             if flatdata:
+                 dejson_data.append(flatdata)
+                 json_str = unicode(json.dumps(j))
+            if not isinstance(d, unicode):
+                d = unicode(d, 'utf-8')
+            print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, d.encode( 'utf-8'))
+    elif isinstance(data, dict):
+        print u"DICTIONARY DATA FIELD:{} DATA:{}".format(field, data) 
+    else:
+        j = getjobj(data)
+        json_str = ''
+        if j:
+            json_str = unicode(json.dumps(j))
+        udata = data
+        if not isinstance(data, unicode):
+            udata = unicode(data, 'utf-8')
+        try:
+            print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str.encode('utf-8'), udata.encode('utf-8'))
+        except UnicodeEncodeError:
+            try:
+                print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, data.encode('latin-1'))
+            except UnicodeEncodeError:
+                print u"FIELD:{} JSON:{} DATA:{}".format(field, json_str, data)
+    return data
 
 class UTCtz(datetime.tzinfo):
     def utcoffset(self, dt):
@@ -120,42 +215,6 @@ def map_date(d):
         date_map['sort_date_end'] = end_date
 
     return date_map
-        
-
-COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-    'alternativeTitle'   : lambda d: {'alternative_title': d.get('alternativeTitle', None)},
-    'contributor' : lambda d: {'contributor': d.get('contributor', None)},
-    'coverage'    : lambda d: {'coverage': d.get('coverage', None)},
-    'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
-        and 'text' in c)  else c for c in d['spatial']]},
-    'creator'     : lambda d: {'creator': d.get('creator', None)},
-    'date'        : lambda d:  map_date(d),
-    'description' : lambda d: {'description': [ds for ds in d['description']]},
-    'extent'      : lambda d: {'extent': d.get('extent', None)},
-    'format'      : lambda d: {'format': d.get('format', None)},
-    'genre'       : lambda d: {'genre': d.get('genre', None)},
-    'identifier'  : lambda d: {'identifier': d.get('identifier', None)},
-    'language'    : lambda d: {'language': [l.get('iso639_3', l.get('name', None)) if isinstance(l, dict) else l for l in d['language']]},
-    'publisher'   : lambda d: {'publisher': d.get('publisher', None)},
-    'relation'    : lambda d: {'relation': d.get('relation', None)},
-    'rights'      : lambda d: {'rights': d.get('rights', None)},
-    'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else s for s in d['subject']]},
-    'temporalCoverage'    : lambda d: {'temporal': d.get('temporalCoverage', None)},
-    'title'       : lambda d: {'title': d.get('title', None)},
-    'type'        : lambda d: {'type': d.get('type', None)},
-}
-
-COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
-    'location'        : lambda d: {'location': d.get('location', None)},
-    'provenance'      : lambda d: {'provenance': d.get('provenance', None)},
-    'dateCopyrighted' : lambda d: {'rights_date': d.get('dateCopyrighted')},
-    'rightsHolder'    : lambda d: {'rights_holder': d.get('rightsHolder')},
-    'rightsNote'      : lambda d: {'rights_note': d.get('rightsNote')},
-    'source'          : lambda d: {'source': d.get('source')},
-    'structmap_text'  : lambda d: {'structmap_text': d.get('structmap_text')},
-    'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
-    'transcription'   : lambda d: {'transcription': d.get('transcription')},
-}
 
 def find_ark_in_identifiers(doc):
     identifiers = doc['sourceResource'].get('identifier', None)
