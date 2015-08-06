@@ -42,7 +42,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'format'      : lambda d: {'format': dejson('format', d.get('format', None))},
     'genre'       : lambda d: {'genre': dejson('genre', d.get('genre', None))},
     'identifier'  : lambda d: {'identifier': dejson('identifier', d.get('identifier', None))},
-    'language'    : lambda d: {'language': [l.get('iso639_3', l.get('name', None)) if isinstance(l, dict) else l for l in d['language']]},
+    'language'    : lambda d: {'language': [l.get('name', l.get('iso639_3', None)) if isinstance(l, dict) else l for l in d['language']]},
     'publisher'   : lambda d: {'publisher': dejson('publisher', d.get('publisher', None))},
     'relation'    : lambda d: {'relation': dejson('relation', d.get('relation', None))},
     'rights'      : lambda d: {'rights': dejson('rights', d.get('rights', None))},
@@ -87,7 +87,6 @@ def dejson(field, data):
     '''de-jsonfy the data.
     For valid json strings, unpack in sensible way?
     '''
-    print "INCOMING DATA:{}".format(data)
     dejson_data = data
     if not dejson_data:
         return dejson_data
@@ -101,7 +100,6 @@ def dejson(field, data):
                  dejson_data.append(d)
     elif isinstance(data, dict):
         #already parsed json?
-        print u"DICTIONARY DATA FIELD:{} DATA:{}".format(field, data) 
         flatdata = data.get('item', None)
         if flatdata:
             dejson_data = flatdata
@@ -109,7 +107,6 @@ def dejson(field, data):
         flatdata = unpack_if_json(field, data)
         if flatdata:
             dejson_data = flatdata
-    print "DEJSON DATA:{}".format(dejson_data)
     return dejson_data
 
 class UTCtz(datetime.tzinfo):

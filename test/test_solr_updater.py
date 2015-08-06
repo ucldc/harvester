@@ -138,7 +138,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['description'], [u'description 1',
                                         u'description 2', u'description 3'])
         self.assertEqual(sdoc['date'], ['between 1885-1890'])
-        self.assertEqual(sdoc['language'], ['en'])
+        self.assertEqual(sdoc['language'], ['English'])
         self.assertEqual(sdoc['publisher'], [u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/']),
         self.assertEqual(sdoc['relation'], [
             u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc',
@@ -281,6 +281,10 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_date_start'], DT(1885, 7, 4, tzinfo=UTC))
         self.assertEqual(sdoc['sort_date_end'], DT(1890, 8, 3, tzinfo=UTC))
 
+    def test_dejson(self):
+        '''Test dejson directly'''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_dejson_type_error.json'))
+        sdoc = map_couch_to_solr_doc(doc)
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
