@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase
 import json
+from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
 from harvester import grab_solr_index
@@ -14,6 +15,8 @@ from harvester.solr_updater import get_solr_id
 from harvester.solr_updater import normalize_sort_field
 from harvester.solr_updater import get_sort_collection_data_string
 from harvester.solr_updater import map_registry_data
+from harvester.solr_updater import UTC
+from harvester.solr_updater import dejson
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -75,7 +78,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/26098--0025ad8f-a44e-4f58-8238-c7b60b2fb850.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], '0025ad8f-a44e-4f58-8238-c7b60b2fb850')
-        self.assertEqual(sdoc['harvest_id_s'], '0025ad8f-a44e-4f58-8238-c7b60b2fb850')
+        self.assertEqual(sdoc['harvest_id_s'], '26098--0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['title'], ['Brag'])
         self.assertEqual(sdoc['sort_title'], 'brag')
         self.assertEqual(sdoc['alternative_title'], ['test alt title'])
@@ -108,7 +111,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
-        self.assertEqual(sdoc['harvest_id_s'], 'ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['harvest_id_s'], '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertNotIn('campus', sdoc)
         self.assertEqual(sdoc['campus_url'], [u'https://registry.cdlib.org/api/v1/campus/1/'])
         self.assertEqual(sdoc['campus_name'], [u'UC Berkeley'])
@@ -136,7 +139,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['description'], [u'description 1',
                                         u'description 2', u'description 3'])
         self.assertEqual(sdoc['date'], ['between 1885-1890'])
-        self.assertEqual(sdoc['language'], ['en'])
+        self.assertEqual(sdoc['language'], ['English'])
         self.assertEqual(sdoc['publisher'], [u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/']),
         self.assertEqual(sdoc['relation'], [
             u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc',
@@ -176,7 +179,6 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
         collections = doc['originalRecord']['collection']
         reg_data = map_registry_data(collections)
-        print reg_data
         self.assertEqual(reg_data['sort_collection_data'],
                 [u'uchida yoshiko photograph collection:Uchida (Yoshiko) photograph collection:https://registry.cdlib.org/api/v1/collection/23066/'])
 
@@ -260,6 +262,33 @@ class SolrUpdaterTestCase(TestCase):
         sid = get_solr_id(doc)
         #sha256 self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
         self.assertEqual(sid, '22a5713851ea0aca428adcf3caf4970b')
+
+    def test_sort_dates(self):
+        '''test the sort_date_start/end values'''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 1, 1, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 1, 1, tzinfo=UTC))
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_no_pretty_id.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(2013, 9, 30, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(2013, 9, 30, tzinfo=UTC))
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_nocampus.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertNotIn('sort_date_start', sdoc)
+        self.assertNotIn('sort_date_end', sdoc)
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_solr_date_map.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_date_start'], DT(1885, 7, 4, tzinfo=UTC))
+        self.assertEqual(sdoc['sort_date_end'], DT(1890, 8, 3, tzinfo=UTC))
+
+    def test_dejson(self):
+        '''Test dejson directly'''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_dejson_type_error.json'))
+
+        dj = dejson('identifier', doc['sourceResource']['identifier'])
+        self.assertEqual(dj, [u'piercephoto:10', u'uclamss_98pierce_0086_c0023',
+            u'86'])
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked

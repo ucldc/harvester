@@ -17,6 +17,7 @@
       s3_root_path: "indexes/{{ server_role }}"
       region: us-west-2
       remote_user: ec2-user
+      s3_file_path: "s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2"
     tasks:
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
@@ -38,9 +39,9 @@
     - name: bzip index file
       command: bzip2 {{ dir_tarball }}/solr-index.{{ datetime }}.tar
     - name: push index tarball to s3 for server_role
-      shell: aws --region={{ region }} s3 cp {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2
-    - name: push index tarball to s3 for server_role to the latest bucket
-      shell: aws s3 cp --region={{ region }} {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
+      shell: aws --region={{ region }} s3 cp {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 {{ s3_file_path }}
+###    - name: push index tarball to s3 for server_role to the latest bucket
+###      shell: aws s3 cp --region={{ region }} {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
 ###      s3:
 ###        bucket: solr.ucldc
@@ -56,6 +57,7 @@
       file:
         state: absent
         path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar.bz2"
+    - debug: var=s3_file_path
 ###    - name: email note of new index (right now only manual index overwrite)-
 ###      local_action: mail
 ###                    from="ucldc@example.edu"
