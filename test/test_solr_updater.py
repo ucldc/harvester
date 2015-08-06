@@ -16,6 +16,7 @@ from harvester.solr_updater import normalize_sort_field
 from harvester.solr_updater import get_sort_collection_data_string
 from harvester.solr_updater import map_registry_data
 from harvester.solr_updater import UTC
+from harvester.solr_updater import dejson
 
 class SolrUpdaterTestCase(TestCase):
     '''Test the solr update from couchdb changes feed'''
@@ -284,7 +285,10 @@ class SolrUpdaterTestCase(TestCase):
     def test_dejson(self):
         '''Test dejson directly'''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_dejson_type_error.json'))
-        sdoc = map_couch_to_solr_doc(doc)
+
+        dj = dejson('identifier', doc['sourceResource']['identifier'])
+        self.assertEqual(dj, [u'piercephoto:10', u'uclamss_98pierce_0086_c0023',
+            u'86'])
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked

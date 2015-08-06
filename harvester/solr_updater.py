@@ -23,6 +23,28 @@ S3_BUCKET = 'solr.ucldc'
 RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
 RE_ALPHANUMSPACE = re.compile(r'[^0-9A-Za-z\s]*') #\W include "_" as does A-z
 
+def dict_for_data_field(field_src, data, field_dest):
+    '''For a given field_src  in the data, create a dictionary to
+    update the field_dest with.
+    If no values, make the dict {}, this will avoid empty data values
+    '''
+    ddict = {}
+    items_not_blank = []
+    items = data.get(field_src)
+    if items:
+        items = dejson(field_src, items) #this handles list, scalar
+        #remove blanks
+        if isinstance(items, basestring):
+            if items:
+                items_not_blank = items
+        else:
+            for i in items:
+                if i:
+                    items_not_blank.append(i)
+    if items_not_blank:
+        ddict = {field_dest: items_not_blank }
+    return ddict
+
 COUCHDOC_TO_SOLR_MAPPING = {
     '_id'       : lambda d: {'harvest_id_s': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
@@ -30,38 +52,48 @@ COUCHDOC_TO_SOLR_MAPPING = {
 }
 
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
-    'alternativeTitle'   : lambda d: {'alternative_title': dejson('alternativeTile', d.get('alternativeTitle', None))},
-    'contributor' : lambda d: {'contributor': dejson('contributor', d.get('contributor', None))},
-    'coverage'    : lambda d: {'coverage': dejson('coverage', d.get('coverage', None))},
+    'alternativeTitle'   : lambda d: dict_for_data_field('alternativeTitle', d,
+                                'alternative_title'),
+    'contributor' : lambda d: dict_for_data_field('contributor', d, 'contributor'),
+    'coverage'    : lambda d: dict_for_data_field('coverage', d, 'coverage'),
     'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
         and 'text' in c)  else dejson('coverage', c) for c in d['spatial']]},
-    'creator'     : lambda d: {'creator': dejson('creator', d.get('creator', None))},
+    'creator'     : lambda d: dict_for_data_field('creator', d, 'creator'),
     'date'        : lambda d:  map_date(d),
-    'description' : lambda d: {'description': [dejson('description', ds) for ds in d['description']]},
-    'extent'      : lambda d: {'extent': dejson('extent', d.get('extent', None))},
-    'format'      : lambda d: {'format': dejson('format', d.get('format', None))},
-    'genre'       : lambda d: {'genre': dejson('genre', d.get('genre', None))},
-    'identifier'  : lambda d: {'identifier': dejson('identifier', d.get('identifier', None))},
+    'description' : lambda d: dict_for_data_field('description', d,
+                              'description'),
+    'extent'      : lambda d: dict_for_data_field('extent', d, 'extent'),
+    'format'      : lambda d: dict_for_data_field('format', d, 'format'),
+    'genre'       : lambda d: dict_for_data_field('genre', d, 'genre'),
+    'identifier'  : lambda d: dict_for_data_field('identifier', d, 'identifier'),
     'language'    : lambda d: {'language': [l.get('name', l.get('iso639_3', None)) if isinstance(l, dict) else l for l in d['language']]},
-    'publisher'   : lambda d: {'publisher': dejson('publisher', d.get('publisher', None))},
-    'relation'    : lambda d: {'relation': dejson('relation', d.get('relation', None))},
-    'rights'      : lambda d: {'rights': dejson('rights', d.get('rights', None))},
+    'publisher'   : lambda d: dict_for_data_field('publisher', d, 'publisher'),
+    'relation'    : lambda d: dict_for_data_field('relation', d, 'relation'),
+    'rights'      : lambda d: dict_for_data_field('rights', d, 'rights'),
     'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else dejson('subject', s) for s in d['subject']]},
-    'temporalCoverage'    : lambda d: {'temporal': dejson('temporal', d.get('temporalCoverage', None))},
-    'title'       : lambda d: {'title': dejson('title', d.get('title', None))},
-    'type'        : lambda d: {'type': dejson('type', d.get('type', None))},
+    'temporalCoverage'    : lambda d: dict_for_data_field('temporalCoverage', d,
+        'temporal'),
+    'title'       : lambda d: dict_for_data_field('title', d, 'title'),
+    'type'        : lambda d: dict_for_data_field('type', d, 'type'),
 }
 
 COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
 #    'location'        : lambda d: {'location': d.get('location', None)},
-    'provenance'      : lambda d: {'provenance': d.get('provenance', None)},
-    'dateCopyrighted' : lambda d: {'rights_date': d.get('dateCopyrighted')},
-    'rightsHolder'    : lambda d: {'rights_holder': d.get('rightsHolder')},
-    'rightsNote'      : lambda d: {'rights_note': d.get('rightsNote')},
-    'source'          : lambda d: {'source': d.get('source')},
-    'structmap_text'  : lambda d: {'structmap_text': d.get('structmap_text')},
-    'structmap_url'   : lambda d: {'structmap_url': d.get('structmap_url')},
-    'transcription'   : lambda d: {'transcription': d.get('transcription')},
+    'provenance'      : lambda d: dict_for_data_field('provenance', d,
+                        'provenance'),
+    'dateCopyrighted' : lambda d: dict_for_data_field('dateCopyrighted', d,
+                        'rights_date'),
+    'rightsHolder'    : lambda d: dict_for_data_field('rightsHolder', d,
+                        'rights_holder'),
+    'rightsNote'      : lambda d: dict_for_data_field('rightsNote', d,
+                        'rights_note'),
+    'source'          : lambda d: dict_for_data_field('source', d, 'source'),
+    'structmap_text'  : lambda d: dict_for_data_field('structmap_text', d,
+                        'structmap_text'),
+    'structmap_url'   : lambda d: dict_for_data_field('structmap_url', d,
+                        'structmap_url'),
+    'transcription'   : lambda d: dict_for_data_field('transcription', d,
+                        'transcription'),
 }
 
 def getjobj(data):
@@ -76,11 +108,14 @@ def unpack_if_json(field, data):
     '''If data is a valid json object, attempt to flatten data to a string.
     In general if there is a field 'name' that is the data
     '''
-    flatdata = None
+    flatdata = data
     j = getjobj(data)
     if j:
-        if 'name' in j:
-            flatdata = j['name']
+        try:
+            if 'name' in j:
+                flatdata = j['name']
+        except TypeError:
+            pass
     return flatdata
 
 def dejson(field, data):
@@ -93,20 +128,15 @@ def dejson(field, data):
     if isinstance(data, list):
         dejson_data = []
         for d in data:
-             flatdata = unpack_if_json(field, d)
-             if flatdata:
-                 dejson_data.append(flatdata)
-             else:
-                 dejson_data.append(d)
+            flatdata = dejson(field, d)
+            dejson_data.append(flatdata)
     elif isinstance(data, dict):
-        #already parsed json?
+        #already parsed json?a
         flatdata = data.get('item', None)
         if flatdata:
             dejson_data = flatdata
     else:
-        flatdata = unpack_if_json(field, data)
-        if flatdata:
-            dejson_data = flatdata
+        dejson_data = unpack_if_json(field, data)
     return dejson_data
 
 class UTCtz(datetime.tzinfo):
@@ -131,14 +161,14 @@ def make_datetime(dstring):
     except ValueError:
         pass
     except TypeError, e:
-        print >> sys.stderr, 'Date type err DATA:{} ERROR:{}'.format(dstring, e)
+        print('Date type err DATA:{} ERROR:{}'.format(dstring, e))
     try:
         strfmt = '%Y-%m-%d'
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
     except TypeError, e:
-        print >> sys.stderr, 'Date type err in strptime:{} {}'.format(dstring, e)
+        print('Date type err in strptime:{} {}'.format(dstring, e))
     # add UTC as timezone, solrpy looks for tzinfo
     if dt:
         dt = datetime.datetime(dt.year, dt.month, dt.day, tzinfo=UTC)
@@ -166,7 +196,6 @@ def map_date(d):
     start_date = end_date = None
     dates_start = []
     dates_end = []
-    #print >> sys.stderr, 'date_source:{}'.format(date_source)
     if date_source:
         if isinstance(date_source, dict):
             try:
