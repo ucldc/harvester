@@ -265,6 +265,29 @@ def ucsd_ark(doc):
             ark = 'ark:/20775/' + ark_frag
     return ark
 
+def ucla_ark(doc):
+    '''UCLA ARKs are buried in a mods field in originalRecord:
+
+    "mods_recordInfo_recordIdentifier_mlt": "21198-zz002b1833",
+    "mods_recordInfo_recordIdentifier_s": "21198-zz002b1833",
+    "mods_recordInfo_recordIdentifier_t": "21198-zz002b1833",
+    
+    If one is found, safe to assume UCLA & make the ARK
+    '''
+    ark = None
+    id_fields =("mods_recordInfo_recordIdentifier_mlt",
+                 "mods_recordInfo_recordIdentifier_s",
+                 "mods_recordInfo_recordIdentifier_t")
+    for f in id_fields:
+        try:
+            mangled_ark = doc['originalRecord'][f]
+            naan, arkid = mangled_ark.split('-') #could fail?
+            ark = '/'.join(('ark:', naan, arkid))
+            break
+        except KeyError:
+            pass
+    return ark
+
 def get_solr_id(couch_doc):
     ''' Extract a good ID to use in the solr index.
     see : https://github.com/ucldc/ucldc-docs/wiki/pretty_id
@@ -281,6 +304,8 @@ def get_solr_id(couch_doc):
         solr_id = uuid_if_nuxeo(couch_doc)
     if not solr_id:
         solr_id = ucsd_ark(couch_doc)
+    if not solr_id:
+        solr_id = ucla_ark(couch_doc)
     if not solr_id:
         # no recognized special id, just has couchdb id
         hash_id = hashlib.md5()

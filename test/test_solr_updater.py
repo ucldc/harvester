@@ -262,6 +262,9 @@ class SolrUpdaterTestCase(TestCase):
         sid = get_solr_id(doc)
         #sha256 self.assertEqual(sid, '0b36b5bb2183de9c81577224d3964d120f911f2e44647319a0f62ffcbab77f6a')
         self.assertEqual(sid, '22a5713851ea0aca428adcf3caf4970b')
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_ucla.json'))
+        sid = get_solr_id(doc)
+        self.assertEqual(sid, "ark:/21198/zz002b1833")
 
     def test_sort_dates(self):
         '''test the sort_date_start/end values'''
