@@ -48,6 +48,15 @@
        "spatial": [
            {
                "name": "Topanga (Calif.)"
+           },
+           {
+               "name": "Pacific Palisades, Los Angeles (Calif.)"
+           },
+           {
+               "name": "Venice (Los Angeles, Calif.)"
+           },
+           {
+               "name": "Los Angeles (Calif.)"
            }
        ],
        "contributor": [

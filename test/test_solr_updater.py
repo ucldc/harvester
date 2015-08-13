@@ -288,10 +288,16 @@ class SolrUpdaterTestCase(TestCase):
     def test_dejson(self):
         '''Test dejson directly'''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_dejson_type_error.json'))
-
         dj = dejson('identifier', doc['sourceResource']['identifier'])
         self.assertEqual(dj, [u'piercephoto:10', u'uclamss_98pierce_0086_c0023',
             u'86'])
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_ucla.json'))
+        dj = dejson('coverage', doc['sourceResource']['spatial'])
+        self.assertEqual(dj, [ "Topanga (Calif.)",
+                               "Pacific Palisades, Los Angeles (Calif.)",
+                               "Venice (Los Angeles, Calif.)",
+                               "Los Angeles (Calif.)" ])
+        
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked

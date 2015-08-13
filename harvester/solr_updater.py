@@ -106,15 +106,15 @@ def getjobj(data):
 
 def unpack_if_json(field, data):
     '''If data is a valid json object, attempt to flatten data to a string.
+    All the json data at this point should be a scalar or a dict
     In general if there is a field 'name' that is the data
     '''
     flatdata = data
     j = getjobj(data)
     if j:
         try:
-            if 'name' in j:
-                flatdata = j['name']
-        except TypeError:
+            flatdata = j.get('name', flatdata)
+        except AttributeError: #not a dict
             pass
     return flatdata
 
@@ -131,8 +131,8 @@ def dejson(field, data):
             flatdata = dejson(field, d)
             dejson_data.append(flatdata)
     elif isinstance(data, dict):
-        #already parsed json?a
-        flatdata = data.get('item', None)
+        #already parsed json?
+        flatdata = data.get('item', data.get('name', data.get('text', None)))
         if flatdata:
             dejson_data = flatdata
     else:
@@ -452,6 +452,8 @@ def add_sort_title(couch_doc, solr_doc):
 def fill_in_title(couch_doc):
     '''if title has no entries, set to ['Title unknown']
     '''
+    if not 'sourceResource' in couch_doc:
+        raise KeyError("ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(couch_doc['_id']))
     if not couch_doc['sourceResource'].get('title', None):
         couch_doc['sourceResource']['title'] = ['Title unknown']
     elif not couch_doc['sourceResource'].get('title'): # empty string?
