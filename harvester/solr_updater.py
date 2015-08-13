@@ -452,6 +452,8 @@ def add_sort_title(couch_doc, solr_doc):
 def fill_in_title(couch_doc):
     '''if title has no entries, set to ['Title unknown']
     '''
+    if not 'sourceResource' in couch_doc:
+        raise KeyError("ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(couch_doc['_id']))
     if not couch_doc['sourceResource'].get('title', None):
         couch_doc['sourceResource']['title'] = ['Title unknown']
     elif not couch_doc['sourceResource'].get('title'): # empty string?
