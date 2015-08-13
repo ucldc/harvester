@@ -56,8 +56,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
                                 'alternative_title'),
     'contributor' : lambda d: dict_for_data_field('contributor', d, 'contributor'),
     'coverage'    : lambda d: dict_for_data_field('coverage', d, 'coverage'),
-    'spatial'     : lambda d: {'coverage': [c['text'] if (isinstance(c, dict)
-        and 'text' in c)  else dejson('coverage', c) for c in d['spatial']]},
+    'spatial'     : lambda d: dict_for_data_field('spatial', d, 'coverage'),
     'creator'     : lambda d: dict_for_data_field('creator', d, 'creator'),
     'date'        : lambda d:  map_date(d),
     'description' : lambda d: dict_for_data_field('description', d,
