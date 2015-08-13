@@ -556,6 +556,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     each document, essentially dumping the db to solr
     '''
     print('Solr update PID: {}'.format(os.getpid()))
+    dt_start = datetime.datetime.now()
+    print('Start time:{}'.format(dt_start))
     sys.stdout.flush() # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     s3_seq_cache = CouchdbLastSeq_S3()
@@ -619,6 +621,8 @@ def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=Non
     print("UPDATED {0} DOCUMENTS. DELETED:{1}".format(n_up, n_delete))
     print("PREVIOUS SINCE:{0}".format(previous_since))
     print("LAST SINCE:{0}".format(last_since))
+    run_time = datetime.datetime.now() - dt_start
+    print("RUN TIME:{}".format(run_time))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
