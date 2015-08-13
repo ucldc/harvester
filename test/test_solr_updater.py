@@ -298,6 +298,17 @@ class SolrUpdaterTestCase(TestCase):
                                "Venice (Los Angeles, Calif.)",
                                "Los Angeles (Calif.)" ])
         
+    def test_dejson_from_map(self):
+        '''Test that the dejson works from the mapping function'''
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_ucla.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['coverage'], [ "Topanga (Calif.)",
+                               "Pacific Palisades, Los Angeles (Calif.)",
+                               "Venice (Los Angeles, Calif.)",
+                               "Los Angeles (Calif.)" ])
+        
+
+
 
 class GrabSolrIndexTestCase(TestCase):
     '''Basic test for grabbing solr index. Like others, heavily mocked
