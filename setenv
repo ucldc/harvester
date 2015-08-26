@@ -8,3 +8,5 @@ export URL_SOLR=<url to solr work instance>
 #NOTE: use aws configure for s3 access
 export EMAIL_SYS_ADMINS=<csv list of admin emails>
 export DPLA_CONFIG_FILE=<abs path to akara.ini>
+export SOLR_API_KEY=<key>
+export URL_SOLR_API=<url to api endpoint>
