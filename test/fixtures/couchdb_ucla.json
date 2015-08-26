@@ -1,0 +1,1368 @@
+{
+   "_id": "17210--piercephoto:100",
+   "_rev": "7-e1889a7587b635263bb536c7dcf84e64",
+   "@context": "http://dp.la/api/items/context",
+   "object_dimensions": [
+       600,
+       422
+   ],
+   "admin": {
+       "validation_message": "u'zxx' is not of type 'object'",
+       "valid_after_enrich": false
+   },
+   "@id": "http://ucldc.cdlib.org/api/items/0d9d4ab69c8069cbcb6b04a87144b597",
+   "object": "a84e25235101ecc2c589133742ea96f5",
+   "ingestDate": "2015-08-09T00:46:36.256907Z",
+   "isShownBy": "http://digital.library.ucla.edu/collections/islandora/object/piercephoto:100/datastream/JPG/JPG.jpg",
+   "ingestionSequence": 4,
+   "isShownAt": "http://digital.library.ucla.edu/collections/islandora/object/piercephoto:100",
+   "provider": {
+       "@id": "https://registry.cdlib.org/api/v1/collection/17210/",
+       "name": "UCLA, Library Special Collections, Charles E. Young Research Library"
+   },
+   "sourceResource": {
+       "rights": [
+           "copyrighted",
+           "Copyright is owned by the creator."
+       ],
+       "description": [
+           "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+           "Access to this collection is generously supported by Arcadia funds."
+       ],
+       "language": [
+           "zxx"
+       ],
+       "title": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+           "Topanga Canyon, Topanga Road"
+       ],
+       "format": "6.75 x 5 inches",
+       "stateLocatedIn": [
+           {
+               "name": "California"
+           }
+       ],
+       "relation": [
+           "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA"
+       ],
+       "spatial": [
+           {
+               "name": "Topanga (Calif.)"
+           },
+           {
+               "name": "Pacific Palisades, Los Angeles (Calif.)"
+           },
+           {
+               "name": "Venice (Los Angeles, Calif.)"
+           },
+           {
+               "name": "Los Angeles (Calif.)"
+           }
+       ],
+       "contributor": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946 (collector)",
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections (repository)"
+       ],
+       "identifier": [
+           "piercephoto:100",
+           "uclamss_98pierce_xxxx_b0047"
+       ],
+       "type": "image",
+       "subject": [
+           {
+               "name": "Canyons $z California $z Topanga"
+           },
+           {
+               "name": "Roads $z California $z Topanga"
+           },
+           {
+               "name": "Topanga (Calif.)"
+           }
+       ]
+   },
+   "ingestType": "item",
+   "dataProvider": "UCLA, Library Special Collections, Charles E. Young Research Library",
+   "originalRecord": {
+       "mods_name_corporate_role_roleTerm_text_mlt": "repository",
+       "fedora_datastream_info_TECHMD_STATE_mt": [
+           "A"
+       ],
+       "fedora_datastream_version_JP2_CREATED_ms": [
+           "2013-03-04T21:58:39.411Z",
+           "2013-03-12T20:11:01.162Z"
+       ],
+       "fedora_datastream_version_JP2_CREATED_mt": [
+           "2013-03-04T21:58:39.411Z",
+           "2013-03-12T20:11:01.162Z"
+       ],
+       "fedora_datastream_info_TECHMD_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_info_TECHMD_ID_ms": [
+           "TECHMD"
+       ],
+       "fedora_datastream_info_TECHMD_ID_mt": [
+           "TECHMD"
+       ],
+       "fedora_datastream_latest_JP2_CREATED_ms": [
+           "2013-03-12T20:11:01.162Z"
+       ],
+       "RELS_EXT_hasModel_uri_mlt": "info:fedora/islandora:sp_large_image_cmodel",
+       "fedora_datastream_latest_JP2_CREATED_mt": [
+           "2013-03-12T20:11:01.162Z"
+       ],
+       "mods_physicalDescription_extent_mlt": "6.75 x 5 inches",
+       "fedora_datastream_latest_JPG_MIMETYPE_mt": [
+           "image/jpeg"
+       ],
+       "dc.relation": [
+           "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA."
+       ],
+       "fedora_datastream_latest_JPG_MIMETYPE_ms": [
+           "image/jpeg"
+       ],
+       "fgs_label_s": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "fgs_label_t": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "fedora_datastream_version_JPG_MIMETYPE_ms": [
+           "image/jpeg",
+           "image/jpeg"
+       ],
+       "mods_language_languageTerm_code_ms": [
+           "zxx"
+       ],
+       "mods_language_languageTerm_code_mt": [
+           "zxx"
+       ],
+       "fedora_datastream_version_JPG_MIMETYPE_mt": [
+           "image/jpeg",
+           "image/jpeg"
+       ],
+       "fgs_ownerId_mlt": "admin",
+       "mods_note_ms": [
+           "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+           "Access to this collection is generously supported by Arcadia funds."
+       ],
+       "fedora_datastream_version_RELS-EXT_CREATED_mt": [
+           "2013-03-12T20:10:59.228Z"
+       ],
+       "fedora_datastream_version_RELS-EXT_CREATED_ms": [
+           "2013-03-12T20:10:59.228Z"
+       ],
+       "mods_note_mt": [
+           "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+           "Access to this collection is generously supported by Arcadia funds."
+       ],
+       "fedora_datastream_latest_MODS_ID_mt": [
+           "MODS.2"
+       ],
+       "fedora_datastream_latest_MODS_ID_ms": [
+           "MODS.2"
+       ],
+       "fgs_createdDate_mt": [
+           "2013-03-04T21:57:54.489Z"
+       ],
+       "mods_subject_authority_lcsh_topic_s": "Topanga (Calif.)",
+       "mods_titleInfo_title_s": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "mods_titleInfo_title_t": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "mods_subject_authority_lcsh_topic_t": "Topanga (Calif.)",
+       "fedora_datastream_latest_TN_MIMETYPE_ms": [
+           "image/jpeg"
+       ],
+       "fedora_datastream_latest_TN_MIMETYPE_mt": [
+           "image/jpeg"
+       ],
+       "fgs_state_ms": [
+           "Active"
+       ],
+       "fedora_datastream_latest_DC_LABEL_ms": [
+           "Dublin Core Record"
+       ],
+       "fedora_datastream_latest_DC_LABEL_mt": [
+           "Dublin Core Record"
+       ],
+       "fgs_state_mt": [
+           "Active"
+       ],
+       "fedora_datastream_version_TECHMD_CREATED_ms": [
+           "2013-03-04T21:58:21.620Z",
+           "2013-03-12T20:11:01.031Z"
+       ],
+       "fedora_datastream_version_OBJ_SIZE_ms": [
+           "45055428"
+       ],
+       "fedora_datastream_version_OBJ_SIZE_mt": [
+           "45055428"
+       ],
+       "fedora_datastream_version_TECHMD_CREATED_mt": [
+           "2013-03-04T21:58:21.620Z",
+           "2013-03-12T20:11:01.031Z"
+       ],
+       "dc.identifier": [
+           "piercephoto:100",
+           "uclamss_98pierce_xxxx_b0047"
+       ],
+       "fedora_datastream_info_TN_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "fedora_datastream_info_TN_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastream_version_AUDIT_FORMAT_URI_mt": [
+           "info:fedora/fedora-system:format/xml.fedora.audit"
+       ],
+       "fedora_datastream_latest_TECHMD_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "mods_subject_geographic_s": "Topanga (Calif.)",
+       "mods_subject_geographic_t": "Topanga (Calif.)",
+       "fedora_datastream_latest_TECHMD_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_version_AUDIT_FORMAT_URI_ms": [
+           "info:fedora/fedora-system:format/xml.fedora.audit"
+       ],
+       "fedora_datastream_version_AUDIT_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_version_AUDIT_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "fedora_datastream_version_AUDIT_LABEL_mt": [
+           "Audit Trail for this object"
+       ],
+       "fedora_datastream_version_MODS_ID_mt": [
+           "MODS.2"
+       ],
+       "fgs_label_mlt": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "fedora_datastream_info_DC_VERSIONABLE_ms": [
+           "true"
+       ],
+       "fedora_datastream_version_MODS_ID_ms": [
+           "MODS.2"
+       ],
+       "dc.title": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+           "Topanga Canyon, Topanga Road"
+       ],
+       "fedora_datastream_version_TECHMD_MIMETYPE_mt": [
+           "text/xml",
+           "text/xml"
+       ],
+       "fedora_datastream_version_TECHMD_MIMETYPE_ms": [
+           "text/xml",
+           "text/xml"
+       ],
+       "fedora_datastream_info_RELS-EXT_VERSIONABLE_ms": [
+           "true"
+       ],
+       "fedora_datastream_info_RELS-EXT_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_info_RELS-EXT_ID_ms": [
+           "RELS-EXT"
+       ],
+       "fedora_datastream_latest_MODS_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "fedora_datastream_latest_TECHMD_CREATED_mt": [
+           "2013-03-12T20:11:01.031Z"
+       ],
+       "fedora_datastream_version_TN_ID_mt": [
+           "TN.0",
+           "TN.1"
+       ],
+       "fedora_datastream_version_TN_ID_ms": [
+           "TN.0",
+           "TN.1"
+       ],
+       "fedora_datastream_latest_TECHMD_CREATED_ms": [
+           "2013-03-12T20:11:01.031Z"
+       ],
+       "fedora_datastream_latest_MODS_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_info_DC_ID_ms": [
+           "DC"
+       ],
+       "fedora_datastream_info_DC_ID_mt": [
+           "DC"
+       ],
+       "mods_subject_geographic_mlt": "Topanga (Calif.)",
+       "fgs_ownerId_s": "admin",
+       "fgs_ownerId_t": "admin",
+       "mods_name_corporate_namePart_t": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "mods_name_corporate_namePart_s": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "mods_name_personal_role_roleTerm_text_s": "collector",
+       "fedora_datastream_latest_AUDIT_ID_ms": [
+           "AUDIT.0"
+       ],
+       "fedora_datastream_latest_AUDIT_ID_mt": [
+           "AUDIT.0"
+       ],
+       "mods_name_personal_role_roleTerm_text_t": "collector",
+       "mods_name_personal_collector_mt": [
+           "collector"
+       ],
+       "fedora_datastream_latest_MODS_CREATED_mt": [
+           "2013-03-12T20:11:01.869Z"
+       ],
+       "fedora_datastream_latest_OBJ_MIMETYPE_ms": [
+           "image/tiff"
+       ],
+       "mods_name_personal_collector_ms": [
+           "collector"
+       ],
+       "fedora_datastream_latest_OBJ_MIMETYPE_mt": [
+           "image/tiff"
+       ],
+       "fedora_datastream_info_TN_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_info_TN_STATE_mt": [
+           "A"
+       ],
+       "mods_language_languageTerm_code_t": "zxx",
+       "mods_language_languageTerm_code_s": "zxx",
+       "fedora_datastream_latest_RELS-EXT_MIMETYPE_mt": [
+           "application/rdf+xml"
+       ],
+       "fgs_lastModifiedDate_dt": "2014-12-07T12:45:40.242000+00:00",
+       "mods_name_corporate_repository_namePart_ms": [
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections"
+       ],
+       "mods_relatedItem_host_titleInfo_title_t": "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA.",
+       "fedora_datastream_info_MODS_VERSIONABLE_mt": [
+           "true"
+       ],
+       "mods_relatedItem_host_titleInfo_title_s": "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA.",
+       "mods_name_corporate_repository_namePart_mt": [
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections"
+       ],
+       "fedora_datastream_version_AUDIT_CREATED_mt": [
+           "2013-03-04T21:57:54.489Z"
+       ],
+       "mods_recordInfo_recordIdentifier_ms": [
+           "21198-zz002b1833"
+       ],
+       "mods_recordInfo_recordIdentifier_mt": [
+           "21198-zz002b1833"
+       ],
+       "fedora_datastream_version_AUDIT_CREATED_ms": [
+           "2013-03-04T21:57:54.489Z"
+       ],
+       "fgs_ownerId_mt": [
+           "admin"
+       ],
+       "fgs_ownerId_ms": [
+           "admin"
+       ],
+       "fedora_datastream_latest_JP2_MIMETYPE_mt": [
+           "image/jp2"
+       ],
+       "RELS_EXT_isMemberOfCollection_uri_ms": [
+           "info:fedora/piercephoto:1"
+       ],
+       "collection": [
+           {
+               "dcmi_type": "X",
+               "qa_completed": false,
+               "featured": false,
+               "ready_for_publication": false,
+               "hosted": "",
+               "id": "17210",
+               "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/kt809nd7nq",
+               "metadata_in_dams": false,
+               "url_harvest": "http://digital.library.ucla.edu/solr",
+               "campus": [
+                   {
+                       "name": "UCLA",
+                       "position": 3,
+                       "ark": "ark:/13030/tf8z09p95s",
+                       "@id": "https://registry.cdlib.org/api/v1/campus/10/",
+                       "slug": "UCLA",
+                       "google_analytics_tracking_code": "",
+                       "resource_uri": "/api/v1/campus/10/"
+                   }
+               ],
+               "files_in_dams": false,
+               "files_in_hand": false,
+               "ingestType": "collection",
+               "description": "Charles C. Pierce (1861-1946) was a pioneer Los Angeles photographer. He came to Los Angeles in 1886 from Chicago because of his health and remained until his death in 1946. Along with two other photographers who accompanied him, he began to document the people and architecture of the area. Collection consists of historic negatives and prints. Most are of Southern California scenes; Los Angeles is well represented with views of downtown streets, commercial and civic buildings, and residential areas. ",
+               "repository": [
+                   {
+                       "name": "Library Special Collections, Charles E. Young Research Library",
+                       "campus": [
+                           {
+                               "name": "UCLA",
+                               "position": 3,
+                               "ark": "ark:/13030/tf8z09p95s",
+                               "slug": "UCLA",
+                               "google_analytics_tracking_code": "",
+                               "resource_uri": "/api/v1/campus/10/"
+                           }
+                       ],
+                       "ark": "ark:/13030/tf129008pn",
+                       "@id": "https://registry.cdlib.org/api/v1/repository/34/",
+                       "slug": "ylibrary-special-collections-charles-e-young-rese",
+                       "google_analytics_tracking_code": "",
+                       "resource_uri": "/api/v1/repository/34/"
+                   }
+               ],
+               "harvest_type": "SLR",
+               "extent": null,
+               "rights_status": "CR",
+               "@id": "https://registry.cdlib.org/api/v1/collection/17210/",
+               "slug": "pierce-cc-photographic-collection",
+               "harvest_extra_data": "RELS_EXT_isMemberOfCollection_uri_ms:info\\:fedora/piercephoto\\:*",
+               "enrichments_item": "/select-id?prop=PID,\n/dpla_mapper?mapper_type=ucla_solr_dc,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/enrich-subject,\n/enrich_date,\n/enrich_date?prop=sourceResource%2Fdate,\n/enrich-type,\n/enrich-format,\n/enrich_location,\n/lookup?prop=sourceResource%2Fformat&target=sourceResource%2Fformat&substitution=scdl_fix_format,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/filter_fields?keys=sourceResource,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+               "url_local": "http://digital2.library.ucla.edu/viewItem.do?ark=21198/zz00294nxr",
+               "name": "Pierce (C.C.) Photographic Collection",
+               "rights_statement": "Copyright is owned by the creator.",
+               "staging_notes": "",
+               "local_id": "pierce-cc-photographic-collection",
+               "title": "Pierce (C.C.) Photographic Collection",
+               "resource_uri": "/api/v1/collection/17210/"
+           }
+       ],
+       "fedora_datastream_version_TN_LABEL_ms": [
+           "Thumbnail",
+           "Thumbnail"
+       ],
+       "fedora_datastream_version_TN_LABEL_mt": [
+           "Thumbnail",
+           "Thumbnail"
+       ],
+       "fedora_datastream_version_RELS-EXT_LABEL_ms": [
+           "Fedora Object to Object Relationship Metadata."
+       ],
+       "fedora_datastream_version_RELS-EXT_LABEL_mt": [
+           "Fedora Object to Object Relationship Metadata."
+       ],
+       "fedora_datastream_latest_MODS_LABEL_ms": [
+           "MODS Record"
+       ],
+       "fedora_datastream_latest_DC_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_latest_DC_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "fedora_datastream_latest_MODS_LABEL_mt": [
+           "MODS Record"
+       ],
+       "fedora_datastream_info_OBJ_ID_mt": [
+           "OBJ"
+       ],
+       "fedora_datastream_info_OBJ_ID_ms": [
+           "OBJ"
+       ],
+       "mods_titleInfo_title_mt": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928"
+       ],
+       "mods_titleInfo_title_ms": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928"
+       ],
+       "fedora_datastream_version_MODS_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_version_MODS_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "mods_recordInfo_recordIdentifier_mlt": "21198-zz002b1833",
+       "fedora_datastream_latest_JPG_ID_ms": [
+           "JPG.1"
+       ],
+       "mods_title_ms": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+           "Topanga Canyon, Topanga Road",
+           "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA."
+       ],
+       "fedora_datastream_info_JP2_ID_mt": [
+           "JP2"
+       ],
+       "fedora_datastream_version_TN_MIMETYPE_mt": [
+           "image/jpeg",
+           "image/jpeg"
+       ],
+       "fedora_datastream_version_TN_MIMETYPE_ms": [
+           "image/jpeg",
+           "image/jpeg"
+       ],
+       "fedora_datastream_info_JP2_ID_ms": [
+           "JP2"
+       ],
+       "fgs_label_ms": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928"
+       ],
+       "fgs_label_mt": [
+           "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928"
+       ],
+       "mods_name_corporate_namePart_ms": [
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections"
+       ],
+       "mods_name_corporate_namePart_mt": [
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections"
+       ],
+       "fedora_datastream_version_DC_LABEL_ms": [
+           "Dublin Core Record"
+       ],
+       "fedora_datastream_latest_TN_CREATED_ms": [
+           "2013-03-12T20:11:01.667Z"
+       ],
+       "fedora_datastream_latest_TN_CREATED_mt": [
+           "2013-03-12T20:11:01.667Z"
+       ],
+       "fedora_datastream_version_DC_LABEL_mt": [
+           "Dublin Core Record"
+       ],
+       "timestamp": "2015-04-01T23:40:47.464000+00:00",
+       "fedora_datastream_version_TECHMD_LABEL_mt": [
+           "TECHMD",
+           "TECHMD"
+       ],
+       "_version_": 1497294855174357000,
+       "fedora_datastream_info_JP2_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_info_JP2_VERSIONABLE_ms": [
+           "true"
+       ],
+       "mods_subject_topic_mlt": "Canyons $z California $z Topanga",
+       "mods_identifier_local_mlt": "uclamss_98pierce_xxxx_b0047",
+       "fedora_datastream_latest_JPG_SIZE_mt": [
+           "87642"
+       ],
+       "fedora_datastream_info_OBJ_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastream_info_OBJ_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "fedora_datastream_latest_JPG_SIZE_ms": [
+           "87642"
+       ],
+       "mods_name_corporate_repository_mlt": "repository",
+       "mods_name_corporate_repository_s": "repository",
+       "mods_name_corporate_repository_t": "repository",
+       "mods_relatedItem_host_titleInfo_title_mt": [
+           "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA."
+       ],
+       "mods_relatedItem_host_titleInfo_title_ms": [
+           "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA."
+       ],
+       "mods_titleInfo_alternative_title_mlt": "Topanga Canyon, Topanga Road",
+       "fedora_datastream_info_JPG_VERSIONABLE_ms": [
+           "true"
+       ],
+       "RELS_EXT_isMemberOfCollection_uri_t": "info:fedora/piercephoto:1",
+       "RELS_EXT_isMemberOfCollection_uri_s": "info:fedora/piercephoto:1",
+       "fedora_datastream_info_JPG_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_version_JPG_SIZE_ms": [
+           "87642",
+           "87642"
+       ],
+       "fgs_lastModifiedDate_mdt": [
+           "2014-12-07T12:45:40.242000+00:00"
+       ],
+       "fedora_datastream_version_JPG_SIZE_mt": [
+           "87642",
+           "87642"
+       ],
+       "fedora_datastream_version_JP2_MIMETYPE_ms": [
+           "image/jp2",
+           "image/jp2"
+       ],
+       "fedora_datastream_version_JP2_MIMETYPE_mt": [
+           "image/jp2",
+           "image/jp2"
+       ],
+       "fedora_datastream_info_DC_STATE_mt": [
+           "A"
+       ],
+       "fedora_datastream_info_DC_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_version_TN_SIZE_mt": [
+           "38450",
+           "38450"
+       ],
+       "RELS_EXT_hasModel_uri_s": "info:fedora/islandora:sp_large_image_cmodel",
+       "RELS_EXT_hasModel_uri_t": "info:fedora/islandora:sp_large_image_cmodel",
+       "fedora_datastream_version_TN_SIZE_ms": [
+           "38450",
+           "38450"
+       ],
+       "mods_originInfo_encoding_iso8601_dateCreated_mt": [
+           "1923/1928"
+       ],
+       "mods_originInfo_encoding_iso8601_dateCreated_ms": [
+           "1923/1928"
+       ],
+       "mods_titleInfo_alternative_title_ms": [
+           "Topanga Canyon, Topanga Road"
+       ],
+       "fedora_datastream_version_OBJ_CREATED_ms": [
+           "2013-03-12T20:10:59.600Z"
+       ],
+       "fedora_datastream_version_OBJ_CREATED_mt": [
+           "2013-03-12T20:10:59.600Z"
+       ],
+       "mods_titleInfo_alternative_title_mt": [
+           "Topanga Canyon, Topanga Road"
+       ],
+       "mods_titleInfo_title_mlt": "Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928",
+       "mods_geographic_ms": [
+           "Topanga (Calif.)"
+       ],
+       "mods_xml": [
+           "\n<mods:mods xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd\">\n                    <mods:titleInfo>\n                        <mods:title>Four photographs of Topanga Canyon in the Santa Monica Mountains, Topanga, circa 1923-1928</mods:title>\n                    </mods:titleInfo>\n                    <mods:titleInfo type=\"alternative\">\n                        <mods:title>Topanga Canyon, Topanga Road</mods:title>\n                    </mods:titleInfo>\n                    <mods:identifier type=\"local\">uclamss_98pierce_xxxx_b0047</mods:identifier>\n                    <mods:note>Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.</mods:note>\n                    <mods:note>Access to this collection is generously supported by Arcadia funds.</mods:note>\n                    <mods:originInfo>\n                        <mods:dateCreated>[circa 1923-1928]</mods:dateCreated>\n                        <mods:dateCreated encoding=\"iso8601\">1923/1928</mods:dateCreated>\n                    </mods:originInfo>\n                    <mods:genre authority=\"aat\">cellulose nitrate film</mods:genre>\n                    <mods:genre authority=\"aat\">black-and-white photographs</mods:genre>\n                    <mods:genre authority=\"aat\">landscapes (representations)</mods:genre>\n                    <mods:typeOfResource>still image</mods:typeOfResource>\n                    <mods:language>\n                        <mods:languageTerm authority=\"iso639-3\" type=\"code\">zxx</mods:languageTerm>\n                    </mods:language>\n                    <mods:relatedItem type=\"host\">\n                        <mods:titleInfo>\n                            <mods:title>C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA.</mods:title>\n                        </mods:titleInfo>\n                    </mods:relatedItem>\n                    <mods:subject authority=\"tgm\">\n                        <mods:topic>Canyons $z California $z Topanga</mods:topic>\n                    </mods:subject>\n                    <mods:subject authority=\"tgm\">\n                        <mods:topic>Roads $z California $z Topanga</mods:topic>\n                    </mods:subject>\n                    <mods:subject authority=\"lcsh\">\n                        <mods:topic>Topanga (Calif.) </mods:topic>\n                    </mods:subject>\n                    <mods:subject>\n                        <mods:geographic>Topanga (Calif.)</mods:geographic>\n                    </mods:subject>\n                    <mods:name type=\"personal\">\n                        <mods:namePart>Pierce, C. C. $q(Charles C.), $d1861-1946</mods:namePart>\n                        <mods:role>\n                            <mods:roleTerm type=\"text\">collector</mods:roleTerm>\n                        </mods:role>\n                    </mods:name>\n                    <mods:name type=\"corporate\">\n                        <mods:namePart>University of California, Los Angeles. $b Library. $b Dept. of Special Collections</mods:namePart>\n                        <mods:role>\n                            <mods:roleTerm type=\"text\">repository</mods:roleTerm>\n                        </mods:role>\n                    </mods:name>\n                    <mods:physicalDescription>\n                        <mods:extent>6.75 x 5 inches</mods:extent>\n                        <mods:extent>1 photograph : b&amp;w</mods:extent>\n                    </mods:physicalDescription>\n                    <mods:recordInfo>\n                        <mods:recordIdentifier>21198-zz002b1833</mods:recordIdentifier>\n                    </mods:recordInfo>\n                </mods:mods>"
+       ],
+       "fedora_datastream_version_JP2_LABEL_mt": [
+           "JPEG 2000",
+           "JPEG 2000"
+       ],
+       "fedora_datastream_version_TN_CREATED_ms": [
+           "2013-03-04T21:58:52.530Z",
+           "2013-03-12T20:11:01.667Z"
+       ],
+       "fedora_datastream_version_TN_CREATED_mt": [
+           "2013-03-04T21:58:52.530Z",
+           "2013-03-12T20:11:01.667Z"
+       ],
+       "fedora_datastream_version_JP2_LABEL_ms": [
+           "JPEG 2000",
+           "JPEG 2000"
+       ],
+       "mods_subject_authority_lcsh_topic_ms": [
+           "Topanga (Calif.)"
+       ],
+       "mods_subject_geographic_mt": [
+           "Topanga (Calif.)"
+       ],
+       "mods_subject_geographic_ms": [
+           "Topanga (Calif.)"
+       ],
+       "mods_subject_authority_lcsh_topic_mt": [
+           "Topanga (Calif.)"
+       ],
+       "fedora_datastream_latest_JPG_LABEL_ms": [
+           "Medium sized JPEG"
+       ],
+       "fedora_datastream_latest_JPG_LABEL_mt": [
+           "Medium sized JPEG"
+       ],
+       "mods_recordInfo_recordIdentifier_s": "21198-zz002b1833",
+       "mods_recordInfo_recordIdentifier_t": "21198-zz002b1833",
+       "fedora_datastream_version_AUDIT_ID_mt": [
+           "AUDIT.0"
+       ],
+       "fedora_datastream_version_AUDIT_ID_ms": [
+           "AUDIT.0"
+       ],
+       "dc.language": [
+           "zxx"
+       ],
+       "fedora_datastream_version_RELS-EXT_MIMETYPE_mt": [
+           "application/rdf+xml"
+       ],
+       "fedora_datastream_version_RELS-EXT_MIMETYPE_ms": [
+           "application/rdf+xml"
+       ],
+       "fedora_datastream_version_OBJ_MIMETYPE_ms": [
+           "image/tiff"
+       ],
+       "fedora_datastream_version_OBJ_MIMETYPE_mt": [
+           "image/tiff"
+       ],
+       "fedora_datastream_version_DC_CREATED_ms": [
+           "2013-03-12T20:10:59.395Z"
+       ],
+       "mods_name_corporate_role_roleTerm_text_t": "repository",
+       "mods_name_corporate_role_roleTerm_text_s": "repository",
+       "fedora_datastream_version_DC_CREATED_mt": [
+           "2013-03-12T20:10:59.395Z"
+       ],
+       "fedora_datastream_latest_OBJ_SIZE_ms": [
+           "45055428"
+       ],
+       "fedora_datastream_latest_OBJ_SIZE_mt": [
+           "45055428"
+       ],
+       "mods_genre_mlt": "cellulose nitrate film",
+       "fedora_datastream_latest_JPG_CREATED_ms": [
+           "2013-03-12T20:11:01.473Z"
+       ],
+       "fedora_datastream_latest_JPG_CREATED_mt": [
+           "2013-03-12T20:11:01.473Z"
+       ],
+       "mods_name_personal_collector_t": "collector",
+       "mods_name_personal_collector_s": "collector",
+       "fedora_datastream_info_MODS_ID_mt": [
+           "MODS"
+       ],
+       "fedora_datastream_info_MODS_ID_ms": [
+           "MODS"
+       ],
+       "fedora_datastream_info_RELS-EXT_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_info_RELS-EXT_STATE_mt": [
+           "A"
+       ],
+       "fedora_datastream_latest_TN_SIZE_ms": [
+           "38450"
+       ],
+       "fedora_datastream_latest_TN_SIZE_mt": [
+           "38450"
+       ],
+       "mods_name_personal_collector_role_roleTerm_text_t": "collector",
+       "mods_name_corporate_repository_role_roleTerm_text_mlt": "repository",
+       "mods_name_personal_collector_role_roleTerm_text_s": "collector",
+       "mods_originInfo_encoding_iso8601_dateCreated_s": "1923/1928",
+       "mods_physicalDescription_extent_ms": [
+           "6.75 x 5 inches",
+           "1 photograph : b&w"
+       ],
+       "mods_physicalDescription_extent_mt": [
+           "6.75 x 5 inches",
+           "1 photograph : b&w"
+       ],
+       "mods_originInfo_encoding_iso8601_dateCreated_t": "1923/1928",
+       "mods_note_t": "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+       "mods_note_s": "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+       "fedora_datastream_version_TECHMD_SIZE_mt": [
+           "8544",
+           "8544"
+       ],
+       "fedora_datastream_version_TECHMD_SIZE_ms": [
+           "8544",
+           "8544"
+       ],
+       "mods_name_corporate_repository_namePart_mlt": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "fedora_datastream_version_JPG_LABEL_mt": [
+           "Medium sized JPEG",
+           "Medium sized JPEG"
+       ],
+       "fedora_datastream_version_JPG_CREATED_mt": [
+           "2013-03-04T21:58:46.048Z",
+           "2013-03-12T20:11:01.473Z"
+       ],
+       "fedora_datastream_version_JPG_CREATED_ms": [
+           "2013-03-04T21:58:46.048Z",
+           "2013-03-12T20:11:01.473Z"
+       ],
+       "mods_language_languageTerm_code_authority_iso639-3_t": "zxx",
+       "fedora_datastream_info_RELS-EXT_ID_mt": [
+           "RELS-EXT"
+       ],
+       "mods_language_languageTerm_code_authority_iso639-3_mlt": "zxx",
+       "fedora_datastream_info_AUDIT_ID_mt": [
+           "AUDIT"
+       ],
+       "fedora_datastream_info_AUDIT_ID_ms": [
+           "AUDIT"
+       ],
+       "mods_name_corporate_repository_role_roleTerm_text_t": "repository",
+       "dc.format": [
+           "6.75 x 5 inches"
+       ],
+       "mods_name_corporate_repository_role_roleTerm_text_s": "repository",
+       "fgs_lastModifiedDate_mt": [
+           "2014-12-07T12:45:40.242Z"
+       ],
+       "fedora_datastream_info_JP2_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastream_info_JP2_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "mods_genre_authority_aat_s": "cellulose nitrate film",
+       "mods_genre_authority_aat_t": "cellulose nitrate film",
+       "score": 1,
+       "dc.description": [
+           "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+           "Access to this collection is generously supported by Arcadia funds."
+       ],
+       "fedora_datastream_latest_JPG_ID_mt": [
+           "JPG.1"
+       ],
+       "fedora_datastream_version_RELS-EXT_ID_ms": [
+           "RELS-EXT.1"
+       ],
+       "fedora_datastream_version_RELS-EXT_ID_mt": [
+           "RELS-EXT.1"
+       ],
+       "mods_titleInfo_alternative_title_t": "Topanga Canyon, Topanga Road",
+       "fedora_datastream_version_MODS_CREATED_ms": [
+           "2013-03-12T20:11:01.869Z"
+       ],
+       "fedora_datastream_version_MODS_CREATED_mt": [
+           "2013-03-12T20:11:01.869Z"
+       ],
+       "mods_titleInfo_alternative_title_s": "Topanga Canyon, Topanga Road",
+       "mods_name_personal_collector_namePart_ms": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946"
+       ],
+       "mods_name_personal_collector_namePart_mt": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946"
+       ],
+       "mods_name_corporate_namePart_mlt": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "fedora_datastream_latest_TN_LABEL_ms": [
+           "Thumbnail"
+       ],
+       "fedora_datastream_version_DC_ID_mt": [
+           "DC.1"
+       ],
+       "fedora_datastream_version_DC_ID_ms": [
+           "DC.1"
+       ],
+       "fedora_datastream_latest_TN_LABEL_mt": [
+           "Thumbnail"
+       ],
+       "fedora_datastream_version_DC_SIZE_mt": [
+           "1750"
+       ],
+       "fedora_datastream_info_OBJ_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_info_OBJ_VERSIONABLE_ms": [
+           "true"
+       ],
+       "fedora_datastream_version_DC_SIZE_ms": [
+           "1750"
+       ],
+       "mods_subject_topic_s": "Canyons $z California $z Topanga",
+       "mods_name_personal_collector_role_roleTerm_text_ms": [
+           "collector"
+       ],
+       "fedora_datastream_info_DC_VERSIONABLE_mt": [
+           "true"
+       ],
+       "mods_genre_t": "cellulose nitrate film",
+       "mods_subject_topic_t": "Canyons $z California $z Topanga",
+       "mods_name_corporate_repository_ms": [
+           "repository"
+       ],
+       "fedora_datastream_info_MODS_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "mods_name_personal_namePart_t": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "fedora_datastream_info_MODS_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastreams_mt": [
+           "AUDIT",
+           "TECHMD",
+           "JP2",
+           "JPG",
+           "TN",
+           "RELS-EXT",
+           "DC",
+           "OBJ",
+           "MODS"
+       ],
+       "fedora_datastreams_ms": [
+           "AUDIT",
+           "TECHMD",
+           "JP2",
+           "JPG",
+           "TN",
+           "RELS-EXT",
+           "DC",
+           "OBJ",
+           "MODS"
+       ],
+       "fedora_datastream_version_OBJ_ID_ms": [
+           "OBJ.1"
+       ],
+       "mods_typeOfResource_s": "still image",
+       "fedora_datastream_version_AUDIT_LABEL_ms": [
+           "Audit Trail for this object"
+       ],
+       "mods_typeOfResource_t": "still image",
+       "fedora_datastream_version_OBJ_ID_mt": [
+           "OBJ.1"
+       ],
+       "fgs_createdDate_mdt": [
+           "2013-03-04T21:57:54.489000+00:00"
+       ],
+       "mods_name_corporate_repository_role_roleTerm_text_ms": [
+           "repository"
+       ],
+       "mods_name_personal_role_roleTerm_text_mlt": "collector",
+       "fedora_datastream_latest_OBJ_ID_ms": [
+           "OBJ.1"
+       ],
+       "fedora_datastream_latest_OBJ_ID_mt": [
+           "OBJ.1"
+       ],
+       "fedora_datastream_info_AUDIT_CONTROL_GROUP_mt": [
+           "X"
+       ],
+       "fedora_datastream_info_AUDIT_CONTROL_GROUP_ms": [
+           "X"
+       ],
+       "mods_language_languageTerm_code_mlt": "zxx",
+       "mods_name_corporate_role_roleTerm_text_ms": [
+           "repository"
+       ],
+       "mods_name_corporate_role_roleTerm_text_mt": [
+           "repository"
+       ],
+       "fedora_datastream_latest_TECHMD_LABEL_mt": [
+           "TECHMD"
+       ],
+       "fedora_datastream_info_MODS_STATE_ms": [
+           "A"
+       ],
+       "mods_identifier_local_ms": [
+           "uclamss_98pierce_xxxx_b0047"
+       ],
+       "mods_identifier_local_mt": [
+           "uclamss_98pierce_xxxx_b0047"
+       ],
+       "fedora_datastream_info_MODS_STATE_mt": [
+           "A"
+       ],
+       "mods_name_corporate_repository_role_roleTerm_text_mt": [
+           "repository"
+       ],
+       "RELS_EXT_isMemberOfCollection_uri_mt": [
+           "info:fedora/piercephoto:1"
+       ],
+       "fedora_datastream_latest_MODS_CREATED_ms": [
+           "2013-03-12T20:11:01.869Z"
+       ],
+       "fedora_datastream_latest_TECHMD_LABEL_ms": [
+           "TECHMD"
+       ],
+       "fedora_datastream_latest_JP2_MIMETYPE_ms": [
+           "image/jp2"
+       ],
+       "fedora_datastream_info_JPG_STATE_mt": [
+           "A"
+       ],
+       "dc.contributor": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946 (collector)",
+           "University of California, Los Angeles. $b Library. $b Dept. of Special Collections (repository)"
+       ],
+       "fedora_datastream_info_JPG_STATE_ms": [
+           "A"
+       ],
+       "mods_relatedItem_host_titleInfo_title_mlt": "C. C. Pierce Photographic Collection, Department of Special Collections, Charles E. Young Research Library, UCLA.",
+       "mods_typeOfResource_mt": [
+           "still image"
+       ],
+       "mods_identifier_local_s": "uclamss_98pierce_xxxx_b0047",
+       "mods_identifier_local_t": "uclamss_98pierce_xxxx_b0047",
+       "mods_typeOfResource_ms": [
+           "still image"
+       ],
+       "fedora_datastream_latest_DC_ID_mt": [
+           "DC.1"
+       ],
+       "fedora_datastream_latest_DC_ID_ms": [
+           "DC.1"
+       ],
+       "fedora_datastream_info_AUDIT_VERSIONABLE_ms": [
+           "false"
+       ],
+       "fedora_datastream_latest_RELS-EXT_FORMAT_URI_mt": [
+           "info:fedora/fedora-system:FedoraRELSExt-1.0"
+       ],
+       "fedora_datastream_latest_RELS-EXT_FORMAT_URI_ms": [
+           "info:fedora/fedora-system:FedoraRELSExt-1.0"
+       ],
+       "mods_physicalDescription_extent_t": "6.75 x 5 inches",
+       "mods_physicalDescription_extent_s": "6.75 x 5 inches",
+       "fedora_datastream_info_TN_ID_ms": [
+           "TN"
+       ],
+       "fedora_datastream_info_JP2_STATE_mt": [
+           "A"
+       ],
+       "mods_genre_authority_aat_ms": [
+           "cellulose nitrate film",
+           "black-and-white photographs",
+           "landscapes (representations)"
+       ],
+       "mods_genre_authority_aat_mt": [
+           "cellulose nitrate film",
+           "black-and-white photographs",
+           "landscapes (representations)"
+       ],
+       "fedora_datastream_info_JP2_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_info_MODS_VERSIONABLE_ms": [
+           "true"
+       ],
+       "dc.type": [
+           "cellulose nitrate film",
+           "black-and-white photographs",
+           "landscapes (representations)",
+           "StillImage"
+       ],
+       "fedora_datastream_info_TN_ID_mt": [
+           "TN"
+       ],
+       "fedora_datastream_info_JPG_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastream_latest_RELS-EXT_MIMETYPE_ms": [
+           "application/rdf+xml"
+       ],
+       "fedora_datastream_info_JPG_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "fedora_datastream_version_OBJ_LABEL_mt": [
+           "High Quality Tiff"
+       ],
+       "fedora_datastream_version_OBJ_LABEL_ms": [
+           "High Quality Tiff"
+       ],
+       "mods_originInfo_dateCreated_s": "[circa 1923-1928]",
+       "mods_originInfo_dateCreated_t": "[circa 1923-1928]",
+       "mods_originInfo_dateCreated_mlt": "[circa 1923-1928]",
+       "fedora_datastream_latest_RELS-EXT_SIZE_mt": [
+           "554"
+       ],
+       "mods_subject_authority_tgm_topic_s": "Canyons $z California $z Topanga",
+       "mods_subject_authority_tgm_topic_t": "Canyons $z California $z Topanga",
+       "fedora_datastream_latest_RELS-EXT_SIZE_ms": [
+           "554"
+       ],
+       "fedora_datastream_version_RELS-EXT_SIZE_mt": [
+           "554"
+       ],
+       "fedora_datastream_version_RELS-EXT_FORMAT_URI_mt": [
+           "info:fedora/fedora-system:FedoraRELSExt-1.0"
+       ],
+       "fedora_datastream_version_RELS-EXT_FORMAT_URI_ms": [
+           "info:fedora/fedora-system:FedoraRELSExt-1.0"
+       ],
+       "fedora_datastream_version_RELS-EXT_SIZE_ms": [
+           "554"
+       ],
+       "PID": "piercephoto:100",
+       "fedora_datastream_info_TECHMD_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "mods_originInfo_dateCreated_mt": [
+           "[circa 1923-1928]",
+           "[circa 1923-1928]",
+           "1923/1928"
+       ],
+       "mods_originInfo_dateCreated_ms": [
+           "[circa 1923-1928]",
+           "[circa 1923-1928]",
+           "1923/1928"
+       ],
+       "fedora_datastream_info_TECHMD_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "mods_subject_authority_lcsh_topic_mlt": "Topanga (Calif.)",
+       "mods_name_personal_namePart_mt": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946"
+       ],
+       "mods_name_personal_namePart_ms": [
+           "Pierce, C. C. $q(Charles C.), $d1861-1946"
+       ],
+       "fedora_datastream_version_JP2_ID_ms": [
+           "JP2.0",
+           "JP2.1"
+       ],
+       "fedora_datastream_version_JP2_ID_mt": [
+           "JP2.0",
+           "JP2.1"
+       ],
+       "mods_name_personal_collector_role_roleTerm_text_mlt": "collector",
+       "mods_name_personal_namePart_mlt": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "mods_name_personal_collector_mlt": "collector",
+       "fedora_datastream_latest_JP2_SIZE_mt": [
+           "1051268"
+       ],
+       "fedora_datastream_latest_JP2_SIZE_ms": [
+           "1051268"
+       ],
+       "fedora_datastream_latest_TECHMD_SIZE_mt": [
+           "8544"
+       ],
+       "fedora_datastream_latest_TECHMD_SIZE_ms": [
+           "8544"
+       ],
+       "fgs_state_mlt": "Active",
+       "fedora_datastream_latest_RELS-EXT_LABEL_ms": [
+           "Fedora Object to Object Relationship Metadata."
+       ],
+       "fedora_datastream_latest_RELS-EXT_LABEL_mt": [
+           "Fedora Object to Object Relationship Metadata."
+       ],
+       "fedora_datastream_info_OBJ_STATE_mt": [
+           "A"
+       ],
+       "fedora_datastream_info_TN_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_info_TN_VERSIONABLE_ms": [
+           "true"
+       ],
+       "mods_genre_s": "cellulose nitrate film",
+       "fedora_datastream_info_TECHMD_VERSIONABLE_mt": [
+           "true"
+       ],
+       "fedora_datastream_info_TECHMD_VERSIONABLE_ms": [
+           "true"
+       ],
+       "mods_typeOfResource_mlt": "still image",
+       "fedora_datastream_latest_AUDIT_FORMAT_URI_mt": [
+           "info:fedora/fedora-system:format/xml.fedora.audit"
+       ],
+       "fedora_datastream_latest_AUDIT_FORMAT_URI_ms": [
+           "info:fedora/fedora-system:format/xml.fedora.audit"
+       ],
+       "fedora_datastream_info_RELS-EXT_CONTROL_GROUP_mt": [
+           "X"
+       ],
+       "mods_name_personal_collector_role_roleTerm_text_mt": [
+           "collector"
+       ],
+       "fedora_datastream_info_RELS-EXT_CONTROL_GROUP_ms": [
+           "X"
+       ],
+       "fedora_datastream_latest_RELS-EXT_ID_mt": [
+           "RELS-EXT.1"
+       ],
+       "fedora_datastream_latest_AUDIT_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "fedora_datastream_latest_AUDIT_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "fedora_datastream_latest_RELS-EXT_ID_ms": [
+           "RELS-EXT.1"
+       ],
+       "fedora_datastream_version_DC_MIMETYPE_mt": [
+           "text/xml"
+       ],
+       "mods_name_personal_namePart_s": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "fedora_datastream_version_DC_MIMETYPE_ms": [
+           "text/xml"
+       ],
+       "RELS_EXT_isMemberOfCollection_uri_mlt": "info:fedora/piercephoto:1",
+       "fedora_datastream_latest_MODS_SIZE_mt": [
+           "3950"
+       ],
+       "fedora_datastream_latest_DC_CREATED_ms": [
+           "2013-03-12T20:10:59.395Z"
+       ],
+       "fedora_datastream_version_JPG_ID_ms": [
+           "JPG.0",
+           "JPG.1"
+       ],
+       "fedora_datastream_version_JPG_ID_mt": [
+           "JPG.0",
+           "JPG.1"
+       ],
+       "fedora_datastream_latest_DC_CREATED_mt": [
+           "2013-03-12T20:10:59.395Z"
+       ],
+       "fedora_datastream_latest_MODS_SIZE_ms": [
+           "3950"
+       ],
+       "fedora_datastream_version_MODS_LABEL_mt": [
+           "MODS Record"
+       ],
+       "fedora_datastream_latest_JP2_ID_mt": [
+           "JP2.1"
+       ],
+       "fedora_datastream_latest_JP2_ID_ms": [
+           "JP2.1"
+       ],
+       "fedora_datastream_version_MODS_LABEL_ms": [
+           "MODS Record"
+       ],
+       "mods_originInfo_encoding_iso8601_dateCreated_mlt": "1923/1928",
+       "mods_name_corporate_repository_mt": [
+           "repository"
+       ],
+       "mods_language_languageTerm_code_authority_iso639-3_s": "zxx",
+       "RELS_EXT_hasModel_uri_ms": [
+           "info:fedora/islandora:sp_large_image_cmodel"
+       ],
+       "RELS_EXT_hasModel_uri_mt": [
+           "info:fedora/islandora:sp_large_image_cmodel"
+       ],
+       "mods_language_languageTerm_code_authority_iso639-3_ms": [
+           "zxx"
+       ],
+       "mods_language_languageTerm_code_authority_iso639-3_mt": [
+           "zxx"
+       ],
+       "fedora_datastream_latest_OBJ_LABEL_mt": [
+           "High Quality Tiff"
+       ],
+       "fedora_datastream_latest_OBJ_LABEL_ms": [
+           "High Quality Tiff"
+       ],
+       "mods_note_mlt": "Four photographs of Topanga Canyon, located in the Santa Monica Mountains. The Tppanga Canyon Road, with a wooden guard rail and a wooden truss bridge, is visible snaking throughout the canyon.",
+       "fedora_datastream_version_MODS_SIZE_ms": [
+           "3950"
+       ],
+       "fedora_datastream_version_MODS_SIZE_mt": [
+           "3950"
+       ],
+       "fedora_datastream_version_TECHMD_ID_mt": [
+           "TECHMD.0",
+           "TECHMD.1"
+       ],
+       "fedora_datastream_version_TECHMD_ID_ms": [
+           "TECHMD.0",
+           "TECHMD.1"
+       ],
+       "fedora_datastream_version_JPG_LABEL_ms": [
+           "Medium sized JPEG",
+           "Medium sized JPEG"
+       ],
+       "dc.coverage": [
+           "Topanga (Calif.)"
+       ],
+       "mods_genre_authority_aat_mlt": "cellulose nitrate film",
+       "fedora_datastream_latest_JP2_LABEL_ms": [
+           "JPEG 2000"
+       ],
+       "fedora_datastream_latest_AUDIT_CREATED_mt": [
+           "2013-03-04T21:57:54.489Z"
+       ],
+       "fedora_datastream_latest_AUDIT_CREATED_ms": [
+           "2013-03-04T21:57:54.489Z"
+       ],
+       "fedora_datastream_latest_JP2_LABEL_mt": [
+           "JPEG 2000"
+       ],
+       "fgs_state_t": "Active",
+       "mods_name_personal_role_roleTerm_text_ms": [
+           "collector"
+       ],
+       "mods_name_personal_role_roleTerm_text_mt": [
+           "collector"
+       ],
+       "fgs_state_s": "Active",
+       "fedora_datastream_latest_RELS-EXT_CREATED_mt": [
+           "2013-03-12T20:10:59.228Z"
+       ],
+       "mods_name_corporate_repository_namePart_t": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "mods_name_corporate_repository_namePart_s": "University of California, Los Angeles. $b Library. $b Dept. of Special Collections",
+       "fedora_datastream_latest_RELS-EXT_CREATED_ms": [
+           "2013-03-12T20:10:59.228Z"
+       ],
+       "mods_name_personal_collector_namePart_mlt": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "fedora_datastream_info_OBJ_STATE_ms": [
+           "A"
+       ],
+       "fgs_createdDate_dt": "2013-03-04T21:57:54.489000+00:00",
+       "mods_subject_authority_tgm_topic_mt": [
+           "Canyons $z California $z Topanga",
+           "Roads $z California $z Topanga"
+       ],
+       "mods_subject_authority_tgm_topic_mlt": "Canyons $z California $z Topanga",
+       "fedora_datastream_latest_TECHMD_ID_ms": [
+           "TECHMD.1"
+       ],
+       "fedora_datastream_latest_TECHMD_ID_mt": [
+           "TECHMD.1"
+       ],
+       "mods_subject_authority_tgm_topic_ms": [
+           "Canyons $z California $z Topanga",
+           "Roads $z California $z Topanga"
+       ],
+       "mods_genre_mt": [
+           "cellulose nitrate film",
+           "black-and-white photographs",
+           "landscapes (representations)"
+       ],
+       "mods_genre_ms": [
+           "cellulose nitrate film",
+           "black-and-white photographs",
+           "landscapes (representations)"
+       ],
+       "fedora_datastream_version_TECHMD_LABEL_ms": [
+           "TECHMD",
+           "TECHMD"
+       ],
+       "fedora_datastream_latest_AUDIT_LABEL_ms": [
+           "Audit Trail for this object"
+       ],
+       "fedora_datastream_latest_AUDIT_LABEL_mt": [
+           "Audit Trail for this object"
+       ],
+       "fedora_datastream_info_AUDIT_VERSIONABLE_mt": [
+           "false"
+       ],
+       "fedora_datastream_latest_DC_SIZE_ms": [
+           "1750"
+       ],
+       "fedora_datastream_latest_DC_SIZE_mt": [
+           "1750"
+       ],
+       "fedora_datastream_version_JP2_SIZE_ms": [
+           "1051268",
+           "1051268"
+       ],
+       "fedora_datastream_info_DC_CONTROL_GROUP_ms": [
+           "M"
+       ],
+       "fedora_datastream_info_DC_CONTROL_GROUP_mt": [
+           "M"
+       ],
+       "fedora_datastream_version_JP2_SIZE_mt": [
+           "1051268",
+           "1051268"
+       ],
+       "dc.subject": [
+           "Canyons $z California $z Topanga",
+           "Roads $z California $z Topanga",
+           "Topanga (Calif.)",
+           ""
+       ],
+       "fedora_datastream_latest_TN_ID_mt": [
+           "TN.1"
+       ],
+       "mods_name_personal_collector_namePart_s": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "mods_name_personal_collector_namePart_t": "Pierce, C. C. $q(Charles C.), $d1861-1946",
+       "fedora_datastream_latest_TN_ID_ms": [
+           "TN.1"
+       ],
+       "fedora_datastream_info_JPG_ID_mt": [
+           "JPG"
+       ],
+       "fedora_datastream_latest_OBJ_CREATED_mt": [
+           "2013-03-12T20:10:59.600Z"
+       ],
+       "fedora_datastream_latest_OBJ_CREATED_ms": [
+           "2013-03-12T20:10:59.600Z"
+       ],
+       "fedora_datastream_info_JPG_ID_ms": [
+           "JPG"
+       ],
+       "mods_subject_topic_ms": [
+           "Canyons $z California $z Topanga",
+           "Roads $z California $z Topanga",
+           "Topanga (Calif.)"
+       ],
+       "mods_subject_topic_mt": [
+           "Canyons $z California $z Topanga",
+           "Roads $z California $z Topanga",
+           "Topanga (Calif.)"
+       ],
+       "fedora_datastream_info_AUDIT_STATE_ms": [
+           "A"
+       ],
+       "fedora_datastream_info_AUDIT_STATE_mt": [
+           "A"
+       ]
+   },
+   "id": "0d9d4ab69c8069cbcb6b04a87144b597"
+}
