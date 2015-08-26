@@ -48,6 +48,9 @@ def dict_for_data_field(field_src, data, field_dest):
 COUCHDOC_TO_SOLR_MAPPING = {
     '_id'       : lambda d: {'harvest_id_s': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
+    'object_dimensions' : lambda d: {'reference_image_dimensions':
+                                     '{0}:{1}'.format(d['object_dimensions'][0],
+                                        d['object_dimensions'][1]) },
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
