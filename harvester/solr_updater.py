@@ -319,9 +319,9 @@ def has_required_fields(doc):
     '''Check the couchdb doc has required fields'''
     if 'sourceResource' not in doc:
         raise KeyError(
-            '+++++OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
+            '---- OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
     if 'title' not in doc['sourceResource']:
-        raise KeyError('+++++OMITTED: Doc:{0} has no title.'.format(doc['_id']))
+        raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
     if 'image' == doc['sourceResource'].get('type', '').lower():
         collection = doc.get('originalRecord', {}).get(
                 'collection', [{'harvest_type':'NONE'}])[0]
@@ -329,7 +329,7 @@ def has_required_fields(doc):
             #if doesnt have a reference_image_md5, reject
             if 'object' not in doc:
                 raise KeyError(
-                '+++++OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
+                '---- OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
     return True
 
 def add_slash(url):
@@ -517,7 +517,7 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
-        print "+++ ADDED: {} +++ {}".format(solr_doc['id'], solr_doc['harvest_id_s'])
+        print "++++ ADDED: {} :harvest_id_s {}".format(solr_doc['id'], solr_doc['harvest_id_s'])
     except SolrException, e:
         print "ERROR for {} : {} {} {}".format(solr_doc['id'], e, solr_doc['collection_url'], solr_doc['harvest_id_s'])
         if not e.httpcode == 400:
