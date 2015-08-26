@@ -1,2 +1,1 @@
-wget --header "x-api-key: xxxyyyzzz" "https://registry.cdlib.org/solr/query?q=-reference_image_md5:[* TO *]&rows=1"
-
+wget --header "X-Authentication-Token: $SOLR_API_KEY" --no-check-certificate "$URL_SOLR_API/solr/query?q=*:*&rows=1"

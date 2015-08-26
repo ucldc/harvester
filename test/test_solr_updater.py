@@ -83,9 +83,10 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_title'], 'brag')
         self.assertEqual(sdoc['alternative_title'], ['test alt title'])
         self.assertEqual(sdoc['creator'], ['Dunya Ramicova'])
-        #TODO: fix so not json
-###################################################################################self.assertEqual(sdoc['description'], ['test description'])
-        # dimensions - not sure where to get this from
+        self.assertEqual(sdoc['description'], [u'"Design #39; BRAG; Entourage; Principle Base A" written on drawing. No signature on drawing.',
+            u'Director: David Pountney; Scene Designer: Robert Israel; Producer: English National Opera, London, UK',
+            u'English National Opera'])
+        self.assertEqual(sdoc['reference_image_dimensions'], u'899:1199')
         self.assertEqual(sdoc['extent'], u'9" x 12" ')
         self.assertEqual(sdoc['format'],
             u'Graphite pencil, and Dr. Ph Martins Liquid Watercolor on watercolor paper')
