@@ -1,0 +1,20 @@
+{
+  "entity-type": "documents",
+  "isPaginable": true,
+  "resultsCount": 0,
+  "pageSize": 50,
+  "maxPageSize": 1000,
+  "currentPageSize": 0,
+  "currentPageIndex": 0,
+  "numberOfPages": 1,
+  "isPreviousPageAvailable": false,
+  "isNextPageAvailable": false,
+  "isLastPageAvailable": false,
+  "isSortable": true,
+  "hasError": false,
+  "errorMessage": null,
+  "totalSize": 0,
+  "pageIndex": 0,
+  "pageCount": 1,
+  "entries": []
+}

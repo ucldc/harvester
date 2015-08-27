@@ -36,6 +36,8 @@ EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
 CONTENT_SERVER = 'http://content.cdlib.org/'
 STRUCTMAP_S3_BUCKET = 'static.ucldc.cdlib.org/media_json'
+NUXEO_MEDIUM_IMAGE_URL_FORMAT = "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/{}/Medium:content/"
+NUXEO_S3_THUMB_URL_FORMAT = "https://s3.amazonaws.com/static.ucldc.cdlib.org/ucldc-nuxeo-thumb-media/{}"
 
 class NoRecordsFetchedException(Exception):
     pass
@@ -234,6 +236,72 @@ class NuxeoFetcher(Fetcher):
         structmap_text = ' '.join(labels)
         return structmap_text
 
+    def _get_isShownBy(self, nuxeo_metadata):
+        '''
+            Get isShownBy value for object
+            1) if object has image at parent level, use this
+            2) if component(s) have image, use first one we can find 
+            3) if object has PDF at parent level, use image stashed on S3
+            4) return None 
+        '''
+        is_shown_by = None 
+
+        # 1) if object has image at parent level, use this
+        if self._has_image(nuxeo_metadata):
+            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(nuxeo_metadata['uid'])
+            return is_shown_by
+
+        # 2) if component(s) have image, use first one we can find
+        first_image_component_uid = self._get_first_image_component(nuxeo_metadata)
+        if first_image_component_uid:
+            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(first_image_component_uid) 
+            return is_shown_by
+
+        # 3) if object has PDF at parent level, use image stashed on S3
+        if self._has_s3_thumbnail(nuxeo_metadata):
+            is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(nuxeo_metadata['uid'])
+ 
+        return is_shown_by
+           
+    def _has_image(self, metadata):
+        ''' based on json metadata, determine whether or not this Nuxeo doc has an image file associated '''
+
+        if metadata['type'] != "SampleCustomPicture":
+            return False
+
+        properties = metadata['properties']
+        file_content = properties.get('file:content')
+        if file_content and 'data' in file_content:
+            return True
+        else:
+            return False 
+
+    def _has_s3_thumbnail(self, metadata):
+        ''' based on json metadata, determine whether or not this Nuxeo doc is PDF (or other non-image)
+            that will have thumb image stashed on S3 for it '''
+        if metadata['type'] != "CustomFile":
+            return False
+
+        properties = metadata['properties']
+        file_content = properties.get('file:content')
+        if file_content and 'data' in file_content:
+            return True
+        else:
+            return False
+
+    def _get_first_image_component(self, parent_metadata):
+        ''' get first image component we can find '''
+        component_uid = None
+
+        children = self._nx.children(parent_metadata['path'])
+        for child in children:
+            child_metadata = self._nx.get_metadata(uid=child['uid'])
+            if self._has_image(child_metadata):
+                component_uid = child_metadata['uid']
+                break
+
+        return component_uid
+
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
@@ -242,6 +310,8 @@ class NuxeoFetcher(Fetcher):
                                             doc['uid'])
         self.metadata['structmap_url'] = self.structmap_url 
         self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
+        self.metadata['isShownBy'] = self._get_isShownBy(self.metadata)
+
         return self.metadata
 
 class UCLDCNuxeoFetcher(NuxeoFetcher):

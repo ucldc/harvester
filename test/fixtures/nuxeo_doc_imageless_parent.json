@@ -1,0 +1,169 @@
+{
+    "changeToken": "1440190818000",
+    "contextParameters": {},
+    "entity-type": "document",
+    "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+    ],
+    "isCheckedOut": true,
+    "lastModified": "2015-08-21T21:00:18.00Z",
+    "parentRef": "96c89cfc-dc43-409d-81b2-0db384747162",
+    "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001",
+    "properties": {
+        "dc:contributors": [
+            "system",
+            "Administrator",
+            "elin@ucmerced.edu",
+            "Adrian.Turner@ucop.edu"
+        ],
+        "dc:coverage": null,
+        "dc:created": "2014-10-22T14:44:26.32Z",
+        "dc:creator": "system",
+        "dc:description": null,
+        "dc:expired": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:language": null,
+        "dc:lastContributor": "elin@ucmerced.edu",
+        "dc:modified": "2015-08-21T21:00:18.00Z",
+        "dc:nature": null,
+        "dc:publisher": null,
+        "dc:rights": null,
+        "dc:source": null,
+        "dc:subjects": [],
+        "dc:title": "An album of twelve paintings on natural subjects",
+        "dc:valid": null,
+        "file:content": null,
+        "file:filename": null,
+        "picture:byline": null,
+        "picture:caption": null,
+        "picture:credit": null,
+        "picture:cropCoords": null,
+        "picture:dateline": null,
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:language": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:source": null,
+        "picture:subheadline": null,
+        "picture:typage": null,
+        "picture:views": [],
+        "ucldc_schema:accessrestrict": "public",
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:campusunit": [
+            "https://registry.cdlib.org/api/v1/repository/18/"
+        ],
+        "ucldc_schema:collection": [
+            "https://registry.cdlib.org/api/v1/collection/65/"
+        ],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:creator": [
+            {
+                "authorityid": "",
+                "name": "Uragami, Shunkin, 1779-1846",
+                "nametype": null,
+                "role": "Artist",
+                "source": "naf"
+            }
+        ],
+        "ucldc_schema:date": [
+            {
+                "date": "undated",
+                "datetype": "created",
+                "inclusiveend": "1846",
+                "inclusivestart": "1779",
+                "single": ""
+            }
+        ],
+        "ucldc_schema:description": [],
+        "ucldc_schema:extent": "",
+        "ucldc_schema:formgenre": [
+            {
+                "authorityid": "",
+                "heading": "hanging scrolls",
+                "source": null
+            },
+            {
+                "authorityid": "",
+                "heading": "Edo (Japanese period)",
+                "source": null
+            }
+        ],
+        "ucldc_schema:identifier": "ark:/13030/hb9c6012mm",
+        "ucldc_schema:language": [],
+        "ucldc_schema:localidentifier": [
+            "ucm_li_CL1979_001"
+        ],
+        "ucldc_schema:physdesc": "9 hanging scrolls; 23 x 16 cm.-23 x 30 cm. No signature or inscriptions. Ink and colors on silk",
+        "ucldc_schema:physlocation": "",
+        "ucldc_schema:place": [],
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:publisher": [
+            "Digitization funded by an Institute for Museum and Library Services (IMLS) Leadership Grant (LG 30-02-0260-02) awarded to the University of California, Merced Library."
+        ],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:rightscontact": "",
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:rightsjurisdiction": "",
+        "ucldc_schema:rightsnote": "",
+        "ucldc_schema:rightsnotice": "",
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user. ",
+        "ucldc_schema:rightsstatus": "publicdomain",
+        "ucldc_schema:source": "",
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:subjecttopic": [
+            {
+                "authorityid": "",
+                "heading": "flowers (plants)",
+                "headingtype": "topic",
+                "source": null
+            },
+            {
+                "authorityid": "",
+                "heading": "Insects",
+                "headingtype": "topic",
+                "source": null
+            },
+            {
+                "authorityid": "",
+                "heading": "Birds",
+                "headingtype": "topic",
+                "source": null
+            },
+            {
+                "authorityid": "",
+                "heading": "Fishes",
+                "headingtype": "topic",
+                "source": null
+            },
+            {
+                "authorityid": "",
+                "heading": "Animals",
+                "headingtype": "topic",
+                "source": null
+            }
+        ],
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:transcription": "",
+        "ucldc_schema:type": "image"
+    },
+    "repository": "default",
+    "state": "project",
+    "title": "An album of twelve paintings on natural subjects",
+    "type": "SampleCustomPicture",
+    "uid": "d400bb29-98d4-429c-a0b8-119acdb92006",
+    "versionLabel": "0.9+"
+}
