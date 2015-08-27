@@ -1,0 +1,142 @@
+{
+    "changeToken": "1432923022549",
+    "contextParameters": {},
+    "entity-type": "document",
+    "facets": [
+        "Downloadable",
+        "Commentable",
+        "Versionable",
+        "Publishable",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+    ],
+    "isCheckedOut": true,
+    "lastModified": "2015-05-29T18:10:22.54Z",
+    "parentRef": "f1cf3646-e599-4ab5-906d-efea733afcf3",
+    "path": "/asset-library/UCM/Assembly Newsletters/Tulare News/Tulare News, Vol. 1 No. 4",
+    "properties": {
+        "dc:contributors": [
+            "achan27@ucmerced.edu",
+            "jshiroma@ucmerced.edu"
+        ],
+        "dc:coverage": null,
+        "dc:created": "2015-03-13T16:53:26.48Z",
+        "dc:creator": "achan27@ucmerced.edu",
+        "dc:description": null,
+        "dc:expired": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:language": null,
+        "dc:lastContributor": "jshiroma@ucmerced.edu",
+        "dc:modified": "2015-05-29T18:10:22.54Z",
+        "dc:nature": null,
+        "dc:publisher": null,
+        "dc:rights": null,
+        "dc:source": null,
+        "dc:subjects": [],
+        "dc:title": "Tulare News, Vol. 1 No. 4\r\n",
+        "dc:valid": null,
+        "file:content": {
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/00d55837-01b6-4211-80d8-b966a15c257e/file:content/ucm_tulare_v1_004.pdf",
+            "digest": "b3f3fceb142d33c5695dc3e642f9818f",
+            "encoding": null,
+            "length": "2960439",
+            "mime-type": "application/pdf",
+            "name": "ucm_tulare_v1_004.pdf"
+        },
+        "file:filename": "ucm_tulare_v1_004.pdf",
+        "ucldc_schema:accessrestrict": "public",
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:collection": [
+            "https://registry.cdlib.org/api/v1/collection/66/"
+        ],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:creator": [
+            {
+                "authorityid": "",
+                "name": "Tulare Assembly Center",
+                "nametype": null,
+                "role": "",
+                "source": null
+            }
+        ],
+        "ucldc_schema:date": [
+            {
+                "date": "May 23, 1942",
+                "datetype": "issued",
+                "inclusiveend": "",
+                "inclusivestart": "",
+                "single": ""
+            }
+        ],
+        "ucldc_schema:description": [],
+        "ucldc_schema:extent": "",
+        "ucldc_schema:formgenre": [
+            {
+                "authorityid": "",
+                "heading": "Newsletter",
+                "source": "aat"
+            }
+        ],
+        "ucldc_schema:identifier": "",
+        "ucldc_schema:language": [],
+        "ucldc_schema:localidentifier": [],
+        "ucldc_schema:physdesc": "",
+        "ucldc_schema:physlocation": "",
+        "ucldc_schema:place": [],
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:rightscontact": "",
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:rightsjurisdiction": "",
+        "ucldc_schema:rightsnote": "",
+        "ucldc_schema:rightsnotice": "",
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user\r\n",
+        "ucldc_schema:rightsstatus": "publicdomain",
+        "ucldc_schema:source": "",
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:subjecttopic": [
+            {
+                "authorityid": "",
+                "heading": "Japanese Americans--Evacuation and relocation, 1942-1945--Newspapers.",
+                "headingtype": "topic",
+                "source": "lcsh"
+            },
+            {
+                "authorityid": "",
+                "heading": "Japanese Americans--Evacuation and relocation, 1942-1945.",
+                "headingtype": "topic",
+                "source": "lcsh"
+            },
+            {
+                "authorityid": "",
+                "heading": "Japanese Americans.",
+                "headingtype": "topic",
+                "source": "lcsh"
+            },
+            {
+                "authorityid": "",
+                "heading": "Japanese Americans--History.",
+                "headingtype": "topic",
+                "source": "lcsh"
+            }
+        ],
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:transcription": "",
+        "ucldc_schema:type": "text"
+    },
+    "repository": "default",
+    "state": "project",
+    "title": "Tulare News, Vol. 1 No. 4\r\n",
+    "type": "CustomFile",
+    "uid": "00d55837-01b6-4211-80d8-b966a15c257e",
+    "versionLabel": "0.1+"
+}

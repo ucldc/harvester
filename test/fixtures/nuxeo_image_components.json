@@ -1,0 +1,1857 @@
+{
+  "entity-type": "documents",
+  "isPaginable": true,
+  "resultsCount": 9,
+  "pageSize": 50,
+  "maxPageSize": 1000,
+  "currentPageSize": 9,
+  "currentPageIndex": 0,
+  "numberOfPages": 1,
+  "isPreviousPageAvailable": false,
+  "isNextPageAvailable": false,
+  "isLastPageAvailable": false,
+  "isSortable": true,
+  "hasError": false,
+  "errorMessage": null,
+  "totalSize": 9,
+  "pageIndex": 0,
+  "pageCount": 1,
+  "entries": [
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "e8af2d74-0c8b-4d18-b86c-4067b9e16159",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001D_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Birds and roses",
+      "lastModified": "2015-05-19T19:37:39.66Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:39.06Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:39.66Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Birds and roses",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_CL1979_001d"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. One seal in lower left quadrant.",
+            "type": "marks"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001D_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "cd5cc7875e797f5a023acbd6566e7c63",
+              "length": "73220",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/picture:views/0/content/Medium_CL1979_001D_K.jpg"
+            },
+            "title": "Medium",
+            "height": 408,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001D_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001D_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "107028ca1702a7465a3e04c6e76a3741",
+              "length": "52140420",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/picture:views/1/content/Original_CL1979_001D_K.tif"
+            },
+            "title": "Original",
+            "height": 3594,
+            "description": null,
+            "tag": "original",
+            "width": 4834,
+            "filename": "Original_CL1979_001D_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001D_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "3f2daa56e31b7ec5a17e5b3fc433da07",
+              "length": "34651",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/picture:views/2/content/Small_CL1979_001D_K.jpg"
+            },
+            "title": "Small",
+            "height": 208,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001D_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001D_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "26ce589d4e53501023bcc4b108f85cc6",
+              "length": "22195",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/picture:views/3/content/Thumbnail_CL1979_001D_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 74,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001D_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001D_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "d01de8c582a7d4ac2402d049e40667cd",
+              "length": "5364919",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/picture:views/4/content/OriginalJpeg_CL1979_001D_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3594,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 4834,
+            "filename": "OriginalJpeg_CL1979_001D_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064259664",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/e8af2d74-0c8b-4d18-b86c-4067b9e16159"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "b8fbdf1e-8871-4008-a7de-d9c550ff50fc",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/AS327_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Buddha's hand",
+      "lastModified": "2015-05-19T19:37:41.71Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:36.17Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:41.71Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Buddha's hand",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_AS327"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Kaki persimmon"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Chestnut"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Citron"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "Two seals at right edge above center. No signature. No inscriptions.",
+            "type": "marks"
+          },
+          {
+            "item": "Exhibited: \"Nanga: Art of the Japanese Literati from the 18th & 19th Centuries\" curated by Maiko Behr, Ruth and Sherman Lee Institute for Japanese Art, November 7, 2000–February 3, 2001.",
+            "type": "exhibitions"
+          },
+          {
+            "item": "Addiss-Seo Nanga Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 16 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_AS327_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "64585871c4f96e0cd27166dd84661373",
+              "length": "86444",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/b8fbdf1e-8871-4008-a7de-d9c550ff50fc/picture:views/0/content/Medium_AS327_K.jpg"
+            },
+            "title": "Medium",
+            "height": 415,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_AS327_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_AS327_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "96b311c3b9bb80e6aa2314ecb73130a3",
+              "length": "50182804",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/b8fbdf1e-8871-4008-a7de-d9c550ff50fc/picture:views/1/content/Original_AS327_K.tif"
+            },
+            "title": "Original",
+            "height": 3555,
+            "description": null,
+            "tag": "original",
+            "width": 4703,
+            "filename": "Original_AS327_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_AS327_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "41b74a2822353be1009a66d612ea5988",
+              "length": "42926",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/b8fbdf1e-8871-4008-a7de-d9c550ff50fc/picture:views/2/content/Small_AS327_K.jpg"
+            },
+            "title": "Small",
+            "height": 211,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_AS327_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_AS327_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "e2cfc05bc030645c13d4628ed19e426b",
+              "length": "28076",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/b8fbdf1e-8871-4008-a7de-d9c550ff50fc/picture:views/3/content/Thumbnail_AS327_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_AS327_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_AS327_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "8a35cd59c6b81a86714a85fdd3c61ac8",
+              "length": "4744678",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/b8fbdf1e-8871-4008-a7de-d9c550ff50fc/picture:views/4/content/OriginalJpeg_AS327_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3555,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 4703,
+            "filename": "OriginalJpeg_AS327_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064261719",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/b8fbdf1e-8871-4008-a7de-d9c550ff50fc"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "dea8673b-f13c-4d31-9674-a29f3d5b3d26",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001B_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Cherry blossoms and fish",
+      "lastModified": "2015-05-19T19:37:38.71Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:28.35Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:38.71Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Cherry blossoms and fish",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_CL1979_001b"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Flowering cherries"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Fishes"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. One seal \"Shunkin no in\" at right edge above center.",
+            "type": "marks"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001B_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "a21b8ff7804549e2f8f54684686473ed",
+              "length": "68162",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/dea8673b-f13c-4d31-9674-a29f3d5b3d26/picture:views/0/content/Medium_CL1979_001B_K.jpg"
+            },
+            "title": "Medium",
+            "height": 417,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001B_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001B_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "b0539af35a21d5650a9bce591376ba49",
+              "length": "63571448",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/dea8673b-f13c-4d31-9674-a29f3d5b3d26/picture:views/1/content/Original_CL1979_001B_K.tif"
+            },
+            "title": "Original",
+            "height": 4012,
+            "description": null,
+            "tag": "original",
+            "width": 5280,
+            "filename": "Original_CL1979_001B_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001B_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "81de8a3b6b0e06b4a42a03757824bb71",
+              "length": "33959",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/dea8673b-f13c-4d31-9674-a29f3d5b3d26/picture:views/2/content/Small_CL1979_001B_K.jpg"
+            },
+            "title": "Small",
+            "height": 212,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001B_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001B_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "8608d0facb9f9a5bf077987721e5991f",
+              "length": "23271",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/dea8673b-f13c-4d31-9674-a29f3d5b3d26/picture:views/3/content/Thumbnail_CL1979_001B_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001B_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001B_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "6d609d6af5394672ae6c64f8c9b71ba3",
+              "length": "6596140",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/dea8673b-f13c-4d31-9674-a29f3d5b3d26/picture:views/4/content/OriginalJpeg_CL1979_001B_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 4012,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 5280,
+            "filename": "OriginalJpeg_CL1979_001B_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064258719",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/dea8673b-f13c-4d31-9674-a29f3d5b3d26"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "8b615c68-7c6a-4642-b0dc-a708a404786e",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001E_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Chinese orchids",
+      "lastModified": "2015-05-19T19:37:40.11Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:42.99Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:40.11Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Chinese orchids",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_CL1979_001e"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. Two seals at right edge.",
+            "type": "marks"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001E_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "b49019f13aab8d20e79a93fb3f9c9033",
+              "length": "65331",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/8b615c68-7c6a-4642-b0dc-a708a404786e/picture:views/0/content/Medium_CL1979_001E_K.jpg"
+            },
+            "title": "Medium",
+            "height": 417,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001E_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001E_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "fbb608b04078400c589d705dcdf32afc",
+              "length": "52139884",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/8b615c68-7c6a-4642-b0dc-a708a404786e/picture:views/1/content/Original_CL1979_001E_K.tif"
+            },
+            "title": "Original",
+            "height": 3630,
+            "description": null,
+            "tag": "original",
+            "width": 4786,
+            "filename": "Original_CL1979_001E_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001E_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "2d2ca6e8703f8e8c2e05f95fc152fc81",
+              "length": "33129",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/8b615c68-7c6a-4642-b0dc-a708a404786e/picture:views/2/content/Small_CL1979_001E_K.jpg"
+            },
+            "title": "Small",
+            "height": 212,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001E_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001E_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "42d415696930f64eec2d1185b545e82f",
+              "length": "22367",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/8b615c68-7c6a-4642-b0dc-a708a404786e/picture:views/3/content/Thumbnail_CL1979_001E_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001E_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001E_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "08bcf4c0653a711472b990fd7a8fbb1d",
+              "length": "5225099",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/8b615c68-7c6a-4642-b0dc-a708a404786e/picture:views/4/content/OriginalJpeg_CL1979_001E_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3630,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 4786,
+            "filename": "OriginalJpeg_CL1979_001E_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064260117",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/8b615c68-7c6a-4642-b0dc-a708a404786e"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "2665ba31-7f4a-4173-bd26-08189675a15d",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001A_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Lotus tuber with insects",
+      "lastModified": "2015-05-19T19:37:38.01Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:48.89Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:38.01Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Lotus tuber with insects",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_CL1979_001a"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Lotus"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Insects"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. One seal \"Shunkin no in\" in upper left quadrant.",
+            "type": "marks"
+          },
+          {
+            "item": "Exhibited: \"Nanga: Art of the Japanese Literati from the 18th & 19th Centuries\" curated by Maiko Behr, Ruth and Sherman Lee Institute for Japanese Art, November 7, 2000–February 3, 2001.",
+            "type": "exhibitions"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001A_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "542bfa08bb76563cac206b4612a685f6",
+              "length": "70738",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/2665ba31-7f4a-4173-bd26-08189675a15d/picture:views/0/content/Medium_CL1979_001A_K.jpg"
+            },
+            "title": "Medium",
+            "height": 415,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001A_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001A_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "a0952da601b1d90a9e032802a2ad72d9",
+              "length": "59261924",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/2665ba31-7f4a-4173-bd26-08189675a15d/picture:views/1/content/Original_CL1979_001A_K.tif"
+            },
+            "title": "Original",
+            "height": 3862,
+            "description": null,
+            "tag": "original",
+            "width": 5113,
+            "filename": "Original_CL1979_001A_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001A_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "51d74360334742afd2377b3397654184",
+              "length": "36378",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/2665ba31-7f4a-4173-bd26-08189675a15d/picture:views/2/content/Small_CL1979_001A_K.jpg"
+            },
+            "title": "Small",
+            "height": 211,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001A_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001A_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "6f4a45e9bee726f3d086a0c956d6f8c5",
+              "length": "24891",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/2665ba31-7f4a-4173-bd26-08189675a15d/picture:views/3/content/Thumbnail_CL1979_001A_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001A_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001A_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "665f48fafeff362af84b9af0d38696f8",
+              "length": "5014922",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/2665ba31-7f4a-4173-bd26-08189675a15d/picture:views/4/content/OriginalJpeg_CL1979_001A_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3862,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 5113,
+            "filename": "OriginalJpeg_CL1979_001A_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064258019",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/2665ba31-7f4a-4173-bd26-08189675a15d"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "0007e0de-0ec5-46a5-8bf5-762fe0639d05",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/AS328_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Narcissus",
+      "lastModified": "2015-05-19T19:37:42.42Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:40.89Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:42.42Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Narcissus",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_AS328"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Narcissus"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "Two seals at left edge above center. No signature. No inscriptions.",
+            "type": "marks"
+          },
+          {
+            "item": "Addiss-Seo Nanga Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 16 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_AS328_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "03382e4b0c6448a4ae8bf6ad714fa775",
+              "length": "67601",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0007e0de-0ec5-46a5-8bf5-762fe0639d05/picture:views/0/content/Medium_AS328_K.jpg"
+            },
+            "title": "Medium",
+            "height": 416,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_AS328_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_AS328_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "20af40f90b3bd8f004f1b665ce895bdc",
+              "length": "75550756",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0007e0de-0ec5-46a5-8bf5-762fe0639d05/picture:views/1/content/Original_AS328_K.tif"
+            },
+            "title": "Original",
+            "height": 4364,
+            "description": null,
+            "tag": "original",
+            "width": 5769,
+            "filename": "Original_AS328_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_AS328_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "7bce7cf17bfa67e28113095bb1f9b8f2",
+              "length": "35457",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0007e0de-0ec5-46a5-8bf5-762fe0639d05/picture:views/2/content/Small_AS328_K.jpg"
+            },
+            "title": "Small",
+            "height": 211,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_AS328_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_AS328_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "3f18e67e59994436379f9e0bf8beb0b6",
+              "length": "24716",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0007e0de-0ec5-46a5-8bf5-762fe0639d05/picture:views/3/content/Thumbnail_AS328_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_AS328_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_AS328_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "b38710a0a70c6646fe5038b6a7460c85",
+              "length": "6039081",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0007e0de-0ec5-46a5-8bf5-762fe0639d05/picture:views/4/content/OriginalJpeg_AS328_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 4364,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 5769,
+            "filename": "OriginalJpeg_AS328_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064262424",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/0007e0de-0ec5-46a5-8bf5-762fe0639d05"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "d1d8877c-2edc-4c2c-ac4d-5131d5a36c02",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001F_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Peony",
+      "lastModified": "2015-05-19T19:37:40.56Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:46.07Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:40.56Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Peony",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_CL1979_001f"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. Two seals at lower left edge.",
+            "type": "marks"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001F_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "1617c575027ab8c456387f17ab2446de",
+              "length": "70346",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02/picture:views/0/content/Medium_CL1979_001F_K.jpg"
+            },
+            "title": "Medium",
+            "height": 412,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001F_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001F_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "57628b08825b5644c3c2352eb135f783",
+              "length": "52286228",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02/picture:views/1/content/Original_CL1979_001F_K.tif"
+            },
+            "title": "Original",
+            "height": 3613,
+            "description": null,
+            "tag": "original",
+            "width": 4822,
+            "filename": "Original_CL1979_001F_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001F_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "200611b8012216509dc1baa10f508d17",
+              "length": "34781",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02/picture:views/2/content/Small_CL1979_001F_K.jpg"
+            },
+            "title": "Small",
+            "height": 209,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001F_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001F_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "19b189c2f35a12176f89729a9dbea8a1",
+              "length": "22719",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02/picture:views/3/content/Thumbnail_CL1979_001F_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 74,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001F_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001F_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "9acd047621f3515d9d4111e8d794303e",
+              "length": "5208015",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02/picture:views/4/content/OriginalJpeg_CL1979_001F_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3613,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 4822,
+            "filename": "OriginalJpeg_CL1979_001F_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064260567",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/d1d8877c-2edc-4c2c-ac4d-5131d5a36c02"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "e8996ee1-54d2-4a30-90ac-a32d69cbb92b",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/AS326_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Pomegranate and insects",
+      "lastModified": "2015-05-19T19:37:41.03Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:30.89Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:41.03Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Pomegranate and insects",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_AS326"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Pomegranate"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Insects"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "Two seals at right edge above center. No signature. No inscriptions.",
+            "type": "marks"
+          },
+          {
+            "item": "Exhibited: \"Nanga: Art of the Japanese Literati from the 18th & 19th Centuries\" curated by Maiko Behr, Ruth and Sherman Lee Institute for Japanese Art, November 7, 2000–February 3, 2001.",
+            "type": "exhibitions"
+          },
+          {
+            "item": "Addiss-Seo Nanga Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 16 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_AS326_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "52f51bafa6b0d96765bb88ad1e203419",
+              "length": "70834",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8996ee1-54d2-4a30-90ac-a32d69cbb92b/picture:views/0/content/Medium_AS326_K.jpg"
+            },
+            "title": "Medium",
+            "height": 420,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_AS326_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_AS326_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "c923f7dc0c7749d0c7e7dfca3551b0a8",
+              "length": "50549124",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8996ee1-54d2-4a30-90ac-a32d69cbb92b/picture:views/1/content/Original_AS326_K.tif"
+            },
+            "title": "Original",
+            "height": 3588,
+            "description": null,
+            "tag": "original",
+            "width": 4694,
+            "filename": "Original_AS326_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_AS326_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "a3e4c9d019251e17507127236f30a290",
+              "length": "36554",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8996ee1-54d2-4a30-90ac-a32d69cbb92b/picture:views/2/content/Small_AS326_K.jpg"
+            },
+            "title": "Small",
+            "height": 214,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_AS326_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_AS326_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "08911dbc1dffd3c7c70d549565ad3026",
+              "length": "25101",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8996ee1-54d2-4a30-90ac-a32d69cbb92b/picture:views/3/content/Thumbnail_AS326_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 76,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_AS326_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_AS326_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "79e494ba06289ecb3562337f6b588ce3",
+              "length": "4162795",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/e8996ee1-54d2-4a30-90ac-a32d69cbb92b/picture:views/4/content/OriginalJpeg_AS326_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3588,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 4694,
+            "filename": "OriginalJpeg_AS326_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064261030",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/e8996ee1-54d2-4a30-90ac-a32d69cbb92b"
+      }
+    },
+    {
+      "entity-type": "document",
+      "repository": "default",
+      "uid": "f7b8adfe-64b1-46f9-b404-c1738e1500b9",
+      "path": "/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/CL1979_001C_K.tif",
+      "type": "SampleCustomPicture",
+      "state": "project",
+      "parentRef": "d400bb29-98d4-429c-a0b8-119acdb92006",
+      "versionLabel": "0.0",
+      "isCheckedOut": true,
+      "title": "Vase with loquats",
+      "lastModified": "2015-05-19T19:37:39.17Z",
+      "properties": {
+        "dc:creator": "system",
+        "dc:source": null,
+        "dc:nature": null,
+        "dc:contributors": [
+          "system",
+          "Administrator"
+        ],
+        "dc:created": "2014-10-22T14:44:34.25Z",
+        "dc:description": null,
+        "dc:rights": null,
+        "dc:subjects": [],
+        "dc:publisher": null,
+        "dc:valid": null,
+        "dc:format": null,
+        "dc:issued": null,
+        "dc:modified": "2015-05-19T19:37:39.17Z",
+        "dc:expired": null,
+        "dc:coverage": null,
+        "dc:language": null,
+        "dc:title": "Vase with loquats",
+        "dc:lastContributor": "Administrator",
+        "ucldc_schema:rightsstatus": null,
+        "ucldc_schema:campusunit": [],
+        "ucldc_schema:extent": null,
+        "ucldc_schema:localidentifier": [
+          "ucm_li_1979_001c"
+        ],
+        "ucldc_schema:rightsnotice": null,
+        "ucldc_schema:language": [],
+        "ucldc_schema:relatedresource": [],
+        "ucldc_schema:source": null,
+        "ucldc_schema:alternativetitle": [],
+        "ucldc_schema:collection": [],
+        "ucldc_schema:formgenre": [],
+        "ucldc_schema:identifier": null,
+        "ucldc_schema:rightsstartdate": null,
+        "ucldc_schema:rightsstatement": null,
+        "ucldc_schema:type": "image",
+        "ucldc_schema:physlocation": "The University of California, Merced Library, 5200 North Lake Road, Merced, CA 95543, URL: http://ucmercedlibrary.info",
+        "ucldc_schema:transcription": null,
+        "ucldc_schema:temporalcoverage": [],
+        "ucldc_schema:rightsdeterminationdate": null,
+        "ucldc_schema:date": [],
+        "ucldc_schema:subjecttopic": [
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Loquat"
+          },
+          {
+            "source": "lcsh",
+            "headingtype": "topic",
+            "authorityid": null,
+            "heading": "Grapes"
+          }
+        ],
+        "ucldc_schema:rightsholder": [],
+        "ucldc_schema:creator": [],
+        "ucldc_schema:rightsjurisdiction": null,
+        "ucldc_schema:rightscontact": null,
+        "ucldc_schema:accessrestrict": null,
+        "ucldc_schema:publisher": [],
+        "ucldc_schema:contributor": [],
+        "ucldc_schema:subjectname": [],
+        "ucldc_schema:rightsnote": null,
+        "ucldc_schema:provenance": [],
+        "ucldc_schema:rightsenddate": null,
+        "ucldc_schema:description": [
+          {
+            "item": "No signature or inscriptions. Two seals at right edge below center.",
+            "type": "marks"
+          },
+          {
+            "item": "Clark Family Collection",
+            "type": "acquisition"
+          }
+        ],
+        "ucldc_schema:place": [],
+        "ucldc_schema:physdesc": "1 hanging scroll; 23 x 30 cm.",
+        "picture:genre": null,
+        "picture:headline": null,
+        "picture:typage": null,
+        "picture:origin": null,
+        "picture:slugline": null,
+        "picture:caption": null,
+        "picture:dateline": null,
+        "picture:byline": null,
+        "picture:source": null,
+        "picture:views": [
+          {
+            "content": {
+              "name": "Medium_CL1979_001C_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "ab120b1d06601af3e1da61b35c70f6d6",
+              "length": "78081",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/f7b8adfe-64b1-46f9-b404-c1738e1500b9/picture:views/0/content/Medium_CL1979_001C_K.jpg"
+            },
+            "title": "Medium",
+            "height": 414,
+            "description": "Medium Size",
+            "tag": "medium",
+            "width": 550,
+            "filename": "Medium_CL1979_001C_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Original_CL1979_001C_K.tif",
+              "mime-type": "image/tiff",
+              "encoding": null,
+              "digest": "2ea496cab1cb796d4c19dbef199add27",
+              "length": "62354764",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/f7b8adfe-64b1-46f9-b404-c1738e1500b9/picture:views/1/content/Original_CL1979_001C_K.tif"
+            },
+            "title": "Original",
+            "height": 3956,
+            "description": null,
+            "tag": "original",
+            "width": 5252,
+            "filename": "Original_CL1979_001C_K.tif"
+          },
+          {
+            "content": {
+              "name": "Small_CL1979_001C_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "ab8f3e62b51009343c349e3f5fb4d811",
+              "length": "39842",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/f7b8adfe-64b1-46f9-b404-c1738e1500b9/picture:views/2/content/Small_CL1979_001C_K.jpg"
+            },
+            "title": "Small",
+            "height": 210,
+            "description": "Small Size",
+            "tag": "small",
+            "width": 280,
+            "filename": "Small_CL1979_001C_K.jpg"
+          },
+          {
+            "content": {
+              "name": "Thumbnail_CL1979_001C_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "0f6365102d8c499bcbd64086c7f73950",
+              "length": "26672",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/f7b8adfe-64b1-46f9-b404-c1738e1500b9/picture:views/3/content/Thumbnail_CL1979_001C_K.jpg"
+            },
+            "title": "Thumbnail",
+            "height": 75,
+            "description": "Thumbnail Size",
+            "tag": "thumb",
+            "width": 100,
+            "filename": "Thumbnail_CL1979_001C_K.jpg"
+          },
+          {
+            "content": {
+              "name": "OriginalJpeg_CL1979_001C_K.jpg",
+              "mime-type": "image/jpeg",
+              "encoding": null,
+              "digest": "2eba2975abfa23ba00f6f915462fe7c0",
+              "length": "6355985",
+              "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/f7b8adfe-64b1-46f9-b404-c1738e1500b9/picture:views/4/content/OriginalJpeg_CL1979_001C_K.jpg"
+            },
+            "title": "OriginalJpeg",
+            "height": 3956,
+            "description": "Original Picture in JPEG format",
+            "tag": "originalJpeg",
+            "width": 5252,
+            "filename": "OriginalJpeg_CL1979_001C_K.jpg"
+          }
+        ],
+        "picture:cropCoords": null,
+        "picture:language": null,
+        "picture:credit": null,
+        "picture:subheadline": null
+      },
+      "facets": [
+        "Picture",
+        "Commentable",
+        "MultiviewPicture",
+        "Versionable",
+        "Publishable",
+        "DocumentsSizeStatistics",
+        "HasRelatedText",
+        "Thumbnail",
+        "Folderish",
+        "NotCollectionMember",
+        "Orderable"
+      ],
+      "changeToken": "1432064259178",
+      "contextParameters": {
+        "documentURL": "/nuxeo/site/api/v1/id/f7b8adfe-64b1-46f9-b404-c1738e1500b9"
+      }
+    }
+  ]
+}

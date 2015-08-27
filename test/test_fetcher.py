@@ -700,7 +700,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 body=open(DIR_FIXTURES+'/nuxeo_folder.json').read())
         deepharvest_mocker(mock_deepharvest)
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         self.assertTrue(hasattr(h, '_url'))  # assert in called next repeatedly
         self.assertEqual(h.url, 'https://example.edu/api/v1/')
         self.assertTrue(hasattr(h, '_nx'))
@@ -717,7 +717,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         deepharvest_mocker(mock_deepharvest)
         mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value=media_json
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         structmap_text = h._get_structmap_text('s3://static.ucldc.cdlib.org/media_json/81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
 
         mock_boto.assert_called_with()
@@ -747,8 +747,16 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/asset-library/UCI/Cochems/MS-R016_1092.tif/@children?currentPageIndex=0',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(), status=200),
+                ]
+            )
+
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         docs = []
         for d in h:
             docs.append(d)
@@ -758,7 +766,8 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('structmap_url', docs[0])
         self.assertIn('structmap_text', docs[0])
         self.assertEqual(docs[0]['structmap_text'], "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
- 
+        self.assertEqual(docs[0]['isShownBy'], 'https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/40677ed1-f7c2-476f-886d-bf79c3fec8c4/Medium:content/')
+        
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
     @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True) 
@@ -780,8 +789,14 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.GET,
                 re.compile('https://example.edu/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/asset-library/UCI/Cochems/MS-R016_1092.tif/@children?currentPageIndex=0',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(), status=200),
+                ]
+            )
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={})
         docs = []
         for d in h:
             docs.append(d)
@@ -796,6 +811,66 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 )
             )
 
+    @httpretty.activate
+    @patch('boto.connect_s3', autospec=True)
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def test_get_isShownBy_component_image(self, mock_deepharvest, mock_boto):
+        ''' test getting correct isShownBy value for Nuxeo doc 
+            with no image at parent level, but an image at the component level
+        '''
+        deepharvest_mocker(mock_deepharvest)
+
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/@children?currentPageIndex=0',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_image_components.json').read(), status=200),
+                ]
+            )
+
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/id/e8af2d74-0c8b-4d18-b86c-4067b9e16159',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_first_image_component.json').read(), status=200),
+                ]
+            )
+
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+        
+        nuxeo_metadata = open(DIR_FIXTURES+'/nuxeo_doc_imageless_parent.json').read()
+        nuxeo_metadata = json.loads(nuxeo_metadata)
+        isShownBy = h._get_isShownBy(nuxeo_metadata)
+        self.assertEqual(isShownBy, 'https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/e8af2d74-0c8b-4d18-b86c-4067b9e16159/Medium:content/')
+
+    @httpretty.activate
+    @patch('boto.connect_s3', autospec=True)
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
+    def test_get_isShownBy_pdf(self, mock_deepharvest, mock_boto):
+        ''' test getting correct isShownBy value for Nuxeo doc
+            with no images and PDF at parent level 
+        '''
+        deepharvest_mocker(mock_deepharvest)
+
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/path/asset-library/UCM/Assembly%20Newsletters/Tulare%20News/Tulare%20News,%20Vol.%201%20No.%204/@children?currentPageIndex=0',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(), status=200),
+                ]
+            )
+
+        '''
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/api/v1/id/e8af2d74-0c8b-4d18-b86c-4067b9e16159',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_first_image_component.json').read(), status=200),
+                ]
+            )
+        '''
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
+
+        nuxeo_metadata = open(DIR_FIXTURES+'/nuxeo_doc_pdf_parent.json').read()
+        nuxeo_metadata = json.loads(nuxeo_metadata)
+        isShownBy = h._get_isShownBy(nuxeo_metadata)
+        self.assertEqual(isShownBy, 'https://s3.amazonaws.com/static.ucldc.cdlib.org/ucldc-nuxeo-thumb-media/00d55837-01b6-4211-80d8-b966a15c257e')
 
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
@@ -832,7 +907,7 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 'path-to-asset/here',
                 conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'}
                 )
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
@@ -870,6 +945,14 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         httpretty.register_uri(httpretty.GET,
                 re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
                 body=open(DIR_FIXTURES+'/nuxeo_doc.json').read())
+
+        httpretty.register_uri(httpretty.GET,
+                'https://example.edu/Nuxeo/site/api/v1/path/asset-library/UCI/Cochems/MS-R016_1092.tif/@children?currentPageIndex=0',
+                responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(), status=200),
+                ]
+            )
+
         self.collection = Collection('http://registry.cdlib.org/api/v1/collection/19/')
         with patch('ConfigParser.SafeConfigParser', autospec=True) as mock_configparser:
             config_inst = mock_configparser.return_value
