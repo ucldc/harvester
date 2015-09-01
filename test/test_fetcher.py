@@ -803,13 +803,6 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(docs[0]['structmap_text'], '')
         self.assertEqual(docs[1]['structmap_text'], '')
         self.assertEqual(docs[2]['structmap_text'], '')
-        self.assertEqual(len(self.test_log_handler.records), 3)
-        self.assertEqual(self.test_log_handler.formatted_records[1],
-                ('[ERROR] FetcherBaseClass: Media json at: '
-                  '/media_json/d34ece39-a5f1-4448-b20c-1698637d4fbb-media.json '
-                  'missing.'
-                )
-            )
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
