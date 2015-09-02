@@ -27,8 +27,11 @@ def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
     Return True or False accordingly
     '''
-    response = requests.head(url, allow_redirects=True,
-            auth=auth)
+    if md5s3stash.is_s3_url(url):
+        response = requests.head(url, allow_redirects=True)
+    else:
+        response = requests.head(url, allow_redirects=True,
+                                 auth=auth)
     if response.status_code != 200:
         return False
     content_type = response.headers.get('content-type', None)
