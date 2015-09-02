@@ -507,7 +507,6 @@ class OAC_XML_Fetcher(Fetcher):
         self._url_current = ''.join((self.url, '&startDoc=',
                             str(self.groups[self.currentGroup]['currentDoc']),
                             '&group=', self.currentGroup))
-        self.logger.debug(''.join(('===== Current URL-->', self._url_current)))
         facet_type_tab = self._get_next_result_set()
         self._update_groups(facet_type_tab.findall('group'))
         objset = self._docHits_to_objset(
@@ -515,7 +514,6 @@ class OAC_XML_Fetcher(Fetcher):
         )
         self.currentDoc += len(objset)
         self.groups[self.currentGroup]['currentDoc'] += len(objset)
-        self.logger.debug('++++++++++++++ curDoc'+str(self.currentDoc))
         return objset
 
 
@@ -876,6 +874,8 @@ class HarvestController(object):
             else:
                 self.num_records += 1
                 self._add_registry_data(objset)
+            with open('{0}:{1}'.format('objset', self.num_records), 'w') as f:
+                f.write(json.dumps(objset))
             self.save_objset(objset)
             if self.num_records >= next_log_n:
                 self.logger.info(' '.join((str(self.num_records),

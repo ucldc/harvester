@@ -898,9 +898,12 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         )
         h = fetcher.UCLDCNuxeoFetcher('https://example.edu/api/v1/',
                 'path-to-asset/here',
-                conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'}
+                conf_pynux={'X-NXDocumentProperties':
+                    'dublincore,ucldc_schema,picture,file'}
                 )
-        mock_deepharvest.assert_called_with('path-to-asset/here', '', conf_pynux={'X-NXDocumentProperties': 'dublincore,ucldc_schema,picture'})
+        mock_deepharvest.assert_called_with('path-to-asset/here', '',
+                conf_pynux={'X-NXDocumentProperties':
+                    'dublincore,ucldc_schema,picture,file'})
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
@@ -980,6 +983,44 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         self.assertEqual(saved_obj['title'], 'Adeline Cochems having her portrait taken by her father Edward W, Cochems in Santa Ana, California: Photograph')
 
 
+class HarvestOAC_XML_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+    '''Test the function of an OAC XML harvest controller'''
+    @httpretty.activate
+    def setUp(self):
+        super(HarvestOAC_XML_ControllerTestCase, self).setUp()
+        # self.testFile = DIR_FIXTURES+'/collection_api_test_oac.json'
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/178/",
+                body=open(DIR_FIXTURES+'/collection_api_test_oac_xml.json').read())
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
+                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
+        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
+        #print "COLLECTION DIR:{}".format(dir(self.collection))
+        self.setUp_config(self.collection)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        print "DIR SAVE::::: {}".format(self.controller.dir_save)
+
+    def tearDown(self):
+        super(HarvestOAC_XML_ControllerTestCase, self).tearDown()
+        self.tearDown_config()
+        #shutil.rmtree(self.controller.dir_save)
+
+    @httpretty.activate
+    def testOAC_XML_Harvest(self):
+        '''Test the function of the OAC harvest'''
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134',
+                #'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.xml').read())
+        self.assertTrue(hasattr(self.controller, 'harvest'))
+        self.controller.harvest()
+        print "LOGS:{}".format(self.test_log_handler.formatted_records)
+        self.assertEqual(len(self.test_log_handler.records), 2)
+        self.assertTrue('UCB Department of Statistics' in self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 24 records harvested')
+
+
 class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the OAC_XML_Fetcher
     '''
@@ -1025,6 +1066,17 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 25)
         self.assertEqual(len(objset), 25)
+
+    @httpretty.activate
+    def testAmpersandInDoc(self):
+        httpretty.register_uri(httpretty.GET,
+                'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj',
+                body=open(DIR_FIXTURES+'/testOAC-utf8-content.xml').read())
+        h = fetcher.OAC_XML_Fetcher('http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/hb5d5nb7dj', 'extra_data')
+        self.assertEqual(h.totalDocs, 25)
+        self.assertEqual(h.currentDoc, 0)
+        objset = h.next()
+            
 
     def testDocHitsToObjset(self):
         '''Check that the _docHits_to_objset to function returns expected
