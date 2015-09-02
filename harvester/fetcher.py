@@ -245,22 +245,34 @@ class NuxeoFetcher(Fetcher):
             4) return None 
         '''
         is_shown_by = None 
+        uid = nuxeo_metadata['uid']
+        self.logger.info("About to get isShownBy for uid {}".format(uid))
 
         # 1) if object has image at parent level, use this
         if self._has_image(nuxeo_metadata):
+            self.logger.info("Nuxeo doc with uid {} has an image at the parent level".format(uid))
             is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(nuxeo_metadata['uid'])
+            self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
         # 2) if component(s) have image, use first one we can find
         first_image_component_uid = self._get_first_image_component(nuxeo_metadata)
+        self.logger.info("first_image_component_uid: {}".format(first_image_component_uid))
         if first_image_component_uid:
+            self.logger.info("Nuxeo doc with uid {} has an image at the component level".format(uid))
             is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(first_image_component_uid) 
+            self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
         # 3) if object has PDF at parent level, use image stashed on S3
         if self._has_s3_thumbnail(nuxeo_metadata):
+            self.logger.info("Nuxeo doc with uid {} has a thumbnail for parent file (probably PDF) stashed on S3".format(uid))
             is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(nuxeo_metadata['uid'])
+            self.logger.info("is_shown_by: {}".format(is_shown_by))
+            return is_shown_by
  
+        # 4) return None
+        self.logger.info("Could not find any image for Nuxeo doc with uid {}! Returning None".format(uid))
         return is_shown_by
            
     def _has_image(self, metadata):
@@ -293,7 +305,8 @@ class NuxeoFetcher(Fetcher):
         ''' get first image component we can find '''
         component_uid = None
 
-        children = self._nx.children(parent_metadata['path'])
+        path = urllib.quote(parent_metadata['path'])
+        children = self._nx.children(path)
         for child in children:
             child_metadata = self._nx.get_metadata(uid=child['uid'])
             if self._has_image(child_metadata):
