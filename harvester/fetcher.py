@@ -305,7 +305,8 @@ class NuxeoFetcher(Fetcher):
         ''' get first image component we can find '''
         component_uid = None
 
-        children = self._nx.children(parent_metadata['path'])
+        path = urllib.quote(parent_metadata['path'])
+        children = self._nx.children(path)
         for child in children:
             child_metadata = self._nx.get_metadata(uid=child['uid'])
             if self._has_image(child_metadata):
