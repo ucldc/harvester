@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <lst name="responseHeader">
+    <int name="status">0</int>
+    <int name="QTime">324</int>
+    <lst name="params">
+      <str name="q">collections_tesim:bb3038949s</str>
+      <str name="rows">3</str>
+    </lst>
+  </lst>
+  <result name="response" numFound="10" start="10" maxScore="9.144687">
+    <doc>
+      <date name="system_create_dtsi">2013-07-10T05:16:04Z</date>
+      <date name="system_modified_dtsi">2013-07-10T05:16:04Z</date>
+      <str name="object_state_ssi">A</str>
+      <str name="active_fedora_model_ssi">DamsObject</str>
+      <str name="id">bb9045293z</str>
+      <arr name="object_profile_ssm">
+        <str>{"datastreams":{"DC":{"dsLabel":null,"dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+DC","dsLocationType":null,"dsVersionID":"DC","dsState":"A","dsMIME":"application/rdf+xml","dsSize":53707,"dsChecksumType":"DISABLED","dsChecksum":"none","dsCreateDate":"2014-06-27T06:10:28+00:00"},"RELS-EXT":{"dsLabel":null,"dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+RELS-EXT","dsLocationType":null,"dsVersionID":"RELS-EXT","dsState":"A","dsMIME":"application/rdf+xml","dsSize":53707,"dsChecksumType":"DISABLED","dsChecksum":"none","dsCreateDate":"2014-06-27T06:10:28+00:00"},"_rdf.xml":{"dsLabel":"/rdf.xml","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_rdf.xml","dsLocationType":null,"dsVersionID":"_rdf.xml","dsState":"A"},"_1.tif":{"dsLabel":"/1.tif","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_1.tif","dsLocationType":null,"dsVersionID":"_1.tif","dsState":"A","dsCreateDate":"2001-05-09T14:00:28-07:00","dsMIME":"image/tiff","dsSize":37648546,"dsChecksumType":"c8719b1c69ba889bc3763656d84945a11fdad10f","dsChecksum":"SHA-1"},"_4.jpg":{"dsLabel":"/4.jpg","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_4.jpg","dsLocationType":null,"dsVersionID":"_4.jpg","dsState":"A","dsCreateDate":"2013-05-14T11:20:17-07:00","dsMIME":"image/jpeg","dsSize":13942,"dsChecksumType":"b1889b5382ebc4c018c20d504c33e9b5aa0a7e13","dsChecksum":"SHA-1"},"_2.jpg":{"dsLabel":"/2.jpg","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_2.jpg","dsLocationType":null,"dsVersionID":"_2.jpg","dsState":"A","dsCreateDate":"2013-05-14T11:20:17-07:00","dsMIME":"image/jpeg","dsSize":340778,"dsChecksumType":"c06d97ddc740a31d290c503cdf778b0400696fa2","dsChecksum":"SHA-1"},"_3.jpg":{"dsLabel":"/3.jpg","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_3.jpg","dsLocationType":null,"dsVersionID":"_3.jpg","dsState":"A","dsCreateDate":"2013-05-14T11:20:17-07:00","dsMIME":"image/jpeg","dsSize":115119,"dsChecksumType":"611fc449b38d59d8b1160612949f3685053e1601","dsChecksum":"SHA-1"},"_5.jpg":{"dsLabel":"/5.jpg","dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+_5.jpg","dsLocationType":null,"dsVersionID":"_5.jpg","dsState":"A","dsCreateDate":"2013-05-14T11:20:18-07:00","dsMIME":"image/jpeg","dsSize":3433,"dsChecksumType":"16e1fbe35a84168bda69316105cd166a7939f0d8","dsChecksum":"SHA-1"},"rightsMetadata":{"dsLabel":null,"dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+rightsMetadata","dsLocationType":null,"dsVersionID":"rightsMetadata","dsState":"A","dsMIME":"application/rdf+xml","dsSize":53707,"dsChecksumType":"DISABLED","dsChecksum":"none","dsCreateDate":"2014-06-27T06:10:28+00:00"},"damsMetadata":{"dsLabel":null,"dsFormatURI":null,"dsControlGroup":"X","dsVersionable":false,"dsInfoType":null,"dsLocation":"bb9045293z+damsMetadata","dsLocationType":null,"dsVersionID":"damsMetadata","dsState":"A","dsMIME":"application/rdf+xml","dsSize":53707,"dsChecksumType":"DISABLED","dsChecksum":"none","dsCreateDate":"2014-06-27T06:10:28+00:00"}},"objLabel":null,"objOwnerId":"foo","objModels":["info:fedora/afmodel:Object","info:fedora/fedora-system:FedoraObject-3.0"],"objCreateDate":"2013-07-10T05:16:04+00:00","objLastModDate":"2013-07-10T05:16:04+00:00","objDissIndexViewURL":"http://localhost:8080/dams/fedora/objects/bb9045293z/methods/fedora-system%3A3/viewMethodIndex","objItemIndexViewURL":"http://localhost:8080/dams/fedora/objects/bb9045293z/methods/fedora-system%3A3/viewItemIndex","objState":"A"}</str>
+      </arr>
+      <arr name="edit_access_group_ssim">
+        <str>dams-curator</str>
+        <str>dams-manager-admin</str>
+      </arr>
+      <arr name="discover_access_group_ssim">
+        <str>public</str>
+        <str>dams-curator</str>
+        <str>dams-manager-admin</str>
+      </arr>
+      <arr name="read_access_group_ssim">
+        <str>public</str>
+        <str>dams-curator</str>
+        <str>dams-manager-admin</str>
+      </arr>
+      <arr name="title_json_tesim">
+        <str>{"name":"Mission at Santa Barbara","external":[],"value":"Mission at Santa Barbara","nonSort":"","partName":"","partNumber":"","subtitle":"","variant":"","translationVariant":"","abbreviationVariant":"","acronymVariant":"","expansionVariant":""}</str>
+      </arr>
+      <arr name="title_tesim">
+        <str>Mission at Santa Barbara</str>
+      </arr>
+      <arr name="all_fields_tesim">
+        <str>Mission at Santa Barbara</str>
+        <str>between 1885-1890</str>
+        <str>1885</str>
+        <str>1890</str>
+        <str>creation</str>
+        <str>w3cdtf</str>
+        <str>Hill, Dorothy V.</str>
+        <str>Collector</str>
+        <str>Jackson, William Henry, 1843-1942</str>
+        <str>Creator</str>
+        <str>Hill, Kenneth E.</str>
+        <str>Collector</str>
+        <str>Special Collections &amp; Archives, University of California, San Diego, La Jolla, 92093-0175 (http://libraries.ucsd.edu/collections/sca/)</str>
+        <str>6313</str>
+        <str>Spanish mission buildings--California</str>
+        <str>Missions--California--History</str>
+        <str>Mission Santa Barbara</str>
+        <str>Library Digital Collections</str>
+        <str>dlp</str>
+        <str>The Missions of Alta California</str>
+        <str>image</str>
+      </arr>
+      <str name="title_ssi">mission at santa barbara</str>
+      <arr name="date_json_tesim">
+        <str>{"beginDate":"1885","endDate":"1890","value":"between 1885-1890","type":"creation","encoding":"w3cdtf"}</str>
+      </arr>
+      <arr name="date_tesim">
+        <str>between 1885-1890</str>
+        <str>1885</str>
+        <str>1890</str>
+        <str>creation</str>
+        <str>w3cdtf</str>
+      </arr>
+      <date name="object_create_dtsi">1885-01-01T00:00:00Z</date>
+      <str name="decade_ssi">1880s</str>
+      <arr name="name_tesim">
+        <str>Hill, Dorothy V.</str>
+        <str>Jackson, William Henry, 1843-1942</str>
+        <str>Hill, Kenneth E.</str>
+        <str>Mission Santa Barbara</str>
+      </arr>
+      <arr name="relationship_json_tesim">
+        <str>{"Collector":["Hill, Dorothy V.","Hill, Kenneth E."],"Creator":["Jackson, William Henry, 1843-1942"]}</str>
+      </arr>
+      <arr name="otherNote_json_tesim">
+        <str>{"id":"b","type":"local attribution","value":"Special Collections \u0026 Archives, University of California, San Diego, La Jolla, 92093-0175 (http://libraries.ucsd.edu/collections/sca/)","displayLabel":"digital object made available by","internalOnly":""}</str>
+        <str>{"id":"_","type":"identifier","value":"6313","displayLabel":"filename","internalOnly":""}</str>
+      </arr>
+      <arr name="otherNote_tesim">
+        <str>Special Collections &amp; Archives, University of California, San Diego, La Jolla, 92093-0175 (http://libraries.ucsd.edu/collections/sca/)</str>
+        <str>6313</str>
+      </arr>
+      <arr name="note_tesim">
+        <str>Special Collections &amp; Archives, University of California, San Diego, La Jolla, 92093-0175 (http://libraries.ucsd.edu/collections/sca/)</str>
+        <str>6313</str>
+      </arr>
+      <arr name="complexSubject_tesim">
+        <str>Spanish mission buildings--California</str>
+        <str>Missions--California--History</str>
+      </arr>
+      <arr name="subject_tesim">
+        <str>Spanish mission buildings--California</str>
+        <str>Missions--California--History</str>
+      </arr>
+      <arr name="corporateName_tesim">
+        <str>Mission Santa Barbara</str>
+      </arr>
+      <str name="rdfxml_ssi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns0="http://library.ucsd.edu/ontology/dams#" xmlns:ns1="http://www.loc.gov/mads/rdf/v1#" xmlns:ns2="http://www.w3.org/1999/02/22-rdf-syntax-ns#"&gt;
+  &lt;ns0:Object rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z"&gt;
+    &lt;ns0:assembledCollection rdf:resource="http://library.ucsd.edu/ark:/20775/bb3038949s"/&gt;
+    &lt;ns0:complexSubject&gt;
+      &lt;ns1:ComplexSubject rdf:about="http://library.ucsd.edu/ark:/20775/bb01720297"/&gt;
+    &lt;/ns0:complexSubject&gt;
+    &lt;ns0:complexSubject&gt;
+      &lt;ns1:ComplexSubject rdf:about="http://library.ucsd.edu/ark:/20775/bb88751802"/&gt;
+    &lt;/ns0:complexSubject&gt;
+    &lt;ns0:copyright rdf:resource="http://library.ucsd.edu/ark:/20775/bb75782410"/&gt;
+    &lt;ns0:corporateName&gt;
+      &lt;ns1:CorporateName rdf:about="http://library.ucsd.edu/ark:/20775/bb9148222n"/&gt;
+    &lt;/ns0:corporateName&gt;
+    &lt;ns0:date&gt;
+      &lt;ns0:Date&gt;
+        &lt;ns0:beginDate&gt;1885&lt;/ns0:beginDate&gt;
+        &lt;ns0:encoding&gt;w3cdtf&lt;/ns0:encoding&gt;
+        &lt;ns0:endDate&gt;1890&lt;/ns0:endDate&gt;
+        &lt;ns0:type&gt;creation&lt;/ns0:type&gt;
+        &lt;ns2:value&gt;between 1885-1890&lt;/ns2:value&gt;
+      &lt;/ns0:Date&gt;
+    &lt;/ns0:date&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd1201665x"/&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd2494935g"/&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd4643137x"/&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd59400781"/&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd78510322"/&gt;
+    &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd8607874t"/&gt;
+    &lt;ns0:hasFile&gt;
+      &lt;ns0:File rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z/1.tif"&gt;
+        &lt;ns0:compositionLevel&gt;0&lt;/ns0:compositionLevel&gt;
+        &lt;ns0:crc32checksum&gt;40363594&lt;/ns0:crc32checksum&gt;
+        &lt;ns0:dateCreated&gt;2001-05-09T14:00:28-07:00&lt;/ns0:dateCreated&gt;
+        &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd0444826j"/&gt;
+        &lt;ns0:formatName&gt;TIFF&lt;/ns0:formatName&gt;
+        &lt;ns0:formatVersion&gt;5.0&lt;/ns0:formatVersion&gt;
+        &lt;ns0:md5checksum&gt;1702ac18fe00b2b1e3add6051d86790f&lt;/ns0:md5checksum&gt;
+        &lt;ns0:mimeType&gt;image/tiff&lt;/ns0:mimeType&gt;
+        &lt;ns0:objectCategory&gt;file&lt;/ns0:objectCategory&gt;
+        &lt;ns0:preservationLevel&gt;full&lt;/ns0:preservationLevel&gt;
+        &lt;ns0:quality&gt;3956x3172&lt;/ns0:quality&gt;
+        &lt;ns0:sha1checksum&gt;c8719b1c69ba889bc3763656d84945a11fdad10f&lt;/ns0:sha1checksum&gt;
+        &lt;ns0:size&gt;37648546&lt;/ns0:size&gt;
+        &lt;ns0:sourceCapture rdf:nodeID="g70205476130700"/&gt;
+        &lt;ns0:sourceFileName&gt;20775-bb9045293z-0-1.tif&lt;/ns0:sourceFileName&gt;
+        &lt;ns0:sourcePath&gt;/pub/data2/dams/localStore/bb/90/45/29/3z&lt;/ns0:sourcePath&gt;
+        &lt;ns0:use&gt;image-source&lt;/ns0:use&gt;
+      &lt;/ns0:File&gt;
+    &lt;/ns0:hasFile&gt;
+    &lt;ns0:hasFile&gt;
+      &lt;ns0:File rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z/2.jpg"&gt;
+        &lt;ns0:compositionLevel&gt;0&lt;/ns0:compositionLevel&gt;
+        &lt;ns0:crc32checksum&gt;330550bd&lt;/ns0:crc32checksum&gt;
+        &lt;ns0:dateCreated&gt;2013-05-14T11:20:17-0700&lt;/ns0:dateCreated&gt;
+        &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd4335644h"/&gt;
+        &lt;ns0:formatName&gt;JPEG&lt;/ns0:formatName&gt;
+        &lt;ns0:formatVersion&gt;1.01&lt;/ns0:formatVersion&gt;
+        &lt;ns0:md5checksum&gt;2c9dfdbce0d22cc1ece2f8e39ba66eb4&lt;/ns0:md5checksum&gt;
+        &lt;ns0:mimeType&gt;image/jpeg&lt;/ns0:mimeType&gt;
+        &lt;ns0:objectCategory&gt;file&lt;/ns0:objectCategory&gt;
+        &lt;ns0:preservationLevel&gt;full&lt;/ns0:preservationLevel&gt;
+        &lt;ns0:quality&gt;768x616&lt;/ns0:quality&gt;
+        &lt;ns0:sha1checksum&gt;c06d97ddc740a31d290c503cdf778b0400696fa2&lt;/ns0:sha1checksum&gt;
+        &lt;ns0:size&gt;340778&lt;/ns0:size&gt;
+        &lt;ns0:sourceFileName&gt;20775-bb9045293z-0-2.jpg&lt;/ns0:sourceFileName&gt;
+        &lt;ns0:sourcePath&gt;/pub/data2/dams/localStore/bb/90/45/29/3z&lt;/ns0:sourcePath&gt;
+        &lt;ns0:use&gt;image-service&lt;/ns0:use&gt;
+      &lt;/ns0:File&gt;
+    &lt;/ns0:hasFile&gt;
+    &lt;ns0:hasFile&gt;
+      &lt;ns0:File rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z/3.jpg"&gt;
+        &lt;ns0:compositionLevel&gt;0&lt;/ns0:compositionLevel&gt;
+        &lt;ns0:crc32checksum&gt;b3288a12&lt;/ns0:crc32checksum&gt;
+        &lt;ns0:dateCreated&gt;2013-05-14T11:20:17-0700&lt;/ns0:dateCreated&gt;
+        &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd5632585m"/&gt;
+        &lt;ns0:formatName&gt;JPEG&lt;/ns0:formatName&gt;
+        &lt;ns0:formatVersion&gt;1.01&lt;/ns0:formatVersion&gt;
+        &lt;ns0:md5checksum&gt;e22f01a4a4d208791f4e8e9f18854bdd&lt;/ns0:md5checksum&gt;
+        &lt;ns0:mimeType&gt;image/jpeg&lt;/ns0:mimeType&gt;
+        &lt;ns0:objectCategory&gt;file&lt;/ns0:objectCategory&gt;
+        &lt;ns0:preservationLevel&gt;full&lt;/ns0:preservationLevel&gt;
+        &lt;ns0:quality&gt;450x361&lt;/ns0:quality&gt;
+        &lt;ns0:sha1checksum&gt;611fc449b38d59d8b1160612949f3685053e1601&lt;/ns0:sha1checksum&gt;
+        &lt;ns0:size&gt;115119&lt;/ns0:size&gt;
+        &lt;ns0:sourceFileName&gt;20775-bb9045293z-0-3.jpg&lt;/ns0:sourceFileName&gt;
+        &lt;ns0:sourcePath&gt;/pub/data2/dams/localStore/bb/90/45/29/3z&lt;/ns0:sourcePath&gt;
+        &lt;ns0:use&gt;image-preview&lt;/ns0:use&gt;
+      &lt;/ns0:File&gt;
+    &lt;/ns0:hasFile&gt;
+    &lt;ns0:hasFile&gt;
+      &lt;ns0:File rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z/4.jpg"&gt;
+        &lt;ns0:compositionLevel&gt;0&lt;/ns0:compositionLevel&gt;
+        &lt;ns0:crc32checksum&gt;9409b35e&lt;/ns0:crc32checksum&gt;
+        &lt;ns0:dateCreated&gt;2013-05-14T11:20:17-0700&lt;/ns0:dateCreated&gt;
+        &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd3038704x"/&gt;
+        &lt;ns0:formatName&gt;JPEG&lt;/ns0:formatName&gt;
+        &lt;ns0:formatVersion&gt;1.01&lt;/ns0:formatVersion&gt;
+        &lt;ns0:md5checksum&gt;cfd24710c943e6bbf2af8a920376be5c&lt;/ns0:md5checksum&gt;
+        &lt;ns0:mimeType&gt;image/jpeg&lt;/ns0:mimeType&gt;
+        &lt;ns0:objectCategory&gt;file&lt;/ns0:objectCategory&gt;
+        &lt;ns0:preservationLevel&gt;full&lt;/ns0:preservationLevel&gt;
+        &lt;ns0:quality&gt;150x120&lt;/ns0:quality&gt;
+        &lt;ns0:sha1checksum&gt;b1889b5382ebc4c018c20d504c33e9b5aa0a7e13&lt;/ns0:sha1checksum&gt;
+        &lt;ns0:size&gt;13942&lt;/ns0:size&gt;
+        &lt;ns0:sourceFileName&gt;20775-bb9045293z-0-4.jpg&lt;/ns0:sourceFileName&gt;
+        &lt;ns0:sourcePath&gt;/pub/data2/dams/localStore/bb/90/45/29/3z&lt;/ns0:sourcePath&gt;
+        &lt;ns0:use&gt;image-thumbnail&lt;/ns0:use&gt;
+      &lt;/ns0:File&gt;
+    &lt;/ns0:hasFile&gt;
+    &lt;ns0:hasFile&gt;
+      &lt;ns0:File rdf:about="http://library.ucsd.edu/ark:/20775/bb9045293z/5.jpg"&gt;
+        &lt;ns0:compositionLevel&gt;0&lt;/ns0:compositionLevel&gt;
+        &lt;ns0:crc32checksum&gt;1a95492e&lt;/ns0:crc32checksum&gt;
+        &lt;ns0:dateCreated&gt;2013-05-14T11:20:18-0700&lt;/ns0:dateCreated&gt;
+        &lt;ns0:event rdf:resource="http://library.ucsd.edu/ark:/20775/bd1741765m"/&gt;
+        &lt;ns0:formatName&gt;JPEG&lt;/ns0:formatName&gt;
+        &lt;ns0:formatVersion&gt;1.01&lt;/ns0:formatVersion&gt;
+        &lt;ns0:md5checksum&gt;66e490bace539efb74143392367e3140&lt;/ns0:md5checksum&gt;
+        &lt;ns0:mimeType&gt;image/jpeg&lt;/ns0:mimeType&gt;
+        &lt;ns0:objectCategory&gt;file&lt;/ns0:objectCategory&gt;
+        &lt;ns0:preservationLevel&gt;full&lt;/ns0:preservationLevel&gt;
+        &lt;ns0:quality&gt;65x52&lt;/ns0:quality&gt;
+        &lt;ns0:sha1checksum&gt;16e1fbe35a84168bda69316105cd166a7939f0d8&lt;/ns0:sha1checksum&gt;
+        &lt;ns0:size&gt;3433&lt;/ns0:size&gt;
+        &lt;ns0:sourceFileName&gt;20775-bb9045293z-0-5.jpg&lt;/ns0:sourceFileName&gt;
+        &lt;ns0:sourcePath&gt;/pub/data2/dams/localStore/bb/90/45/29/3z&lt;/ns0:sourcePath&gt;
+        &lt;ns0:use&gt;image-icon&lt;/ns0:use&gt;
+      &lt;/ns0:File&gt;
+    &lt;/ns0:hasFile&gt;
+    &lt;ns0:note&gt;
+      &lt;ns0:Note&gt;
+        &lt;ns0:displayLabel&gt;filename&lt;/ns0:displayLabel&gt;
+        &lt;ns0:type&gt;identifier&lt;/ns0:type&gt;
+        &lt;ns2:value&gt;6313&lt;/ns2:value&gt;
+      &lt;/ns0:Note&gt;
+    &lt;/ns0:note&gt;
+    &lt;ns0:note&gt;
+      &lt;ns0:Note rdf:about="http://library.ucsd.edu/ark:/20775/bb48138063"/&gt;
+    &lt;/ns0:note&gt;
+    &lt;ns0:relationship&gt;
+      &lt;ns0:Relationship&gt;
+        &lt;ns0:personalName rdf:resource="http://library.ucsd.edu/ark:/20775/bb1127669b"/&gt;
+        &lt;ns0:role rdf:resource="http://library.ucsd.edu/ark:/20775/bb2390480h"/&gt;
+      &lt;/ns0:Relationship&gt;
+    &lt;/ns0:relationship&gt;
+    &lt;ns0:relationship&gt;
+      &lt;ns0:Relationship&gt;
+        &lt;ns0:personalName rdf:resource="http://library.ucsd.edu/ark:/20775/bb3687419n"/&gt;
+        &lt;ns0:role rdf:resource="http://library.ucsd.edu/ark:/20775/bb6486002k"/&gt;
+      &lt;/ns0:Relationship&gt;
+    &lt;/ns0:relationship&gt;
+    &lt;ns0:relationship&gt;
+      &lt;ns0:Relationship&gt;
+        &lt;ns0:personalName rdf:resource="http://library.ucsd.edu/ark:/20775/bb98308201"/&gt;
+        &lt;ns0:role rdf:resource="http://library.ucsd.edu/ark:/20775/bb2390480h"/&gt;
+      &lt;/ns0:Relationship&gt;
+    &lt;/ns0:relationship&gt;
+    &lt;ns0:title&gt;
+      &lt;ns1:Title&gt;
+        &lt;ns1:authoritativeLabel&gt;Mission at Santa Barbara&lt;/ns1:authoritativeLabel&gt;
+        &lt;ns1:elementList rdf:parseType="Collection"&gt;
+          &lt;ns1:MainTitleElement&gt;
+            &lt;ns1:elementValue&gt;Mission at Santa Barbara&lt;/ns1:elementValue&gt;
+          &lt;/ns1:MainTitleElement&gt;
+        &lt;/ns1:elementList&gt;
+      &lt;/ns1:Title&gt;
+    &lt;/ns0:title&gt;
+    &lt;ns0:typeOfResource&gt;still image&lt;/ns0:typeOfResource&gt;
+    &lt;ns0:unit rdf:resource="http://library.ucsd.edu/ark:/20775/bb09910635"/&gt;
+  &lt;/ns0:Object&gt;
+  &lt;ns1:PersonalName rdf:about="http://library.ucsd.edu/ark:/20775/bb98308201"/&gt;
+  &lt;ns1:PersonalName rdf:about="http://library.ucsd.edu/ark:/20775/bb3687419n"/&gt;
+  &lt;ns1:Authority rdf:about="http://library.ucsd.edu/ark:/20775/bb6486002k"/&gt;
+  &lt;ns1:PersonalName rdf:about="http://library.ucsd.edu/ark:/20775/bb1127669b"/&gt;
+  &lt;ns0:SourceCapture rdf:nodeID="g70205476130700"&gt;
+    &lt;ns0:captureSource&gt;transmission scanner&lt;/ns0:captureSource&gt;
+    &lt;ns0:imageProducer&gt;Mandeville Special Collections Library&lt;/ns0:imageProducer&gt;
+    &lt;ns0:scannerManufacturer&gt;Epson&lt;/ns0:scannerManufacturer&gt;
+    &lt;ns0:scannerModelName&gt;Expression 1600&lt;/ns0:scannerModelName&gt;
+    &lt;ns0:scanningSoftware&gt;Epson Twain Pro&lt;/ns0:scanningSoftware&gt;
+    &lt;ns0:scanningSoftwareVersion&gt;2.10E&lt;/ns0:scanningSoftwareVersion&gt;
+    &lt;ns0:sourceType&gt;albumen photographs&lt;/ns0:sourceType&gt;
+  &lt;/ns0:SourceCapture&gt;
+  &lt;ns1:Authority rdf:about="http://library.ucsd.edu/ark:/20775/bb2390480h"/&gt;
+&lt;/rdf:RDF&gt;
+</str>
+      <arr name="component_map_tesim">
+        <str>{}</str>
+      </arr>
+      <arr name="files_tesim">
+        <str>{"filestore":"","id":"1.tif","quality":"3956x3172","size":"37648546","sourcePath":"/pub/data2/dams/localStore/bb/90/45/29/3z","sourceFileName":"20775-bb9045293z-0-1.tif","use":"image-source","label":"","dateCreated":"2001-05-09T14:00:28-07:00","formatName":"TIFF","mimeType":"image/tiff","source_capture":"_:g70205476130700","capture_source":"transmission scanner","image_producer":"Mandeville Special Collections Library","scanner_manufacturer":"Epson","scanner_model_name":"Expression 1600","scanning_software":"Epson Twain Pro","scanning_software_version":"2.10E","source_type":"albumen photographs"}</str>
+        <str>{"filestore":"","id":"2.jpg","quality":"768x616","size":"340778","sourcePath":"/pub/data2/dams/localStore/bb/90/45/29/3z","sourceFileName":"20775-bb9045293z-0-2.jpg","use":"image-service","label":"","dateCreated":"2013-05-14T11:20:17-0700","formatName":"JPEG","mimeType":"image/jpeg"}</str>
+        <str>{"filestore":"","id":"3.jpg","quality":"450x361","size":"115119","sourcePath":"/pub/data2/dams/localStore/bb/90/45/29/3z","sourceFileName":"20775-bb9045293z-0-3.jpg","use":"image-preview","label":"","dateCreated":"2013-05-14T11:20:17-0700","formatName":"JPEG","mimeType":"image/jpeg"}</str>
+        <str>{"filestore":"","id":"4.jpg","quality":"150x120","size":"13942","sourcePath":"/pub/data2/dams/localStore/bb/90/45/29/3z","sourceFileName":"20775-bb9045293z-0-4.jpg","use":"image-thumbnail","label":"","dateCreated":"2013-05-14T11:20:17-0700","formatName":"JPEG","mimeType":"image/jpeg"}</str>
+        <str>{"filestore":"","id":"5.jpg","quality":"65x52","size":"3433","sourcePath":"/pub/data2/dams/localStore/bb/90/45/29/3z","sourceFileName":"20775-bb9045293z-0-5.jpg","use":"image-icon","label":"","dateCreated":"2013-05-14T11:20:18-0700","formatName":"JPEG","mimeType":"image/jpeg"}</str>
+      </arr>
+      <arr name="thumbnail_tesim">
+        <str>http://library.ucsd.edu/ark:/20775/bb9045293z/4.jpg</str>
+      </arr>
+      <arr name="unit_code_tesim">
+        <str>dlp</str>
+      </arr>
+      <arr name="unit_json_tesim">
+        <str>{"id":"bb09910635","code":"dlp","name":"Library Digital Collections"}</str>
+      </arr>
+      <arr name="collection_name_tesim">
+        <str>The Missions of Alta California</str>
+      </arr>
+      <arr name="collections_tesim">
+        <str>bb3038949s</str>
+      </arr>
+      <arr name="collection_json_tesim">
+        <str>{"id":"bb3038949s","name":"The Missions of Alta California","visibility":"public","type":"AssembledCollection"}</str>
+      </arr>
+      <arr name="copyright_tesim">
+        <str>{"id":"bb75782410","status":"Public Domain","jurisdiction":"","purposeNote":"Use: This work is available from the UC San Diego Library. This digital copy of the work is intended to support research, teaching, and private study.","note":"Constraint(s) on Use: This work may be used without prior permission.","beginDate":"","endDate":"","date":""}</str>
+      </arr>
+      <arr name="resource_type_tesim">
+        <str>image</str>
+      </arr>
+      <arr name="has_model_ssim">
+        <str>info:fedora/afmodel:DamsObject</str>
+      </arr>
+      <str name="id_t">bb9045293z</str>
+      <date name="timestamp">2015-08-15T04:33:36.827Z</date>
+      <float name="score">9.144687</float>
+    </doc>
+  </result>
+  <lst name="facet_counts">
+    <lst name="facet_queries"/>
+    <lst name="facet_fields">
+      <lst name="active_fedora_model_ssi">
+        <int name="DamsObject">39</int>
+      </lst>
+      <lst name="object_type_si"/>
+      <lst name="object_type_sim">
+        <int name="image">39</int>
+      </lst>
+      <lst name="collection_sim">
+        <int name="The Missions of Alta California">39</int>
+      </lst>
+      <lst name="unit_sim">
+        <int name="Library Digital Collections">39</int>
+      </lst>
+    </lst>
+    <lst name="facet_dates"/>
+    <lst name="facet_ranges"/>
+  </lst>
+  <lst name="highlighting">
+    <lst name="bb9045293z"/>
+  </lst>
+  <lst name="spellcheck">
+    <lst name="suggestions">
+      <lst name="bb3038949s">
+        <int name="numFound">5</int>
+        <int name="startOffset">18</int>
+        <int name="endOffset">28</int>
+        <int name="origFreq">0</int>
+        <arr name="suggestion">
+          <lst>
+            <str name="word">1.3038949e</str>
+            <int name="freq">2</int>
+          </lst>
+          <lst>
+            <str name="word">bb 30389 49s</str>
+            <int name="freq">451</int>
+          </lst>
+          <lst>
+            <str name="word">30389494</str>
+            <int name="freq">2</int>
+          </lst>
+          <lst>
+            <str name="word">bb3 0389 49s</str>
+            <int name="freq">13</int>
+          </lst>
+          <lst>
+            <str name="word">bb3038729x</str>
+            <int name="freq">2</int>
+          </lst>
+        </arr>
+      </lst>
+      <bool name="correctlySpelled">true</bool>
+    </lst>
+  </lst>
+</response>

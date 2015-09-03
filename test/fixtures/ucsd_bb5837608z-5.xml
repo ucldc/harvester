@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<response>
-<lst name="responseHeader"><int name="status">0</int><int name="QTime">6</int><lst name="params"><str name="start">10</str><str name="q">collections_tesim:"bb5837608z"</str><str name="rows">3</str></lst></lst><result name="response" numFound="10" start="10" maxScore="6.7889824"></result><lst name="facet_counts"><lst name="facet_queries"/><lst name="facet_fields"><lst name="active_fedora_model_ssi"><int name="DamsObject">10</int></lst><lst name="object_type_sim"><int name="image">259</int><int name="video">4</int></lst><lst name="collection_sim"><int name="Charles H. Graves Photographs and Films">10</int><int name="UC San Diego History">10</int></lst><lst name="unit_sim"><int name="Library Digital Collections">10</int></lst></lst><lst name="facet_dates"/><lst name="facet_ranges"/></lst>
-</response>

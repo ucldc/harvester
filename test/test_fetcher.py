@@ -507,7 +507,7 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
         if initial data not correct'''
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
-            body=open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()
+            body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()
             )
         self.assertRaises(TypeError, fetcher.SolrFetcher)
         h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
@@ -530,11 +530,11 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(httpretty.POST,
             'http://example.edu/solr/select',
             responses=[
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-1.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-2.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-3.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-4.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd_bb5837608z-5.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-4.xml').read())
             ]
             )
         h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
@@ -543,8 +543,52 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
         n = 0
         for r in h:
             n += 1
-        self.assertEqual(['Urey Hall and Mayer Hall'], r['title_tesim'])
+        self.assertEqual(['Mission at Santa Barbara'], r['title_tesim'])
         self.assertEqual(n, 10)
+
+class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
+    '''Test the function of Solr harvest controller'''
+    @httpretty.activate
+    def setUp(self):
+        super(HarvestSolr_ControllerTestCase, self).setUp()
+        # self.testFile = DIR_FIXTURES+'/collection_api_test_oac.json'
+        httpretty.register_uri(httpretty.GET,
+                "https://registry.cdlib.org/api/v1/collection/183/",
+                body=open(DIR_FIXTURES+'/collection_api_solr_harvest.json').read())
+        httpretty.register_uri(httpretty.POST,
+                'http://example.edu/solr/blacklight/select',
+                body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()
+                )
+        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/183/')
+        self.setUp_config(self.collection)
+        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
+        print "DIR SAVE::::: {}".format(self.controller.dir_save)
+
+    def tearDown(self):
+        super(HarvestSolr_ControllerTestCase, self).tearDown()
+        self.tearDown_config()
+        #shutil.rmtree(self.controller.dir_save)
+
+    @httpretty.activate
+    def testSolrHarvest(self):
+        '''Test the function of the Solr harvest with <date> objects
+        in stream'''
+        httpretty.register_uri(httpretty.POST,
+            'http://example.edu/solr/blacklight/select',
+            responses=[
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
+                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-4.xml').read())
+            ]
+            )
+        self.assertTrue(hasattr(self.controller, 'harvest'))
+        self.controller.harvest()
+        print "LOGS:{}".format(self.test_log_handler.formatted_records)
+        self.assertEqual(len(self.test_log_handler.records), 2)
+        self.assertTrue('UC San Diego' in self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 13 records harvested')
 
 
 class MARCFetcherTestCase(LogOverrideMixin, TestCase):
