@@ -875,8 +875,6 @@ class HarvestController(object):
             else:
                 self.num_records += 1
                 self._add_registry_data(objset)
-            with open('{0}:{1}'.format('objset', self.num_records), 'w') as f:
-                f.write(json.dumps(objset))
             self.save_objset(objset)
             if self.num_records >= next_log_n:
                 self.logger.info(' '.join((str(self.num_records),

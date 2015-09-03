@@ -587,9 +587,8 @@ class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, 
         self.controller.harvest()
         print "LOGS:{}".format(self.test_log_handler.formatted_records)
         self.assertEqual(len(self.test_log_handler.records), 2)
-        self.assertTrue('UCB Department of Statistics' in self.test_log_handler.formatted_records[0])
-        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 24 records harvested')
-
+        self.assertTrue('UC San Diego' in self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 13 records harvested')
 
 
 class MARCFetcherTestCase(LogOverrideMixin, TestCase):
