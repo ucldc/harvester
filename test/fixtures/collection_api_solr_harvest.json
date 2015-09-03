@@ -1,0 +1,58 @@
+{
+  "url_oac": "",
+  "url_local": "http://library.ucsd.edu/dc/collection/bb3038949s",
+  "url_harvest": "http://example.edu/solr/blacklight",
+  "staging_notes": "",
+  "slug": "missions-of-alta-california-images-from-the-series",
+  "rights_status": "X",
+  "rights_statement": "",
+  "resource_uri": "/api/v1/collection/183/",
+  "repository": [
+    {
+      "slug": "special-collections-and-archives",
+      "resource_uri": "/api/v1/repository/22/",
+      "name": "Library, Special Collections and Archives",
+      "id": 22,
+      "google_analytics_tracking_code": "UA-66101317-1",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego",
+          "id": 6,
+          "google_analytics_tracking_code": "",
+          "ark": "ark:/13030/tf5j49p47v"
+        }
+      ],
+      "ark": "ark:/13030/tf5r29p653"
+    }
+  ],
+  "ready_for_publication": false,
+  "files_in_hand": false,
+  "files_in_dams": false,
+  "featured": false,
+  "extent": null,
+  "enrichments_item": "/select-id?prop=id,\n/jsonfy-prop,\n/dpla_mapper?mapper_type=ucsd_blacklight_dc,\n/strip_html,\n/set_context,\n/cleanup_value,\n/move_date_values?prop=sourceResource%2Fsubject,\n/move_date_values?prop=sourceResource%2Fspatial,\n/shred?prop=sourceResource%2Fspatial&delim=--,\n/capitalize_value?exclude=sourceResource%2Frelation,\n/enrich-subject,\n/enrich_earliest_date,\n/enrich_date,\n/enrich_date?prop=sourceResource%2Fdate,\n/enrich-type,\n/enrich-format,\n/copy_prop?prop=sourceResource%4Fpublisher&to_prop=dataProvider,\n/enrich_language,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3,\n/lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True,\n/copy_prop?prop=provider%2Fname&to_prop=dataProvider&skip_if_exists=True,\n/set_prop?prop=sourceResource%2FstateLocatedIn&value=California,\n/enrich_location?prop=sourceResource%2FstateLocatedIn,\n/filter_fields?keys=sourceResource,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+  "description": "Images documenting the interiors and exteriors of missions in San Antonio, San Carlos, San Diego, San Fernando, San Francisco, San Gabriel, San Juan, San Juan Capistrano, San Lus Rey, San Miguel, Santa Barbara, and Santa Ynez. The original albumen photographs were taken by William Henry Jackson. ",
+  "dcmi_type": "X",
+  "campus": [
+    {
+      "slug": "UCSD",
+      "resource_uri": "/api/v1/campus/6/",
+      "position": 6,
+      "name": "UC San Diego",
+      "id": 6,
+      "google_analytics_tracking_code": "",
+      "ark": "ark:/13030/tf5j49p47v"
+    }
+  ],
+  "harvest_extra_data": "collections_tesim:bb3038949s",
+  "harvest_type": "SLR",
+  "hosted": "",
+  "id": 183,
+  "local_id": "missions-of-alta-california-images-from-the-series",
+  "metadata_in_dams": false,
+  "name": "The Missions of Alta California",
+  "qa_completed": false
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <lst name="responseHeader">
+    <int name="status">0</int>
+    <int name="QTime">324</int>
+    <lst name="params">
+      <str name="q">collections_tesim:bb3038949s</str>
+      <str name="rows">3</str>
+    </lst>
+  </lst>
+  <result name="response" numFound="10" start="0" maxScore="9.144687">
+  </result>
+  <lst name="facet_counts">
+    <lst name="facet_queries"/>
+    <lst name="facet_fields">
+      <lst name="active_fedora_model_ssi">
+        <int name="DamsObject">39</int>
+      </lst>
+      <lst name="object_type_si"/>
+      <lst name="object_type_sim">
+        <int name="image">39</int>
+      </lst>
+      <lst name="collection_sim">
+        <int name="The Missions of Alta California">39</int>
+      </lst>
+      <lst name="unit_sim">
+        <int name="Library Digital Collections">39</int>
+      </lst>
+    </lst>
+    <lst name="facet_dates"/>
+    <lst name="facet_ranges"/>
+  </lst>
+  <lst name="highlighting">
+  </lst>
+  <lst name="spellcheck">
+    <lst name="suggestions">
+      <lst name="bb3038949s">
+        <int name="numFound">5</int>
+        <int name="startOffset">18</int>
+        <int name="endOffset">28</int>
+        <int name="origFreq">0</int>
+        <arr name="suggestion">
+          <lst>
+            <str name="word">1.3038949e</str>
+            <int name="freq">2</int>
+          </lst>
+          <lst>
+            <str name="word">bb 30389 49s</str>
+            <int name="freq">451</int>
+          </lst>
+          <lst>
+            <str name="word">30389494</str>
+            <int name="freq">2</int>
+          </lst>
+          <lst>
+            <str name="word">bb3 0389 49s</str>
+            <int name="freq">13</int>
+          </lst>
+          <lst>
+            <str name="word">bb3038729x</str>
+            <int name="freq">2</int>
+          </lst>
+        </arr>
+      </lst>
+      <bool name="correctlySpelled">true</bool>
+    </lst>
+  </lst>
+</response>
