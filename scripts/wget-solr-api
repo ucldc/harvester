@@ -1,1 +1,10 @@
-wget --header "X-Authentication-Token: $SOLR_API_KEY" --no-check-certificate "$URL_SOLR_API/solr/query?q=*:*&rows=1"
+set -x
+
+suffix=${1}
+
+query="https://ucldc-solr-stage${suffix}.elasticbeanstalk.com/solr/query?q=*:*&rows=1"
+
+echo "QUERY: $query"
+
+wget --header "X-Authentication-Token: $SOLR_API_KEY" --no-check-certificate \
+  -O ucldc-solr-stage${1}-solr.xml $query
