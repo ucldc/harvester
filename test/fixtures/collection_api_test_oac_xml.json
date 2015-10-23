@@ -1,0 +1,76 @@
+{
+  "url_was": "",
+  "url_oai": "",
+  "metadata_standard": "MODS; METS",
+  "metadata_level": "Item",
+  "hosted": "",
+  "extent": null,
+  "description": "Black & white photographs of Sonora and Baja California taken by Harry Crosby. These materials are used widely by programs in Mexican history and ethnic studies.",
+  "collection_type": "A",
+  "dcmi_type": "I",
+  "files_in_dams": false,
+  "files_in_hand": false,
+  "metadata_in_dams": false,
+  "qa_completed": false,
+  "ready_for_publication": false,
+  "rights_statement": "a sample rights statement",
+  "rights_status": "PD",
+  "staging_notes": "some staging notes",
+  "campus": [
+    {
+      "slug": "UCSD",
+      "resource_uri": "/api/v1/campus/6/",
+      "position": 6,
+      "name": "UC San Diego"
+    },
+    {
+      "slug": "UCB",
+      "resource_uri": "/api/v1/campus/1/",
+      "position": 0,
+      "name": "UC Berkeley"
+    }
+  ],
+  "appendix": "Harvest/Crawl",
+  "name": "Harry Crosby Collection",
+  "phase_one": false,
+  "repository": [
+    {
+      "resource_uri": "/api/v1/repository/22/",
+      "name": "Mandeville Special Collections Library",
+      "slug": "Mandeville-Special-Collections-Library",
+      "campus": [
+        {
+          "slug": "UCSD",
+          "resource_uri": "/api/v1/campus/6/",
+          "position": 6,
+          "name": "UC San Diego"
+        },
+        {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley"
+        }
+      ]
+    },
+    {
+      "resource_uri": "/api/v1/repository/36/",
+      "name": "UCB Department of Statistics",
+      "slug": "UCB-Department-of-Statistics",
+      "campus": {
+          "slug": "UCB",
+          "resource_uri": "/api/v1/campus/1/",
+          "position": 0,
+          "name": "UC Berkeley"
+        }
+    }
+  ],
+  "resource_uri": "/api/v1/collection/178/",
+  "slug": "harry-crosby-collection-black-white-photographs-of",
+  "url_local": "http://oac.cdlib.org/findaid/ark:/13030/tf2v19n928/",
+  "url_oac": "fixtures/testOAC.json",
+  "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf0c600134",
+  "harvest_type": "OAC",
+  "harvest_extra_data": "",
+  "enrichments_item": "/oai-to-dpla,\r\n /shred?prop=sourceResource/contributor%2CsourceResource/creator%2CsourceResource/date,\r\n /shred?prop=sourceResource/language%2CsourceResource/publisher%2CsourceResource/relation,\r\n /shred?prop=sourceResource/subject%2CsourceResource/type%2CsourceResource/format,\r\n /shred?prop=sourceResource/subject&delim=<br>,\r\n /cleanup_value,\r\n /move_date_values?prop=sourceResource/subject,\r\n /move_date_values?prop=sourceResource/spatial,\r\n /shred?prop=sourceResource/spatial&delim=--,\r\n /capitalize_value,\r\n /enrich_earliest_date,\r\n /enrich-subject,\r\n /enrich_date,\r\n /enrich-type,\r\n /enrich-format,\r\n /contentdm_identify_object,\r\n /enrich_location,\r\n /scdl_enrich_location,\r\n /geocode,\r\n /scdl_geocode_regions,\r\n /copy_prop?prop=sourceResource/publisher&to_prop=dataProvider&create=True&remove=True,\r\n /cleanup_language,\r\n /enrich_language,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/name&substitution=iso639_3,\r\n /lookup?prop=sourceResource/language/name&target=sourceResource/language/iso639_3&substitution=iso639_3&inverse=True,\r\n /copy_prop?prop=provider/name&to_prop=dataProvider&create=True&no_overwrite=True,\r\n /lookup?prop=sourceResource/format&target=sourceResource/format&substitution=scdl_fix_format,\r\n /set_prop?prop=sourceResource/stateLocatedIn&value=California,\r\n /enrich_location?prop=sourceResource/stateLocatedIn,\r\n /compare_with_schema"
+}

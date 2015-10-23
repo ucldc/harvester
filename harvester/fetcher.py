@@ -21,6 +21,7 @@ import requests
 import logbook
 from logbook import FileHandler
 import solr
+import pysolr
 from collection_registry_client import Collection
 import config
 from urlparse import parse_qs
@@ -155,6 +156,49 @@ class SolrFetcher(Fetcher):
         if not len(self.resp.results):
             raise StopIteration
         return self.resp.results[self.index-1]
+
+
+class PySolrFetcher(Fetcher):
+    def __init__(self, url_harvest, query, **query_params):
+        super(PySolrFetcher, self).__init__(url_harvest, query)
+        print "URL: {}".format(url_harvest)
+        self.solr = pysolr.Solr(url_harvest, timeout=1)
+        self.queryParams = {'q':query, 'sort':'id asc', 'wt':'json',
+                'cursorMark':'*'}
+        print "self.queryParams = {}".format(self.queryParams)
+        self.get_next_results()
+        print "self.results dir:{}".format(dir(self.results))
+        print "self.results keys:{}".format(self.results.keys())
+        self.numFound = self.results['response'].get('numFound')
+        self.index = 0
+        self.iter = self.results.__iter__()
+
+    def set_select_path(self):
+        '''Set the encoded path to send to Solr'''
+        queryParams_encoded = pysolr.safe_urlencode(self.queryParams)
+        self.selectPath = 'select?{}'.format(queryParams_encoded)
+
+    def get_next_results(self):
+        self.set_select_path()
+        resp = self.solr._send_request('get', path=self.selectPath)
+        self.results = self.solr.decoder.decode(resp)
+        self.nextCursorMark = self.results.get('nextCursorMark')
+
+    def next(self):
+        try:
+            next_result = self.iter.next()
+            self.index += 1
+            return next_result
+        except StopIteration:
+            if self.index >= self.numFound:
+                raise StopIteration
+        self.queryParams['cursorMark'] = self.nextCursorMark
+        self.get_next_results()
+        if self.nextCursorMark == self.queryParams['cursorMark']:
+            print "CURSOR MARKS THE SAME:::{}".format(self.nextCursorMark)
+            if self.index >= self.numFound:
+                raise StopIteration
+        self.iter = self.results.__iter__()
 
 
 class MARCFetcher(Fetcher):
