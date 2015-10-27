@@ -161,17 +161,12 @@ class SolrFetcher(Fetcher):
 class PySolrFetcher(Fetcher):
     def __init__(self, url_harvest, query, **query_params):
         super(PySolrFetcher, self).__init__(url_harvest, query)
-        print "URL: {}".format(url_harvest)
         self.solr = pysolr.Solr(url_harvest, timeout=1)
         self.queryParams = {'q':query, 'sort':'id asc', 'wt':'json',
                 'cursorMark':'*'}
-        print "self.queryParams = {}".format(self.queryParams)
         self.get_next_results()
-        print "self.results dir:{}".format(dir(self.results))
-        print "self.results keys:{}".format(self.results.keys())
         self.numFound = self.results['response'].get('numFound')
         self.index = 0
-        self.iter = self.results.__iter__()
 
     def set_select_path(self):
         '''Set the encoded path to send to Solr'''
@@ -183,6 +178,7 @@ class PySolrFetcher(Fetcher):
         resp = self.solr._send_request('get', path=self.selectPath)
         self.results = self.solr.decoder.decode(resp)
         self.nextCursorMark = self.results.get('nextCursorMark')
+        self.iter = self.results['response']['docs'].__iter__()
 
     def next(self):
         try:
@@ -195,10 +191,12 @@ class PySolrFetcher(Fetcher):
         self.queryParams['cursorMark'] = self.nextCursorMark
         self.get_next_results()
         if self.nextCursorMark == self.queryParams['cursorMark']:
-            print "CURSOR MARKS THE SAME:::{}".format(self.nextCursorMark)
             if self.index >= self.numFound:
                 raise StopIteration
-        self.iter = self.results.__iter__()
+        if len(self.results['response']['docs']) == 0:
+            raise StopIteration
+        self.index += 1
+        return self.iter.next()
 
 
 class MARCFetcher(Fetcher):

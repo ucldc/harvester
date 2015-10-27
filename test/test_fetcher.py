@@ -555,22 +555,18 @@ class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
         '''Test that the class exists and gives good error messages
         if initial data not correct'''
         httpretty.register_uri(httpretty.GET,
-                'http://example.edu/solr/select/',
+                'http://example.edu/solr/select',
             body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()
             )
         self.assertRaises(TypeError, fetcher.PySolrFetcher)
-        h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',
-        rows=3)
+        h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',)
+        #rows=3)
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, pysolr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
-        self.assertTrue(hasattr(h, 'query'))
-        self.assertEqual(h.query, 'extra_data')
         self.assertTrue(hasattr(h, 'results'))
-        print "RESP ATTR:{}".format(dir(h.results))
-        self.assertEqual(h.results.hits, 10)
-        self.assertEqual(len(h.results), 3)
-        self.assertTrue(hasattr(h, 'numFound'))
+        self.assertEqual(len(h.results), 4)
+        self.assertEqual(h.results['response']['numFound'], 10)
         self.assertEqual(h.numFound, 10)
         self.assertTrue(hasattr(h, 'index'))
 
@@ -578,7 +574,7 @@ class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
     def testIterateOverResults(self):
         '''Test the iteration over a mock set of data'''
         httpretty.register_uri(httpretty.GET,
-            'http://example.edu/solr/select/',
+            'http://example.edu/solr/select',
             responses=[
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()),
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.json').read()),
@@ -588,21 +584,16 @@ class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
             ]
         )
         self.assertRaises(TypeError, fetcher.PySolrFetcher)
-        #h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',
-        #**{ 'rows':3 })
-        h = fetcher.PySolrFetcher('http://solr.industrydocuments.library.ucsf.edu/solr/ltdl3', 'collection:["Gallaher"]')
+        h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',
+                **{ 'rows':3 })
+        #h = fetcher.PySolrFetcher('http://solr.industrydocuments.library.ucsf.edu/solr/ltdl3', 'collection:["Gallaher"]')
         #self.assertEqual(len(h.results), 3)
         #self.assertEqual(h.numFound, 10)
         n = 0
-        print "LOOPING NEXT"
-        print "RESULTS DIR:{}".format(dir(h.results))
-        #print "NEXT CUrsor Mark:{}".format(h.results.nextCursorMark)
-        print "iter DIR:{}".format(dir(h.results.__iter__()))
         for r in h:
             n += 1
         self.assertEqual(n, 10)
-        self.assertEqual(['Mission at Santa Barbara'], r['title_tesim'])
-        self.assertEqual(n, 10)
+        self.assertEqual(['Mission Santa Ynez'], r['title_tesim'])
 
 class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the function of Solr harvest controller'''
