@@ -347,9 +347,8 @@ class NuxeoFetcher(Fetcher):
         ''' get first image component we can find '''
         component_uid = None
 
-        path = urllib.quote(parent_metadata['path'])
-        children = self._nx.children(path)
-        for child in children:
+        query = "SELECT * FROM Document WHERE ecm:parentId = '{}' ORDER BY ecm:pos".format(parent_metadata['uid'])
+        for child in self._nx.nxql(query):
             child_metadata = self._nx.get_metadata(uid=child['uid'])
             if self._has_image(child_metadata):
                 component_uid = child_metadata['uid']
