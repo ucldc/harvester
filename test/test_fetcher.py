@@ -858,7 +858,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         deepharvest_mocker(mock_deepharvest)
 
         httpretty.register_uri(httpretty.GET,
-                'https://example.edu/api/v1/path/asset-library/UCM/LIJA-metadata-completed/LIJA2/UCM_LI_CL1979_001/@children?currentPageIndex=0',
+                'https://example.edu/api/v1/path/@search?query=SELECT+%2A+FROM+Document+WHERE+ecm%3AparentId+%3D+%27d400bb29-98d4-429c-a0b8-119acdb92006%27+ORDER+BY+ecm%3Apos&currentPageIndex=0&pageSize=100',
                 responses=[
                     httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_image_components.json').read(), status=200),
                 ]
@@ -888,7 +888,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         deepharvest_mocker(mock_deepharvest)
 
         httpretty.register_uri(httpretty.GET,
-                'https://example.edu/api/v1/path/asset-library/UCM/Assembly%20Newsletters/Tulare%20News/Tulare%20News,%20Vol.%201%20No.%204/@children?currentPageIndex=0',
+                'https://example.edu/api/v1/path/@search?query=SELECT+%2A+FROM+Document+WHERE+ecm%3AparentId+%3D+%2700d55837-01b6-4211-80d8-b966a15c257e%27+ORDER+BY+ecm%3Apos&currentPageIndex=0&pageSize=100',
                 responses=[
                     httpretty.Response(body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(), status=200),
                 ]
