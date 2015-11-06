@@ -763,7 +763,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
                  'ALX': AlephMARCXMLFetcher,
-                 'SFX': UCSF_XML_Fetcher,
+                 'SFX': PySolrFetcher, #changed 20151106
 }
 
 
