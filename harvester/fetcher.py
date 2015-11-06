@@ -21,6 +21,7 @@ import requests
 import logbook
 from logbook import FileHandler
 import solr
+import pysolr
 from collection_registry_client import Collection
 import config
 from urlparse import parse_qs
@@ -155,6 +156,47 @@ class SolrFetcher(Fetcher):
         if not len(self.resp.results):
             raise StopIteration
         return self.resp.results[self.index-1]
+
+
+class PySolrFetcher(Fetcher):
+    def __init__(self, url_harvest, query, **query_params):
+        super(PySolrFetcher, self).__init__(url_harvest, query)
+        self.solr = pysolr.Solr(url_harvest, timeout=1)
+        self.queryParams = {'q':query, 'sort':'id asc', 'wt':'json',
+                'cursorMark':'*'}
+        self.get_next_results()
+        self.numFound = self.results['response'].get('numFound')
+        self.index = 0
+
+    def set_select_path(self):
+        '''Set the encoded path to send to Solr'''
+        queryParams_encoded = pysolr.safe_urlencode(self.queryParams)
+        self.selectPath = 'select?{}'.format(queryParams_encoded)
+
+    def get_next_results(self):
+        self.set_select_path()
+        resp = self.solr._send_request('get', path=self.selectPath)
+        self.results = self.solr.decoder.decode(resp)
+        self.nextCursorMark = self.results.get('nextCursorMark')
+        self.iter = self.results['response']['docs'].__iter__()
+
+    def next(self):
+        try:
+            next_result = self.iter.next()
+            self.index += 1
+            return next_result
+        except StopIteration:
+            if self.index >= self.numFound:
+                raise StopIteration
+        self.queryParams['cursorMark'] = self.nextCursorMark
+        self.get_next_results()
+        if self.nextCursorMark == self.queryParams['cursorMark']:
+            if self.index >= self.numFound:
+                raise StopIteration
+        if len(self.results['response']['docs']) == 0:
+            raise StopIteration
+        self.index += 1
+        return self.iter.next()
 
 
 class MARCFetcher(Fetcher):
@@ -721,7 +763,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
                  'ALX': AlephMARCXMLFetcher,
-                 'SFX': UCSF_XML_Fetcher,
+                 'SFX': PySolrFetcher, #changed 20151106
 }
 
 
