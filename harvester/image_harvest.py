@@ -18,7 +18,9 @@ from redis import Redis
 import redis_collections
 from harvester.couchdb_pager import couchdb_pager
 
-BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
+#old N.Virginia BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
+BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE',
+              'static-ucldc-cdlib-org/harvested_images')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
