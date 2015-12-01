@@ -555,7 +555,7 @@ class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
         '''Test that the class exists and gives good error messages
         if initial data not correct'''
         httpretty.register_uri(httpretty.GET,
-                'http://example.edu/solr/select',
+                'http://example.edu/solr/query',
             body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()
             )
         self.assertRaises(TypeError, fetcher.PySolrFetcher)
@@ -574,7 +574,7 @@ class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
     def testIterateOverResults(self):
         '''Test the iteration over a mock set of data'''
         httpretty.register_uri(httpretty.GET,
-            'http://example.edu/solr/select',
+            'http://example.edu/solr/query',
             responses=[
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()),
                     httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.json').read()),
