@@ -12,7 +12,7 @@ import couchdb
 from harvester.couchdb_pager import couchdb_pager
 
 BUCKET_BASE = 'ucldc' #old virginia
-BUCKET_BASE = 'static-ucldc-cdlib-org/harvested_images' #new oregon
+BUCKET_BASE = 'static.ucldc.cdlib.org/harvested_images' #new oregon
 SERVER_COUCHDB = 'https://54.84.142.143/couchdb'
 DB_COUCHDB = 'ucldc'
 COUCH_VIEW = 'all_provider_docs/by_provider_name'

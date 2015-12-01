@@ -12,6 +12,7 @@ import urlparse
 import couchdb
 import requests
 import md5s3stash
+import logging
 from harvester.couchdb_init import get_couchdb
 from harvester.config import config
 from redis import Redis
@@ -20,10 +21,11 @@ from harvester.couchdb_pager import couchdb_pager
 
 #old N.Virginia BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE',
-              'static-ucldc-cdlib-org/harvested_images')
+              'static.ucldc.cdlib.org/harvested_images' )
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
+logging.basicConfig(level=logging.ERROR, )
 
 def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
