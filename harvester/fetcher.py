@@ -171,7 +171,7 @@ class PySolrFetcher(Fetcher):
     def set_select_path(self):
         '''Set the encoded path to send to Solr'''
         queryParams_encoded = pysolr.safe_urlencode(self.queryParams)
-        self.selectPath = 'select?{}'.format(queryParams_encoded)
+        self.selectPath = 'query?{}'.format(queryParams_encoded)
 
     def get_next_results(self):
         self.set_select_path()
