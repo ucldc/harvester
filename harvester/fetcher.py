@@ -885,6 +885,9 @@ class HarvestController(object):
         self.collection['id'] = self.collection.url.strip('/').rsplit('/', 1)[1]
         self.collection['ingestType'] = 'collection'
         self.collection['title'] = self.collection.name
+        if 'collection' in obj:
+            #save before hammering
+            obj['source_collection_name'] = obj['collection']
         obj['collection'] = dict(self.collection)
         campus = []
         for c in self.collection.get('campus', []):

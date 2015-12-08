@@ -31,7 +31,6 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
             'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
                 body=open(DIR_FIXTURES+'/testOAC.json').read())
         self.collection = Collection('https://registry.cdlib.org/api/v1/collection/178/')
-        #print "COLLECTION DIR:{}".format(dir(self.collection))
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
 
@@ -68,6 +67,9 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         self.assertEqual(len(dir_list), 2)
         objset_saved = json.loads(open(os.path.join(self.controller.dir_save, dir_list[0])).read())
         obj = objset_saved[2]
+        self.assertIn('source_collection_name', obj)
+        self.assertEqual(obj['source_collection_name'],
+                'record source collection name')
         self.assertIn('collection', obj)
         self.assertIn('@id', obj['collection'][0])
         self.assertIn('title', obj['collection'][0])
