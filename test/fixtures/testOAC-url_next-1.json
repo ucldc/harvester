@@ -1,6 +1,7 @@
 {"api":{"version":"x-002","license":"All Rights Reserved; Unauthorized use is strictly prohibited; http://www.oac.cdlib.org/terms.html"},"objset_total":28,"objset_start":26,"objset_end":28,"objset":[
 {"qdc":{
 "title":"The Questions for '43!: Stay on the job: Don't slow up the ship!",
+"collection":"record source collection name",
 "creator":"Scott, Howard, 1902-1983, artist",
 "subject":["World War, 1939-1945--United States--Posters","Civilian participation: Labor","War work","Patriotism",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
 "description":"lang: Incentive Division, Navy Department: S-7-11M : \"Navy S-7-11M\" on verso",
@@ -19,6 +20,7 @@
 
 {"qdc":{
 "title":"More...and more...and still more tomorrow",
+"collection":"record source collection name",
 "subject":["World War, 1939-1945--United States--Posters","Civilian participation: War production","Industrial mobilization","Labor",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
 "description":"lang: Copyright 1943, Aluminum Company of America",
 "publisher":"The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
@@ -35,6 +37,7 @@
 
 {"qdc":{
 "title":"Step on it : Bethlehem Steel Company",
+"collection":"record source collection name",
 "subject":["World War, 1939-1945--United States--Posters","Civilian participation: Health and safety","Safety education","Industrial safety",{"q":"series","v":"American war posters from the Second World War"},{"q":"series","v":"Amercian war posters from the Second World War"}],
 "publisher":"The Bancroft Library;;, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu;;, URL: http://bancroft.berkeley.edu/",
 "date":{"q":"created","v":"[1941-1945]"},
