@@ -45,7 +45,7 @@ class ImageHarvestTestCase(TestCase):
         mock_stash.assert_called_with(
                 url_test,
                 url_auth=None,
-                bucket_base='static.ucldc.cdlib.org/harvested_images',
+                bucket_base='static-ucldc-cdlib-org/harvested_images',
                 hash_cache={},
                 url_cache={})
         self.assertEqual('s3 url object', ret.s3_url)
