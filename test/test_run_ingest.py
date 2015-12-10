@@ -273,6 +273,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         os.environ['ID_EC2_INGEST'] = 'INGEST'
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
 	os.environ['DPLA_CONFIG_FILE'] = 'akara.ini'
+	os.environ['DATA_BRANCH'] = 'stage'
 
     def tearDown(self):
         # remove env vars if created?
@@ -280,6 +281,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['REDIS_PASSWORD']
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
+	del os.environ['DATA_BRANCH']
         if 'DPLA_CONFIG_FILE' in os.environ:
 	    del os.environ['DPLA_CONFIG_FILE']
 
@@ -315,3 +317,34 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         # no longer run image_harvest by default
         #self.assertEqual(self.test_log_handler.formatted_records[14],
         #    u'[INFO] run_ingest: Started job for image_harvest:RQ-result!')
+
+    @patch('harvester.run_ingest.Redis', autospec=True)
+    @patch('couchdb.Server')
+    @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
+    @patch('dplaingestion.scripts.save_records.main', return_value=0)
+    @patch('dplaingestion.scripts.remove_deleted_records.main', return_value=0)
+    @patch('dplaingestion.scripts.check_ingestion_counts.main', return_value=0)
+    @patch('dplaingestion.scripts.dashboard_cleanup.main', return_value=0)
+    @patch('dplaingestion.couch.Couch')
+    def testRunIngestProductionNotReady(self, mock_couch, mock_dash_clean, mock_check,
+                mock_remove, mock_save, mock_enrich, mock_couchdb, mock_redis):
+        mock_couch.return_value._create_ingestion_document.return_value = 'test-id'
+        # this next is because the redis client unpickles....
+        mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
+        mail_handler = MagicMock()
+        url_api_collection = 'https://registry.cdlib.org/api/v1/collection/178/'
+        httpretty.enable()
+        httpretty.register_uri(httpretty.GET,
+                url_api_collection,
+                body=open(DIR_FIXTURES+'/collection_api_test_oac.json').read())
+        httpretty.register_uri(httpretty.GET,
+            'http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/tf2v19n928',
+                body=open(DIR_FIXTURES+'/testOAC-url_next-1.json').read())
+	os.environ['DATA_BRANCH'] = 'production'
+        self.assertRaises(Exception,
+                run_ingest.main,
+                'mark.redar@ucop.edu',
+                url_api_collection,
+                log_handler=self.test_log_handler,
+                mail_handler=mail_handler)
+        self.assertEqual(len(self.test_log_handler.records), 9)

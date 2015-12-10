@@ -101,7 +101,11 @@ def main(user_email, url_api_collection, log_handler=None,
         log_handler=log_handler,
         mail_handler=mail_handler
         )
-
+    if 'prod' in os.environ['DATA_BRANCH'].lower():
+        if not collection.ready_for_publication:
+            raise Exception(''.join(('Collection {} is not ready for publication.',
+              ' Run on stage and QA first, then set',
+              ' ready_for_publication')).format(collection.id))
     logger.info("INGEST DOC ID:{0}".format(ingest_doc_id))
     logger.info('HARVESTED {0} RECORDS'.format(num_recs))
     logger.info('IN DIR:{0}'.format(dir_save))
