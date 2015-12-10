@@ -10,6 +10,7 @@ import datetime
 import time
 import urlparse
 import couchdb
+from couchdb import ResourceConflict
 import requests
 import md5s3stash
 import logging
@@ -119,7 +120,10 @@ class ImageHarvester(object):
         '''Update the object field to point to an s3 bucket'''
         doc['object'] = report.md5
         doc['object_dimensions'] = report.dimensions
-        self._couchdb.save(doc)
+        try:
+            self._couchdb.save(doc)
+        except ResourceConflict, e:
+            print >> sys.stderr, 'ResourceConflictfor doc: {}'.format(doc['id'])
         return doc['object']
 
     def harvest_image_for_doc(self, doc):
