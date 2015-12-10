@@ -10,6 +10,7 @@ import datetime
 import time
 import urlparse
 import couchdb
+from couchdb import ResourceConflict
 import requests
 import md5s3stash
 import logging
@@ -21,11 +22,13 @@ from harvester.couchdb_pager import couchdb_pager
 
 #old N.Virginia BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE', 'ucldc')
 BUCKET_BASE = os.environ.get('S3_BUCKET_IMAGE_BASE',
-              'static.ucldc.cdlib.org/harvested_images' )
+              'static-ucldc-cdlib-org/harvested_images' )
+              #'static.ucldc.cdlib.org/harvested_images' )
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
-logging.basicConfig(level=logging.ERROR, )
+
+logging.basicConfig(level=logging.DEBUG, )
 
 def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
@@ -100,6 +103,9 @@ class ImageHarvester(object):
             return None
         if link_is_to_image(url_image, self._auth):
             try:
+                logging.getLogger('image_harvest.stash_image').info(
+                        'bucket_base:{0} url_image:{1}'.format(
+                            self._bucket_base, url_image))
                 report = md5s3stash.md5s3stash(url_image,
                                          bucket_base=self._bucket_base,
                                          url_auth=self._auth,
@@ -118,7 +124,10 @@ class ImageHarvester(object):
         '''Update the object field to point to an s3 bucket'''
         doc['object'] = report.md5
         doc['object_dimensions'] = report.dimensions
-        self._couchdb.save(doc)
+        try:
+            self._couchdb.save(doc)
+        except ResourceConflict, e:
+            print >> sys.stderr, 'ResourceConflictfor doc: {}'.format(doc['id'])
         return doc['object']
 
     def harvest_image_for_doc(self, doc):
