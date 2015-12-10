@@ -45,18 +45,18 @@ class ImageHarvestTestCase(TestCase):
         mock_stash.assert_called_with(
                 url_test,
                 url_auth=None,
-                bucket_base='static-ucldc-cdlib-org/harvested_images',
+                bucket_base='static.ucldc.cdlib.org/harvested_images',
                 hash_cache={},
                 url_cache={})
-        self.assertEqual('s3 url object', ret.s3_url)
-        ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
+        self.assertEqual('s3 url object', ret[0].s3_url)
+        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
         mock_stash.assert_called_with(
                 url_test,
                 url_auth=None,
                 bucket_base='x',
                 hash_cache={},
                 url_cache={})
-        ret = image_harvest.ImageHarvester(bucket_base='x',
+        ret = image_harvest.ImageHarvester(bucket_bases=['x'],
                            object_auth=('tstuser', 'tstpswd')).stash_image(doc)
         mock_stash.assert_called_with(
                 url_test,
@@ -134,7 +134,7 @@ class ImageHarvestTestCase(TestCase):
                 content_type='text/plain; charset=utf-8',
                 connection='close',
                 )
-        ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
+        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
         self.assertEqual(ret, None)
         httpretty.register_uri(httpretty.HEAD,
                 url,
@@ -145,8 +145,8 @@ class ImageHarvestTestCase(TestCase):
                 )
         r = StashReport('test url', 'md5 test value',
                 's3 url object', 'mime_type', 'dimensions')
-        ret = image_harvest.ImageHarvester(bucket_base='x').stash_image(doc)
-        self.assertEqual(ret, r)
+        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
+        self.assertEqual(ret, [r])
 
     def test_url_missing_schema(self):
         '''Test when the url is malformed and doesn't have a proper http
