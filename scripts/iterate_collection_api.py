@@ -1,5 +1,7 @@
 import requests
+from harvester.config import config
 from harvester.queue_harvest import main as queue_harvest
+env=config()
 c_prod=[]
 c_harvest=[]
 url_reg = "https://registry.cdlib.org"
@@ -16,6 +18,9 @@ while nextpage:
             url_api_collection = '{}{}/'.format(url_reg_api, o['id'])
             print url_api_collection
             queue_harvest('mredar@gmail.com', url_api_collection,
+                    redis_host=env['redis_host'],
+                    redis_port=env['redis_port'],
+                    redis_pswd=env['redis_password'],
                     rq_queue='normal-prod')
         if o['url_harvest']:
             c_harvest.append(o)
