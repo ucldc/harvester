@@ -156,8 +156,6 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     conf = config_harvest()
-    print("HOST:{0}  PORT:{1}".format(conf['redis_host'], conf['redis_port'], ))
-    print "EMAIL", args.user_email, " URI: ", args.url_api_collection
     main(args.user_email,
             args.url_api_collection,
             redis_host=conf['redis_host'],
