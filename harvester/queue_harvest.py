@@ -22,7 +22,6 @@ def get_redis_connection(redis_host, redis_port, redis_pswd, redis_timeout=10):
 
 def check_redis_queue(redis_host, redis_port, redis_pswd):
     '''Check if the redis host db is up and running'''
-    print "HOST {0} PORT: {1}".format(redis_host, redis_port)
     r = get_redis_connection(redis_host, redis_port, redis_pswd)
     try:
         return r.ping()
