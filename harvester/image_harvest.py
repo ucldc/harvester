@@ -103,8 +103,8 @@ class ImageHarvester(object):
             print >> sys.stderr, 'Link not http URL for {} - {}'.format(
                                       doc['_id'], url_image)
             return None
+        reports = []
         if link_is_to_image(url_image, self._auth):
-            reports = []
             for bucket_base in self._bucket_bases:
                 try:
                     logging.getLogger('image_harvest.stash_image').info(
