@@ -137,7 +137,7 @@ class ImageHarvester(object):
 
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
-        report = None
+        reports = None
         if not self.get_if_object and doc.get('object', False):
             print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
             return
