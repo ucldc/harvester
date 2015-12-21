@@ -33,7 +33,7 @@ setup(
     dependency_links=[
         'https://github.com/zepheira/amara/archive/master.zip#egg=amara',
         'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-        'https://github.com/ucldc/md5s3stash/archive/master.zip#egg=md5s3stash',
+        'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-1.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
