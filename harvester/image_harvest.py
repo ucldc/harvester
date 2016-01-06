@@ -13,6 +13,7 @@ import couchdb
 from couchdb import ResourceConflict
 import requests
 import md5s3stash
+import boto.s3
 import logging
 from harvester.couchdb_init import get_couchdb
 from harvester.config import config
@@ -21,7 +22,7 @@ import redis_collections
 from harvester.couchdb_pager import couchdb_pager
 
 BUCKET_BASES = os.environ.get('S3_BUCKET_IMAGE_BASE',
-              'static-ucldc-cdlib-org/harvested_images;static.ucldc.cdlib.org/harvested_images'
+              'us-west-2:static-ucldc-cdlib-org/harvested_images;us-east-1:static.ucldc.cdlib.org/harvested_images'
               ).split(';')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
@@ -110,8 +111,11 @@ class ImageHarvester(object):
                     logging.getLogger('image_harvest.stash_image').info(
                             'bucket_base:{0} url_image:{1}'.format(
                                 bucket_base, url_image))
+                    region, bucket_base = bucket_base.split(':')
+                    conn = boto.s3.connect_to_region(region)
                     report = md5s3stash.md5s3stash(url_image,
                                              bucket_base=bucket_base,
+                                             conn=conn,
                                              url_auth=self._auth,
                                              url_cache=self._url_cache,
                                              hash_cache=self._hash_cache)
@@ -143,7 +147,7 @@ class ImageHarvester(object):
             return
         try:
             reports = self.stash_image(doc)
-            if reports != None:
+            if reports != None and len(reports) > 0:
                 obj_val = self.update_doc_object(doc, reports[0])
         except KeyError, e:
             if 'isShownBy' in e.message:
