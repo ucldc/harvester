@@ -347,4 +347,5 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
                 url_api_collection,
                 log_handler=self.test_log_handler,
                 mail_handler=mail_handler)
+        print self.test_log_handler.records
         self.assertEqual(len(self.test_log_handler.records), 9)
