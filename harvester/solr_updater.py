@@ -322,7 +322,9 @@ def has_required_fields(doc):
             '---- OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
     if 'title' not in doc['sourceResource']:
         raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
-    if 'image' == doc['sourceResource'].get('type', '').lower():
+    doc_type = doc['sourceResource'].get('type', '')
+    if not isinstance(doc_type, list) and  \
+            'image' == doc_type.lower():
         collection = doc.get('originalRecord', {}).get(
                 'collection', [{'harvest_type':'NONE'}])[0]
         if collection['harvest_type'] != 'NUX':
