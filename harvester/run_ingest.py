@@ -20,8 +20,6 @@ from harvester.collection_registry_client import Collection
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
-from harvester import solr_updater
-from harvester import grab_solr_index
 import harvester.image_harvest
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',

@@ -4,7 +4,6 @@ import json
 from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
-from harvester import grab_solr_index
 from harvester.solr_updater import main as solr_updater_main
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
@@ -307,33 +306,3 @@ class SolrUpdaterTestCase(TestCase):
                                "Pacific Palisades, Los Angeles (Calif.)",
                                "Venice (Los Angeles, Calif.)",
                                "Los Angeles (Calif.)" ])
-        
-
-
-
-class GrabSolrIndexTestCase(TestCase):
-    '''Basic test for grabbing solr index. Like others, heavily mocked
-    '''
-    def setUp(self):
-        os.environ['DIR_CODE'] = os.path.abspath('../harvester')
-
-    def tearDown(self):
-        del os.environ['DIR_CODE']
-
-    @patch('ansible.callbacks.PlaybookRunnerCallbacks', autospec=True)
-    @patch('ansible.callbacks.PlaybookCallbacks', autospec=True)
-    @patch('ansible.callbacks.AggregateStats', autospec=True)
-    @patch('ansible.inventory.Inventory', autospec=True)
-    @patch('ansible.playbook.PlayBook', autospec=True)
-    def test_grab_solr_main(self, mock_pb, mock_inv, mock_stats, mock_cb, mock_cbr):
-        inventory = mock_inv.return_value
-        inventory.list_hosts.return_value = ['test-host']
-        grab_solr_index.main()
-        mock_pb.assert_called_with(playbook=os.path.join(os.environ['DIR_CODE'], 'harvester/grab-solr-index-playbook.yml'),
-                                   inventory=inventory,
-                                   callbacks=mock_cb.return_value,
-                                   runner_callbacks=mock_cbr.return_value,
-                                   stats=mock_stats.return_value
-                                   )
-        self.assertEqual(mock_pb.return_value.run.called, True)
-        self.assertEqual(mock_pb.return_value.run.call_count, 1)
