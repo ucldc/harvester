@@ -20,18 +20,24 @@ class ImageHarvestTestCase(TestCase):
         if self.old_url_couchdb:
             os.environ['COUCHDB_URL'] = self.old_url_couchdb
 
+    @patch('boto.s3.connect_to_region', return_value='S3Conn to a region')
     @patch('harvester.image_harvest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True,
             return_value=StashReport('test url', 'md5 test value',
                 's3 url object', 'mime_type', 'dimensions'))
     @httpretty.activate
-    def test_stash_image(self, mock_stash, mock_couch, mock_redis):
+    def test_stash_image(self, mock_stash, mock_couch, mock_redis,
+            mock_s3_connect):
         '''Test the stash image calls are correct'''
         doc = {'_id': 'TESTID'}
-        self.assertRaises(KeyError, image_harvest.ImageHarvester().stash_image, doc)
+        image_harvester = image_harvest.ImageHarvester(url_cache={},
+                                                        hash_cache={},
+                                            bucket_bases=['region:x'])
+        self.assertRaises(KeyError, image_harvester.stash_image,
+                                                                    doc)
         doc['isShownBy'] = None
-        self.assertRaises(ValueError, image_harvest.ImageHarvester().stash_image, doc)
+        self.assertRaises(ValueError, image_harvester.stash_image, doc)
         doc['isShownBy'] = 'ark:/test_local_url_ark:'
         url_test = 'http://content.cdlib.org/ark:/test_local_url_ark:'
         httpretty.register_uri(httpretty.HEAD,
@@ -41,27 +47,31 @@ class ImageHarvestTestCase(TestCase):
                 content_type='image/jpeg;',
                 connection='close',
                 )
-        ret = image_harvest.ImageHarvester().stash_image(doc)
-        mock_stash.assert_called_with(
-                url_test,
-                url_auth=None,
-                bucket_base='static.ucldc.cdlib.org/harvested_images',
-                hash_cache={},
-                url_cache={})
-        self.assertEqual('s3 url object', ret[0].s3_url)
-        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
+        ret = image_harvester.stash_image(doc)
         mock_stash.assert_called_with(
                 url_test,
                 url_auth=None,
                 bucket_base='x',
+                conn='S3Conn to a region',
                 hash_cache={},
                 url_cache={})
-        ret = image_harvest.ImageHarvester(bucket_bases=['x'],
-                           object_auth=('tstuser', 'tstpswd')).stash_image(doc)
+        self.assertEqual('s3 url object', ret[0].s3_url)
+        ret = image_harvester.stash_image(doc)
+        mock_stash.assert_called_with(
+                url_test,
+                url_auth=None,
+                bucket_base='x',
+                conn='S3Conn to a region',
+                hash_cache={},
+                url_cache={})
+        ret = image_harvest.ImageHarvester(bucket_bases=['region:x'],
+                           object_auth=('tstuser', 'tstpswd'),
+                           url_cache={}, hash_cache={}).stash_image(doc)
         mock_stash.assert_called_with(
                 url_test,
                 url_auth=('tstuser', 'tstpswd'),
                 bucket_base='x',
+                conn='S3Conn to a region',
                 hash_cache={},
                 url_cache={})
 
@@ -71,7 +81,11 @@ class ImageHarvestTestCase(TestCase):
         r = StashReport('s3 test2 url', 'md5 test value', 's3 url', 'mime_type',
                 'dimensions-x:y')
         db = MagicMock()
-        ret = image_harvest.ImageHarvester(cdb=db).update_doc_object(doc, r)
+        image_harvester = image_harvest.ImageHarvester(cdb=db,
+                                            url_cache={},
+                                            hash_cache={},
+                                            bucket_bases=['region:x'])
+        ret = image_harvester.update_doc_object(doc, r)
         self.assertEqual('md5 test value', ret)
         self.assertEqual('md5 test value', doc['object'])
         self.assertEqual(doc['object_dimensions'], 'dimensions-x:y')
@@ -134,7 +148,10 @@ class ImageHarvestTestCase(TestCase):
                 content_type='text/plain; charset=utf-8',
                 connection='close',
                 )
-        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
+        image_harvester = image_harvest.ImageHarvester(url_cache={},
+                hash_cache={},
+                bucket_bases=['region:x'])
+        ret = image_harvester.stash_image(doc)
         self.assertEqual(ret, None)
         httpretty.register_uri(httpretty.HEAD,
                 url,
@@ -145,7 +162,7 @@ class ImageHarvestTestCase(TestCase):
                 )
         r = StashReport('test url', 'md5 test value',
                 's3 url object', 'mime_type', 'dimensions')
-        ret = image_harvest.ImageHarvester(bucket_bases=['x']).stash_image(doc)
+        ret = image_harvester.stash_image(doc)
         self.assertEqual(ret, [r])
 
     def test_url_missing_schema(self):

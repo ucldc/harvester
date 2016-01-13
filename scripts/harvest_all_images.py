@@ -10,6 +10,7 @@ import time
 from md5s3stash import md5s3stash
 import couchdb
 from harvester.couchdb_pager import couchdb_pager
+from harvester.image_harvest import stash_image
 
 BUCKET_BASE = 'ucldc' #old virginia
 BUCKET_BASE = 'static.ucldc.cdlib.org/harvested_images' #new oregon
