@@ -108,7 +108,8 @@ class ImageHarvester(object):
                  object_auth=None,
                  get_if_object=False,
                  url_cache=None,
-                 hash_cache=None):
+                 hash_cache=None,
+                 harvested_object_cache=None):
         self._config = config()
         if cdb:
             self._couchdb = cdb
@@ -132,7 +133,10 @@ class ImageHarvester(object):
         self._hash_cache = hash_cache if hash_cache is not None else \
                 redis_collections.Dict(key='ucldc-image-hash-cache',
                         redis=self._redis)
-        print "++++++++URL CACHE:{}".format(self._url_cache)
+        self._object_cache = harvested_object_cache if harvested_object_cache \
+                else redis_collections.Dict(
+                        key='ucldc:harvester:harvested-images',
+                        redis=self._redis)
 
     def stash_image(self, doc):
         return stash_image(doc, self._url_cache, self._hash_cache,
@@ -154,9 +158,18 @@ class ImageHarvester(object):
         if not self.get_if_object and doc.get('object', False):
             print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
             return
+        object_cached = self._object_cache.get(doc['_id'], False)
+        if object_cached:
+            #have already downloaded an image for this, just fill in data
+            ImageReport = namedtuple('ImageReport', 'md5, dimensions')
+            self.update_doc_object(doc, ImageReport(object_cached[0],
+                object_cached[1]))
+            return None
         try:
             reports = self.stash_image(doc)
             if reports != None and len(reports) > 0:
+                self._object_cache[doc['_id']] = [reports[0].md5,
+                    reports[0].dimensions]
                 obj_val = self.update_doc_object(doc, reports[0])
         except KeyError, e:
             if 'isShownBy' in e.message:
