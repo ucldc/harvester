@@ -155,10 +155,13 @@ class ImageHarvester(object):
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
         reports = None
+        object_cached = self._object_cache.get(doc['_id'], False)
         if not self.get_if_object and doc.get('object', False):
             print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+            if not object_cached:
+                self._object_cache[doc['_id']] = [doc['object'],
+                    doc['object_dimensions']]
             return
-        object_cached = self._object_cache.get(doc['_id'], False)
         if object_cached:
             #have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
