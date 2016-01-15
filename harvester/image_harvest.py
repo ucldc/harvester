@@ -15,6 +15,7 @@ import requests
 import md5s3stash
 import boto.s3
 import logging
+from collections import namedtuple
 from harvester.couchdb_init import get_couchdb
 from harvester.config import config
 from redis import Redis
@@ -155,23 +156,26 @@ class ImageHarvester(object):
     def harvest_image_for_doc(self, doc):
         '''Try to harvest an image for a couchdb doc'''
         reports = None
-        object_cached = self._object_cache.get(doc['_id'], False)
+        did = doc['_id']
+        object_cached = self._object_cache.get(did, False)
         if not self.get_if_object and doc.get('object', False):
-            print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
+            print >> sys.stderr, 'Skipping {}, has object field'.format(did)
             if not object_cached:
-                self._object_cache[doc['_id']] = [doc['object'],
+                print >> sys.stderr, 'Save to object cache {}'.format(did)
+                self._object_cache[did] = [doc['object'],
                     doc['object_dimensions']]
             return
         if object_cached:
             #have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
+            print >> sys.stderr, 'Restore from object_cache: {}'.format(did)
             self.update_doc_object(doc, ImageReport(object_cached[0],
                 object_cached[1]))
             return None
         try:
             reports = self.stash_image(doc)
             if reports != None and len(reports) > 0:
-                self._object_cache[doc['_id']] = [reports[0].md5,
+                self._object_cache[did] = [reports[0].md5,
                     reports[0].dimensions]
                 obj_val = self.update_doc_object(doc, reports[0])
         except KeyError, e:
