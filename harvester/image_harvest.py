@@ -165,7 +165,7 @@ class ImageHarvester(object):
                 self._object_cache[did] = [doc['object'],
                     doc['object_dimensions']]
             return
-        if object_cached:
+        if not self.get_if_object and object_cached:
             #have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
             print >> sys.stderr, 'Restore from object_cache: {}'.format(did)
