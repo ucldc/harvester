@@ -6,7 +6,8 @@ It checks that the collection has "ready_for_publication" set before syncing.
 It then syncs to the harvesting environments default couchdb instance by just
 adding the documents from the source.
 '''
-from copy import copy
+from os import environ
+import sys
 from harvester.collection_registry_client import Collection
 from harvester.couchdb_init import get_couchdb
 from harvester.couchdb_pager import couchdb_pager
@@ -46,9 +47,11 @@ def update_from_remote(doc_id, url_remote_couchdb=None, couchdb_remote=None,
     if doc_in_target:
         doc_in_target.update(doc)
         couchdb_env[doc_id] = doc_in_target
+        print >> sys.stderr, "updated {}".format(doc_id)
     else:
         doc_no_rev = doc.copy()
         couchdb_env[doc_id] = doc_no_rev
+        print >> sys.stderr, "created {}".format(doc_id)
 
 def queue_update_from_remote(queue, url_api_collection, url_couchdb_source=None):
     '''for this environment, put a couchdb doc id on another environments
@@ -61,7 +64,6 @@ def queue_update_from_remote(queue, url_api_collection, url_couchdb_source=None)
 def get_collection_doc_ids(collection_id, url_couchdb_source=None):
     '''Use the by_provider_name view to get doc ids for a given collection
     '''
-    print "XXXXXXXXXXXX", str(collection_id), url_couchdb_source
     _couchdb = get_couchdb(url=url_couchdb_source)
     v = CouchDBCollectionFilter(couchdb_obj=_couchdb,
                                     collection_key=str(collection_id),
@@ -76,6 +78,12 @@ def update_collection_from_remote(url_remote_couchdb, url_api_collection):
     '''Update a collection from a remote couchdb.
     '''
     collection = Collection(url_api_collection)
+    #guard against updating production for not ready_for_publication
+    #collections
+    if 'prod' in environ.get('DATA_BRANCH', ''):
+        if not collection.ready_for_publication:
+            raise Exception(
+            'In PRODUCTION ENV and collection not ready for publication')
     doc_ids = get_collection_doc_ids(collection.id, url_remote_couchdb)
     couchdb_remote = get_couchdb(url_remote_couchdb)
     couchdb_env = get_couchdb()
@@ -91,7 +99,6 @@ def main(url_remote_couchdb, url_api_collection):
 
 if __name__=='__main__':
     import argparse
-    import sys
     parser = argparse.ArgumentParser(
         description='Update current env couchdb from a remote couchdb for \
                 given collection')
