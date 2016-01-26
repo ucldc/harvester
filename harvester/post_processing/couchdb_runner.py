@@ -11,6 +11,18 @@ from harvester.couchdb_pager import couchdb_pager
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
+def get_collection_doc_ids(collection_id, url_couchdb_source=None):
+    '''Use the by_provider_name view to get doc ids for a given collection
+    '''
+    _couchdb = get_couchdb(url=url_couchdb_source)
+    v = CouchDBCollectionFilter(couchdb_obj=_couchdb,
+                                    collection_key=str(collection_id),
+                                    include_docs=False)
+    doc_ids = []
+    for r in v:
+        doc_ids.append(r.id)
+    return doc_ids
+
 
 class CouchDBCollectionFilter(object):
     '''Class for selecting collections from the UCLDC couchdb data store.
