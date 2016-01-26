@@ -21,6 +21,7 @@ class CouchDBCollectionFilter(object):
                  url_couchdb=None,
                  couchdb_name=None,
                  couch_view=COUCHDB_VIEW,
+                 include_docs=True
                  ):
         if not collection_key:
             collection_key = '{}'
@@ -32,7 +33,8 @@ class CouchDBCollectionFilter(object):
             self._couchdb = couchdb_obj
         self._view = couch_view
         self._view_iter = couchdb_pager(self._couchdb, self._view,
-                key=collection_key, include_docs='true')
+                key=collection_key, include_docs='true' if include_docs else
+                'false')
         #self._view_iter = self._couchdb.view(self._view, include_docs='true',
         #                                     key=collection_key)
 
