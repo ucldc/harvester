@@ -12,6 +12,7 @@ from harvester.collection_registry_client import Collection
 from harvester.couchdb_init import get_couchdb
 from harvester.couchdb_pager import couchdb_pager
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
+from harvester.post_processing.couchdb_runner import get_collection_doc_ids
 
 COUCHDB_VIEW_COLL_IDS = 'all_provider_docs/by_provider_name'
 
@@ -60,19 +61,6 @@ def queue_update_from_remote(queue, url_api_collection, url_couchdb_source=None)
     This can be overridden to run from target environment
     '''
     pass
-
-def get_collection_doc_ids(collection_id, url_couchdb_source=None):
-    '''Use the by_provider_name view to get doc ids for a given collection
-    '''
-    _couchdb = get_couchdb(url=url_couchdb_source)
-    v = CouchDBCollectionFilter(couchdb_obj=_couchdb,
-                                    collection_key=str(collection_id),
-                                    include_docs=False)
-
-    doc_ids = []
-    for r in v:
-        doc_ids.append(r.id)
-    return doc_ids
 
 def update_collection_from_remote(url_remote_couchdb, url_api_collection):
     '''Update a collection from a remote couchdb.

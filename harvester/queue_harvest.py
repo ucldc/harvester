@@ -39,8 +39,8 @@ def def_args():
                         help='URL for the collection Django tastypie api resource')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
                         help='Timeout for the RQ job')
-    parser.add_argument('--run_image_harvest', type=bool, default=False,
-            help='Run image harvest set: --run_image_harvest=True to run')
+    parser.add_argument('--run_image_harvest', type=bool, default=True,
+            help='Run image harvest set: --run_image_harvest=False to skip')
     return parser
 
 
