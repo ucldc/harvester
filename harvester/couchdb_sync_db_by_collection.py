@@ -71,7 +71,7 @@ def update_collection_from_remote(url_remote_couchdb, url_api_collection):
     if 'prod' in environ.get('DATA_BRANCH', ''):
         if not collection.ready_for_publication:
             raise Exception(
-            'In PRODUCTION ENV and collection not ready for publication')
+'In PRODUCTION ENV and collection {} not ready for publication'.format(collection.id))
     doc_ids = get_collection_doc_ids(collection.id, url_remote_couchdb)
     couchdb_remote = get_couchdb(url_remote_couchdb)
     couchdb_env = get_couchdb()
