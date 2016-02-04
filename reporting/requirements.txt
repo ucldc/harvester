@@ -1,0 +1,5 @@
+XlsxWriter==0.8.0
+configparser==3.3.0r2
+git+git://github.com/ucldc/pynux.git
+requests==2.9.1
+wsgiref==0.1.2
