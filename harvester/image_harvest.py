@@ -21,6 +21,7 @@ from harvester.config import config
 from redis import Redis
 import redis_collections
 from harvester.couchdb_pager import couchdb_pager
+from harvester.cleanup_dir import cleanup_work_dir
 
 BUCKET_BASES = os.environ.get('S3_BUCKET_IMAGE_BASE',
               'us-west-2:static-ucldc-cdlib-org/harvested_images;us-east-1:static.ucldc.cdlib.org/harvested_images'
@@ -245,6 +246,7 @@ def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
          get_if_object=False):
+    cleanup_work_dir() # remove files from /tmp
     ImageHarvester(url_couchdb=url_couchdb,
                          object_auth=object_auth,
                          get_if_object=get_if_object).by_collection(collection_key)
