@@ -21,6 +21,7 @@ from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 import harvester.image_harvest
+from harvester.cleanup_dir import cleanup_work_dir
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -67,6 +68,7 @@ def main(user_email, url_api_collection, log_handler=None,
          rq_queue=None,
          run_image_harvest=False):
     '''Runs a UCLDC ingest process for the given collection'''
+    cleanup_work_dir() # remove files from /tmp
     emails = [user_email]
     if EMAIL_SYS_ADMIN:
         emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
