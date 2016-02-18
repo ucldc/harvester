@@ -275,6 +275,8 @@ def ucla_ark(doc):
     "mods_recordInfo_recordIdentifier_t": "21198-zz002b1833",
     
     If one is found, safe to assume UCLA & make the ARK
+    NOTE: I cut & pasted this to the ucla_solr_dc_mapper to get it
+    into the "identifier" field
     '''
     ark = None
     id_fields =("mods_recordInfo_recordIdentifier_mlt",
@@ -433,7 +435,7 @@ def get_sort_collection_data_string(collection):
             missing_equivalents=[])
     sort_string = ':'.join((sort_name,
                             collection['name'],
-                            collection['@id']))
+                            add_slash(collection['@id'])))
     return sort_string
 
 def add_sort_title(couch_doc, solr_doc):
