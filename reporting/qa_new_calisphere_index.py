@@ -61,6 +61,34 @@ def create_facet_dict(json_results, facet_field):
             dmap[val] = count
     return dmap
 
+def get_registry_collection_data():
+    '''Return a dictionary of ready for publication collections doublelist data
+    and a NOT ready for publication dict from the registry api
+    '''
+
+    url_base = 'https://registry.cdlib.org'
+    url_base_api = url_base + '/api/v1/collection/'
+    offset=0
+    limit=100
+    colls=[]
+    while 1:
+        url='{}?limit={}&offset={}'.format(url_base_api, limit, offset)
+        objs = requests.get(url).json()['objects']
+        if not len(objs):
+            break
+        colls.extend(objs)
+        offset+=limit
+    ready_for_pub = []
+    not_ready_for_pub = []
+    for c in colls:
+        coll_doublelist = u'{}{}::{}'.format(url_base, c['resource_uri'], c['name'])
+        c['doublelist']=coll_doublelist
+        if c['ready_for_publication']:
+            ready_for_pub.append(c)
+        else:
+            not_ready_for_pub.append(c)
+    return ready_for_pub, not_ready_for_pub
+
 def compare_datasets(prod_facet_dict, new_facet_dict):
     '''This does the heavy lifting.
     First, find what collections are in prod but not new & vice versa.
@@ -94,6 +122,28 @@ def compare_datasets(prod_facet_dict, new_facet_dict):
 
     return not_in_new, not_in_prod, count_equal, new_less, new_more 
 
+def find_missing_ready_for_pub_collections(ready_for_pub, new_facet_dict):
+    '''Return any collections that are marked "ready for publication" that
+    aren't in new index
+    Should be empty!
+    '''
+    missing = []
+    for c in ready_for_pub:
+        if c['doublelist'] not in new_facet_dict:
+            missing.append(c)
+    return missing
+
+
+def find_not_ready_for_pub_collections(not_ready_for_pub, new_facet_dict):
+    '''Find any collections marked NOT "ready for publication" that are in the 
+    new index
+    '''
+    found = []
+    for c in not_ready_for_pub:
+        if c['doublelist'] in new_facet_dict:
+            found.append(c)
+    return found
+                            
 def create_totals_page(workbook, header_format, number_format,
         runtime, total_prod, total_new, type_ss_prod, type_ss_new):
     '''For the 2 pages reporting collections missing from an index,
@@ -160,9 +210,9 @@ def create_missing_collections_page(workbook, header_format, number_format,
     page.set_column(2, 2, 10, )
     row = 1
     for item in data:
-        c, c_url = item[0].split('::')
-        page.write(row, 0, c)
-        page.write(row, 1, c_url)
+        c_url, c_name = item[0].split('::')
+        page.write(row, 0, c_url)
+        page.write(row, 1, c_name)
         page.write_number(row, 2, item[1], n_format)
         row = row + 1
     page.write_formula(row, 3, '=SUM(C2:C{})'.format(row))
@@ -195,9 +245,9 @@ def create_counts_collections_page(workbook, header_format, number_format,
     page.set_column(4, 4, 10, )
     row = 1
     for item in data:
-        c, c_url = item[0].split('::')
-        page.write(row, 0, c)
-        page.write(row, 1, c_url)
+        c_url, c_name = item[0].split('::')
+        page.write(row, 0, c_url)
+        page.write(row, 1, c_name)
         page.write_number(row, 2, item[1], number_format)
         page.write_number(row, 3, item[2], number_format)
         page.write_formula(row, 4, '=C{}-D{}'.format(row+1, row+1), sum_format)
@@ -205,12 +255,50 @@ def create_counts_collections_page(workbook, header_format, number_format,
     page.write_formula(row, 5, '=SUM(E2:E{})'.format(row))
     page.write(row, 6, runtime)
 
+def create_registry_publication_report(workbook, header_format, number_format,
+        runtime, missing_ready_for_pub, not_ready_for_pub):
+    '''Report any collections marked "ready for publication" that aren't in 
+    new index & any the are NOT ready for publication that are in index
+    '''
+    pp("MISSING READY for PUB:{}".format(len(missing_ready_for_pub)))
+    pp("FOUND NOT  READY:{}".format(len(not_ready_for_pub)))
+    page = workbook.add_worksheet('Registry Publication State')
+    page.set_tab_color('red')
+    page.write(0, 0, 'Collection URL', header_format)
+    page.write(0, 1, 'Collection', header_format)
+    page.write(0, 2, 'Ready for Publication', header_format)
+    page.write(0, 3, 'Index State', header_format)
+    page.set_column(0, 0, 40, )
+    page.set_column(1, 1, 43, )
+    page.set_column(2, 2, 20, )
+    page.set_column(3, 3, 10, )
+    row = 1
+    for c in missing_ready_for_pub:
+        c_url, c_name = c['doublelist'].split('::')
+        page.write(row, 0, c_url)
+        page.write(row, 1, c_name)
+        page.write(row, 2, c['ready_for_publication'])
+        page.write(row, 3, 'MISSING')
+        row +=1
+    row += 3
+    for c in not_ready_for_pub:
+        c_url, c_name = c['doublelist'].split('::')
+        page.write(row, 0, c_url)
+        page.write(row, 1, c_name)
+        page.write(row, 2, c['ready_for_publication'])
+        page.write(row, 3, 'FOUND')
+        row += 1
+    row += 2
+    page.write(row, 6, runtime)
+
 def create_report_workbook(outdir, not_in_new, not_in_prod, count_equal,
                             new_less, new_more,
                             num_found_prod,
                             num_found_new,
                             type_ss_prod,
-                            type_ss_new):
+                            type_ss_new,
+                            missing_ready_for_pub,
+                            not_ready_for_pub):
     # now create a workbook, page one is In production but missing in new (BAD)
     # next is In new but not production (OK)
     # next is Equal Count (OK)
@@ -256,6 +344,11 @@ def create_report_workbook(outdir, not_in_new, not_in_prod, count_equal,
     create_counts_collections_page(workbook, header_format, number_format,
         runtime, 'Index count EQUAL', count_equal,
         tab_color='green')
+
+    if missing_ready_for_pub or not_ready_for_pub:
+        create_registry_publication_report(workbook, header_format,
+                number_format, runtime, missing_ready_for_pub,
+                not_ready_for_pub)
 
     workbook.close()
 
@@ -324,6 +417,13 @@ def main(argv=None):
                                         len(new_facet_dict)))
 
     not_in_new, not_in_prod, count_equal, new_less, new_more = compare_datasets(production_facet_dict, new_facet_dict)
+    ready_for_pub, not_ready_for_pub = get_registry_collection_data()
+    pp("READY FOR PUB:{} NOT READY:{}".format(len(ready_for_pub),
+        len(not_ready_for_pub)))
+    missing_ready_for_pub = find_missing_ready_for_pub_collections(ready_for_pub, new_facet_dict)
+    not_ready_for_pub = find_not_ready_for_pub_collections(not_ready_for_pub,
+            new_facet_dict)
+
     pp('NOT IN NEW INDEX {}'.format(len(not_in_new)))
     pp('NOT IN PROD INDEX {}'.format(len(not_in_prod)))
     pp('COUNT EQUAL {}'.format(len(count_equal)))
@@ -334,12 +434,13 @@ def main(argv=None):
                             num_found_prod=num_prod_docs,
                             num_found_new=num_new_docs,
                             type_ss_prod=production_type_ss_dict,
-                            type_ss_new=new_type_ss_dict)
+                            type_ss_new=new_type_ss_dict,
+                            missing_ready_for_pub=missing_ready_for_pub,
+                            not_ready_for_pub=not_ready_for_pub)
     write_csv(os.path.join(argv.outdir[0], '{}-collection_not_in_new.csv'.format(today)),
             not_in_new)
     write_csv(os.path.join(argv.outdir[0], '{}-missing_docs_in_new.csv'.format(today)),
             new_less)
-
 
 if __name__ == "__main__":
     sys.exit(main())
