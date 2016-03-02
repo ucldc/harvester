@@ -96,7 +96,7 @@
       { "name": "English", "iso639_3": "en" }
     ],
      "format": "mods",
-       "type": "image"
+     "type": "image"
    },
    "@type": "ore:Aggregation",
    "aggregatedCHO": "#sourceResource",

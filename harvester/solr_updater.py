@@ -317,6 +317,24 @@ def get_solr_id(couch_doc):
         solr_id = hash_id.hexdigest()
     return solr_id
 
+def normalize_type(solr_doc):
+    '''Normalize the type field for the solr doc. Should be a lower case, word
+    separated DCMI type to match our UI
+    This is being done on a "as found" basis. When results that don't agreee
+    with the current list, handle them here.
+    Could be done in couch but easier here?
+    '''
+    DCMI_TYPES = ('collection', 'dataset', 'event', 'image',
+            'interactive resource', 'moving image', 'service', 'software',
+            'sound', 'text', 'physical object')
+    doc_type = solr_doc.get('type', None)
+    if doc_type:
+        #assuming just a string, not sure if true
+        if doc_type not in DCMI_TYPES:
+            if 'physical' in doc_type.lower():
+                solr_doc['type'] = 'physical object'
+
+
 def has_required_fields(doc):
     '''Check the couchdb doc has required fields'''
     if 'sourceResource' not in doc:
@@ -511,6 +529,7 @@ def map_couch_to_solr_doc(doc):
             except TypeError, e:
                 print('TypeError for doc {} on originalRecord {}'.format(doc['_id'], p))
                 raise e
+    normalize_type(solr_doc)
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
     solr_doc['id'] = get_solr_id(doc)
