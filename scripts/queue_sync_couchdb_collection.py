@@ -22,9 +22,8 @@ def queue_couch_sync(redis_host, redis_port, redis_password, redis_timeout,
     )
     job = rQ.enqueue_call(func=harvester.couchdb_sync_db_by_collection.main,
                           kwargs=dict(url_remote_couchdb=url_remote_couchdb,
-                                      url_api_collection=url_api_collection,
+                                      url_api_collection=url_api_collection),
                                       timeout=timeout
-                          )
                           )
     return job
 
