@@ -437,10 +437,10 @@ def main(argv=None):
                             type_ss_new=new_type_ss_dict,
                             missing_ready_for_pub=missing_ready_for_pub,
                             not_ready_for_pub=not_ready_for_pub)
-    write_csv(os.path.join(argv.outdir[0], '{}-collection_not_in_new.csv'.format(today)),
-            not_in_new)
-    write_csv(os.path.join(argv.outdir[0], '{}-missing_docs_in_new.csv'.format(today)),
-            new_less)
+    #write_csv(os.path.join(argv.outdir[0], '{}-collection_not_in_new.csv'.format(today)),
+    #        not_in_new)
+    #write_csv(os.path.join(argv.outdir[0], '{}-missing_docs_in_new.csv'.format(today)),
+    #        new_less)
 
 if __name__ == "__main__":
     sys.exit(main())
