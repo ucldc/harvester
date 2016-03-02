@@ -240,6 +240,21 @@ class SolrUpdaterTestCase(TestCase):
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
 
+    def test_type_mapping(self):
+        doc = json.load(open(DIR_FIXTURES+'/couchdb_doc.json'))
+        ret = map_couch_to_solr_doc(doc)
+        self.assertEqual(ret['type'], 'image')
+        doc['sourceResource']['type'] = 'moving image'
+        ret = map_couch_to_solr_doc(doc)
+        self.assertEqual(ret['type'], 'moving image')
+        doc['sourceResource']['type'] = 'Physical ObjectXX'
+        ret = map_couch_to_solr_doc(doc)
+        self.assertEqual(ret['type'], 'physical object')
+        doc['sourceResource']['type'] = 'physicalobject'
+        ret = map_couch_to_solr_doc(doc)
+        self.assertEqual(ret['type'], 'physical object')
+
+
     def test_solr_pretty_id(self):
         '''Test the new solr id scheme on the various document types.
         see : https://github.com/ucldc/ucldc-docs/wiki/pretty_id
