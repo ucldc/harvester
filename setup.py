@@ -65,7 +65,7 @@ setup(
         'UCLDC-Deep-Harvester'
         ],
     test_suite='test',
-    tests_require=['mock==1.0.1', 'httpretty==0.8.3', ],
+    tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
 )
 
 pip_main(['install', 'ansible'])
