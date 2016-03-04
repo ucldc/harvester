@@ -19,6 +19,7 @@ def main(collection_key):
         solr_doc = map_couch_to_solr_doc(r.doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
         dt_end = datetime.datetime.now()
+    solr_db.commit() #commit updates
     return results
 
 
