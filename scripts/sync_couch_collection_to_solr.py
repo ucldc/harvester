@@ -17,6 +17,7 @@ def main(collection_key):
     for r in v:
         dt_start = dt_end = datetime.datetime.now()
         solr_doc = map_couch_to_solr_doc(r.doc)
+        results.append(solr_doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
         dt_end = datetime.datetime.now()
     solr_db.commit() #commit updates
@@ -33,7 +34,8 @@ if __name__=="__main__":
     print "DELETE COLLECTION TO CAPTURE ANY REMOVALS"
     print "hit any key to continue"
     raw_input()
-    main(args.collection_key)
+    results = main(args.collection_key)
+    print 'Updated {} docs'.format(len(results))
 
     # arg will be just id
 # Copyright © 2016, Regents of the University of California
