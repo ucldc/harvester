@@ -14,7 +14,7 @@ if [ $# -ne 1 ];
 fi
 
 c_url=https://registry.cdlib.org/api/v1/collection/${1}/
-query="stream.body=<delete><query>collection_url:\"${c_url}\"</query></delete>"
+query="stream.body=<delete><query>collection_url:\"${c_url}\"</query></delete>&commit=true"
 url_get=${URL_SOLR}/update?${query}
 echo $url_get
 
