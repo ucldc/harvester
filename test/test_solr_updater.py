@@ -156,6 +156,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['format'], 'mods')
         self.assertTrue('extent' not in sdoc)
         self.assertEqual(sdoc['sort_title'], u'neighbor')
+        self.assertEqual(sdoc['temporal'], [u'1964-1965'])
 
     def test_sort_title_all_punctuation(self):
         doc = json.load(open(DIR_FIXTURES+'/couchdb_title_all_punc.json'))
