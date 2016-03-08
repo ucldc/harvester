@@ -23,6 +23,13 @@
         "displayDate": "between 1885-1890"
       }
     ],
+    "temporal": [
+           {
+               "begin": "1964",
+               "end": "1965",
+               "displayDate": "1964-1965"
+           }
+       ],
        "publisher": [
            "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/"
        ],
