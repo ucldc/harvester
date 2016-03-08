@@ -73,8 +73,8 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'relation'    : lambda d: dict_for_data_field('relation', d, 'relation'),
     'rights'      : lambda d: dict_for_data_field('rights', d, 'rights'),
     'subject'     : lambda d: {'subject': [s['name'] if isinstance(s, dict) else dejson('subject', s) for s in d['subject']]},
-    'temporalCoverage'    : lambda d: dict_for_data_field('temporalCoverage', d,
-        'temporal'),
+    'temporal'    : lambda d: {'temporal': unpack_date(d.get('temporal',
+        None))[0]},
     'title'       : lambda d: dict_for_data_field('title', d, 'title'),
     'type'        : lambda d: dict_for_data_field('type', d, 'type'),
 }
@@ -191,17 +191,17 @@ def get_dates_from_date_obj(date_obj):
     else:
         return None, None, None
 
-def map_date(d):
-    date_map = {}
-    date_source = d.get('date', None)
+def unpack_date(date_obj):
+    '''Unpack a couchdb date object'''
     dates = []
-    start_date = end_date = None
     dates_start = []
     dates_end = []
-    if date_source:
-        if isinstance(date_source, dict):
+    if not date_obj:
+        return None, None, None
+    else:
+        if isinstance(date_obj, dict):
             try:
-                displayDate, dt_start, dt_end = get_dates_from_date_obj(date_source)
+                displayDate, dt_start, dt_end = get_dates_from_date_obj(date_obj)
                 dates.append(displayDate)
                 if dt_start:
                      dates_start.append(dt_start)
@@ -210,14 +210,24 @@ def map_date(d):
             except KeyError:
                 pass
         else: #should be list
-            for dt in date_source:
+            for dt in date_obj:
                 displayDate, dt_start, dt_end = get_dates_from_date_obj(dt)
                 dates.append(displayDate)
                 if dt_start:
                      dates_start.append(dt_start)
                 if dt_end:
                     dates_end.append(dt_end)
+    return dates, dates_start, dates_end
 
+def map_date(d):
+    date_map = {}
+    date_source = d.get('date', None)
+
+    dates = []
+    start_date = end_date = None
+    dates_start = []
+    dates_end = []
+    dates, dates_start, dates_end = unpack_date(date_source)
     date_map['date'] = dates
 
     dates_start = sorted(dates_start)
