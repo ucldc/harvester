@@ -48,6 +48,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['repository_data'], repo_data)
         self.assertEqual(sdoc['sort_title'],
                 u'neighbor my neighbor what a happy boy')
+        self.assertEqual(sdoc['type'], ['image', 'physical object'])
 
     def test_normalize_sort_field(self):
         self.assertEqual(normalize_sort_field('XXXXX'), 'xxxxx')

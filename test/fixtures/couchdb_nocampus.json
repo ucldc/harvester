@@ -142,7 +142,9 @@
         "name": "Japanese American Relocation Digital Archive"
       }
     ],
-    "type": "image",
+    "type": [ "image",
+        "physical object"
+    ],
     "publisher": "The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/",
     "rights": [
       "Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.",

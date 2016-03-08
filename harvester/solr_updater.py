@@ -334,15 +334,25 @@ def normalize_type(solr_doc):
     with the current list, handle them here.
     Could be done in couch but easier here?
     '''
+    def norm_type(d):
+        if d not in DCMI_TYPES:
+            if 'physical' in d.lower():
+                return 'physical object'
+        else:
+            return d
+
     DCMI_TYPES = ('collection', 'dataset', 'event', 'image',
             'interactive resource', 'moving image', 'service', 'software',
             'sound', 'text', 'physical object')
     doc_type = solr_doc.get('type', None)
     if doc_type:
-        #assuming just a string, not sure if true
-        if doc_type not in DCMI_TYPES:
-            if 'physical' in doc_type.lower():
-                solr_doc['type'] = 'physical object'
+        if isinstance(doc_type, list):
+            norm_types = []
+            for d in doc_type:
+                norm_types.append(norm_type(d))
+            solr_doc['type'] = norm_types
+        else: #string? 
+            solr_doc['type'] = norm_type(doc_type)
 
 
 def has_required_fields(doc):
