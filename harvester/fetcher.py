@@ -113,10 +113,12 @@ class OAIFetcher(Fetcher):
                 self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
             self.records = self.oai_client.ListRecords(
                                     metadataPrefix=self._metadataPrefix,
-                                                    set=self._set)
+                                                    set=self._set,
+                                                    ignore_deleted=True)
         else:
             self.records = self.oai_client.ListRecords(
-                                    metadataPrefix=self._metadataPrefix)
+                                    metadataPrefix=self._metadataPrefix,
+                                                    ignore_deleted=True)
 
 
     def next(self):
