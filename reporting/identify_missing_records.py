@@ -13,35 +13,21 @@ import itertools
 import json
 import xlsxwriter
 import requests
-from requests.auth import HTTPDigestAuth
 from pprint import pprint as pp
 import ConfigParser
 import time
 import datetime
 import os
+from get_solr_json import get_solr_json
 
 base_query = {
     'rows': 1000000, # get all rows
     'fl': 'id,harvest_id_s',
 }
 
-def get_solr_json(solr_url, collection_url, base_query, api_key=None, digest_user=None,
-        digest_pswd=None):
-    '''get the solr json response for the given URL.
-    Use the requests library. The production API uses headers for auth,
-    while the ingest environment uses http digest auth
-    Returns an python object created from the json response.
-    '''
-    solr_auth = { 'X-Authentication-Token': api_key } if api_key else None
-    digest_auth = HTTPDigestAuth(digest_user, digest_pswd) if digest_user else None
-    q = 'collection_url:"{}"'.format(collection_url)
-    query = {'q':q}
-    query.update(base_query)
-    return json.loads(requests.get(solr_url,
-                                    headers=solr_auth,
-                                    auth=digest_auth,
-                                    params=query,
-                                    verify=False).text)
+def get_collection_solr_json(solr_url, collection_url, **kwargs):
+    q = base_query.copy().update({'collection_url':collection_url})
+    return get_solr_json(solr_url, q, **kwargs)
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
@@ -56,12 +42,13 @@ def main(argv=None):
     #get calisphere current index data
     solr_url = config.get('calisphere', 'solrUrl')
     api_key = config.get('calisphere', 'solrAuth')
-    production_json = get_solr_json(solr_url, collection_url, base_query, api_key=api_key)
+    production_json = get_collection_solr_json(solr_url, collection_url,
+            api_key=api_key)
     prod_docs = production_json.get('response').get('docs')
     solr_url = config.get('new-index', 'solrUrl')
     digest_user = config.get('new-index', 'digestUser')
     digest_pswd = config.get('new-index', 'digestPswd')
-    new_json = get_solr_json(solr_url, collection_url, base_query,
+    new_json = get_collection_solr_json(solr_url, collection_url,
             digest_user=digest_user, digest_pswd=digest_pswd)
     new_docs = new_json.get('response').get('docs')
     prod_doc_set = set([ x['id'] for x in prod_docs])
