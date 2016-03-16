@@ -338,6 +338,8 @@ def normalize_type(solr_doc):
         if d not in DCMI_TYPES:
             if 'physical' in d.lower():
                 return 'physical object'
+            elif 'moving' in d.lower():
+                return 'moving image'
             else:
                 return d #don't drop, will show in facets
         else:

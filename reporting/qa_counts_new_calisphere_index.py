@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ calisphere new production index QA script """
 
+import os
 import sys
 import argparse
 import re
@@ -11,12 +12,11 @@ import json
 import csv
 import xlsxwriter
 import requests
-from requests.auth import HTTPDigestAuth
 from pprint import pprint as pp
 import ConfigParser
 import time
 import datetime
-import os
+from get_solr_json import get_solr_json, create_facet_dict
 
 URL_CALISPHERE_BASE_COLLECTION = 'https://calisphere.org/collections/'
 
@@ -30,38 +30,9 @@ base_query = {
     'facet.limit': -1, #give them all
 }
 
-def get_solr_json(solr_url, base_query, api_key=None, digest_user=None,
-        digest_pswd=None):
-    '''get the solr json response for the given URL.
-    Use the requests library. The production API uses headers for auth,
-    while the ingest environment uses http digest auth
-    Returns an python object created from the json response.
-    '''
-    solr_auth = { 'X-Authentication-Token': api_key } if api_key else None
-    digest_auth = HTTPDigestAuth(digest_user, digest_pswd) if digest_user else None
-    return json.loads(requests.get(solr_url,
-                                    headers=solr_auth,
-                                    auth=digest_auth,
-                                    params=base_query,
-                                    verify=False).text)
-
 def get_total_docs(json_results):
     '''Return total docs in the response'''
     return int(json_results.get('response').get('numFound'))
-
-def create_facet_dict(json_results, facet_field):
-    '''Create a dictionary consisting of keys = facet_field_values, values =
-    facet_field coutns
-    Takes a json result that must have the given facet field in it & the
-    '''
-    results = json_results.get('facet_counts').get('facet_fields').get(facet_field)
-    #zip into array with elements of ('collection_data_value', count)
-    facet_list = zip(*[iter(results)]*2)
-    dmap = {}
-    for val, count in facet_list:
-        if count > 0: #reject ones that have 0 records?
-            dmap[val] = count
-    return dmap
 
 def get_registry_collection_data():
     '''Return a dictionary of ready for publication collections doublelist data

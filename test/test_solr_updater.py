@@ -249,6 +249,9 @@ class SolrUpdaterTestCase(TestCase):
         doc['sourceResource']['type'] = 'moving image'
         ret = map_couch_to_solr_doc(doc)
         self.assertEqual(ret['type'], 'moving image')
+        doc['sourceResource']['type'] = 'movingimage'
+        ret = map_couch_to_solr_doc(doc)
+        self.assertEqual(ret['type'], 'moving image')
         doc['sourceResource']['type'] = 'Physical ObjectXX'
         ret = map_couch_to_solr_doc(doc)
         self.assertEqual(ret['type'], 'physical object')
