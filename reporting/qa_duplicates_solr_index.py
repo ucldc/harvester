@@ -91,6 +91,9 @@ if __name__=='__main__':
    
     print "ARGS OUTDIR:{}".format(args.outdir)
     solr_url = args.solr_url if args.solr_url else 'https://52.10.100.133/solr/dc-collection/query'
+    if not args.api_key and not args.digest_user:
+        parser.print_help()
+        sys.exit(7)
     sys.exit(main(solr_url=solr_url, outdir=args.outdir[0],
         api_key=args.api_key,
         digest_user=args.digest_user, digest_pswd=args.digest_pswd))
