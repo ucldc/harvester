@@ -158,21 +158,30 @@ def create_missing_collections_page(workbook, header_format, number_format,
     page.write(0, 1, 'Collection', header_format)
     page.write(0, 2, 'Count', header_format)
     page.write(0, 4, 'Calisphere URL', header_format)
+    page.write(0, 5, 'Institution', header_format)
     # width
     page.set_column(0, 0, 40, )
     page.set_column(1, 1, 43, )
     page.set_column(2, 2, 10, )
     page.set_column(4, 4, 40, )
+    page.set_column(5, 5, 50, )
     row = 1
     for item in data:
         c_url = item[0]
         c_name = all_collections[c_url]['name']
+        repo = all_collections[c_url]["repository"][0]["name"]
+        campus = all_collections[c_url].get("campus")
+        campus_name = None
+        if campus:
+            campus_name = campus[0]["name"]
+        inst_name = '{}::{}'.format(campus_name, repo) if campus_name else repo
         c_id = c_url.rsplit('/', 2)[1]
         url_calisphere = URL_CALISPHERE_BASE_COLLECTION + c_id + '/'
         page.write(row, 0, c_url)
         page.write(row, 1, c_name)
         page.write_number(row, 2, item[1], n_format)
         page.write(row, 4, url_calisphere)
+        page.write(row, 5, inst_name)
         row = row + 1
     page.write_formula(row, 3, '=SUM(C2:C{})'.format(row))
     page.write(row, 4, runtime)
