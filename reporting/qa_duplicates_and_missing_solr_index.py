@@ -4,6 +4,7 @@ import sys
 import argparse
 import datetime
 import time
+import ConfigParser
 import xlsxwriter
 from get_solr_json import get_solr_json, create_facet_dict
 
@@ -12,6 +13,7 @@ facet_query = { 'q': '*:*',
         'wt' : 'json',
         'facet': 'true',
         }
+FNAME = 'duplicates_and_missing_fields'
 
 def get_facet_query(solr_url, field, **kwargs):
     '''Return a facet data dict to muck with based on "field")
@@ -24,7 +26,7 @@ def get_facet_query(solr_url, field, **kwargs):
 def create_report_workbook(outdir): 
     today = datetime.date.today()
     fileout = os.path.join(outdir, '{}-{}.xlsx'.format(today, 
-                                            'duplicates'))
+                                            FNAME))
     runtime = '{}'.format(time.ctime())
 
     # open the workbook
@@ -39,6 +41,7 @@ def create_report_workbook(outdir):
 def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
         outdir=None,
         api_key=None, digest_user=None, digest_pswd=None):
+    print "USING SOLR:{}".format(solr_url)
     field = 'reference_image_md5'
     #print "======FIELD:{} {} {}".format(field, digest_user, digest_pswd)
     #print "======FIELD:{} {} {}".format(field, api_key, solr_url)
@@ -114,14 +117,21 @@ if __name__=='__main__':
 
     args = parser.parse_args()
    
-    print "ARGS OUTDIR:{}".format(args.outdir)
     solr_url = args.solr_url if args.solr_url else 'https://52.10.100.133/solr/dc-collection/query'
+    digest_user = digest_pswd = None
     if not args.api_key and not args.digest_user:
-        parser.print_help()
-        sys.exit(7)
+        #use config file for qa_counts
+        config = ConfigParser.SafeConfigParser()
+        config.read('report.ini')
+        solr_url = config.get('new-index-api', 'solrUrl')
+        api_key = config.get('new-index-api', 'solrAuth')
+    else:
+        api_key = args.api_key
+        digest_user = args.digest_user
+        digest_pswd = args.digest_pswd
     sys.exit(main(solr_url=solr_url, outdir=args.outdir[0],
-        api_key=args.api_key,
-        digest_user=args.digest_user, digest_pswd=args.digest_pswd))
+        api_key=api_key,
+        digest_user=digest_user, digest_pswd=digest_pswd))
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
