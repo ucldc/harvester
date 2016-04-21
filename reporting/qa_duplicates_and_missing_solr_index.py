@@ -77,6 +77,31 @@ def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
             page.write(row, column, coll_data)
             column += 1
         row += 1
+    #end md5 page
+    #missing type_ss
+    query = { 'q': '-type_ss:[* TO *]',
+            'rows' : 0,
+            'wt' : 'json',
+            'facet': 'true',
+            'facet.field': 'collection_url'
+            }
+    collection_urls = create_facet_dict(get_solr_json(solr_url, 
+                query=query, api_key=api_key,
+                digest_user=digest_user, digest_pswd=digest_pswd),
+                'collection_url')
+    field = 'missing type_ss'
+    page = workbook.add_worksheet(field)
+    # headers
+    page.write(0, 0, field, header_format)
+    page.write(0, 1, 'Number Missing', header_format)
+    # width
+    page.set_column(0, 0, 50, )
+    page.set_column(1, 1, 10, )
+    row = 1
+    for collection_url, count in collection_urls.items():
+        page.write(row, 0, collection_url)
+        page.write(row, 1, count)
+        row += 1
 
 
 if __name__=='__main__':
@@ -91,6 +116,9 @@ if __name__=='__main__':
    
     print "ARGS OUTDIR:{}".format(args.outdir)
     solr_url = args.solr_url if args.solr_url else 'https://52.10.100.133/solr/dc-collection/query'
+    if not args.api_key and not args.digest_user:
+        parser.print_help()
+        sys.exit(7)
     sys.exit(main(solr_url=solr_url, outdir=args.outdir[0],
         api_key=args.api_key,
         digest_user=args.digest_user, digest_pswd=args.digest_pswd))
