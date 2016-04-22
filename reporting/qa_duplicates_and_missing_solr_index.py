@@ -82,7 +82,15 @@ def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
         row += 1
     #end md5 page
     #missing type_ss
-    query = { 'q': '-type_ss:[* TO *]',
+    field = 'type_ss'
+    create_missing_report(field, workbook, header_format)
+    field = 'repository_data'
+    create_missing_report(field, workbook, header_format)
+    field = 'title_ss'
+    create_missing_report(field, workbook, header_format)
+
+def create_missing_report(field, workbook, header_format):
+    query = { 'q': '-{}:[* TO *]'.format(field),
             'rows' : 0,
             'wt' : 'json',
             'facet': 'true',
@@ -92,10 +100,13 @@ def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
                 query=query, api_key=api_key,
                 digest_user=digest_user, digest_pswd=digest_pswd),
                 'collection_url')
-    field = 'missing type_ss'
-    page = workbook.add_worksheet(field)
+    title = 'missing {}'.format(field)
+    create_missing_worksheet(title, collection_urls, workbook, header_format)
+
+def create_missing_worksheet(title, collection_urls, workbook, header_format):
+    page = workbook.add_worksheet(title)
     # headers
-    page.write(0, 0, field, header_format)
+    page.write(0, 0, title, header_format)
     page.write(0, 1, 'Number Missing', header_format)
     # width
     page.set_column(0, 0, 50, )
