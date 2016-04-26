@@ -88,14 +88,24 @@ def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
     create_missing_report(field, workbook, header_format)
     field = 'title_ss'
     create_missing_report(field, workbook, header_format)
+    field = 'url_item'
+    create_missing_report(field, workbook, header_format)
+    field = 'reference_image_md5'
+    create_missing_report(field, workbook, header_format, 
+            add_query={'fq':'type_ss:image'})
 
-def create_missing_report(field, workbook, header_format):
+def create_missing_report(field, workbook, header_format, add_query=None):
+    '''add_query is additional parameters for the query as a dictionary of
+    param: value. Needed for filter query for missing reference_image_md5
+    '''
     query = { 'q': '-{}:[* TO *]'.format(field),
             'rows' : 0,
             'wt' : 'json',
             'facet': 'true',
             'facet.field': 'collection_url'
             }
+    if add_query:
+        query.update(add_query)
     collection_urls = create_facet_dict(get_solr_json(solr_url, 
                 query=query, api_key=api_key,
                 digest_user=digest_user, digest_pswd=digest_pswd),
