@@ -366,6 +366,8 @@ def has_required_fields(doc):
             '---- OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
     if 'title' not in doc['sourceResource']:
         raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
+    if 'isShownAt' not in doc:
+        raise KeyError('---- OMITTED: Doc:{0} has no isShownAt.'.format(doc['_id']))
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
