@@ -17,7 +17,7 @@ def confirm_deletion(cid):
         else:
             return False
 
-def delete_id_list(ids, couchdb=None):
+def delete_id_list(ids, _couchdb=None):
     '''For a list of couchdb ids & given couchdb, delete the docs'''
     deleted = []
     num_deleted = 0
