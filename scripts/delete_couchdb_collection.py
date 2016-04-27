@@ -17,20 +17,25 @@ def confirm_deletion(cid):
         else:
             return False
 
+def delete_id_list(ids, couchdb=None):
+    '''For a list of couchdb ids & given couchdb, delete the docs'''
+    deleted = []
+    num_deleted = 0
+    for did in ids:
+        doc = _couchdb.get(did)
+        deleted.append(did)
+        _couchdb.delete(doc)
+        print "DELETED: {0}".format(did)
+        num_deleted +=1
+    return num_deleted, deleted 
+
 def delete_collection(cid):
     _couchdb = get_couchdb()
     rows = CouchDBCollectionFilter(collection_key=cid,
                                         couchdb_obj=_couchdb
                                         )
-    deleted = []
-    num_deleted = 0
-    for row in rows:
-        doc = _couchdb.get(row['id'])
-        deleted.append(row['id'])
-        _couchdb.delete(doc)
-        print "DELETED: {0}".format(row['id'])
-        num_deleted +=1
-    return num_deleted, deleted 
+    ids = [row['id'] for row in rows]
+    return delete_id_list(ids, couchdb=_couchdb)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(
