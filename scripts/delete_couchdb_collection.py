@@ -37,7 +37,7 @@ def delete_collection(cid):
                                         couchdb_obj=_couchdb
                                         )
     ids = [row['id'] for row in rows]
-    return delete_id_list(ids, couchdb=_couchdb)
+    return delete_id_list(ids, _couchdb=_couchdb)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(
