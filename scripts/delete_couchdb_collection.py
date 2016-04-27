@@ -23,8 +23,10 @@ def delete_id_list(ids, _couchdb=None):
     num_deleted = 0
     for did in ids:
         doc = _couchdb.get(did)
-        deleted.append(did)
+        if not doc:
+            continue
         _couchdb.delete(doc)
+        deleted.append(did)
         print "DELETED: {0}".format(did)
         num_deleted +=1
     return num_deleted, deleted 
