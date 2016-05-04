@@ -8,7 +8,7 @@ from harvester.collection_registry_client import Collection
 import harvester.couchdb_sync_db_by_collection
 
 JOB_TIMEOUT = 28800 #8 hrs
-URL_REMOTE_COUCHDB = 'https://52.10.100.133/couchdb'
+URL_REMOTE_COUCHDB = 'https://harvest-stg.cdlib.org/couchdb'
 
 def queue_couch_sync(redis_host, redis_port, redis_password, redis_timeout,
                         rq_queue,

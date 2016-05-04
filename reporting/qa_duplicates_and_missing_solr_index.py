@@ -38,7 +38,7 @@ def create_report_workbook(outdir):
     number_format.set_num_format('#,##0')
     return workbook, header_format, number_format
 
-def main(solr_url='https://52.10.100.133/solr/dc-collection/query',
+def main(solr_url='https://harvest-stg.cdlib.org/solr/dc-collection/query',
         outdir=None,
         api_key=None, digest_user=None, digest_pswd=None):
     print "USING SOLR:{}".format(solr_url)
@@ -138,7 +138,7 @@ if __name__=='__main__':
 
     args = parser.parse_args()
    
-    solr_url = args.solr_url if args.solr_url else 'https://52.10.100.133/solr/dc-collection/query'
+    solr_url = args.solr_url if args.solr_url else 'https://harvest-stg.cdlib.org/solr/dc-collection/query'
     digest_user = digest_pswd = None
     if not args.api_key and not args.digest_user:
         #use config file for qa_counts
