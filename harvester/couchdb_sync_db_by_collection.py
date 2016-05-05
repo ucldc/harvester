@@ -18,6 +18,28 @@ COUCHDB_VIEW_COLL_IDS = 'all_provider_docs/by_provider_name'
 
 # use couchdb_init to get environment couchdb
 
+def delete_id_list(ids, _couchdb=None):
+    '''For a list of couchdb ids & given couchdb, delete the docs'''
+    deleted = []
+    num_deleted = 0
+    for did in ids:
+        doc = _couchdb.get(did)
+        if not doc:
+            continue
+        _couchdb.delete(doc)
+        deleted.append(did)
+        print "DELETED: {0}".format(did)
+        num_deleted +=1
+    return num_deleted, deleted 
+
+def delete_collection(cid):
+    _couchdb = get_couchdb()
+    rows = CouchDBCollectionFilter(collection_key=cid,
+                                        couchdb_obj=_couchdb
+                                        )
+    ids = [row['id'] for row in rows]
+    return delete_id_list(ids, _couchdb=_couchdb)
+
 def collection_ready_for_publication(url_api_collection):
     '''Check if the collection has "ready_for_publication" currently 
     checked
@@ -62,9 +84,12 @@ def queue_update_from_remote(queue, url_api_collection, url_couchdb_source=None)
     '''
     pass
 
-def update_collection_from_remote(url_remote_couchdb, url_api_collection):
+def update_collection_from_remote(url_remote_couchdb, url_api_collection, 
+        delete_first=True):
     '''Update a collection from a remote couchdb.
     '''
+    if delete_first:
+        delete_collection(url_api_collection.rsplit('/', 2)[1])
     collection = Collection(url_api_collection)
     #guard against updating production for not ready_for_publication
     #collections
