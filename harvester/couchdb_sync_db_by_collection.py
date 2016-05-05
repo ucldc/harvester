@@ -28,11 +28,12 @@ def delete_id_list(ids, _couchdb=None):
             continue
         _couchdb.delete(doc)
         deleted.append(did)
-        print "DELETED: {0}".format(did)
+        print >> sys.stderr, "DELETED: {0}".format(did)
         num_deleted +=1
     return num_deleted, deleted 
 
 def delete_collection(cid):
+    print >> sys.stderr, "DELETING COLLECTION: {}".format(cid)
     _couchdb = get_couchdb()
     rows = CouchDBCollectionFilter(collection_key=cid,
                                         couchdb_obj=_couchdb
