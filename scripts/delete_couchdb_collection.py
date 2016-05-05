@@ -3,7 +3,8 @@ import argparse
 import os
 from harvester.couchdb_init import get_couchdb
 import couchdb
-from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
+from harvester.couchdb_sync_db_by_collection import delete_collection
+from harvester.couchdb_sync_db_by_collection import delete_id_list
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
@@ -17,28 +18,6 @@ def confirm_deletion(cid):
         else:
             return False
 
-def delete_id_list(ids, _couchdb=None):
-    '''For a list of couchdb ids & given couchdb, delete the docs'''
-    deleted = []
-    num_deleted = 0
-    for did in ids:
-        doc = _couchdb.get(did)
-        if not doc:
-            continue
-        _couchdb.delete(doc)
-        deleted.append(did)
-        print "DELETED: {0}".format(did)
-        num_deleted +=1
-    return num_deleted, deleted 
-
-def delete_collection(cid):
-    _couchdb = get_couchdb()
-    rows = CouchDBCollectionFilter(collection_key=cid,
-                                        couchdb_obj=_couchdb
-                                        )
-    ids = [row['id'] for row in rows]
-    return delete_id_list(ids, _couchdb=_couchdb)
-
 if __name__=='__main__':
     parser = argparse.ArgumentParser(
         description='Delete all documents in given collection')
@@ -50,7 +29,6 @@ if __name__=='__main__':
     if args.yes or confirm_deletion(args.collection_id):
         print 'DELETING COLLECTION {}'.format(args.collection_id)
         num, deleted_ids = delete_collection(args.collection_id)
-        print "DELTED {} DOCS".format(num)
-        print "DELTED {} DOCS".format(num)
+        print "DELETED {} DOCS".format(num)
     else:
         print "Exiting without deleting"
