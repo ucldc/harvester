@@ -4,9 +4,6 @@ import os
 from harvester.couchdb_init import get_couchdb
 import couchdb
 from harvester.couchdb_sync_db_by_collection import delete_collection
-from harvester.couchdb_sync_db_by_collection import delete_id_list
-
-COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
 def confirm_deletion(cid):
     prompt = "Are you sure you want to delete all couchdb " + \
