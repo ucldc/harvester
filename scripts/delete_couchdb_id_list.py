@@ -19,6 +19,7 @@ if __name__=='__main__':
 
     _couchdb = get_couchdb()
     num_deleted, delete_ids = delete_id_list(ids, _couchdb=_couchdb)
+    print 'Deleted {} documents'.format(num_deleted)
 
 
 # Copyright © 2016, Regents of the University of California
