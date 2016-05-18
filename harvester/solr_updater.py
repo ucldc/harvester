@@ -196,7 +196,7 @@ def unpack_date(date_obj):
     dates = []
     dates_start = []
     dates_end = []
-    if not date_obj:
+    if not date_obj or not len(date_obj):
         return None, None, None
     else:
         if isinstance(date_obj, dict):
@@ -222,6 +222,9 @@ def unpack_date(date_obj):
 def map_date(d):
     date_map = {}
     date_source = d.get('date', None)
+
+    if not date_source:
+        return date_map
 
     dates = []
     start_date = end_date = None
