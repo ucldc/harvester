@@ -223,6 +223,9 @@ def map_date(d):
     date_map = {}
     date_source = d.get('date', None)
 
+    if not date_source:
+        return date_map
+
     dates = []
     start_date = end_date = None
     dates_start = []
