@@ -320,7 +320,7 @@ def create_report_workbook(outdir, not_in_new, not_in_prod, count_equal,
                 number_format, runtime, missing_ready_for_pub,
                 not_ready_for_pub)
 
-    workbook.close()
+    return workbook
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
@@ -350,25 +350,20 @@ def main(argv=None):
     num_prod_docs = get_total_docs(production_totals)
     production_type_ss_dict = create_facet_dict(production_totals,
                                                 'type_ss')
-    solr_url = config.get('new-index', 'solrUrl')
+    solr_url_new = config.get('new-index', 'solrUrl')
     digest_user = config.get('new-index', 'digestUser')
     digest_pswd = config.get('new-index', 'digestPswd')
-    new_totals = get_solr_json(solr_url, query_t, digest_user=digest_user,
+    new_totals = get_solr_json(solr_url_new, query_t, digest_user=digest_user,
             digest_pswd=digest_pswd)
     num_new_docs = get_total_docs(new_totals)
     new_type_ss_dict = create_facet_dict(new_totals,
                                         'type_ss')
 
     #get calisphere current index data
-    solr_url = config.get('calisphere', 'solrUrl')
-    api_key = config.get('calisphere', 'solrAuth')
     production_json = get_solr_json(solr_url, base_query, api_key=api_key)
     production_facet_dict = create_facet_dict(production_json,
                                                 'collection_url')
-    solr_url = config.get('new-index', 'solrUrl')
-    digest_user = config.get('new-index', 'digestUser')
-    digest_pswd = config.get('new-index', 'digestPswd')
-    new_json = get_solr_json(solr_url, base_query, digest_user=digest_user,
+    new_json = get_solr_json(solr_url_new, base_query, digest_user=digest_user,
             digest_pswd=digest_pswd)
     new_facet_dict = create_facet_dict(new_json,
                                         'collection_url')
@@ -387,7 +382,7 @@ def main(argv=None):
     pp('COUNT EQUAL {}'.format(len(count_equal)))
     pp('NEW LESS {}'.format(len(new_less)))
     pp('NEW MORE {}'.format(len(new_more)))
-    create_report_workbook(argv.outdir[0], not_in_new, not_in_prod, count_equal,
+    workbook = create_report_workbook(argv.outdir[0], not_in_new, not_in_prod, count_equal,
                             new_less, new_more,
                             num_found_prod=num_prod_docs,
                             num_found_new=num_new_docs,
@@ -396,6 +391,46 @@ def main(argv=None):
                             all_collections=all_collections,
                             missing_ready_for_pub=missing_ready_for_pub,
                             not_ready_for_pub=not_ready_for_pub)
+
+    #check the "coverage_ss" facet differences, need to be added 
+    # to our coverage_lookup_table.csv if new values exist
+    cov_query = {
+        'facet': 'true',
+        'facet.field': [
+            'coverage_ss',
+        ],
+        'rows': 0,
+        'facet.limit': -1, #give them all
+        'facet.sort': 'count',
+        'facet.mincount': 1,
+    }
+    production_json = get_solr_json(solr_url, cov_query, api_key=api_key)
+    production_facet_dict = create_facet_dict(production_json, 'coverage_ss')
+    new_json = get_solr_json(solr_url_new, cov_query, digest_user=digest_user,
+            digest_pswd=digest_pswd)
+    new_facet_dict = create_facet_dict(new_json, 'coverage_ss')
+    not_in_new, not_in_prod, count_equal, new_less, new_more = compare_datasets(production_facet_dict, new_facet_dict)
+    print("COVERAGE: NOT IN PROD: {}  NOT_IN_NEW: {}".format(not_in_prod,
+        not_in_new))
+    
+    page = workbook.add_worksheet('New Coverage Values')
+    header_format = workbook.add_format({'bold': True, })
+    number_format = workbook.add_format()
+    number_format.set_num_format('#,##0')
+    if not_in_prod > 0:
+        page.set_tab_color('red')
+        number_format.set_bg_color('red')
+    page.write(0, 0, 'New Coverage_ss Values', header_format)
+    page.write(0, 1, 'Counts', header_format)
+    # width
+    page.set_column(0, 1, 25, )
+    row = 2
+    for value, count in not_in_prod:
+        page.write(row, 0, value)
+        page.write(row, 1, count, number_format)
+        row = row + 1
+
+    workbook.close()
 
 if __name__ == "__main__":
     sys.exit(main())
