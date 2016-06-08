@@ -351,10 +351,8 @@ def main(argv=None):
     production_type_ss_dict = create_facet_dict(production_totals,
                                                 'type_ss')
     solr_url_new = config.get('new-index', 'solrUrl')
-    digest_user = config.get('new-index', 'digestUser')
-    digest_pswd = config.get('new-index', 'digestPswd')
-    new_totals = get_solr_json(solr_url_new, query_t, digest_user=digest_user,
-            digest_pswd=digest_pswd)
+    api_key_new = config.get('new-index', 'solrAuth')
+    new_totals = get_solr_json(solr_url_new, query_t, api_key=api_key_new)
     num_new_docs = get_total_docs(new_totals)
     new_type_ss_dict = create_facet_dict(new_totals,
                                         'type_ss')
@@ -363,8 +361,7 @@ def main(argv=None):
     production_json = get_solr_json(solr_url, base_query, api_key=api_key)
     production_facet_dict = create_facet_dict(production_json,
                                                 'collection_url')
-    new_json = get_solr_json(solr_url_new, base_query, digest_user=digest_user,
-            digest_pswd=digest_pswd)
+    new_json = get_solr_json(solr_url_new, base_query, api_key=api_key_new)
     new_facet_dict = create_facet_dict(new_json,
                                         'collection_url')
     pp('OLD LEN:{} NEW LEN:{}'.format(len(production_facet_dict),
@@ -406,8 +403,7 @@ def main(argv=None):
     }
     production_json = get_solr_json(solr_url, cov_query, api_key=api_key)
     production_facet_dict = create_facet_dict(production_json, 'coverage_ss')
-    new_json = get_solr_json(solr_url_new, cov_query, digest_user=digest_user,
-            digest_pswd=digest_pswd)
+    new_json = get_solr_json(solr_url_new, cov_query, api_key=api_key_new)
     new_facet_dict = create_facet_dict(new_json, 'coverage_ss')
     not_in_new, not_in_prod, count_equal, new_less, new_more = compare_datasets(production_facet_dict, new_facet_dict)
     print("COVERAGE: NOT IN PROD: {}  NOT_IN_NEW: {}".format(not_in_prod,

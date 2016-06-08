@@ -144,8 +144,8 @@ if __name__=='__main__':
         #use config file for qa_counts
         config = ConfigParser.SafeConfigParser()
         config.read('report.ini')
-        solr_url = config.get('new-index-api', 'solrUrl')
-        api_key = config.get('new-index-api', 'solrAuth')
+        solr_url = config.get('new-index', 'solrUrl')
+        api_key = config.get('new-index', 'solrAuth')
     else:
         api_key = args.api_key
         digest_user = args.digest_user
