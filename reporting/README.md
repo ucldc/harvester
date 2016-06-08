@@ -4,11 +4,10 @@ in `report.ini`:
 ```ini
 [calisphere]
 solrUrl = .../solr/query
-solrAuth = X-Authentication-Token-header
+solrAuth = api_key
 
 #for solr ingest indexes behind digest auth
 [new-index]
-solrUrl = https://52.11.194.40/solr/dc-collection/query
-digestUser = <your digest username or ask mark>
-digestPswd = <your password>
+solrUrl = https://harvest-prd.cdlib.org/solr/dc-collection/query
+solrAuth = api_key
 ```
