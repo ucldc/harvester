@@ -703,7 +703,7 @@ class CMISAtomFeedFetcherTestCase(LogOverrideMixin, TestCase):
                 'http://cmis-atom-endpoint/descendants',
                 body=open(DIR_FIXTURES+'/cmis-atom-descendants.xml').read())
         h = fetcher.CMISAtomFeedFetcher('http://cmis-atom-endpoint/descendants',
-                ('uname', 'pswd'))
+                'uname, pswd')
         self.assertTrue(hasattr(h, 'objects'))
         self.assertEqual(42, len(h.objects))
 
@@ -713,9 +713,8 @@ class CMISAtomFeedFetcherTestCase(LogOverrideMixin, TestCase):
                 'http://cmis-atom-endpoint/descendants',
                 body=open(DIR_FIXTURES+'/cmis-atom-descendants.xml').read())
         h = fetcher.CMISAtomFeedFetcher('http://cmis-atom-endpoint/descendants',
-                ('uname', 'pswd'))
+                'uname, pswd')
         num_fetched = 0
-        print dir(h.objects)
         for obj in h:
             num_fetched += 1
         self.assertEqual(num_fetched, 42)

@@ -772,8 +772,9 @@ class CMISAtomFeedFetcher(Fetcher):
         '''Grab file and copy to local temp file'''
         super(CMISAtomFeedFetcher, self).__init__(url_harvest, extra_data)
         #parse extra data for username,password
-        uname, pswd = extra_data
-        resp=requests.get(url_harvest, auth=HTTPBasicAuth(uname, pswd))
+        uname, pswd = extra_data.split(',')
+        resp=requests.get(url_harvest, auth=HTTPBasicAuth(uname.strip(),
+            pswd.strip()))
         self.tree=ET.fromstring(resp.text)
         self.objects=[ badgerfish.data(x) for x in
                 self.tree.findall('./{http://www.w3.org/2005/Atom}entry/{http://docs.oasis-open.org/ns/cmis/restatom/200908/}children//{http://www.w3.org/2005/Atom}entry')]
