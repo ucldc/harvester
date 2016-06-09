@@ -63,6 +63,7 @@ setup(
         'pymarc==3.0.4',
         'facet_decade',
         'redis_collections',
+        'xmljson',
         'UCLDC-Deep-Harvester'
         ],
     test_suite='test',
