@@ -1,3 +1,6 @@
+reporting/comp-qa
+reporting/prod-indexes-qa
+reporting/report.ini
 profiles
 workspace
 venv*
