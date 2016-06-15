@@ -50,7 +50,7 @@ def link_is_to_image(url, auth=None):
     return reg_type == 'image'
 
 # Need to make each download a separate job.
-def stash_image(doc, url_cache, hash_cache, bucket_bases=BUCKET_BASES, auth=None):
+def stash_image_for_doc(doc, url_cache, hash_cache, bucket_bases=BUCKET_BASES, auth=None):
     '''Stash the images in s3, using md5s3stash
     Duplicate it among the "BUCKET_BASES" list. This will give redundancy
     in case some idiot (me) deletes one of the copies. Not tons of data so
@@ -141,7 +141,7 @@ class ImageHarvester(object):
                         redis=self._redis)
 
     def stash_image(self, doc):
-        return stash_image(doc, self._url_cache, self._hash_cache,
+        return stash_image_for_doc(doc, self._url_cache, self._hash_cache,
                 bucket_bases=self._bucket_bases, auth=self._auth)
 
     def update_doc_object(self, doc, report):
