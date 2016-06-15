@@ -455,6 +455,8 @@ def get_facet_decades(date):
     '''
     if isinstance(date, dict):
         facet_decades = facet_decade(date.get('displayDate', ''))
+    else:
+        facet_decades = facet_decade(date)
     facet_decade_set = set() #don't repeat values
     for decade in facet_decades:
         facet_decade_set.add(decade)
