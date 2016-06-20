@@ -15,5 +15,5 @@ Harvester for the ucldc solr index. Pushes content into the raw solr index.
 ### log on to the ingest-stg majorTom machine and run
 
 ```shell
-python ~/code/havester/scripts/image_harvest_opl_preservica.py <collection id> <token value>
+python ~/code/harvester/scripts/image_harvest_opl_preservica.py <collection id> <token value>
 ```
