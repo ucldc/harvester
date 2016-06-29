@@ -456,7 +456,7 @@ def get_facet_decades(date):
     if isinstance(date, dict):
         facet_decades = facet_decade(date.get('displayDate', ''))
     else:
-        facet_decades = facet_decade(date)
+        facet_decades = facet_decade(str(date))
     facet_decade_set = set() #don't repeat values
     for decade in facet_decades:
         facet_decade_set.add(decade)
@@ -541,7 +541,12 @@ def map_couch_to_solr_doc(doc):
     solr_doc = {}
     for p in doc.keys():
         if p in COUCHDOC_TO_SOLR_MAPPING:
-            solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
+            try:
+                solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
+            except TypeError, e:
+                print('TypeError for doc {} on COUCHDOC_TO_SOLR_MAPPING {}'.format(doc['_id'], p))
+                raise e
+
     reg_data_dict = map_registry_data(doc['originalRecord']['collection'])
     solr_doc.update(reg_data_dict)
     sourceResource = doc['sourceResource']
