@@ -29,6 +29,8 @@ class ImageHarvesterOPLPreservica(ImageHarvester):
         self.auth_token = auth_token
 
     def stash_image(self, doc):
+        if doc['sourceResource']['type'] == 'text':
+            return None
         url_image_base = doc.get('isShownBy', None)
         if url_image_base:
             doc['isShownBy'] = url_image_base +'&token={}'.format(self.auth_token)
