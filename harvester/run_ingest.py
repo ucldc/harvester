@@ -152,7 +152,7 @@ def main(user_email, url_api_collection, log_handler=None,
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.user_email or not args.url_api_collection or not arge.rq_queue:
+    if not args.user_email or not args.url_api_collection or not args.rq_queue:
         parser.print_help()
         sys.exit(27)
     conf = config_harvest()
