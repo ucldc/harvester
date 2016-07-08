@@ -481,6 +481,7 @@ def get_sort_collection_data_string(collection):
     [sort_collection_name::collection_name::collection_url, <>,<>]
     '''
     sort_name = normalize_sort_field(collection['name'], 
+            default_missing='~collection unknown',
             missing_equivalents=[])
     sort_string = ':'.join((sort_name,
                             collection['name'],

@@ -47,6 +47,18 @@ def link_is_to_image(url, auth=None):
     if not content_type:
         return False
     reg_type = content_type.split('/', 1)[0].lower()
+    #situation where a server returned 'text/html' to HEAD requests
+    # but returned 'image/jpeg' for GET.
+    # try a slower GET if not image type
+    if reg_type != 'image':
+        response = requests.get(url, allow_redirects=True,
+                                 auth=auth)
+        if response.status_code != 200:
+            return False
+        content_type = response.headers.get('content-type', None)
+        if not content_type:
+            return False
+        reg_type = content_type.split('/', 1)[0].lower()
     return reg_type == 'image'
 
 # Need to make each download a separate job.

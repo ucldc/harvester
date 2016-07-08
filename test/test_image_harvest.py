@@ -104,6 +104,13 @@ class ImageHarvestTestCase(TestCase):
                 content_type='text/plain; charset=utf-8',
                 connection='close',
                 )
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body='',
+                content_length='0',
+                content_type='text/html; charset=utf-8',
+                connection='close',
+                )
         self.assertFalse(image_harvest.link_is_to_image(url))
         url = 'http://getthisimage/isanimage'
         httpretty.register_uri(httpretty.HEAD,
@@ -129,6 +136,21 @@ class ImageHarvestTestCase(TestCase):
                 connection='close',
                 )
         self.assertTrue(image_harvest.link_is_to_image(url))
+        httpretty.register_uri(httpretty.HEAD,
+                url,
+                body='',
+                content_length='0',
+                content_type='text/html; charset=utf-8',
+                connection='close',
+                )
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body='',
+                content_length='0',
+                content_type='image/jpeg; charset=utf-8',
+                connection='close',
+                )
+        self.assertTrue(image_harvest.link_is_to_image(url))
 
     @patch('couchdb.Server')
     @patch('md5s3stash.md5s3stash', autospec=True,
@@ -146,6 +168,13 @@ class ImageHarvestTestCase(TestCase):
                 body='',
                 content_length='0',
                 content_type='text/plain; charset=utf-8',
+                connection='close',
+                )
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body='',
+                content_length='0',
+                content_type='text/html; charset=utf-8',
                 connection='close',
                 )
         image_harvester = image_harvest.ImageHarvester(url_cache={},
