@@ -22,18 +22,18 @@ import logbook
 from logbook import FileHandler
 import solr
 import pysolr
-from collection_registry_client import Collection
-import config
 from urlparse import parse_qs
 from pymarc import MARCReader
 import pymarc
-import dplaingestion.couch
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
 from requests.auth import HTTPBasicAuth
 import boto
-from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 from xmljson import badgerfish
+import dplaingestion.couch
+from ..collection_registry_client import Collection
+from .. import config
+from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -71,8 +71,8 @@ class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
     Fills in data for the didl specific values
 
-    After Record's __init__ runs, the self.metadata contains keys for the 
-    following DIDL data: DIDLInfo, Resource, Item, Component, Statement, 
+    After Record's __init__ runs, the self.metadata contains keys for the
+    following DIDL data: DIDLInfo, Resource, Item, Component, Statement,
     Descriptor
     DIDLInfo contains created date for the data feed - drop
     Statement wraps the dc metadata
@@ -255,10 +255,10 @@ class NuxeoFetcher(Fetcher):
     def _get_structmap_text(self, structmap_url):
         '''
            Get structmap_text for object. This is all the words from 'label' in the json.
-           See https://github.com/ucldc/ucldc-docs/wiki/media.json 
+           See https://github.com/ucldc/ucldc-docs/wiki/media.json
         '''
         structmap_text = ""
-        
+
         bucketpath = self._structmap_bucket.strip("/")
         bucketbase = bucketpath.split("/")[0]
         parts = urlparse.urlsplit(structmap_url)
@@ -271,7 +271,7 @@ class NuxeoFetcher(Fetcher):
             self.logger.error(
                 'Media json at: {} missing.'.format(parts.path))
             return structmap_text
-        mediajson = key.get_contents_as_string()            
+        mediajson = key.get_contents_as_string()
         mediajson_dict = json.loads(mediajson)
 
         # concatenate all of the words from 'label' in the json
@@ -286,11 +286,11 @@ class NuxeoFetcher(Fetcher):
         '''
             Get isShownBy value for object
             1) if object has image at parent level, use this
-            2) if component(s) have image, use first one we can find 
+            2) if component(s) have image, use first one we can find
             3) if object has PDF at parent level, use image stashed on S3
-            4) return None 
+            4) return None
         '''
-        is_shown_by = None 
+        is_shown_by = None
         uid = nuxeo_metadata['uid']
         self.logger.info("About to get isShownBy for uid {}".format(uid))
 
@@ -306,7 +306,7 @@ class NuxeoFetcher(Fetcher):
         self.logger.info("first_image_component_uid: {}".format(first_image_component_uid))
         if first_image_component_uid:
             self.logger.info("Nuxeo doc with uid {} has an image at the component level".format(uid))
-            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(first_image_component_uid) 
+            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(first_image_component_uid)
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
@@ -316,11 +316,11 @@ class NuxeoFetcher(Fetcher):
             is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(nuxeo_metadata['uid'])
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
- 
+
         # 4) return None
         self.logger.info("Could not find any image for Nuxeo doc with uid {}! Returning None".format(uid))
         return is_shown_by
-           
+
     def _has_image(self, metadata):
         ''' based on json metadata, determine whether or not this Nuxeo doc has an image file associated '''
 
@@ -332,7 +332,7 @@ class NuxeoFetcher(Fetcher):
         if file_content and 'data' in file_content:
             return True
         else:
-            return False 
+            return False
 
     def _has_s3_thumbnail(self, metadata):
         ''' based on json metadata, determine whether or not this Nuxeo doc is PDF (or other non-image)
@@ -366,8 +366,8 @@ class NuxeoFetcher(Fetcher):
         self.metadata = self._nx.get_metadata(uid=doc['uid'])
         self.structmap_url = self._get_structmap_url(self._structmap_bucket,
                                             doc['uid'])
-        self.metadata['structmap_url'] = self.structmap_url 
-        self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url) 
+        self.metadata['structmap_url'] = self.structmap_url
+        self.metadata['structmap_text'] = self._get_structmap_text(self.structmap_url)
         self.metadata['isShownBy'] = self._get_isShownBy(self.metadata)
 
         return self.metadata
@@ -500,7 +500,7 @@ class OAC_XML_Fetcher(Fetcher):
                     # <snippet> tag breaks up text for findaid <relation>
                     for innertext in t.itertext():
                         data = ''.join((data, innertext.strip()))
-                    if data: 
+                    if data:
                         obj[t.tag].append({'attrib':t.attrib, 'text':data})
                 else:
                     if t.text: #don't add blank ones
@@ -522,7 +522,7 @@ class OAC_XML_Fetcher(Fetcher):
         '''get the next result set
         Return the facet element, only one were interested in'''
         n_tries = 0
-        pause = 5 
+        pause = 5
         while True:
             try:
                 #resp = requests.get(self._url_current)
@@ -708,7 +708,7 @@ class OAC_JSON_Fetcher(Fetcher):
 
 
 class AlephMARCXMLFetcher(Fetcher):
-    '''Harvest a MARC XML feed from Aleph. Currently used for the 
+    '''Harvest a MARC XML feed from Aleph. Currently used for the
     UCSB cylinders project'''
     def __init__(self, url_harvest, extra_data, page_size=500):
         '''Grab file and copy to local temp file'''
@@ -719,7 +719,7 @@ class AlephMARCXMLFetcher(Fetcher):
         self.current_record = 1
         url_current = ''.join((self.url_base, '&startRecord=',
                                    str(self.current_record)))
-        
+
         tree_current = self.get_current_xml_tree()
         self.num_records = self.get_total_records(tree_current)
 
@@ -1089,7 +1089,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
         logger.error(error_msg)
         harvester.update_ingest_doc('error', error_msg=error_msg,
                                     items=num_recs)
-        raise e 
+        raise e
     if my_log_handler:
         my_log_handler.pop_application()
     if my_mail_handler:
