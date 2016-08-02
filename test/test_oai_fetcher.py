@@ -34,6 +34,95 @@ class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, Te
         self.tearDown_config()
 
 
+class OAIFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the OAIFetcher
+    '''
+    @httpretty.activate
+    def setUp(self):
+        super(OAIFetcherTestCase, self).setUp()
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAI.xml').read())
+        self.fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'oac:images')
+
+    def tearDown(self):
+        super(OAIFetcherTestCase, self).tearDown()
+        httpretty.disable()
+
+    def testHarvestIsIter(self):
+        self.assertTrue(hasattr(self.fetcher, '__iter__'))
+        self.assertEqual(self.fetcher, self.fetcher.__iter__())
+        rec1 = self.fetcher.next()
+
+    def testOAIFetcherReturnedData(self):
+        '''test that the data returned by the OAI Fetcher is a proper dc
+        dictionary
+        '''
+        rec = self.fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], '13030/hb796nb5mn')
+        self.assertIn('datestamp', rec)
+        self.assertIn(rec['datestamp'], '2005-12-13')
+
+    def testDeletedRecords(self):
+        '''Test that the OAI harvest handles "deleted" records.
+        For now that means skipping over them.
+        '''
+        recs = []
+        for r in self.fetcher:
+            recs.append(r)
+        #skips over 5 "deleted" records
+        self.assertEqual(len(recs), 3)
+
+    @httpretty.activate
+    def testOverrideMetadataPrefix(self):
+        '''test that the metadataPrefix for an OAI feed can be overridden.
+        The extra_data for OAI can be either just a set spec or a html query
+        string of set= &metadataPrefix=
+        '''
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAI.xml').read())
+        set_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'set=oac:images')
+        self.assertEqual(set_fetcher._set, 'oac:images')
+        rec = set_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], '13030/hb796nb5mn')
+        self.assertIn('datestamp', rec)
+        self.assertIn(rec['datestamp'], '2005-12-13')
+        self.assertEqual(httpretty.last_request().querystring,
+            {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
+            u'metadataPrefix': [u'oai_dc']})
+        httpretty.register_uri(httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/testOAI-didl.xml').read())
+        didl_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai', 'set=oac:images&metadataPrefix=didl')
+        self.assertEqual(didl_fetcher._set, 'oac:images')
+        self.assertEqual(didl_fetcher._metadataPrefix, 'didl')
+        rec = didl_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'], 'oai:ucispace-prod.lib.uci.edu:10575/25')
+        self.assertEqual(rec['title'], ['Schedule of lectures'])
+        self.assertIn('datestamp', rec)
+        self.assertEqual(rec['datestamp'], '2015-05-20T11:04:23Z')
+        self.assertEqual(httpretty.last_request().querystring,
+            {u'verb': [u'ListRecords'], u'set': [u'oac:images'],
+            u'metadataPrefix': [u'didl']})
+        self.assertEqual(rec['Resource']['@ref'],
+                'http://ucispace-prod.lib.uci.edu/xmlui/bitstream/10575/25/1/!COLLOQU.IA.pdf')
+        self.assertEqual(rec['Item']['@id'],
+                        'uuid-640925bd-9cdf-46be-babb-b2138c3fce9c')
+        self.assertEqual(rec['Component']['@id'],
+                        'uuid-897984d8-9392-4a68-912f-ffdf6fd7ce59')
+        self.assertIn('Descriptor', rec)
+        self.assertEqual(rec['Statement']['@mimeType'],
+                                        'application/xml; charset=utf-8')
+        self.assertEqual(rec['DIDLInfo']['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'], '2015-05-20T20:30:26Z')
+        del didl_fetcher
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
