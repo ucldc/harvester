@@ -17,8 +17,6 @@ import urllib
 import requests
 import logbook
 from logbook import FileHandler
-from pymarc import MARCReader
-import pymarc
 import pynux.utils
 from requests.packages.urllib3.exceptions import DecodeError
 from requests.auth import HTTPBasicAuth
@@ -33,6 +31,8 @@ from .fetcher import NoRecordsFetchedException
 from .oaifetcher import OAIFetcher
 from .solrfetcher import SolrFetcher
 from .solrfetcher import PySolrFetcher
+from .marcfetcher import MARCFetcher
+from .marcfetcher import AlephMARCXMLFetcher
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -41,42 +41,7 @@ STRUCTMAP_S3_BUCKET = 'static.ucldc.cdlib.org/media_json'
 NUXEO_MEDIUM_IMAGE_URL_FORMAT = "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/{}/Medium:content/"
 NUXEO_S3_THUMB_URL_FORMAT = "https://s3.amazonaws.com/static.ucldc.cdlib.org/ucldc-nuxeo-thumb-media/{}"
 
-###class NoRecordsFetchedException(Exception):
-###    pass
-###
-###class Fetcher(object):
-###    '''Base class for harvest objects.'''
-###    def __init__(self, url_harvest, extra_data):
-###        self.url = url_harvest
-###        self.extra_data = extra_data
-###        self.logger = logbook.Logger('FetcherBaseClass')
-###
-###    def __iter__(self):
-###        return self
-###
-###    def next(self):
-###        '''This returns a set of json objects.
-###        Set can be only one json object.
-###        '''
-###        raise NotImplementedError
 
-
-class MARCFetcher(Fetcher):
-    '''Harvest a MARC FILE. Can be local or at a URL'''
-    def __init__(self, url_harvest, extra_data):
-        '''Grab file and copy to local temp file'''
-        super(MARCFetcher, self).__init__(url_harvest, extra_data)
-        self.url_marc_file = url_harvest
-        self.marc_file = tempfile.TemporaryFile()
-        self.marc_file.write(urllib.urlopen(self.url_marc_file).read())
-        self.marc_file.seek(0)
-        self.marc_reader = MARCReader(self.marc_file,
-                                      to_unicode=True,
-                                      utf8_handling='replace')
-
-    def next(self):
-        '''Return MARC record by record to the controller'''
-        return self.marc_reader.next().as_dict()
 
 
 class NuxeoFetcher(Fetcher):
@@ -565,56 +530,6 @@ class OAC_JSON_Fetcher(Fetcher):
 
 
 
-class AlephMARCXMLFetcher(Fetcher):
-    '''Harvest a MARC XML feed from Aleph. Currently used for the
-    UCSB cylinders project'''
-    def __init__(self, url_harvest, extra_data, page_size=500):
-        '''Grab file and copy to local temp file'''
-        super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data)
-        self.ns={'zs':"http://www.loc.gov/zing/srw/"}
-        self.page_size = page_size
-        self.url_base = url_harvest + '&maximumRecords=' + str(self.page_size)
-        self.current_record = 1
-        url_current = ''.join((self.url_base, '&startRecord=',
-                                   str(self.current_record)))
-
-        tree_current = self.get_current_xml_tree()
-        self.num_records = self.get_total_records(tree_current)
-
-    def get_url_current_chunk(self):
-        '''Set the next URL to retrieve according to page size and current
-        record'''
-        return ''.join((self.url_base, '&startRecord=',
-                                   str(self.current_record)))
-
-    def get_current_xml_tree(self):
-        '''Return an ElementTree for the next xml_page'''
-        url = self.get_url_current_chunk()
-        return ET.fromstring(urllib.urlopen(url).read())
-
-    def get_total_records(self, tree):
-        '''Return the total number of records from the etree passed in'''
-        return int(tree.find('.//zs:numberOfRecords', self.ns).text)
-
-    def next(self):
-        '''Return MARC records in sets to controller.
-        Break when last record position == num_records
-        '''
-        if self.current_record >= self.num_records:
-            raise StopIteration
-        #get chunk from self.current_record to self.current_record + page_size
-        tree = self.get_current_xml_tree()
-        recs_xml=tree.findall('.//zs:record', self.ns)
-        #advance current record to end of set
-        self.current_record = int(recs_xml[-1].find(
-                                './/zs:recordPosition', self.ns).text)
-        self.current_record += 1
-        #translate to pymarc records & return
-        marc_xml_file = tempfile.TemporaryFile()
-        marc_xml_file.write(ET.tostring(tree))
-        marc_xml_file.seek(0)
-        recs=[rec.as_dict() for rec in pymarc.parse_xml_to_array(marc_xml_file) if rec is not None]
-        return recs
 
 
 class CMISAtomFeedFetcher(Fetcher):
