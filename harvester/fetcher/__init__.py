@@ -34,70 +34,11 @@ from .nuxeofetcher import NuxeoFetcher
 from .nuxeofetcher import UCLDCNuxeoFetcher
 from .oacfetcher import OAC_XML_Fetcher
 from .oacfetcher import OAC_JSON_Fetcher
+from .ucsfxmlfetcher import UCSF_XML_Fetcher
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
 
-
-
-
-class UCSF_XML_Fetcher(Fetcher):
-    def __init__(self, url_harvest, extra_data, page_size=100):
-        self.url_base = url_harvest
-        self.page_size = page_size
-        self.page_current = 1
-        self.doc_current = 1
-        self.docs_fetched = 0
-        xml = urllib.urlopen(self.url_current).read()
-        total = re.search('search-hits pages="(?P<pages>\d+)" page="(?P<page>\d+)" total="(?P<total>\d+)"', xml)
-        self.docs_total = int(total.group('total'))
-        self.re_ns_strip = re.compile('{.*}(?P<tag>.*)$')
-
-    @property
-    def url_current(self):
-        return '{0}&ps={1}&p={2}'.format(self.url_base, self.page_size,
-                                         self.page_current)
-
-    def _dochits_to_objset(self, docHits):
-        '''Returns list of objecs.
-        Objects are dictionary with tid, uri & metadata keys.
-        tid & uri are strings
-        metadata is a dict with keys matching UCSF xml metadata tags.
-        '''
-        objset = []
-        for d in docHits:
-            doc = d.find('./{http://legacy.library.ucsf.edu/document/1.1}document')
-            obj = {}
-            obj['tid'] = doc.attrib['tid']
-            obj['uri'] = doc.find('./{http://legacy.library.ucsf.edu/document/1.1}uri').text
-            mdata = doc.find('./{http://legacy.library.ucsf.edu/document/1.1}metadata')
-            obj_mdata = defaultdict(list)
-            for md in mdata:
-                # strip namespace
-                key = self.re_ns_strip.match(md.tag).group('tag')
-                obj_mdata[key].append(md.text)
-            obj['metadata'] = obj_mdata
-            self.docs_fetched += 1
-            objset.append(obj)
-        return objset
-
-    def next(self):
-        '''get next objset, use etree to pythonize'''
-        if self.doc_current == self.docs_total:
-            if self.docs_fetched != self.docs_total:
-                raise ValueError(
-                   "Number of documents fetched ({0}) doesn't match \
-                    total reported by server ({1})".format(
-                        self.docs_fetched,
-                        self.docs_total)
-                    )
-            else:
-                raise StopIteration
-        tree = ET.fromstring(urllib.urlopen(self.url_current).read())
-        hits=tree.findall(".//{http://legacy.library.ucsf.edu/search/1.0}search-hit")
-        self.page_current += 1
-        self.doc_current = int(hits[-1].attrib['number'])
-        return self._dochits_to_objset(hits)
 
 
 
