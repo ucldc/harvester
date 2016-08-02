@@ -5,8 +5,6 @@ import shutil
 import re
 from xml.etree import ElementTree as ET
 import json
-import solr
-import pysolr
 import httpretty
 from mock import patch, call
 from mock import Mock
@@ -385,145 +383,6 @@ class FetcherClassTestCase(TestCase):
         h = h('url_harvest', 'extra_data')
 
 
-class SolrFetcherTestCase(LogOverrideMixin, TestCase):
-    '''Test the harvesting of solr baed data.'''
-    # URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
-    @httpretty.activate
-    def testClassInit(self):
-        '''Test that the class exists and gives good error messages
-        if initial data not correct'''
-        httpretty.register_uri(httpretty.POST,
-            'http://example.edu/solr/select',
-            body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()
-            )
-        self.assertRaises(TypeError, fetcher.SolrFetcher)
-        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
-        rows=3)
-        self.assertTrue(hasattr(h, 'solr'))
-        self.assertTrue(isinstance(h.solr, solr.Solr))
-        self.assertEqual(h.solr.url, 'http://example.edu/solr')
-        self.assertTrue(hasattr(h, 'query'))
-        self.assertEqual(h.query, 'extra_data')
-        self.assertTrue(hasattr(h, 'resp'))
-        self.assertEqual(h.resp.start, 0)
-        self.assertEqual(len(h.resp.results), 3)
-        self.assertTrue(hasattr(h, 'numFound'))
-        self.assertEqual(h.numFound, 10)
-        self.assertTrue(hasattr(h, 'index'))
-
-    @httpretty.activate
-    def testIterateOverResults(self):
-        '''Test the iteration over a mock set of data'''
-        httpretty.register_uri(httpretty.POST,
-            'http://example.edu/solr/select',
-            responses=[
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-4.xml').read())
-            ]
-            )
-        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
-            rows=3)
-        self.assertEqual(len(h.resp.results), 3)
-        n = 0
-        for r in h:
-            n += 1
-        self.assertEqual(['Mission at Santa Barbara'], r['title_tesim'])
-        self.assertEqual(n, 10)
-
-class PySolrFetcherTestCase(LogOverrideMixin, TestCase):
-    '''Test the harvesting of solr baed data.'''
-    # URL:/solr/select body:q=extra_data&version=2.2&fl=%2A%2Cscore&wt=standard
-    @httpretty.activate
-    def testClassInit(self):
-        '''Test that the class exists and gives good error messages
-        if initial data not correct'''
-        httpretty.register_uri(httpretty.GET,
-                'http://example.edu/solr/query',
-            body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()
-            )
-        self.assertRaises(TypeError, fetcher.PySolrFetcher)
-        h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',)
-        #rows=3)
-        self.assertTrue(hasattr(h, 'solr'))
-        self.assertTrue(isinstance(h.solr, pysolr.Solr))
-        self.assertEqual(h.solr.url, 'http://example.edu/solr')
-        self.assertTrue(hasattr(h, 'results'))
-        self.assertEqual(len(h.results), 4)
-        self.assertEqual(h.results['response']['numFound'], 10)
-        self.assertEqual(h.numFound, 10)
-        self.assertTrue(hasattr(h, 'index'))
-
-    @httpretty.activate
-    def testIterateOverResults(self):
-        '''Test the iteration over a mock set of data'''
-        httpretty.register_uri(httpretty.GET,
-            'http://example.edu/solr/query',
-            responses=[
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.json').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.json').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-2.json').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-3.json').read()),
-#                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-4.json').read())
-            ]
-        )
-        self.assertRaises(TypeError, fetcher.PySolrFetcher)
-        h = fetcher.PySolrFetcher('http://example.edu/solr', 'extra_data',
-                **{ 'rows':3 })
-        #h = fetcher.PySolrFetcher('http://solr.industrydocuments.library.ucsf.edu/solr/ltdl3', 'collection:["Gallaher"]')
-        #self.assertEqual(len(h.results), 3)
-        #self.assertEqual(h.numFound, 10)
-        n = 0
-        for r in h:
-            n += 1
-        self.assertEqual(n, 10)
-        self.assertEqual(['Mission Santa Ynez'], r['title_tesim'])
-
-class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
-    '''Test the function of Solr harvest controller'''
-    @httpretty.activate
-    def setUp(self):
-        super(HarvestSolr_ControllerTestCase, self).setUp()
-        # self.testFile = DIR_FIXTURES+'/collection_api_test_oac.json'
-        httpretty.register_uri(httpretty.GET,
-                "https://registry.cdlib.org/api/v1/collection/183/",
-                body=open(DIR_FIXTURES+'/collection_api_solr_harvest.json').read())
-        httpretty.register_uri(httpretty.POST,
-                'http://example.edu/solr/blacklight/select',
-                body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()
-                )
-        self.collection = Collection('https://registry.cdlib.org/api/v1/collection/183/')
-        self.setUp_config(self.collection)
-        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
-        print "DIR SAVE::::: {}".format(self.controller.dir_save)
-
-    def tearDown(self):
-        super(HarvestSolr_ControllerTestCase, self).tearDown()
-        self.tearDown_config()
-        #shutil.rmtree(self.controller.dir_save)
-
-    @httpretty.activate
-    def testSolrHarvest(self):
-        '''Test the function of the Solr harvest with <date> objects
-        in stream'''
-        httpretty.register_uri(httpretty.POST,
-            'http://example.edu/solr/blacklight/select',
-            responses=[
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
-                    httpretty.Response(body=open(DIR_FIXTURES+'/ucsd-new-feed-missions-bb3038949s-4.xml').read())
-            ]
-            )
-        self.assertTrue(hasattr(self.controller, 'harvest'))
-        self.controller.harvest()
-        print "LOGS:{}".format(self.test_log_handler.formatted_records)
-        self.assertEqual(len(self.test_log_handler.records), 2)
-        self.assertTrue('UC San Diego' in self.test_log_handler.formatted_records[0])
-        self.assertEqual(self.test_log_handler.formatted_records[1], '[INFO] HarvestController: 13 records harvested')
 
 
 class MARCFetcherTestCase(LogOverrideMixin, TestCase):
@@ -1242,7 +1101,7 @@ class OAC_JSON_FetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     def testOAC_JSON_FetcherReturnedData(self):
-        '''test that the data returned by the OAI Fetcher is a proper dc
+        '''test that the data returned by the OAC Fetcher is a proper dc
         dictionary
         '''
         httpretty.register_uri(httpretty.GET,
