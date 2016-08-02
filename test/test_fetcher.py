@@ -85,7 +85,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
         self.assertIn('url_harvest', obj['collection'][0])
         self.assertEqual(obj['collection'][0]['@id'], 'https://registry.cdlib.org/api/v1/collection/178/')
         self.assertNotIn('campus', obj)
-        self.assertEqual(obj['collection'][0]['campus'], 
+        self.assertEqual(obj['collection'][0]['campus'],
                             [
                                {
                                    '@id': 'https://registry.cdlib.org/api/v1/campus/6/',
@@ -103,7 +103,7 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
                                }
                              ])
         self.assertNotIn('repository', obj)
-        self.assertEqual(obj['collection'][0]['repository'], 
+        self.assertEqual(obj['collection'][0]['repository'],
                         [
                           {
                             '@id': 'https://registry.cdlib.org/api/v1/repository/22/',
@@ -138,33 +138,6 @@ class HarvestOAC_JSON_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMix
                               }
                           }
                         ])
-
-
-class HarvestOAIControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
-    '''Test the function of an OAI fetcher'''
-    def setUp(self):
-        super(HarvestOAIControllerTestCase, self).setUp()
-
-    def tearDown(self):
-        super(HarvestOAIControllerTestCase, self).tearDown()
-        shutil.rmtree(self.controller.dir_save)
-
-    @httpretty.activate
-    def testOAIHarvest(self):
-        '''Test the function of the OAI harvest'''
-        httpretty.register_uri(httpretty.GET,
-                'http://registry.cdlib.org/api/v1/collection/',
-                body=open(DIR_FIXTURES+'/collection_api_test.json').read())
-        httpretty.register_uri(httpretty.GET,
-                'http://content.cdlib.org/oai',
-                body=open(DIR_FIXTURES+'/testOAC-url_next-0.xml').read())
-        self.collection = Collection('http://registry.cdlib.org/api/v1/collection/')
-        self.setUp_config(self.collection)
-        self.controller = fetcher.HarvestController('email@example.com', self.collection, config_file=self.config_file, profile_path=self.profile_path)
-        self.assertTrue(hasattr(self.controller, 'harvest'))
-        # TODO: fix why logbook.TestHandler not working for the previous logging
-        # self.assertEqual(len(self.test_log_handler.records), 2)
-        self.tearDown_config()
 
 
 class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
@@ -358,11 +331,11 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestC
         objset_saved = json.loads(open(os.path.join(self.controller_oai.dir_save, dir_list[0])).read())
         obj_saved = objset_saved[0]
         self.assertIn('collection', obj_saved)
-        self.assertEqual(obj_saved['collection'][0]['@id'], 
+        self.assertEqual(obj_saved['collection'][0]['@id'],
                     'https://registry.cdlib.org/api/v1/collection/197/')
-        self.assertEqual(obj_saved['collection'][0]['title'], 
+        self.assertEqual(obj_saved['collection'][0]['title'],
                     'Calisphere - Santa Clara University: Digital Objects')
-        self.assertEqual(obj_saved['collection'][0]['ingestType'], 
+        self.assertEqual(obj_saved['collection'][0]['ingestType'],
                                     'collection')
         self.assertNotIn('campus', obj_saved)
         self.assertEqual(obj_saved['collection'][0]['campus'],
@@ -718,7 +691,7 @@ class CMISAtomFeedFetcherTestCase(LogOverrideMixin, TestCase):
         for obj in h:
             num_fetched += 1
         self.assertEqual(num_fetched, 42)
-        
+
 
 
 
@@ -889,10 +862,10 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('structmap_text', docs[0])
         self.assertEqual(docs[0]['structmap_text'], "Angela Davis socializing with students at UC Irvine AS-061_A69-013_001.tif AS-061_A69-013_002.tif AS-061_A69-013_003.tif AS-061_A69-013_004.tif AS-061_A69-013_005.tif AS-061_A69-013_006.tif AS-061_A69-013_007.tif")
         self.assertEqual(docs[0]['isShownBy'], 'https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/40677ed1-f7c2-476f-886d-bf79c3fec8c4/Medium:content/')
-        
+
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True) 
+    @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
     def testFetch_missing_media_json(self, mock_deepharvest, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
         deepharvest_mocker(mock_deepharvest)
@@ -930,7 +903,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     @patch('boto.connect_s3', autospec=True)
     @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_component_image(self, mock_deepharvest, mock_boto):
-        ''' test getting correct isShownBy value for Nuxeo doc 
+        ''' test getting correct isShownBy value for Nuxeo doc
             with no image at parent level, but an image at the component level
         '''
         deepharvest_mocker(mock_deepharvest)
@@ -950,7 +923,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
             )
 
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/', 'path-to-asset/here')
-        
+
         nuxeo_metadata = open(DIR_FIXTURES+'/nuxeo_doc_imageless_parent.json').read()
         nuxeo_metadata = json.loads(nuxeo_metadata)
         isShownBy = h._get_isShownBy(nuxeo_metadata)
@@ -961,7 +934,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     @patch('harvester.fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_pdf(self, mock_deepharvest, mock_boto):
         ''' test getting correct isShownBy value for Nuxeo doc
-            with no images and PDF at parent level 
+            with no images and PDF at parent level
         '''
         deepharvest_mocker(mock_deepharvest)
 
@@ -1092,7 +1065,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin, LogOverride
         saved_obj = saved_objset[0]
         self.assertEqual(saved_obj['collection'][0]['@id'],
                 u'http://registry.cdlib.org/api/v1/collection/19/')
-        self.assertEqual(saved_obj['collection'][0]['name'], 
+        self.assertEqual(saved_obj['collection'][0]['name'],
                 u'Cochems (Edward W.) Photographs')
         self.assertEqual(saved_obj['collection'][0]['title'],
                 u'Cochems (Edward W.) Photographs')
@@ -1198,7 +1171,7 @@ class OAC_XML_FetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.totalDocs, 25)
         self.assertEqual(h.currentDoc, 0)
         objset = h.next()
-            
+
 
     def testDocHitsToObjset(self):
         '''Check that the _docHits_to_objset to function returns expected
