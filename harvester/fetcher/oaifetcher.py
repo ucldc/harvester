@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-import logbook
 import re
 from urlparse import parse_qs
 from .fetcher import Fetcher
 from sickle import Sickle
 from sickle.models import Record as SickleDCRecord
-from sickle.utils import xml_to_dict
+
 
 def etree_to_dict(t):
-    d = {t.tag : map(etree_to_dict, t.iterchildren())}
+    d = {t.tag: map(etree_to_dict, t.iterchildren())}
     d.update(('@' + k, v) for k, v in t.attrib.iteritems())
     d['text'] = t.text
     return d
+
 
 class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
@@ -28,8 +28,8 @@ class SickleDIDLRecord(SickleDCRecord):
     '''
     def __init__(self, record_element, strip_ns=True):
         super(SickleDIDLRecord, self).__init__(record_element,
-                                                strip_ns=strip_ns)
-        #need to grab the didl components here
+                                               strip_ns=strip_ns)
+        # need to grab the didl components here
         if not self.deleted:
             didl = self.xml.find('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDL')
             didls = didl.findall('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}*')
@@ -48,26 +48,26 @@ class OAIFetcher(Fetcher):
         # ensure not cached in module?
         self.oai_client.class_mapping['ListRecords'] = SickleDCRecord
         self.oai_client.class_mapping['GetRecord'] = SickleDCRecord
-        if extra_data: # extra data is set spec
+        if extra_data:  # extra data is set spec
             if 'set' in extra_data:
                 params = parse_qs(extra_data)
                 self._set = params['set'][0]
-                self._metadataPrefix = params.get('metadataPrefix', ['oai_dc'])[0]
+                self._metadataPrefix = params.get('metadataPrefix',
+                                                  ['oai_dc'])[0]
             else:
                 self._set = extra_data
-            #if metadataPrefix=didl, use didlRecord for parsing
+            # if metadataPrefix=didl, use didlRecord for parsing
             if self._metadataPrefix.lower() == 'didl':
                 self.oai_client.class_mapping['ListRecords'] = SickleDIDLRecord
                 self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
             self.records = self.oai_client.ListRecords(
                                     metadataPrefix=self._metadataPrefix,
-                                                    set=self._set,
-                                                    ignore_deleted=True)
+                                    set=self._set,
+                                    ignore_deleted=True)
         else:
             self.records = self.oai_client.ListRecords(
                                     metadataPrefix=self._metadataPrefix,
-                                                    ignore_deleted=True)
-
+                                    ignore_deleted=True)
 
     def next(self):
         '''return a record iterator? then outside layer is a controller,
@@ -80,8 +80,8 @@ class OAIFetcher(Fetcher):
         while True:
             sickle_rec = self.records.next()
             if not sickle_rec.deleted:
-                break #good record to harvest, don't do deleted
-                      # update process looks for deletions
+                break   # good record to harvest, don't do deleted
+                        # update process looks for deletions
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier
@@ -110,4 +110,3 @@ class OAIFetcher(Fetcher):
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-
