@@ -265,25 +265,3 @@ class FetcherClassTestCase(TestCase):
 
 
 
-class CMISAtomFeedFetcherTestCase(LogOverrideMixin, TestCase):
-    @httpretty.activate
-    def testCMISFetch(self):
-        httpretty.register_uri(httpretty.GET,
-                'http://cmis-atom-endpoint/descendants',
-                body=open(DIR_FIXTURES+'/cmis-atom-descendants.xml').read())
-        h = fetcher.CMISAtomFeedFetcher('http://cmis-atom-endpoint/descendants',
-                'uname, pswd')
-        self.assertTrue(hasattr(h, 'objects'))
-        self.assertEqual(42, len(h.objects))
-
-    @httpretty.activate
-    def testFetching(self):
-        httpretty.register_uri(httpretty.GET,
-                'http://cmis-atom-endpoint/descendants',
-                body=open(DIR_FIXTURES+'/cmis-atom-descendants.xml').read())
-        h = fetcher.CMISAtomFeedFetcher('http://cmis-atom-endpoint/descendants',
-                'uname, pswd')
-        num_fetched = 0
-        for obj in h:
-            num_fetched += 1
-        self.assertEqual(num_fetched, 42)

@@ -35,36 +35,11 @@ from .nuxeofetcher import UCLDCNuxeoFetcher
 from .oacfetcher import OAC_XML_Fetcher
 from .oacfetcher import OAC_JSON_Fetcher
 from .ucsfxmlfetcher import UCSF_XML_Fetcher
+from .cmisatomfeedfetcher import CMISAtomFeedFetcher
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
 
-
-
-
-class CMISAtomFeedFetcher(Fetcher):
-    '''harvest a CMIS Atom Feed. Don't know how generic this is, just working
-    with Oakland Public Library Preservica implementation.
-
-    Right now this uses the "descendants" page for collections, this gets all
-    the data for one collection from one http request then parses the resulting
-    data. This might not work if we get collections much bigger than the
-    current ones (~1000 objects max)
-    '''
-    def __init__(self, url_harvest, extra_data):
-        '''Grab file and copy to local temp file'''
-        super(CMISAtomFeedFetcher, self).__init__(url_harvest, extra_data)
-        #parse extra data for username,password
-        uname, pswd = extra_data.split(',')
-        resp=requests.get(url_harvest, auth=HTTPBasicAuth(uname.strip(),
-            pswd.strip()))
-        self.tree=ET.fromstring(resp.content)
-        self.objects=[ badgerfish.data(x) for x in
-                self.tree.findall('./{http://www.w3.org/2005/Atom}entry/{http://docs.oasis-open.org/ns/cmis/restatom/200908/}children//{http://www.w3.org/2005/Atom}entry')]
-        self.objects_iter = iter(self.objects)
-
-    def next(self):
-        return self.objects_iter.next()
 
 HARVEST_TYPES = {'OAI': OAIFetcher,
                  'OAJ': OAC_JSON_Fetcher,
