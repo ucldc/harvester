@@ -16,7 +16,8 @@ from .fetcher import Fetcher
 from .fetcher import NoRecordsFetchedException
 from .oaifetcher import OAIFetcher
 from .solrfetcher import SolrFetcher
-from .solrfetcher import PySolrFetcher
+from .solrfetcher import PySolrQueryFetcher
+from .solrfetcher import PySolrUCBFetcher
 from .marcfetcher import MARCFetcher
 from .marcfetcher import AlephMARCXMLFetcher
 from .nuxeofetcher import UCLDCNuxeoFetcher
@@ -34,7 +35,8 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'MRC': MARCFetcher,
                  'NUX': UCLDCNuxeoFetcher,
                  'ALX': AlephMARCXMLFetcher,
-                 'SFX': PySolrFetcher,  # changed 20151106
+                 'SFX': PySolrQueryFetcher,
+                 'UCB': PySolrUCBFetcher,
                  'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
                  }
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import solr
 import pysolr
-from ..collection_registry_client import Collection
 from .fetcher import Fetcher
+
 
 class SolrFetcher(Fetcher):
     def __init__(self, url_harvest, query, **query_params):
@@ -25,23 +25,25 @@ class SolrFetcher(Fetcher):
 
 
 class PySolrFetcher(Fetcher):
-    def __init__(self, url_harvest, query, **query_params):
+    def __init__(self, url_harvest, query, handler_path='select',
+                 **query_params):
         super(PySolrFetcher, self).__init__(url_harvest, query)
         self.solr = pysolr.Solr(url_harvest, timeout=1)
-        self.queryParams = {'q':query, 'sort':'id asc', 'wt':'json',
-                'cursorMark':'*'}
+        self._handler_path = handler_path
+        self._query_params = {
+                'q': query,
+                'wt': 'json',
+                'cursorMark': '*'}
+        self._query_params.update(query_params)
+        self._query_params_encoded = pysolr.safe_urlencode(self._query_params)
+        self._query_path = '{}?{}'.format(self._handler_path,
+                                          self._query_params_encoded)
         self.get_next_results()
         self.numFound = self.results['response'].get('numFound')
         self.index = 0
 
-    def set_select_path(self):
-        '''Set the encoded path to send to Solr'''
-        queryParams_encoded = pysolr.safe_urlencode(self.queryParams)
-        self.selectPath = 'query?{}'.format(queryParams_encoded)
-
     def get_next_results(self):
-        self.set_select_path()
-        resp = self.solr._send_request('get', path=self.selectPath)
+        resp = self.solr._send_request('get', path=self._query_path)
         self.results = self.solr.decoder.decode(resp)
         self.nextCursorMark = self.results.get('nextCursorMark')
         self.iter = self.results['response']['docs'].__iter__()
@@ -54,9 +56,9 @@ class PySolrFetcher(Fetcher):
         except StopIteration:
             if self.index >= self.numFound:
                 raise StopIteration
-        self.queryParams['cursorMark'] = self.nextCursorMark
+        self._query_params['cursorMark'] = self.nextCursorMark
         self.get_next_results()
-        if self.nextCursorMark == self.queryParams['cursorMark']:
+        if self.nextCursorMark == self._query_params['cursorMark']:
             if self.index >= self.numFound:
                 raise StopIteration
         if len(self.results['response']['docs']) == 0:
@@ -64,6 +66,24 @@ class PySolrFetcher(Fetcher):
         self.index += 1
         return self.iter.next()
 
+
+class PySolrQueryFetcher(PySolrFetcher):
+    ''' Use the `select` url path for querying instead of 'query'. This is
+    more typical for most Solr applications.
+    '''
+    def __init__(self, url_harvest, query, **query_params):
+        super(PySolrQueryFetcher, self).__init__(url_harvest,
+                                                 query,
+                                                 handler_path='query',
+                                                 **query_params)
+
+
+class PySolrUCBFetcher(PySolrFetcher):
+    '''Add the qt=document parameter for UCB blacklight'''
+    def __init__(self, url_harvest, query, **query_params):
+        query_params = {'qt': 'document'}
+        super(PySolrUCBFetcher, self).__init__(url_harvest, query,
+                                                 **query_params)
 
 
 # Copyright © 2016, Regents of the University of California
@@ -89,4 +109,3 @@ class PySolrFetcher(Fetcher):
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-

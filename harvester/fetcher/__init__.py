@@ -3,6 +3,8 @@ from .fetcher import NoRecordsFetchedException
 from .oaifetcher import OAIFetcher
 from .solrfetcher import SolrFetcher
 from .solrfetcher import PySolrFetcher
+from .solrfetcher import PySolrQueryFetcher
+from .solrfetcher import PySolrUCBFetcher
 from .marcfetcher import MARCFetcher
 from .marcfetcher import AlephMARCXMLFetcher
 from .nuxeofetcher import NuxeoFetcher
@@ -22,4 +24,5 @@ __all__ = (Fetcher, NoRecordsFetchedException, HARVEST_TYPES, OAIFetcher,
            SolrFetcher, PySolrFetcher, MARCFetcher, AlephMARCXMLFetcher,
            NuxeoFetcher, UCLDCNuxeoFetcher, OAC_XML_Fetcher, OAC_JSON_Fetcher,
            UCSF_XML_Fetcher, CMISAtomFeedFetcher, HarvestController,
+           PySolrQueryFetcher, PySolrUCBFetcher,
            EMAIL_RETURN_ADDRESS, get_log_file_path, main)
