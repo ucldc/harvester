@@ -33,6 +33,7 @@ class PySolrFetcher(Fetcher):
         self._query_params = {
                 'q': query,
                 'wt': 'json',
+                'sort': 'id asc',
                 'cursorMark': '*'}
         self._query_params.update(query_params)
         self._query_params_encoded = pysolr.safe_urlencode(self._query_params)
