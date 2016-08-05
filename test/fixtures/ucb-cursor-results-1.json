@@ -1,0 +1,65 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 18,
+    "params": {
+      "q": "collection:VTM",
+      "qt": "document",
+      "cursorMark": "AoEzVlRNX3Z0bTFfMTAwMF9waG90bw==",
+      "sort": "id asc",
+      "wt": "json",
+      "echoParams": "all",
+      "fl": "*",
+      "rows": "1"
+    }
+  },
+  "response": {
+    "numFound": 4,
+    "start": 0,
+    "docs": [
+      {
+        "id": "VTM_vtm1_1001_photo",
+        "thumbNail": "http://digitalassets.lib.berkeley.edu/vtm/ucb/images/VTM00006001a_i.gif",
+        "imageFile": "http://digitalassets.lib.berkeley.edu/vtm/ucb/images/VTM00006001a_j.jpg",
+        "fileNamesURL_midResolution": "http://digitalassets.lib.berkeley.edu/vtm/ucb/images/VTM00006001a_j.jpg",
+        "fileNamesURL_highResolution": "http://digitalassets.lib.berkeley.edu/vtm/ucb/images/VTM00006001a_k.jpg",
+        "title_display": "From near Incline looking SW to dense hardwood type in middle distance on a steep NE slope.  Canyon oak # 2 size in air photo- growing on nontimber site.  Assoc. spp.: Quercus kelloggii, Arbutus menziesii, Ceanothus integerrimus. (Air photo 95-6).",
+        "title_t": [
+          "From near Incline looking SW to dense hardwood type in middle distance on a steep NE slope.  Canyon oak # 2 size in air photo- growing on nontimber site.  Assoc. spp.: Quercus kelloggii, Arbutus menziesii, Ceanothus integerrimus. (Air photo 95-6)."
+        ],
+        "opensearch_display": [
+          "From near Incline looking SW to dense hardwood type in middle distance on a steep NE slope.  Canyon oak # 2 size in air photo- growing on nontimber site.  Assoc. spp.: Quercus kelloggii, Arbutus menziesii, Ceanothus integerrimus. (Air photo 95-6)."
+        ],
+        "format": "still image",
+        "rights": "[\n  All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Access Services, The Bancroft Library, University of California, Berkeley 94720-6000. Consent is given on behalf of The Bancroft Library as the owner of the physical items and does not constitute permission from the copyright owner.  Such permission must be obtained from the copyright owner.  See: http://bancroft.berkeley.edu/reference/permissions.html\n, \n    Copyright status unknown. Some materials in these collections may be protected by the U.S. Copyright Law (Title 17, U.S.C.). In addition, the reproduction of some materials may be restricted by terms of University of California gift or purchase agreements, donor restrictions, privacy and publicity rights, licensing and trademarks. Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.\n  ]",
+        "identifier_TlocalId_SphotoNo": "2472",
+        "titleInfo_Tid_SphotoId": "1001",
+        "note_Televation": "",
+        "note_Ssection": "",
+        "note_Stownship": "",
+        "note_Srange": "",
+        "subject_carthographic_coordinates": "",
+        "note_Tspecie": [
+          "Arbutus menziesii",
+          "Ceanothus integerrimus",
+          "Quercus chrysolepis",
+          "Quercus kelloggii"
+        ],
+        "originInfo_dateCreated": "10-01-1941",
+        "relatedItem_titleInfo_title": [
+          "Smartsville"
+        ],
+        "relatedItem_titleInfo_Tid_SquadNumber": "50",
+        "relatedItem_titleInfo_Tid_SquadName": "Smartsville",
+        "relatedItem_Tid_SmapId": "48",
+        "name_Sphotographer_namePart": "Wieslander, Albert Everett",
+        "relatedItem_identifier_SmapReference": "",
+        "sourceFile": "vtm1_1001_photo.xml",
+        "collection": "VTM",
+        "relatedItem_Toriginal_typeOfResource": "Photo",
+        "timestamp": "2016-07-26T16:25:22.695Z"
+      }
+    ]
+  },
+  "nextCursorMark": "AoEzVlRNX3Z0bTFfMTAwMV9waG90bw=="
+}

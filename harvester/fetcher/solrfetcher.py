@@ -36,17 +36,22 @@ class PySolrFetcher(Fetcher):
                 'sort': 'id asc',
                 'cursorMark': '*'}
         self._query_params.update(query_params)
-        self._query_params_encoded = pysolr.safe_urlencode(self._query_params)
-        self._query_path = '{}?{}'.format(self._handler_path,
-                                          self._query_params_encoded)
+        self._nextCursorMark = '*'
         self.get_next_results()
         self.numFound = self.results['response'].get('numFound')
         self.index = 0
 
+    @property
+    def _query_path(self):
+        self._query_params_encoded = pysolr.safe_urlencode(self._query_params)
+        return '{}?{}'.format(self._handler_path,
+                              self._query_params_encoded)
+
     def get_next_results(self):
+        self._query_params['cursorMark'] = self._nextCursorMark
         resp = self.solr._send_request('get', path=self._query_path)
         self.results = self.solr.decoder.decode(resp)
-        self.nextCursorMark = self.results.get('nextCursorMark')
+        self._nextCursorMark = self.results.get('nextCursorMark')
         self.iter = self.results['response']['docs'].__iter__()
 
     def next(self):
@@ -57,9 +62,8 @@ class PySolrFetcher(Fetcher):
         except StopIteration:
             if self.index >= self.numFound:
                 raise StopIteration
-        self._query_params['cursorMark'] = self.nextCursorMark
         self.get_next_results()
-        if self.nextCursorMark == self._query_params['cursorMark']:
+        if self._nextCursorMark == self._query_params['cursorMark']:
             if self.index >= self.numFound:
                 raise StopIteration
         if len(self.results['response']['docs']) == 0:
@@ -84,7 +88,7 @@ class PySolrUCBFetcher(PySolrFetcher):
     def __init__(self, url_harvest, query, **query_params):
         query_params = {'qt': 'document'}
         super(PySolrUCBFetcher, self).__init__(url_harvest, query,
-                                                 **query_params)
+                                               **query_params)
 
 
 # Copyright © 2016, Regents of the University of California
