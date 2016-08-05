@@ -34,6 +34,7 @@ class PySolrFetcher(Fetcher):
                 'q': query,
                 'wt': 'json',
                 'sort': 'id asc',
+                'rows': 100,
                 'cursorMark': '*'}
         self._query_params.update(query_params)
         self._nextCursorMark = '*'
@@ -86,7 +87,7 @@ class PySolrQueryFetcher(PySolrFetcher):
 class PySolrUCBFetcher(PySolrFetcher):
     '''Add the qt=document parameter for UCB blacklight'''
     def __init__(self, url_harvest, query, **query_params):
-        query_params = {'qt': 'document'}
+        query_params.update({'qt': 'document'})
         super(PySolrUCBFetcher, self).__init__(url_harvest, query,
                                                **query_params)
 

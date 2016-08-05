@@ -124,7 +124,7 @@ class PySolrQueryFetcherTestCase(LogOverrideMixin, TestCase):
                                        **{'rows': 3})
         self.assertEqual(
                 h._query_path,
-                'query?q=extra_data&sort=id+asc&wt=json&cursorMark=%2A&rows=3')
+                'query?q=extra_data&sort=id+asc&cursorMark=%2A&wt=json&rows=3')
         n = 0
         for r in h:
             n += 1
@@ -147,7 +147,8 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
                 )
         self.assertRaises(TypeError, fetcher.PySolrUCBFetcher)
         h = fetcher.PySolrUCBFetcher('http://example.edu/solr',
-                                     'extra_data',)
+                                     'extra_data',
+                                     **{'rows': 1})
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, pysolr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
@@ -177,11 +178,12 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
                     '/ucb-cursor-results-3.json').read()),
             ]
         )
-        h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',)
+        h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',
+                                     **{'rows': 1})
         self.assertEqual(
                 h._query_path,
-                'select?q=extra_data&sort=id+asc&wt=json&cursorMark=%2A'
-                '&qt=document')
+                'select?q=extra_data&sort=id+asc&cursorMark=%2A'
+                '&qt=document&wt=json&rows=1')
         cursor = h._nextCursorMark
         docs = []
         docs.append(h.next())  # gets the one from init, no get_next_results
