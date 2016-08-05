@@ -124,7 +124,7 @@ class PySolrQueryFetcherTestCase(LogOverrideMixin, TestCase):
                                        **{'rows': 3})
         self.assertEqual(
                 h._query_path,
-                'query?q=extra_data&rows=3&wt=json&cursorMark=%2A')
+                'query?q=extra_data&sort=id+asc&wt=json&cursorMark=%2A&rows=3')
         n = 0
         for r in h:
             n += 1
@@ -143,7 +143,7 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
                 'http://example.edu/solr/select',
                 body=open(
                     DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-0.json').read()
+                    '/ucb-cursor-results-0.json').read()
                 )
         self.assertRaises(TypeError, fetcher.PySolrUCBFetcher)
         h = fetcher.PySolrUCBFetcher('http://example.edu/solr',
@@ -152,9 +152,9 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(isinstance(h.solr, pysolr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
         self.assertTrue(hasattr(h, 'results'))
-        self.assertEqual(len(h.results), 4)
-        self.assertEqual(h.results['response']['numFound'], 10)
-        self.assertEqual(h.numFound, 10)
+        self.assertEqual(len(h.results), 3)
+        self.assertEqual(h.results['response']['numFound'], 3)
+        self.assertEqual(h.numFound, 3)
         self.assertTrue(hasattr(h, 'index'))
 
     @httpretty.activate
@@ -166,27 +166,27 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
             responses=[
                 httpretty.Response(body=open(
                     DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-0.json').read()),
+                    '/ucb-cursor-results-0.json').read()),
                 httpretty.Response(body=open(
                     DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-1.json').read()),
+                    '/ucb-cursor-results-1.json').read()),
                 httpretty.Response(body=open(
                     DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-2.json').read()),
-                httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-3.json').read()),
+                    '/ucb-cursor-results-1.json').read()),
             ]
         )
-        h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',
-                                     **{'rows': 3})
+        h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',)
         self.assertEqual(
                 h._query_path,
-                'select?q=extra_data&wt=json&cursorMark=%2A&qt=document')
+                'select?q=extra_data&sort=id+asc&wt=json&cursorMark=%2A'
+                '&qt=document')
         n = 0
+        cursor = h.nextCursorMark
         for r in h:
             n += 1
-        self.assertEqual(n, 10)
+            self.assertNotEqual(cursor, h.nextCursorMark)
+            cursor = h.nextCursorMark
+        self.assertEqual(n, 3)
         self.assertEqual(['Mission Santa Ynez'], r['title_tesim'])
 
 
