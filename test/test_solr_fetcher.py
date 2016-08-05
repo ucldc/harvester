@@ -152,9 +152,8 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(isinstance(h.solr, pysolr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
         self.assertTrue(hasattr(h, 'results'))
-        self.assertEqual(len(h.results), 3)
-        self.assertEqual(h.results['response']['numFound'], 3)
-        self.assertEqual(h.numFound, 3)
+        self.assertEqual(h.results['response']['numFound'], 4)
+        self.assertEqual(h.numFound, 4)
         self.assertTrue(hasattr(h, 'index'))
 
     @httpretty.activate
@@ -172,7 +171,10 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
                     '/ucb-cursor-results-1.json').read()),
                 httpretty.Response(body=open(
                     DIR_FIXTURES +
-                    '/ucb-cursor-results-1.json').read()),
+                    '/ucb-cursor-results-2.json').read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES +
+                    '/ucb-cursor-results-3.json').read()),
             ]
         )
         h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',)
@@ -180,14 +182,19 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
                 h._query_path,
                 'select?q=extra_data&sort=id+asc&wt=json&cursorMark=%2A'
                 '&qt=document')
-        n = 0
-        cursor = h.nextCursorMark
-        for r in h:
-            n += 1
-            self.assertNotEqual(cursor, h.nextCursorMark)
-            cursor = h.nextCursorMark
-        self.assertEqual(n, 3)
-        self.assertEqual(['Mission Santa Ynez'], r['title_tesim'])
+        cursor = h._nextCursorMark
+        docs = []
+        docs.append(h.next())  # gets the one from init, no get_next_results
+        self.assertEqual(cursor, h._nextCursorMark)
+        docs.append(h.next())  # get_next_results
+        self.assertNotEqual(cursor, h._nextCursorMark)
+        cursor = h._nextCursorMark
+        docs.append(h.next())  # get_next_results
+        self.assertNotEqual(cursor, h._nextCursorMark)
+        cursor = h._nextCursorMark
+        docs.append(h.next())   # get_next_results
+        self.assertNotEqual(cursor, h._nextCursorMark)
+        self.assertEqual(len(docs), 4)
 
 
 class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
