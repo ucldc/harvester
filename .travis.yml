@@ -17,6 +17,7 @@ install:
   - "mkdir -p ${HOME}/code/harvester/harvester/"
   - "touch ${HOME}/code/harvester/harvester/grab-solr-index-playbook.yml"
   - "touch ${HOME}/code/harvester/harvester/host_inventory"
+  - 'python -c "from dplaingestion.mappers.ucldc_nuxeo_mapper import UCLDCNuxeoMapper"'
 
 # command to run tests
 script: python setup.py test
