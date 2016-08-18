@@ -7,6 +7,9 @@ env: CODE_DIR=.
 
 # command to install dependencies
 install: 
+  # this next is needed but not installed by setup.py
+  # due to "secret" bitbucket with our modifications
+  - "pip install git+https://github.com/mredar/ingestion.git"
   - "python setup.py install"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
