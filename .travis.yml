@@ -7,8 +7,6 @@ env: CODE_DIR=.
 
 # command to install dependencies
 install: 
-  - "ls"
-  - "cat $access_dpla_repo > .ssh/id_rsa"
   - "python setup.py install"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
