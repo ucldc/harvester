@@ -11,7 +11,7 @@ install:
   # due to "secret" bitbucket with our modifications
   - "pip install httpretty"
   - "pip install git+https://github.com/mredar/ingestion.git"
-  - "git clone https://github.com/mredar/ingestion.git ."
+  - "git clone https://github.com/mredar/ingestion.git ingestion"
   - "cd ingestion ; python setup.py install"
   - "python setup.py install"
   - "cp akara.ini.tmpl akara.ini"
