@@ -21,6 +21,7 @@ install:
   - "touch ${HOME}/code/harvester/harvester/host_inventory"
   - 'python -c "from dplaingestion.mappers.ucldc_nuxeo_mapper import UCLDCNuxeoMapper"'
   - 'python -c "import test.test_run_ingest"'
+  - 'pip freeze'
 
 # command to run tests
 script: python setup.py test
