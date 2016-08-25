@@ -1,0 +1,137 @@
+[
+  {
+    "contextParameters": {
+      "documentURL": "/nuxeo/site/api/v1/id/40677ed1-f7c2-476f-886d-bf79c3fec8c4"
+    },
+    "changeToken": "1393973477428",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "Asset",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Folderish",
+      "Orderable"
+    ],
+    "lastModified": "2014-03-04T22:51:17.42Z",
+    "title": "Adeline Cochems having her portrait taken by her father Edward W,\n Cochems in Santa Ana,\n California: Photograph",
+    "entity-type": "document",
+    "repository": "default",
+    "uid": "40677ed1-f7c2-476f-886d-bf79c3fec8c4",
+    "path": "/asset-library/UCI/Cochems/MS-R016_1092.tif",
+    "type": "SampleCustomPicture",
+    "state": "project",
+    "versionLabel": "0.0",
+    "isCheckedOut": true
+  },
+  {
+    "contextParameters": {
+      "documentURL": "/nuxeo/site/api/v1/id/efd1db5c-808b-4bbe-8ef1-ab543dc68bac"
+    },
+    "changeToken": "1393973460629",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "Asset",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Folderish",
+      "Orderable"
+    ],
+    "lastModified": "2014-03-04T22:51:00.62Z",
+    "title": "Advertisement for \"The Revelers\" at Pythian Hall in Santa Ana,\n California: Photograph",
+    "entity-type": "document",
+    "repository": "default",
+    "uid": "efd1db5c-808b-4bbe-8ef1-ab543dc68bac",
+    "path": "/asset-library/UCI/Cochems/MS-R016_0739.tif",
+    "type": "SampleCustomPicture",
+    "state": "project",
+    "versionLabel": "0.0",
+    "isCheckedOut": true
+  },
+  {
+    "contextParameters": {
+      "documentURL": "/nuxeo/site/api/v1/id/487cc4cd-39dd-4329-861c-7d0402d57404"
+    },
+    "changeToken": "1393973474086",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "Asset",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Folderish",
+      "Orderable"
+    ],
+    "lastModified": "2014-03-04T22:51:14.08Z",
+    "title": "Advertisements from Marlow-Burns Building Company,\n Windsor Hills,\n California: Photograph",
+    "entity-type": "document",
+    "repository": "default",
+    "uid": "487cc4cd-39dd-4329-861c-7d0402d57404",
+    "path": "/asset-library/UCI/Cochems/MS-R016_0941.tif",
+    "type": "SampleCustomPicture",
+    "state": "project",
+    "versionLabel": "0.0",
+    "isCheckedOut": true
+  },
+  {
+    "contextParameters": {
+      "documentURL": "/nuxeo/site/api/v1/id/a7a4931d-3e82-4c73-a7e1-1ebdb8f04746"
+    },
+    "changeToken": "1393973423800",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "Asset",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Folderish",
+      "Orderable"
+    ],
+    "lastModified": "2014-03-04T22:50:23.80Z",
+    "title": "Aerial view of Hewes Park,\n Orange,\n California: Photograph",
+    "entity-type": "document",
+    "repository": "default",
+    "uid": "a7a4931d-3e82-4c73-a7e1-1ebdb8f04746",
+    "path": "/asset-library/UCI/Cochems/MS-R016_0200.tif",
+    "type": "SampleCustomPicture",
+    "state": "project",
+    "versionLabel": "0.0",
+    "isCheckedOut": true
+  },
+  {
+    "contextParameters": {
+      "documentURL": "/nuxeo/site/api/v1/id/6811cd90-5dac-4c59-9304-b492dbe66dba"
+    },
+    "changeToken": "1393973424887",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "Asset",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Folderish",
+      "Orderable"
+    ],
+    "lastModified": "2014-03-04T22:50:24.88Z",
+    "title": "Aerial view of Hewes Park,\n Orange,\n California: Photograph",
+    "entity-type": "document",
+    "repository": "default",
+    "uid": "6811cd90-5dac-4c59-9304-b492dbe66dba",
+    "path": "/asset-library/UCI/Cochems/MS-R016_0207.tif",
+    "type": "SampleCustomPicture",
+    "state": "project",
+    "versionLabel": "0.0",
+    "isCheckedOut": true
+  }
+]
