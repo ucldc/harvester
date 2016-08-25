@@ -43,7 +43,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
                                  'path-to-asset/here')
         mock_deepharvest.assert_called_with('path-to-asset/here', '',
-                                            conf_pynux={})
+                conf_pynux={'api': 'https://example.edu/api/v1/'})
         self.assertTrue(hasattr(h, '_url'))  # assert in called next repeatedly
         self.assertEqual(h.url, 'https://example.edu/api/v1/')
         self.assertTrue(hasattr(h, '_nx'))
@@ -62,7 +62,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
                                  'path-to-asset/here')
         mock_deepharvest.assert_called_with('path-to-asset/here', '',
-                                            conf_pynux={})
+                conf_pynux={'api': 'https://example.edu/api/v1/'})
         structmap_text = h._get_structmap_text(
                 's3://static.ucldc.cdlib.org/media_json/'
                 '81249b9c-5a87-43af-877c-fb161325b1a0-media.json')
@@ -113,11 +113,10 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                     status=200),
                 ]
             )
-
-        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1',
                                  'path-to-asset/here')
         mock_deepharvest.assert_called_with('path-to-asset/here', '',
-                                            conf_pynux={})
+                conf_pynux={'api': 'https://example.edu/api/v1'})
         docs = []
         for d in h:
             docs.append(d)
@@ -171,10 +170,10 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                    status=200),
                 ]
             )
-        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1',
                                  'path-to-asset/here')
         mock_deepharvest.assert_called_with('path-to-asset/here', '',
-                                            conf_pynux={})
+                conf_pynux={'api': 'https://example.edu/api/v1'})
         docs = []
         for d in h:
             docs.append(d)
@@ -218,7 +217,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 ]
             )
 
-        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1',
                                  'path-to-asset/here')
 
         nuxeo_metadata = open(DIR_FIXTURES +
@@ -252,7 +251,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 ]
             )
 
-        h = fetcher.NuxeoFetcher('https://example.edu/api/v1/',
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1',
                                  'path-to-asset/here')
 
         nuxeo_metadata = open(DIR_FIXTURES+'/nuxeo_doc_pdf_parent.json').read()
@@ -307,7 +306,8 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         mock_deepharvest.assert_called_with(
                 'path-to-asset/here', '',
                 conf_pynux={'X-NXDocumentProperties':
-                            'dublincore,ucldc_schema,picture,file'})
+                            'dublincore,ucldc_schema,picture,file',
+                            'api': 'https://example.edu/api/v1/'})
         self.assertIn('dublincore', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('ucldc_schema', h._nx.conf['X-NXDocumentProperties'])
         self.assertIn('picture', h._nx.conf['X-NXDocumentProperties'])
@@ -325,7 +325,8 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin,
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    def testNuxeoHarvest(self, mock_boto):
+    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    def testNuxeoHarvest(self, mock_deepharvest, mock_boto):
         '''Test the function of the Nuxeo harvest'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
         mock_boto.return_value.get_bucket.return_value.get_key.return_value.get_contents_as_string.return_value = media_json
@@ -333,33 +334,12 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin,
             httpretty.GET,
             'http://registry.cdlib.org/api/v1/collection/19/',
             body=open(DIR_FIXTURES + '/collection_api_test_nuxeo.json').read())
-        httpretty.register_uri(
-            httpretty.GET,
-            'https://example.edu/Nuxeo/site/api/v1/path/asset-library/UCI/'
-            'Cochems/@children',
-            responses=[
-                httpretty.Response(
-                    body=open(DIR_FIXTURES + '/nuxeo_folder.json').read(),
-                    status=200),
-                httpretty.Response(
-                    body=open(DIR_FIXTURES + '/nuxeo_folder-1.json').read(),
-                    status=200),
-                ]
-        )
+        mock_deepharvest.return_value.fetch_objects.return_value = json.load(
+                open( DIR_FIXTURES + '/nuxeo_object_list.json'))
         httpretty.register_uri(
             httpretty.GET,
             re.compile('https://example.edu/Nuxeo/site/api/v1/id/.*'),
             body=open(DIR_FIXTURES + '/nuxeo_doc.json').read())
-        httpretty.register_uri(
-           httpretty.GET,
-           'https://example.edu/Nuxeo/site/api/v1/path/asset-library/UCI/'
-           'Cochems/MS-R016_1092.tif/@children?currentPageIndex=0',
-           responses=[
-               httpretty.Response(
-                   body=open(DIR_FIXTURES+'/nuxeo_no_children.json').read(),
-                   status=200),
-                ]
-            )
 
         self.collection = Collection(
                 'http://registry.cdlib.org/api/v1/collection/19/')
@@ -376,7 +356,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin,
             )
         self.assertTrue(hasattr(self.controller, 'harvest'))
         num = self.controller.harvest()
-        self.assertEqual(num, 10)
+        self.assertEqual(num, 5)
         self.tearDown_config()
         # verify one record has collection and such filled in
         fname = os.listdir(self.controller.dir_save)[0]

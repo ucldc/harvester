@@ -34,8 +34,8 @@ class NuxeoFetcher(Fetcher):
         self._structmap_bucket = STRUCTMAP_S3_BUCKET
 
         # get harvestable child objects
+        conf_pynux['api'] = self._url
         self._dh = DeepHarvestNuxeo(self._path, '', conf_pynux=conf_pynux)
-        self._dh.nx.conf['api'] = self._url
 
         self._children = iter(self._dh.fetch_objects())
 
