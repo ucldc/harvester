@@ -1,0 +1,41 @@
+---
+-   hosts: couchdb
+    gather_facts: True         
+    vars:
+      dir_code_src: '~/code/'
+      dir_couch_data: '/var/lib/couchdb/'
+      dir_work: '/var/tmp/'
+      couchdb_file: 'ucldc.couch'
+      # replace colons, scp doesn't play well with colons
+      datetime: >
+        {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
+      email_to: "{{ lookup('env', 'EMAIL_SYS_ADMINS') }}"
+      server_roles:
+        - production
+        - stage
+        - dev
+      s3_bucket: ucldc
+      s3_root_path: "couchdb/{{ server_role }}"
+      region: us-west-2
+      remote_user: ec2-user
+      s3_file_path: "s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/{{ couchdb_file }}.{{ datetime }}.bz2"
+    tasks:
+    - fail: msg="Define server_role to one of production, stage or dev"
+      when: server_role not in  server_roles
+    - name: copy couchdb file to {{ dir_work }}
+      command: cp -p {{ dir_couch_data}}{{ couchdb_file}} {{ dir_work}}{{ couchdb_file }}.{{ datetime }}
+    - name: bzip couchdb database file
+      command: bzip2  {{ dir_work}}{{ couchdb_file }}.{{ datetime }}
+    - name: push bzipped couchdb file to s3
+      shell: aws --region={{ region }} s3 cp {{ dir_work }}/{{ couchdb_file }}.{{ datetime}}.bz2 {{ s3_file_path }}
+    - name: remove artifacts on remote
+      file:
+        state: absent
+        path: "{{ dir_work }}/{{ couchdb_file }}.{{ datetime }}.bz2"
+    - debug: var=s3_file_path
+###    - name: email note of new index (right now only manual index overwrite)-
+###      local_action: mail
+###                    from="ucldc@example.edu"
+###                    to={{ email_to }}
+###                    subject="New solr index tarball ready"
+###                    body="New solr index ready for download-> /var/local/{{ couchdb_file }}es/{{ couchdb_file }}.{{datetime}}.tar.bz2"
