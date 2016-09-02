@@ -1,6 +1,7 @@
+#! /bin/env python
 # harvest images for the given collection
-# by this point the isShownBy value for the doc should be filled in. 
-# this should point at the highest fidelity object file available 
+# by this point the isShownBy value for the doc should be filled in.
+# this should point at the highest fidelity object file available
 # from the source.
 # use brian's content md5s3stash to store the resulting image.
 
@@ -39,7 +40,7 @@ def get_isShownBy(doc):
 
 #Need to make each download a separate job.
 def main(collection_key=None, url_couchdb=SERVER_COUCHDB):
-    '''If collection_key is none, trying to grab all of the images. (Not 
+    '''If collection_key is none, trying to grab all of the images. (Not
     recommended)
     '''
     s = couchdb.Server(url=url_couchdb)

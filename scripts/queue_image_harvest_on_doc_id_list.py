@@ -1,3 +1,4 @@
+#! /bin/env python
 import sys
 import os
 from harvester.post_processing.couchdb_runner import CouchDBJobEnqueue
@@ -52,7 +53,7 @@ if __name__ == '__main__':
         kwargs['harvest_timeout'] = int(args.timeout)
     if args.get_if_object:
         kwargs['get_if_object'] = args.get_if_object
-    
+
     main(args.user_email,
             args.doc_id_list_file,
             rq_queue = args.rq_queue,

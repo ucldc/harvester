@@ -1,3 +1,4 @@
+#! /bin/env python
 # -*- coding: utf-8 -*-
 import datetime
 import os
@@ -6,7 +7,7 @@ from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.couchdb_init import get_couchdb
 from harvester.solr_updater import map_couch_to_solr_doc, push_doc_to_solr
 
-# This works from inside an environment with default URLs for couch & solr 
+# This works from inside an environment with default URLs for couch & solr
 URL_SOLR = os.environ.get('URL_SOLR', None)
 
 def main(collection_key):

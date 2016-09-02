@@ -1,7 +1,7 @@
-
+#! /bin/env python
 """"
 Usage:
-    $ python run_ingest.py user-email url_collection_api
+    $ python queue_image_harvest.py user-email url_collection_api
 """
 import sys
 import os
