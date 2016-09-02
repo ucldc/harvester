@@ -1,3 +1,4 @@
+#! /bin/env python
 '''create a script to feed to the redis-cli to delete cached
 harvested images information'''
 import sys

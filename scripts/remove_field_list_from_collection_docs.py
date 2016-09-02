@@ -1,3 +1,4 @@
+#! /bin/env python
 import sys
 import os
 from harvester.post_processing.couchdb_runner import CouchDBWorker

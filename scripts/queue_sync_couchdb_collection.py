@@ -1,3 +1,4 @@
+#! /bin/env python
 # -*- coding: utf-8 -*-
 import sys
 import logbook
@@ -68,7 +69,7 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     main(args.url_api_collection, URL_REMOTE_COUCHDB)
-    
+
 
 """
 Copyright © 2016, Regents of the University of California

@@ -1,3 +1,4 @@
+#! /bin/env python
 '''Rerun a collection's stored enrichments
 
 '''
