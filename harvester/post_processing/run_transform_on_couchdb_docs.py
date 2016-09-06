@@ -34,7 +34,9 @@ def run_on_couchdb_doc(docid, func):
     '''Run on a doc, by doc id'''
     _couchdb = get_couchdb()
     doc = _couchdb[docid]
-    ffunc = __import__(func)
+    mod_name, func_name = func.rsplit('.', 1)
+    fmod = importlib.import_module(mod_name)
+    ffunc = getattr(fmod, func_name)
     doc_new = ffunc(doc)
     if doc_new:
         _couchdb.save(doc_new)
