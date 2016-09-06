@@ -30,6 +30,16 @@ def run_on_couchdb_by_collection(func, collection_key=None):
             print '{} docs ran. Last doc:{}\n'.format(n, r.doc['_id'])
     return doc_ids
 
+def run_on_couchdb_doc(func, docid=None):
+    '''Run on a doc, by doc id'''
+    _couchdb = get_couchdb()
+    doc = _couchdb[docid]
+    doc_new = func(doc)
+    if doc_new:
+        _couchdb.save(doc_new)
+        return True
+    return False
+
 
 C_CACHE = {}
 def update_collection_description(doc):
