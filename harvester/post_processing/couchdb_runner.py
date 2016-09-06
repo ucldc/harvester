@@ -1,7 +1,5 @@
-import os
 import datetime
 import time
-import couchdb
 from redis import Redis
 from rq import Queue
 
@@ -11,13 +9,14 @@ from harvester.couchdb_pager import couchdb_pager
 
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 
+
 def get_collection_doc_ids(collection_id, url_couchdb_source=None):
     '''Use the by_provider_name view to get doc ids for a given collection
     '''
     _couchdb = get_couchdb(url=url_couchdb_source)
     v = CouchDBCollectionFilter(couchdb_obj=_couchdb,
-                                    collection_key=str(collection_id),
-                                    include_docs=False)
+                                collection_key=str(collection_id),
+                                include_docs=False)
     doc_ids = []
     for r in v:
         doc_ids.append(r.id)
@@ -44,11 +43,10 @@ class CouchDBCollectionFilter(object):
         else:
             self._couchdb = couchdb_obj
         self._view = couch_view
-        self._view_iter = couchdb_pager(self._couchdb, self._view,
-                key=collection_key, include_docs='true' if include_docs else
-                'false')
-        #self._view_iter = self._couchdb.view(self._view, include_docs='true',
-        #                                     key=collection_key)
+        self._view_iter = couchdb_pager(
+                self._couchdb, self._view,
+                key=collection_key,
+                include_docs='true' if include_docs else 'false')
 
     def __iter__(self):
         return self._view_iter.__iter__()
@@ -101,20 +99,22 @@ class CouchDBJobEnqueue(object):
     def __init__(self, rq_queue=None):
         self._config = config()
         self._couchdb = get_couchdb()
-        self._redis = Redis(host=self._config['redis_host'],
-                            port=self._config['redis_port'],
-                            password=self._config['redis_password'],
-                            socket_connect_timeout=self._config['redis_connect_timeout'])
+        self._redis = Redis(
+                host=self._config['redis_host'],
+                port=self._config['redis_port'],
+                password=self._config['redis_password'],
+                socket_connect_timeout=self._config['redis_connect_timeout'])
         self.rqname = self._config['rq_queue']
         if rq_queue:
             self.rqname = rq_queue
         if not self.rqname:
             raise ValueError(''.join(('Must set RQ_QUEUE env var',
-                                ' or pass in rq_queue to CouchDBJobEnqueue')))
+                                      ' or pass in rq_queue to ',
+                                      'CouchDBJobEnqueue')))
         self._rQ = Queue(self.rqname, connection=self._redis)
 
     def queue_list_of_ids(self, id_list, job_timeout, func,
-                         *args, **kwargs):
+                          *args, **kwargs):
         '''Enqueue jobs in the ingest infrastructure for a list of ids'''
         results = []
         for doc_id in id_list:
@@ -123,14 +123,14 @@ class CouchDBJobEnqueue(object):
                 this_args.extend(args)
             this_args = tuple(this_args)
             print('Enqueing doc {} args: {} kwargs:{}'.format(doc_id,
-                this_args, kwargs))
+                                                              this_args,
+                                                              kwargs))
             result = self._rQ.enqueue_call(func=func,
-                                     args=this_args,
-                                     kwargs=kwargs,
-                                     timeout=job_timeout)
+                                           args=this_args,
+                                           kwargs=kwargs,
+                                           timeout=job_timeout)
             results.append(result)
         return results
-            
 
     def queue_collection(self, collection_key, job_timeout, func,
                          *args, **kwargs):
@@ -152,11 +152,12 @@ class CouchDBJobEnqueue(object):
                 this_args.extend(args)
             this_args = tuple(this_args)
             print('Enqueing doc {} args: {} kwargs:{}'.format(doc['_id'],
-                this_args, kwargs))
+                                                              this_args,
+                                                              kwargs))
             result = self._rQ.enqueue_call(func=func,
-                                     args=this_args,
-                                     kwargs=kwargs,
-                                     timeout=job_timeout)
+                                           args=this_args,
+                                           kwargs=kwargs,
+                                           timeout=job_timeout)
             results.append(result)
         if not results:
             print "NO RESULTS FOR COLLECTION: {}".format(collection_key)
