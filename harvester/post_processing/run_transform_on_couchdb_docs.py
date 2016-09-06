@@ -2,6 +2,7 @@
 code should take a json python object, modify it and hand back to the code
 Not quite that slick yet, need way to pass in code or make this a decorator
 '''
+import importlib
 from harvester.collection_registry_client import Collection
 from harvester.couchdb_init import get_couchdb
 
