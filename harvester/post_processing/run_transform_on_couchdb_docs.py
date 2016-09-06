@@ -30,7 +30,7 @@ def run_on_couchdb_by_collection(func, collection_key=None):
             print '{} docs ran. Last doc:{}\n'.format(n, r.doc['_id'])
     return doc_ids
 
-def run_on_couchdb_doc(func, docid=None):
+def run_on_couchdb_doc(docid, func):
     '''Run on a doc, by doc id'''
     _couchdb = get_couchdb()
     doc = _couchdb[docid]
