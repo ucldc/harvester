@@ -24,7 +24,7 @@ def run_on_couchdb_by_collection(func, collection_key=None):
     for r in v:
         n += 1
         doc_new = func(r.doc)
-        if doc_new:
+        if doc_new and doc_new != doc:
             _couchdb.save(doc_new)
             doc_ids.append(r.doc['_id'])
         if n % 100 == 0:
@@ -39,7 +39,7 @@ def run_on_couchdb_doc(docid, func):
     fmod = importlib.import_module(mod_name)
     ffunc = getattr(fmod, func_name)
     doc_new = ffunc(doc)
-    if doc_new:
+    if doc_new and doc_new != doc:
         _couchdb.save(doc_new)
         return True
     return False

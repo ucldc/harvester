@@ -14,7 +14,7 @@ def fix_repeated_date(doc):
                     new_dd = r.match(disp_date).group(1)
                     d['displayDate'] = new_dd
                 new_dates.append(d)
-        doc['sourceResource']['date'] = new_dates
+            doc['sourceResource']['date'] = new_dates
     return doc
 
 # Copyright © 2016, Regents of the University of California
