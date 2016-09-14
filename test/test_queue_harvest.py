@@ -35,7 +35,7 @@ class QueueHarvestTestCase(TestCase):
                     poll_interval=1
                 )
         self.assertIn('TIMEOUT (1s) WAITING FOR QUEUE.', cm.exception.message)
-        with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:
+        with patch('harvester.queue_harvest.Redis') as mock_redis:
             mock_redis().ping.return_value = True
             results = queue_harvest_main('mark.redar@ucop.edu',
                 'https://registry.cdlib.org/api/v1/collection/178/; \
@@ -48,20 +48,19 @@ class QueueHarvestTestCase(TestCase):
                 poll_interval=1
                 )
         mock_calls = [str(x) for x in mock_redis.mock_calls]
-        self.assertEqual(len(mock_calls), 10)
+        self.assertEqual(len(mock_calls), 16)
         self.assertEqual(mock_redis.call_count, 3)
         #for i, call in enumerate(mock_calls):
         #    print str(i), call
+        mock_calls_str = ''.join(mock_calls)
         self.assertIn('call().ping()', mock_calls)
-        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:normal-stage')", mock_calls[4])
-        self.assertEqual("call().sadd(u'rq:queues', u'rq:queue:normal-stage')", mock_calls[7])
-        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls[6])
-        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls[9])
-        self.assertIn("call().hmset('rq:job", mock_calls[5])
-        self.assertIn(results[0].id, mock_calls[5])
-        self.assertIn("call().hmset('rq:job", mock_calls[8])
-        self.assertIn(results[1].id, mock_calls[8])
-    
+        self.assertIn("sadd(u'rq:queues', u'rq:queue:normal-stage')",
+                      mock_calls_str)
+        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls_str)
+        self.assertIn("call().rpush(u'rq:queue:normal-stage", mock_calls_str)
+        self.assertIn(results[0].id, mock_calls_str)
+        self.assertIn(results[1].id, mock_calls_str)
+
     def testBadRQQueue(self):
         with self.assertRaises(Exception) as cm:
             with patch('harvester.queue_harvest.Redis', autospec=True) as mock_redis:

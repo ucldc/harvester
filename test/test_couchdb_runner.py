@@ -60,7 +60,7 @@ class CouchDBWorkerTestCase(TestCase):
 
 class CouchDBJobEnqueueTestCase(TestCase):
     #@patch('redis.client.Redis', autospec=True)
-    @patch('harvester.post_processing.couchdb_runner.Redis', autospec=True)
+    @patch('harvester.post_processing.couchdb_runner.Redis')
     @httpretty.activate
     def setUp(self, mock_redis):
         self.conf = config()
