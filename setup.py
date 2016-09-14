@@ -56,7 +56,7 @@ setup(
         'python-dateutil==2.2',
         'CouchDB==0.9',
         'redis==2.10.1',
-        'rq==0.4.6',
+        'rq',
         'boto==2.29.1',
         'CouchDB==0.9',
         'md5s3stash',
