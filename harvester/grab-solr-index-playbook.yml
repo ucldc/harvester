@@ -28,31 +28,26 @@
         state: directory
         mode: 0777
     - name: tar up latest solr index directoy
-      command: tar --force-local -cvf {{ dir_tarball }}/solr-index.{{ datetime }}.tar index/
+      command: tar --force-local -cvf "{{ dir_tarball }}/solr-index.{{ datetime }}.tar" index/
       args:
         chdir: "{{ dir_solr_data }}"
-#    - name: chown back to {{ remote_user }}
-#      sudo: yes
-#      file:
-#        owner: "{{ remote_user }}"
-#        path: "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
     - name: bzip index file
-      command: bzip2 {{ dir_tarball }}/solr-index.{{ datetime }}.tar
+      command: bzip2 "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
     - name: push index tarball to s3 for server_role
       shell: aws --region={{ region }} s3 cp {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 {{ s3_file_path }}
 ###    - name: push index tarball to s3 for server_role to the latest bucket
 ###      shell: aws s3 cp --region={{ region }} {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
 ###      s3:
-###        bucket: solr.ucldc
+###        bucket: "{{ s3_bucket }}"
 ###        mode: put
 ###        src: solr-index.{{ datetime }}.tar.bz2
 ###        object: solr-index.{{ datetime }}.tar.bz2
-        #metadata: 'Content-Encoding=bzip2'
-        #        ###    - name: fetch index tarball
-        #                ###fetch: src=solr-index.{{ datetime }}.tar.bz2
-        #                        ###     dest=/var/local/solr-indexes/ flat=yes
-        #                          
+###        #metadata: 'Content-Encoding=bzip2'
+###        #        ###    - name: fetch index tarball
+###        #                ###fetch: src=solr-index.{{ datetime }}.tar.bz2
+###        #                        ###     dest=/var/local/solr-indexes/ flat=yes
+###        #                          
     - name: remove artifacts on remote
       file:
         state: absent
