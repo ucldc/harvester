@@ -6,8 +6,7 @@
       dir_solr_data: '/opt/solr/data'
       dir_tarball: '/opt/indexes/'
       # replace colons, scp doesn't play well with colons
-      datetime: >
-        {{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}
+      datetime: "{{ ansible_date_time.date }}-{{ ansible_date_time.time | regex_replace(':','_') }}"
       email_to: "{{ lookup('env', 'EMAIL_SYS_ADMINS') }}"
       server_roles:
         - production
@@ -19,6 +18,9 @@
       remote_user: ec2-user
       s3_file_path: "s3://{{ s3_bucket }}/{{s3_root_path}}/{{ ansible_date_time.year }}/{{ ansible_date_time.month }}/solr-index.{{ datetime }}.tar.bz2"
     tasks:
+    - debug: var=ansible_date_time.date
+    - debug: var=ansible_date_time.time
+    - debug: var=datetime
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
     - name: create tarball target directory
@@ -34,7 +36,7 @@
     - name: bzip index file
       command: bzip2 "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
     - name: push index tarball to s3 for server_role
-      shell: aws --region={{ region }} s3 cp {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 {{ s3_file_path }}
+      shell: aws --region="{{ region }}" s3 cp "{{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2" "{{ s3_file_path }}"
 ###    - name: push index tarball to s3 for server_role to the latest bucket
 ###      shell: aws s3 cp --region={{ region }} {{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2 s3://{{ s3_bucket }}/{{ s3_root_path }}/solr-index.tar.bz2
 ### NOTE: s3 module not working, gets a connection reset by peer
