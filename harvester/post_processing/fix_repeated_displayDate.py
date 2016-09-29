@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 import re
+from copy import deepcopy
 
 r=re.compile(r'(\d\d\d\d)-\1')
 
 def fix_repeated_date(doc):
     dates = doc['sourceResource'].get('date', None)
+    new_doc = {}
     if dates:
+        new_doc = deepcopy(doc)
         if isinstance(dates, list):
-            new_dates = []
-            for d in dates:
+            dates_n = new_doc['sourceResource'].get('date', None)
+            for d in dates_n:
                 disp_date =  d.get('displayDate', '')
                 if r.match(disp_date):
                     new_dd = r.match(disp_date).group(1)
                     d['displayDate'] = new_dd
-                new_dates.append(d)
-            doc['sourceResource']['date'] = new_dates
-    return doc
+    return new_doc if new_doc else doc
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
