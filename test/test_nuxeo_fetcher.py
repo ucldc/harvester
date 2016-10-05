@@ -263,6 +263,41 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
                 'ucldc-nuxeo-thumb-media/00d55837-01b6-4211-80d8-b966a15c257e')
 
 
+    @httpretty.activate
+    @patch('boto.connect_s3', autospec=True)
+    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    def test_get_isShownBy_video(self, mock_deepharvest, mock_boto):
+        ''' test getting correct isShownBy value for Nuxeo video object 
+        '''
+        deepharvest_mocker(mock_deepharvest)
+
+        httpretty.register_uri(
+            httpretty.GET,
+            'https://example.edu/api/v1/path/@search?query=SELECT+%2A+FROM+'
+            'Document+WHERE+ecm%3AparentId+%3D+'
+            '%274c80e254-6def-4230-9f28-bc48878568d4%27+'
+            'AND+ecm%3AcurrentLifeCycleState+%21%3D+%27deleted%27+ORDER+BY+'
+            'ecm%3Apos&currentPageIndex=0&pageSize=100',
+            responses=[
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/nuxeo_no_children.json').read(),
+                    status=200),
+                ]
+            )
+
+        h = fetcher.NuxeoFetcher('https://example.edu/api/v1',
+                                 'path-to-asset/here')
+
+        nuxeo_metadata = open(DIR_FIXTURES+'/nuxeo_doc_video.json').read()
+        nuxeo_metadata = json.loads(nuxeo_metadata)
+        isShownBy = h._get_isShownBy(nuxeo_metadata)
+
+        self.assertEqual(
+                isShownBy,
+                'https://s3.amazonaws.com/static.ucldc.cdlib.org/'
+                'ucldc-nuxeo-thumb-media/4c80e254-6def-4230-9f28-bc48878568d4')
+
+
 class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test that the UCLDC Nuxeo Fetcher errors if necessary
     Nuxeo document schema header property not set.

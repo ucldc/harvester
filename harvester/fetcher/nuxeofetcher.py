@@ -81,7 +81,7 @@ class NuxeoFetcher(Fetcher):
             Get isShownBy value for object
             1) if object has image at parent level, use this
             2) if component(s) have image, use first one we can find
-            3) if object has PDF at parent level, use image stashed on S3
+            3) if object has PDF or video at parent level, use image stashed on S3
             4) return None
         '''
         is_shown_by = None
@@ -144,7 +144,7 @@ class NuxeoFetcher(Fetcher):
         ''' based on json metadata, determine whether or not this Nuxeo doc
         is PDF (or other non-image)
             that will have thumb image stashed on S3 for it '''
-        if metadata['type'] != "CustomFile":
+        if metadata['type'] not in ("CustomFile", "CustomVideo"):
             return False
 
         properties = metadata['properties']
