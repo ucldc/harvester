@@ -10,7 +10,7 @@ rights_statement = 'The copyright and related rights status of this Item ' \
 
 def set_rights_lapl(doc):
     new_doc = deepcopy(doc)
-    new_doc['sourceResource']['rights'] = rights_statement
+    new_doc['sourceResource']['rights'] = [rights_statement]
     return new_doc
 
 
