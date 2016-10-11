@@ -6,6 +6,7 @@ from solr import Solr, SolrException
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.couchdb_init import get_couchdb
 from harvester.solr_updater import map_couch_to_solr_doc, push_doc_to_solr
+from harvester.solr_updater import has_required_fields, fill_in_title
 
 # This works from inside an environment with default URLs for couch & solr
 URL_SOLR = os.environ.get('URL_SOLR', None)
@@ -17,6 +18,12 @@ def main(collection_key):
     results = []
     for r in v:
         dt_start = dt_end = datetime.datetime.now()
+        try:
+            doc = fill_in_title(r.doc)
+            has_required_fields(r.doc)
+        except KeyError, e:
+            print(e.message)
+            continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         results.append(solr_doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
