@@ -40,8 +40,6 @@ if __name__=="__main__":
             help='Numeric ID for collection')
     args = parser.parse_args(sys.argv[1:])
     print "DELETE COLLECTION TO CAPTURE ANY REMOVALS"
-    print "hit any key to continue"
-    raw_input()
     results = main(args.collection_key)
     print 'Updated {} docs'.format(len(results))
 
