@@ -44,7 +44,7 @@ class OAIFetcher(Fetcher):
         super(OAIFetcher, self).__init__(url_harvest, extra_data)
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
-        self._metadataPrefix = 'oai_dc'
+        self._metadataPrefix = self.get_metadataPrefix(extra_data)
         # ensure not cached in module?
         self.oai_client.class_mapping['ListRecords'] = SickleDCRecord
         self.oai_client.class_mapping['GetRecord'] = SickleDCRecord
@@ -52,8 +52,6 @@ class OAIFetcher(Fetcher):
             if 'set' in extra_data:
                 params = parse_qs(extra_data)
                 self._set = params['set'][0]
-                self._metadataPrefix = params.get('metadataPrefix',
-                                                  ['oai_dc'])[0]
             else:
                 self._set = extra_data
             # if metadataPrefix=didl, use didlRecord for parsing
@@ -69,6 +67,23 @@ class OAIFetcher(Fetcher):
                                     metadataPrefix=self._metadataPrefix,
                                     ignore_deleted=True)
 
+    def get_metadataPrefix(self, extra_data):
+        '''Set the metadata format for the feed.
+        If it is in extra_data, use that.
+        Else, see if oai_qdc is supported, if so use that.
+        Else, revert to oai_dc
+        '''
+        if extra_data:
+            if 'metadataPrefix' in extra_data:
+                params = parse_qs(extra_data)
+                return params.get('metadataPrefix', [self._metadataPrefix])[0]
+
+        mdformats = [x for x in self.oai_client.ListMetadataFormats()]
+        for f in mdformats:
+            if f.metadataPrefix == 'oai_qdc':
+                return 'oai_qdc'
+        return 'oai_dc'
+
     def next(self):
         '''return a record iterator? then outside layer is a controller,
         same for all. Records are dicts that include:
@@ -82,6 +97,7 @@ class OAIFetcher(Fetcher):
             if not sickle_rec.deleted:
                 break   # good record to harvest, don't do deleted
                         # update process looks for deletions
+        import sys
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier

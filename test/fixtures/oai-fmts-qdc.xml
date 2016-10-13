@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2016-10-13T22:45:55Z</responseDate>
+  <request verb="ListMetadataFormats">http://digitalcollections.lmu.edu/oai/oai.php</request>
+  <ListMetadataFormats>
+    <metadataFormat>
+      <metadataPrefix>oai_dc</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>oclcdc</metadataPrefix>
+      <schema>http://purl.org/net/oclcterms-recset</schema>
+      <metadataNamespace>http://purl.org/net/oclcterms-recset/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+        <metadataPrefix>oai_qdc</metadataPrefix>
+        <schema>
+            http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd
+        </schema>
+    <metadataNamespace>http://purl.org/dc/terms/</metadataNamespace>
+    </metadataFormat>
+  </ListMetadataFormats>
+</OAI-PMH>
