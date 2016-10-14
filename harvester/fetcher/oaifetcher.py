@@ -97,7 +97,6 @@ class OAIFetcher(Fetcher):
             if not sickle_rec.deleted:
                 break   # good record to harvest, don't do deleted
                         # update process looks for deletions
-        import sys
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier

@@ -173,7 +173,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('id', rec)
         self.assertEqual(rec['id'],
                          'oai:digitalcollections.usfca.edu:p264101coll6/188')
-        for term in DCTERMS: # dependent on data fed to sickle
+        for term in DCTERMS:  # dependent on data fed to sickle
             self.assertIn(term, rec.keys())
         self.assertEqual(rec['created'], ['TEST dcterms:created'])
         self.assertEqual(rec['date'], ['1927; ', 'TEST dcterms:date'])
