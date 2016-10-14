@@ -76,7 +76,7 @@ class OAIFetcher(Fetcher):
         if extra_data:
             if 'metadataPrefix' in extra_data:
                 params = parse_qs(extra_data)
-                return params.get('metadataPrefix')[0]
+                return params['metadataPrefix'][0]
 
         mdformats = [x for x in self.oai_client.ListMetadataFormats()]
         for f in mdformats:
