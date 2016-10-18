@@ -17,7 +17,7 @@ import datetime
 
 reload(sys)
 sys.setdefaultencoding('utf8')
- 
+
 S3_BUCKET = 'solr.ucldc'
 
 RE_ARK_FINDER = re.compile('(ark:/\d\d\d\d\d/[^/|\s]*)')
@@ -45,6 +45,13 @@ def dict_for_data_field(field_src, data, field_dest):
         ddict = {field_dest: items_not_blank }
     return ddict
 
+def dict_for_data_to_fields(field_src, data, field_dests):
+    '''Copy sourceResource field to 2 or more solr doc fields'''
+    data_dict = {}
+    for field in field_dests:
+        data_dict.update(dict_for_data_field(field_src, data, field))
+    return data_dict
+
 COUCHDOC_TO_SOLR_MAPPING = {
     '_id'       : lambda d: {'harvest_id_s': d['_id']},
     'object'   : lambda d: {'reference_image_md5': d['object']},
@@ -54,12 +61,17 @@ COUCHDOC_TO_SOLR_MAPPING = {
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
 }
 
+# So no "coverage" has been in the sourceResource, it's always mapped to
+# spatial. With QDC we have a better fidelity.
+# for the interim, spatial needs to map to coverage & spatial.
+# Will this wind up wiping out any sourceResource coverage values?
 COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'alternativeTitle'   : lambda d: dict_for_data_field('alternativeTitle', d,
                                 'alternative_title'),
     'contributor' : lambda d: dict_for_data_field('contributor', d, 'contributor'),
     'coverage'    : lambda d: dict_for_data_field('coverage', d, 'coverage'),
-    'spatial'     : lambda d: dict_for_data_field('spatial', d, 'coverage'),
+    'spatial'     : lambda d: dict_for_data_to_fields('spatial', d, ('spatial',
+    'coverage')),
     'creator'     : lambda d: dict_for_data_field('creator', d, 'creator'),
     'date'        : lambda d:  map_date(d),
     'description' : lambda d: dict_for_data_field('description', d,
@@ -286,7 +298,7 @@ def ucla_ark(doc):
     "mods_recordInfo_recordIdentifier_mlt": "21198-zz002b1833",
     "mods_recordInfo_recordIdentifier_s": "21198-zz002b1833",
     "mods_recordInfo_recordIdentifier_t": "21198-zz002b1833",
-    
+
     If one is found, safe to assume UCLA & make the ARK
     NOTE: I cut & pasted this to the ucla_solr_dc_mapper to get it
     into the "identifier" field
@@ -358,7 +370,7 @@ def normalize_type(solr_doc):
             for d in doc_type:
                 norm_types.append(norm_type(d))
             solr_doc['type'] = norm_types
-        else: #string? 
+        else: #string?
             solr_doc['type'] = norm_type(doc_type)
 
 
@@ -447,7 +459,7 @@ def map_registry_data(collections):
             }
         )
     return registry_dict
-                                    
+
 
 def get_facet_decades(date):
     '''Return set of decade string for given date structure.
@@ -480,7 +492,7 @@ def get_sort_collection_data_string(collection):
     sort_collection_data ->
     [sort_collection_name::collection_name::collection_url, <>,<>]
     '''
-    sort_name = normalize_sort_field(collection['name'], 
+    sort_name = normalize_sort_field(collection['name'],
             default_missing='~collection unknown',
             missing_equivalents=[])
     sort_string = ':'.join((sort_name,
@@ -609,13 +621,13 @@ class CouchdbLastSeq_S3(object):
     @last_seq.setter
     def last_seq(self, value):
         '''value should be last_seq from couchdb _changes'''
-        self.key.set_contents_from_string(value) 
+        self.key.set_contents_from_string(value)
 
 def main(url_couchdb=None, dbname=None, url_solr=None, all_docs=False, since=None):
-    '''Use the _changes feed with a "since" parameter to only catch new 
+    '''Use the _changes feed with a "since" parameter to only catch new
     changes to docs. The _changes feed will only have the *last* event on
     a document and does not retain intermediate changes.
-    Setting the "since" to 0 will result in getting a _changes record for 
+    Setting the "since" to 0 will result in getting a _changes record for
     each document, essentially dumping the db to solr
     '''
     print('Solr update PID: {}'.format(os.getpid()))

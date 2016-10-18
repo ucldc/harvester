@@ -26,7 +26,7 @@ class SolrUpdaterTestCase(TestCase):
     def tearDown(self):
         if self.old_data_branch:
             os.environ['DATA_BRANCH'] = self.old_data_branch
-        
+
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
         '''Unit test calls to solr'''
@@ -91,12 +91,12 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['format'],
             u'Graphite pencil, and Dr. Ph Martins Liquid Watercolor on watercolor paper')
         self.assertEqual(sdoc['genre'], ['Drawing'])
-        self.assertNotIn('identifier', sdoc)        
+        self.assertNotIn('identifier', sdoc)
         self.assertEqual(sdoc['language'], ['English', 'eng'])
         self.assertEqual(sdoc['provenance'], [u'Gift of Dunya Ramicova, 2014'])
         self.assertNotIn('publisher', sdoc)
         self.assertEqual(sdoc['relation'], [u'The Fairy Queen'])
-        self.assertEqual(sdoc['rights'], 
+        self.assertEqual(sdoc['rights'],
                 [u'copyrighted',
                 u'Creative Commons Attribution - NonCommercial-NoDerivatives (CC BY-NC-ND 4.0)'])
         self.assertEqual(sdoc['structmap_text'], 'Brag')
@@ -104,7 +104,7 @@ class SolrUpdaterTestCase(TestCase):
                 u's3://static.ucldc.cdlib.org/media_json/0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json')
         self.assertEqual(sdoc['subject'], [None])
         self.assertEqual(sdoc['type'], 'image')
- 
+
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema
         compatible doc.
@@ -135,6 +135,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['collection_data'], c_data)
         self.assertEqual(sdoc['url_item'], u'http://ark.cdlib.org/ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['contributor'], ['contrib 1', 'contrib 2'])
+        self.assertEqual(sdoc['spatial'], ['Palm Springs (Calif.)', 'San Jacinto Mountains (Calif.)', 'Tahquitz Stream', 'Tahquitz Canyon'])
         self.assertEqual(sdoc['coverage'], ['Palm Springs (Calif.)', 'San Jacinto Mountains (Calif.)', 'Tahquitz Stream', 'Tahquitz Canyon'])
         self.assertEqual(sdoc['creator'], [u'creator 1', u'creator 2'])
         self.assertEqual(sdoc['description'], [u'description 1',
@@ -322,7 +323,7 @@ class SolrUpdaterTestCase(TestCase):
                                "Pacific Palisades, Los Angeles (Calif.)",
                                "Venice (Los Angeles, Calif.)",
                                "Los Angeles (Calif.)" ])
-        
+
     def test_dejson_from_map(self):
         '''Test that the dejson works from the mapping function'''
         doc = json.load(open(DIR_FIXTURES+'/couchdb_ucla.json'))
