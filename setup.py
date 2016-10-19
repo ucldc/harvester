@@ -55,7 +55,7 @@ setup(
         'akara',
         'python-dateutil==2.2',
         'CouchDB==0.9',
-        'redis==2.10.1',
+        'redis>=2.10.1',
         'rq',
         'boto==2.29.1',
         'CouchDB==0.9',
