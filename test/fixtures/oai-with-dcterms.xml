@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2016-08-26T17:42:07Z</responseDate>
+  <request verb="GetRecord" metadataPrefix="oai_qdc" identifier="oai:digitalcollections.usfca.edu:p264101coll6/188">http://digitalcollections.usfca.edu/oai/oai.php</request>
+  <GetRecord>
+    <record>
+      <header>
+        <identifier>oai:digitalcollections.usfca.edu:p264101coll6/188</identifier>
+        <datestamp>2012-02-01</datestamp>
+        <setSpec>p264101coll6</setSpec>
+      </header>
+      <metadata>
+        <oai_qdc:qualifieddc xmlns:oai_qdc="http://worldcat.org/xmlschemas/qdc-1.0/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://worldcat.org/xmlschemas/qdc-1.0/ http://worldcat.org/xmlschemas/qdc/1.0/qdc-1.0.xsd http://purl.org/net/oclcterms http://worldcat.org/xmlschemas/oclcterms/1.4/oclcterms-1.4.xsd">
+          <dc:identifier>pga00225</dc:identifier>
+          <dc:identifier>P484</dc:identifier>
+          <dc:title>A Symbol of Divine Love</dc:title>
+          <dc:creator>Gill, Eric 1882-1940</dc:creator>
+          <dc:date>1927; </dc:date>
+          <dc:format>engraving on copper</dc:format>
+          <dc:source>Art &amp; Love</dc:source>
+          <dc:format>19cm x 15.6cm</dc:format>
+          <dc:format>11.2cm x 6.8cm</dc:format>
+          <dc:description>Signed and numbered 3/15</dc:description>
+          <dc:relation>The Albert Sperisen Collection of Eric Gill</dc:relation>
+          <dc:format>Master TIFF image captured at 600ppi, 24-bit color, using Epson Expression 10000 XL scanner. Online display image was converted to JPEG 2000 format.</dc:format>
+          <dc:relation>Donohue Rare Book Room, Gleeson Library|Geschke Center, University of San Francisco</dc:relation>
+          <dc:relation>Printing &amp; Graphic Arts Collection</dc:relation>
+          <dc:type>Image</dc:type>
+          <dc:language>eng</dc:language>
+          <dc:rights>University of San Francisco can only claim physical ownership of the collection. Users are responsible for satisfying any claims of the copyright holder. Permission to copy or publish any portion of the University of San Francisco's collection must be given by the University of San Francisco.</dc:rights>
+          <dc:identifier>188</dc:identifier>
+          <dc:identifier>http://digitalcollections.usfca.edu/cdm/ref/collection/p264101coll6/id/188</dc:identifier>
+          <dcterms:abstract>TEST dcterms:abstract</dcterms:abstract>
+          <dcterms:accessRights>TEST dcterms:accessRights </dcterms:accessRights>
+          <dcterms:accrualMethod>TEST dcterms:accrualMethod</dcterms:accrualMethod>
+          <dcterms:accrualPeriodicity>TEST dcterms:accrualPeriodicity</dcterms:accrualPeriodicity>
+          <dcterms:accrualPolicy>TEST dcterms:accrualPolicy</dcterms:accrualPolicy>
+          <dcterms:alternative>TEST dcterms:alternative</dcterms:alternative>
+          <dcterms:audience>TEST dcterms:audience</dcterms:audience>
+          <dcterms:available>TEST dcterms:available</dcterms:available>
+          <dcterms:bibliographicCitation>TEST dcterms:bibliographicCitation</dcterms:bibliographicCitation>
+          <dcterms:conformsTo>TEST dcterms:conformsTo</dcterms:conformsTo>
+          <dcterms:contributor>TEST dcterms:contributor</dcterms:contributor>
+          <dcterms:coverage>TEST dcterms:coverage</dcterms:coverage>
+          <dcterms:created>TEST dcterms:created</dcterms:created>
+          <dcterms:creator>TEST dcterms:creator</dcterms:creator>
+          <dcterms:date>TEST dcterms:date</dcterms:date>
+          <dcterms:dateAccepted>TEST dcterms:dateAccepted</dcterms:dateAccepted>
+          <dcterms:dateCopyrighted>TEST dcterms:dateCopyrighted</dcterms:dateCopyrighted>
+          <dcterms:dateSubmitted>TEST dcterms:dateSubmitted</dcterms:dateSubmitted>
+          <dcterms:description>TEST dcterms:description</dcterms:description>
+          <dcterms:educationLevel>TEST dcterms:educationLevel</dcterms:educationLevel>
+          <dcterms:extent>TEST dcterms:extent</dcterms:extent>
+          <dcterms:format>TEST dcterms:format</dcterms:format>
+          <dcterms:hasFormat>TEST dcterms:hasFormat</dcterms:hasFormat>
+          <dcterms:hasPart>TEST dcterms:hasPart</dcterms:hasPart>
+          <dcterms:hasVersion>TEST dcterms:hasVersion</dcterms:hasVersion>
+          <dcterms:identifier>TEST dcterms:identifier</dcterms:identifier>
+          <dcterms:instructionalMethod>TEST dcterms:instructionalMethod</dcterms:instructionalMethod>
+          <dcterms:isFormatOf>TEST dcterms:isFormatOf</dcterms:isFormatOf>
+          <dcterms:isPartOf>TEST dcterms:isPartOf</dcterms:isPartOf>
+          <dcterms:isReferencedBy>TEST dcterms:isReferencedBy</dcterms:isReferencedBy>
+          <dcterms:isReplacedBy>TEST dcterms:isReplacedBy</dcterms:isReplacedBy>
+          <dcterms:isRequiredBy>TEST dcterms:isRequiredBy</dcterms:isRequiredBy>
+          <dcterms:issued>TEST dcterms:issued</dcterms:issued>
+          <dcterms:isVersionOf>TEST dcterms:isVersionOf</dcterms:isVersionOf>
+          <dcterms:language>TEST dcterms:language</dcterms:language>
+          <dcterms:license>TEST dcterms:license</dcterms:license>
+          <dcterms:mediator>TEST dcterms:mediator</dcterms:mediator>
+          <dcterms:medium>TEST dcterms:medium</dcterms:medium>
+          <dcterms:modified>TEST dcterms:modified</dcterms:modified>
+          <dcterms:provenance>TEST dcterms:provenance</dcterms:provenance>
+          <dcterms:publisher>TEST dcterms:publisher</dcterms:publisher>
+          <dcterms:references>TEST dcterms:references</dcterms:references>
+          <dcterms:relation>TEST dcterms:relation</dcterms:relation>
+          <dcterms:replaces>TEST dcterms:replaces</dcterms:replaces>
+          <dcterms:requires>TEST dcterms:requires</dcterms:requires>
+          <dcterms:rights>TEST dcterms:rights</dcterms:rights>
+          <dcterms:rightsHolder>TEST dcterms:rightsHolder</dcterms:rightsHolder>
+          <dcterms:source>TEST dcterms:source</dcterms:source>
+          <dcterms:spatial>TEST dcterms:spatial</dcterms:spatial>
+          <dcterms:subject>TEST dcterms:subject</dcterms:subject>
+          <dcterms:tableOfContents>TEST dcterms:tableOfContents</dcterms:tableOfContents>
+          <dcterms:temporal>TEST dcterms:temporal</dcterms:temporal>
+          <dcterms:title>TEST dcterms:title</dcterms:title>
+          <dcterms:type>TEST dcterms:type</dcterms:type>
+          <dcterms:valid>TEST dcterms:valid</dcterms:valid>
+        </oai_qdc:qualifieddc>
+      </metadata>
+    </record>
+  </GetRecord>
+</OAI-PMH>

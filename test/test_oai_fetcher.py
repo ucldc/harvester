@@ -140,6 +140,67 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
                 '2015-05-20T20:30:26Z')
         del didl_fetcher
 
+    @httpretty.activate
+    def testDCTERMS(self):
+        '''Test the OAI fetcher when the source data has exteneded dcterms in
+        it.
+        '''
+        DCTERMS = (
+                'abstract', 'accessRights', 'accrualMethod',
+                'accrualPeriodicity', 'accrualPolicy', 'alternative',
+                'audience', 'available', 'bibliographicCitation', 'conformsTo',
+                'contributor', 'coverage', 'created', 'creator', 'date',
+                'dateAccepted', 'dateCopyrighted', 'dateSubmitted',
+                'description', 'educationLevel', 'extent', 'format',
+                'hasFormat', 'hasPart', 'hasVersion', 'identifier',
+                'instructionalMethod', 'isFormatOf', 'isPartOf',
+                'isReferencedBy', 'isReplacedBy', 'isRequiredBy', 'issued',
+                'isVersionOf', 'language', 'license', 'mediator', 'medium',
+                'modified', 'provenance', 'publisher', 'references',
+                'relation', 'replaces', 'requires', 'rights', 'rightsHolder',
+                'source', 'spatial', 'subject', 'tableOfContents', 'temporal',
+                'title', 'type', 'valid')
+
+        httpretty.register_uri(
+                httpretty.GET,
+                'http://content.cdlib.org/oai',
+                body=open(DIR_FIXTURES+'/oai-with-dcterms.xml').read())
+        set_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai',
+                                         'set=bogus')
+        self.assertEqual(set_fetcher._set, 'bogus')
+        rec = set_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('id', rec)
+        self.assertEqual(rec['id'],
+                         'oai:digitalcollections.usfca.edu:p264101coll6/188')
+        for term in DCTERMS:  # dependent on data fed to sickle
+            self.assertIn(term, rec.keys())
+        self.assertEqual(rec['created'], ['TEST dcterms:created'])
+        self.assertEqual(rec['date'], ['1927; ', 'TEST dcterms:date'])
+
+    @httpretty.activate
+    def test_getMetadataPrefix(self):
+        fmts = open(DIR_FIXTURES+'/oai-fmts.xml').read()
+        fmts_qdc = open(DIR_FIXTURES+'/oai-fmts-qdc.xml').read()
+        httpretty.register_uri(
+                httpretty.GET,
+                'http://xxxx.cdlib.org/oai?verb=ListMetadataFormats',
+                responses=[
+                    httpretty.Response(body=fmts, status=200),
+                    httpretty.Response(body=fmts, status=200),
+                    httpretty.Response(body=fmts, status=200),
+                    httpretty.Response(body=fmts_qdc, status=200),
+                ])
+        set_fetcher = fetcher.OAIFetcher('http://xxxx.cdlib.org/oai',
+                                         'set=bogus')
+        self.assertEqual(set_fetcher._metadataPrefix, 'oai_dc')
+        prefix = set_fetcher.get_metadataPrefix('')
+        self.assertEqual(prefix, 'oai_dc')
+        prefix = set_fetcher.get_metadataPrefix('metadataPrefix=override')
+        self.assertEqual(prefix, 'override')
+        prefix = set_fetcher.get_metadataPrefix('')
+        self.assertEqual(prefix, 'oai_qdc')
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
