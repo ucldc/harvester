@@ -6,11 +6,6 @@ Usage:
 import sys
 import os
 from email.mime.text import MIMEText
-from dplaingestion.scripts import enrich_records
-from dplaingestion.scripts import save_records
-from dplaingestion.scripts import remove_deleted_records
-from dplaingestion.scripts import dashboard_cleanup
-from dplaingestion.scripts import check_ingestion_counts
 import logbook
 from harvester import fetcher
 from harvester.config import config as config_harvest
