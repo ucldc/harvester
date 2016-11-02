@@ -41,7 +41,7 @@ def main(url_api_collection,
          url_remote_couchdb=URL_REMOTE_COUCHDB,
          log_handler=None):
     '''This should only be run in production env!
-    Queue is hard coded to normal-prod so that it will be run there
+    Queue is hard coded to normal-production so that it will be run there
     '''
     config = parse_env(None)
     try:
@@ -59,7 +59,7 @@ def main(url_api_collection,
         config['redis_port'],
         config['redis_password'],
         config['redis_connect_timeout'],
-        rq_queue='normal-prod',
+        rq_queue='normal-production',
         url_api_collection=url_api_collection,
         url_remote_couchdb=url_remote_couchdb, )
 

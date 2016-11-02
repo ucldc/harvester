@@ -14,9 +14,9 @@ REDIS_PORT = '6379'
 DPLA_CONFIG_FILE = 'akara.ini'
 
 RQ_Q_LIST = (
-        'high-prod',
-        'normal-prod',
-        'low-prod',
+        'high-production',
+        'normal-production',
+        'low-production',
         'high-stage',
         'normal-stage',
         'low-stage',
