@@ -89,14 +89,10 @@ def main(user_email,
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.user_email or not args.url_api_collection:
+    if not args.collection_key
         parser.print_help()
         sys.exit(27)
     kwargs = {}
-    if args.timeout:
-        kwargs['harvest_timeout'] = int(args.timeout)
-    if args.get_if_object:
-        kwargs['get_if_object'] = args.get_if_object
     main(args.collection_key, rq_queue=args.rq_queue, **kwargs)
 
 # Copyright © 2016, Regents of the University of California
