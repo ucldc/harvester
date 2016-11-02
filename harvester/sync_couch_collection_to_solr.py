@@ -13,6 +13,7 @@ URL_SOLR = os.environ.get('URL_SOLR', None)
 
 
 def main(collection_key):
+    collection_key = str(collection_key) # Couch need string keys
     v = CouchDBCollectionFilter(
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
