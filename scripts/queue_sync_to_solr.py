@@ -8,13 +8,6 @@ from harvester import sync_couch_collection_to_solr
 from redis import Redis
 from rq import Queue
 
-EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
-                                      'example@example.com')
-# csv delim email addresses
-EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None)
-IMAGE_HARVEST_TIMEOUT = 144000
-
-
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
@@ -31,11 +24,7 @@ def queue_sync_to_solr(redis_host,
                        redis_password,
                        redis_timeout,
                        rq_queue,
-                       collection_key,
-                       url_couchdb=None,
-                       object_auth=None,
-                       get_if_object=False,
-                       harvest_timeout=IMAGE_HARVEST_TIMEOUT):
+                       collection_key):
     rQ = Queue(
         rq_queue,
         connection=Redis(
@@ -50,21 +39,12 @@ def queue_sync_to_solr(redis_host,
     return job
 
 
-def main(user_email,
-         collection_key,
+def main(collection_key,
          log_handler=None,
-         mail_handler=None,
          config_file='akara.ini',
          rq_queue=None,
          **kwargs):
     '''Runs a UCLDC sync to solr for collection key'''
-    emails = [user_email]
-    if EMAIL_SYS_ADMIN:
-        emails.extend([u for u in EMAIL_SYS_ADMIN.split(',')])
-    if not mail_handler:
-        mail_handler = logbook.MailHandler(
-            EMAIL_RETURN_ADDRESS, emails, level='ERROR', bubble=True)
-    mail_handler.push_application()
     config = config_harvest(config_file=config_file)
 
     if not log_handler:
@@ -83,13 +63,12 @@ def main(user_email,
         **kwargs)
 
     log_handler.pop_application()
-    mail_handler.pop_application()
 
 
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.collection_key
+    if not args.collection_key:
         parser.print_help()
         sys.exit(27)
     kwargs = {}
