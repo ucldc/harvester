@@ -30,5 +30,5 @@ else
     #exit 13;
 fi
 # 24hr timeout = 86400 secs
-python scripts/sync_couch_collection_to_solr.py ${@:1}
+python scripts/queue_sync_to_solr.py ${@:1}
 
