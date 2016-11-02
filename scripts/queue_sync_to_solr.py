@@ -4,6 +4,7 @@ import sys
 import os
 import logbook
 from harvester.config import config as config_harvest
+from harvester.scripts import sync_couch_collection_to_solr
 from redis import Redis
 from rq import Queue
 
@@ -25,16 +26,16 @@ def def_args():
     return parser
 
 
-def queue_image_harvest(redis_host,
-                        redis_port,
-                        redis_password,
-                        redis_timeout,
-                        rq_queue,
-                        collection_key,
-                        url_couchdb=None,
-                        object_auth=None,
-                        get_if_object=False,
-                        harvest_timeout=IMAGE_HARVEST_TIMEOUT):
+def queue_sync_to_solr(redis_host,
+                       redis_port,
+                       redis_password,
+                       redis_timeout,
+                       rq_queue,
+                       collection_key,
+                       url_couchdb=None,
+                       object_auth=None,
+                       get_if_object=False,
+                       harvest_timeout=IMAGE_HARVEST_TIMEOUT):
     rQ = Queue(
         rq_queue,
         connection=Redis(
@@ -43,10 +44,9 @@ def queue_image_harvest(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=harvester.scripts.sync_couch_collection_to_solr.main
+        func=sync_couch_collection_to_solr.main,
         kwargs=dict(
-            collection_key=collection_key,
-            )
+            collection_key=collection_key, ))
     return job
 
 
@@ -73,7 +73,7 @@ def main(user_email,
     log_handler.push_application()
     print config
     # the image_harvest should be a separate job, with a long timeout
-    job = queue_image_harvest(
+    queue_sync_to_solr(
         config['redis_host'],
         config['redis_port'],
         config['redis_password'],
@@ -97,11 +97,7 @@ if __name__ == '__main__':
         kwargs['harvest_timeout'] = int(args.timeout)
     if args.get_if_object:
         kwargs['get_if_object'] = args.get_if_object
-    main(
-        args.collection_key,
-        rq_queue=args.rq_queue,
-        **kwargs)
-
+    main(args.collection_key, rq_queue=args.rq_queue, **kwargs)
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
