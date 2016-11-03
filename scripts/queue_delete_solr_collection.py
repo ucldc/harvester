@@ -22,11 +22,11 @@ def def_args():
 
 
 def queue_delete_from_solr(redis_host,
-                       redis_port,
-                       redis_password,
-                       redis_timeout,
-                       rq_queue,
-                       collection_key):
+                           redis_port,
+                           redis_password,
+                           redis_timeout,
+                           rq_queue,
+                           collection_key):
     rQ = Queue(
         rq_queue,
         connection=Redis(
