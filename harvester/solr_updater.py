@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import sys
 import argparse
@@ -191,14 +192,16 @@ def make_datetime(dstring):
     except ValueError:
         pass
     except TypeError, e:
-        print('Date type err DATA:{} ERROR:{}'.format(dstring, e))
+        print('Date type err DATA:{} ERROR:{}'.format(dstring, e),
+              file=sys.stderr)
     try:
         strfmt = '%Y-%m-%d'
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
     except TypeError, e:
-        print('Date type err in strptime:{} {}'.format(dstring, e))
+        print('Date type err in strptime:{} {}'.format(dstring, e)
+              file=sys.stderr)
     # add UTC as timezone, solrpy looks for tzinfo
     if dt:
         dt = datetime.datetime(dt.year, dt.month, dt.day, tzinfo=UTC)
@@ -582,14 +585,16 @@ def add_facet_decade(couch_doc, solr_doc):
                     solr_doc['facet_decade'] = facet_decades
                 except AttributeError, e:
                     print('Attr Error for facet_decades in doc:{} ERROR:{}'.
-                          format(couch_doc['_id'], e))
+                          format(couch_doc['_id'], e),
+                          file=sys.stderr)
         else:
             try:
                 facet_decades = get_facet_decades(date_field)
                 solr_doc['facet_decade'] = facet_decades
             except AttributeError, e:
                 print('Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],
-                                                              e))
+                                                              e),
+                                                              file=sys.stderr)
 
 
 def map_couch_to_solr_doc(doc):
@@ -602,7 +607,8 @@ def map_couch_to_solr_doc(doc):
                 solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
             except TypeError, e:
                 print('TypeError for doc {} on COUCHDOC_TO_SOLR_MAPPING {}'.
-                      format(doc['_id'], p))
+                      format(doc['_id'], p),
+                      file=sys.stderr)
                 raise e
 
     reg_data_dict = map_registry_data(doc['originalRecord']['collection'])
@@ -615,7 +621,8 @@ def map_couch_to_solr_doc(doc):
                     sourceResource))
             except TypeError, e:
                 print('TypeError for doc {} on sourceResource {}'.format(
-                    doc['_id'], p))
+                    doc['_id'], p),
+                    file=sys.stderr)
                 raise e
     originalRecord = doc['originalRecord']
     for p in originalRecord.keys():
@@ -625,7 +632,8 @@ def map_couch_to_solr_doc(doc):
                     originalRecord))
             except TypeError, e:
                 print('TypeError for doc {} on originalRecord {}'.format(
-                    doc['_id'], p))
+                    doc['_id'], p),
+                    file=sys.stderr)
                 raise e
     normalize_type(solr_doc)
     add_sort_title(doc, solr_doc)
@@ -638,12 +646,14 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
-        print "++++ ADDED: {} :harvest_id_s {}".format(
-            solr_doc['id'], solr_doc['harvest_id_s'])
+        print("++++ ADDED: {} :harvest_id_s {}".format(
+            solr_doc['id'], solr_doc['harvest_id_s']),
+            file=sys.stderr)
     except SolrException, e:
-        print "ERROR for {} : {} {} {}".format(solr_doc['id'], e,
+        print("ERROR for {} : {} {} {}".format(solr_doc['id'], e,
                                                solr_doc['collection_url'],
-                                               solr_doc['harvest_id_s'])
+                                               solr_doc['harvest_id_s']),
+              file=sys.stderr)
         if not e.httpcode == 400:
             raise e
     return solr_doc
