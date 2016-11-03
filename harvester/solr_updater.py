@@ -7,6 +7,7 @@ import argparse
 import re
 import hashlib
 import json
+import requests
 import boto
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
@@ -687,6 +688,42 @@ class CouchdbLastSeq_S3(object):
     def last_seq(self, value):
         '''value should be last_seq from couchdb _changes'''
         self.key.set_contents_from_string(value)
+
+
+def delete_solr_collection(url_solr, collection_key):
+    '''Delete a solr collection for the environment'''
+    collection_url = COLLECTION_URL_TEMPLATE.format(collection_key)
+    query = 'stream.body=<delete><query>collection_url:\"{}\"</query>' \
+            '</delete>&commit=true'.format(collection_url)
+    url_delete = '{}/dc-collection/update?{}'.format(url_solr, query)
+    response = requests.get(url_delete)
+    response.raise_for_status()
+
+
+
+def sync_couch_collection_to_solr(collection_key):
+    # This works from inside an environment with default URLs for couch & solr
+    URL_SOLR = os.environ.get('URL_SOLR', None)
+    collection_key = str(collection_key) # Couch need string keys
+    v = CouchDBCollectionFilter(
+        couchdb_obj=get_couchdb(), collection_key=collection_key)
+    solr_db = Solr(URL_SOLR)
+    results = []
+    for r in v:
+        dt_start = dt_end = datetime.datetime.now()
+        try:
+            doc = fill_in_title(r.doc)
+            has_required_fields(r.doc)
+        except KeyError, e:
+            print(e.message)
+            continue
+        solr_doc = map_couch_to_solr_doc(r.doc)
+        results.append(solr_doc)
+        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
+        dt_end = datetime.datetime.now()
+    solr_db.commit()
+    return results
+
 
 
 def main(url_couchdb=None,
