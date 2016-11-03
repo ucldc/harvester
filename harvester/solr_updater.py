@@ -200,7 +200,7 @@ def make_datetime(dstring):
     except ValueError:
         pass
     except TypeError, e:
-        print('Date type err in strptime:{} {}'.format(dstring, e)
+        print('Date type err in strptime:{} {}'.format(dstring, e),
               file=sys.stderr)
     # add UTC as timezone, solrpy looks for tzinfo
     if dt:
@@ -759,7 +759,7 @@ def main(url_couchdb=None,
         n_up += 1
         if n_up % 1000 == 0:
             elapsed_time = datetime.datetime.now() - start_time
-            print "Updated {} so far in {}".format(n_up, elapsed_time)
+            print("Updated {} so far in {}".format(n_up, elapsed_time))
     solr_db.commit()
     if not all_docs:
         s3_seq_cache.last_seq = last_since
