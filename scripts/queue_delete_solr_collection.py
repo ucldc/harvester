@@ -37,7 +37,6 @@ def queue_delete_from_solr(redis_host,
     job = rQ.enqueue_call(
         func=delete_solr_collection,
         kwargs=dict(
-            url_solr=os.environ['URL_SOLR'],
             collection_key=collection_key, ))
     return job
 
