@@ -5,9 +5,6 @@ import argparse
 import requests
 from harvester.solr_updater import delete_solr_collection
 
-COLLECTION_URL_TEMPLATE = 'https://registry.cdlib.org/api/v1/collection/{0}/'
-
-
 def confirm_deletion(cid):
     prompt = "Are you sure you want to delete all solr " + \
              "documents for %s? yes to confirm\n" % cid

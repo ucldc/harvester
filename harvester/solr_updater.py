@@ -11,6 +11,7 @@ import requests
 import boto
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
+from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from facet_decade import facet_decade
 import datetime
 
@@ -84,17 +85,16 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'genre': lambda d: dict_for_data_field('genre', d, 'genre'),
     'identifier': lambda d: dict_for_data_field('identifier', d, 'identifier'),
     'language': lambda d: {
-        'language': [l.get('name',
-                           l.get('iso639_3',
-                                 None)) if isinstance(l, dict)
-                                        else l for l in d['language']]},
+        'language': [
+            l.get('name', l.get('iso639_3', None))
+            if isinstance(l, dict) else l for l in d['language']]},
     'publisher': lambda d: dict_for_data_field('publisher', d, 'publisher'),
     'relation': lambda d: dict_for_data_field('relation', d, 'relation'),
     'rights': lambda d: dict_for_data_field('rights', d, 'rights'),
     'subject': lambda d: {'subject': [s['name']
-                                        if isinstance(s, dict)
-                                        else dejson('subject', s)
-                                        for s in d['subject']]},
+                                      if isinstance(s, dict)
+                                      else dejson('subject', s)
+                                      for s in d['subject']]},
     'temporal': lambda d: {'temporal': unpack_date(d.get('temporal',
                                                          None))[0]},
     'title': lambda d: dict_for_data_field('title', d, 'title'),
@@ -193,16 +193,18 @@ def make_datetime(dstring):
     except ValueError:
         pass
     except TypeError, e:
-        print('Date type err DATA:{} ERROR:{}'.format(dstring, e),
-              file=sys.stderr)
+        print(
+            'Date type err DATA:{} ERROR:{}'.format(dstring, e),
+            file=sys.stderr)
     try:
         strfmt = '%Y-%m-%d'
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
     except TypeError, e:
-        print('Date type err in strptime:{} {}'.format(dstring, e),
-              file=sys.stderr)
+        print(
+            'Date type err in strptime:{} {}'.format(dstring, e),
+            file=sys.stderr)
     # add UTC as timezone, solrpy looks for tzinfo
     if dt:
         dt = datetime.datetime(dt.year, dt.month, dt.day, tzinfo=UTC)
@@ -424,8 +426,7 @@ def has_required_fields(doc):
             if 'object' not in doc:
                 raise KeyError(
                     '---- OMITTED: Doc:{0} is image type with no harvested '
-                    'image.'.
-                    format(doc['_id']))
+                    'image.'.format(doc['_id']))
     return True
 
 
@@ -585,17 +586,19 @@ def add_facet_decade(couch_doc, solr_doc):
                     facet_decades = get_facet_decades(date)
                     solr_doc['facet_decade'] = facet_decades
                 except AttributeError, e:
-                    print('Attr Error for facet_decades in doc:{} ERROR:{}'.
-                          format(couch_doc['_id'], e),
-                          file=sys.stderr)
+                    print(
+                        'Attr Error for facet_decades in doc:{} ERROR:{}'.
+                        format(couch_doc['_id'], e),
+                        file=sys.stderr)
         else:
             try:
                 facet_decades = get_facet_decades(date_field)
                 solr_doc['facet_decade'] = facet_decades
             except AttributeError, e:
-                print('Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],
-                                                              e),
-                                                              file=sys.stderr)
+                print(
+                    'Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],
+                                                            e),
+                    file=sys.stderr)
 
 
 def map_couch_to_solr_doc(doc):
@@ -607,9 +610,10 @@ def map_couch_to_solr_doc(doc):
             try:
                 solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
             except TypeError, e:
-                print('TypeError for doc {} on COUCHDOC_TO_SOLR_MAPPING {}'.
-                      format(doc['_id'], p),
-                      file=sys.stderr)
+                print(
+                    'TypeError for doc {} on COUCHDOC_TO_SOLR_MAPPING {}'.
+                    format(doc['_id'], p),
+                    file=sys.stderr)
                 raise e
 
     reg_data_dict = map_registry_data(doc['originalRecord']['collection'])
@@ -621,8 +625,9 @@ def map_couch_to_solr_doc(doc):
                 solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](
                     sourceResource))
             except TypeError, e:
-                print('TypeError for doc {} on sourceResource {}'.format(
-                    doc['_id'], p),
+                print(
+                    'TypeError for doc {} on sourceResource {}'.format(
+                        doc['_id'], p),
                     file=sys.stderr)
                 raise e
     originalRecord = doc['originalRecord']
@@ -632,8 +637,9 @@ def map_couch_to_solr_doc(doc):
                 solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[p](
                     originalRecord))
             except TypeError, e:
-                print('TypeError for doc {} on originalRecord {}'.format(
-                    doc['_id'], p),
+                print(
+                    'TypeError for doc {} on originalRecord {}'.format(
+                        doc['_id'], p),
                     file=sys.stderr)
                 raise e
     normalize_type(solr_doc)
@@ -647,14 +653,16 @@ def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
     try:
         solr_db.add(solr_doc)
-        print("++++ ADDED: {} :harvest_id_s {}".format(
-            solr_doc['id'], solr_doc['harvest_id_s']),
+        print(
+            "++++ ADDED: {} :harvest_id_s {}".format(solr_doc['id'],
+                                                     solr_doc['harvest_id_s']),
             file=sys.stderr)
     except SolrException, e:
-        print("ERROR for {} : {} {} {}".format(solr_doc['id'], e,
-                                               solr_doc['collection_url'],
-                                               solr_doc['harvest_id_s']),
-              file=sys.stderr)
+        print(
+            "ERROR for {} : {} {} {}".format(solr_doc['id'], e,
+                                             solr_doc['collection_url'],
+                                             solr_doc['harvest_id_s']),
+            file=sys.stderr)
         if not e.httpcode == 400:
             raise e
     return solr_doc
@@ -691,8 +699,9 @@ class CouchdbLastSeq_S3(object):
 
 
 def delete_solr_collection(url_solr, collection_key):
-    '''Delete a solr collection for the environment'''
-    collection_url = COLLECTION_URL_TEMPLATE.format(collection_key)
+    '''Delete a solr  collection for the environment'''
+    COLLECTION_URL_FORMAT = 'https://registry.cdlib.org/api/v1/collection/{}/'
+    collection_url = COLLECTION_URL_FORMAT.format(collection_key)
     query = 'stream.body=<delete><query>collection_url:\"{}\"</query>' \
             '</delete>&commit=true'.format(collection_url)
     url_delete = '{}/dc-collection/update?{}'.format(url_solr, query)
@@ -700,19 +709,17 @@ def delete_solr_collection(url_solr, collection_key):
     response.raise_for_status()
 
 
-
 def sync_couch_collection_to_solr(collection_key):
     # This works from inside an environment with default URLs for couch & solr
     URL_SOLR = os.environ.get('URL_SOLR', None)
-    collection_key = str(collection_key) # Couch need string keys
+    collection_key = str(collection_key)  # Couch need string keys
     v = CouchDBCollectionFilter(
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
     results = []
     for r in v:
-        dt_start = dt_end = datetime.datetime.now()
         try:
-            doc = fill_in_title(r.doc)
+            fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
             print(e.message)
@@ -720,10 +727,8 @@ def sync_couch_collection_to_solr(collection_key):
         solr_doc = map_couch_to_solr_doc(r.doc)
         results.append(solr_doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-        dt_end = datetime.datetime.now()
     solr_db.commit()
     return results
-
 
 
 def main(url_couchdb=None,
@@ -753,7 +758,8 @@ def main(url_couchdb=None,
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     changes = db.changes(since=since)
     previous_since = since
-    last_since = int(changes['last_seq'])  # get new last_since for changes feed
+    last_since = int(
+        changes['last_seq'])  # get new last_since for changes feed
     results = changes['results']
     n_up = n_design = n_delete = 0
     solr_db = Solr(url_solr)

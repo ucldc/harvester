@@ -1,6 +1,7 @@
 #! /bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import os
 import logbook
 from harvester.config import config as config_harvest
 from harvester.solr_updater import delete_solr_collection
@@ -21,11 +22,11 @@ def def_args():
 
 
 def queue_delete_from_solr(redis_host,
-                       redis_port,
-                       redis_password,
-                       redis_timeout,
-                       rq_queue,
-                       collection_key):
+                           redis_port,
+                           redis_password,
+                           redis_timeout,
+                           rq_queue,
+                           collection_key):
     rQ = Queue(
         rq_queue,
         connection=Redis(
@@ -36,6 +37,7 @@ def queue_delete_from_solr(redis_host,
     job = rQ.enqueue_call(
         func=delete_solr_collection,
         kwargs=dict(
+            url_solr=os.environ['URL_SOLR'],
             collection_key=collection_key, ))
     return job
 

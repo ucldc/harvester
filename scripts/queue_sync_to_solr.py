@@ -1,12 +1,12 @@
 #! /bin/env python
 # -*- coding: utf-8 -*-
 import sys
-import os
 import logbook
 from harvester.config import config as config_harvest
-from harvester import sync_couch_collection_to_solr
+from harvester.solr_updater import sync_couch_collection_to_solr
 from redis import Redis
 from rq import Queue
+
 
 def def_args():
     import argparse
