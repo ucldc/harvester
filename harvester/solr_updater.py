@@ -698,8 +698,9 @@ class CouchdbLastSeq_S3(object):
         self.key.set_contents_from_string(value)
 
 
-def delete_solr_collection(url_solr, collection_key):
+def delete_solr_collection(collection_key):
     '''Delete a solr  collection for the environment'''
+    url_solr = os.environ['URL_SOLR']
     COLLECTION_URL_FORMAT = 'https://registry.cdlib.org/api/v1/collection/{}/'
     collection_url = COLLECTION_URL_FORMAT.format(collection_key)
     query = 'stream.body=<delete><query>collection_url:\"{}\"</query>' \
