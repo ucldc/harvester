@@ -700,7 +700,6 @@ def delete_solr_collection(url_solr, collection_key):
     response.raise_for_status()
 
 
-
 def sync_couch_collection_to_solr(collection_key):
     # This works from inside an environment with default URLs for couch & solr
     URL_SOLR = os.environ.get('URL_SOLR', None)
