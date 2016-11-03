@@ -11,6 +11,7 @@ from rq import Queue
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')
+    parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
     parser.add_argument(
         'collection_key',

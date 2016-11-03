@@ -70,6 +70,8 @@ def def_args():
     import argparse
     parser = argparse.ArgumentParser(
         description='Sync collection to production couchdb')
+    parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ queue to put job in')
     parser.add_argument(
         'url_api_collection',
         type=str,
