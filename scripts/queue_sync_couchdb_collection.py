@@ -5,7 +5,6 @@ import logbook
 from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
-from harvester.collection_registry_client import Collection
 import harvester.couchdb_sync_db_by_collection
 
 JOB_TIMEOUT = 28800  # 8 hrs
@@ -37,31 +36,25 @@ def queue_couch_sync(redis_host,
     return job
 
 
-def main(url_api_collection,
+def main(url_api_collections,
          url_remote_couchdb=URL_REMOTE_COUCHDB,
          log_handler=None):
     '''This should only be run in production env!
     Queue is hard coded to normal-production so that it will be run there
     '''
     config = parse_env(None)
-    try:
-        collection = Collection(url_api_collection)
-    except Exception, e:
-        msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
-                                                           str(e))
-        logbook.error(msg)
-        raise e
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
-    job = queue_couch_sync(
-        config['redis_host'],
-        config['redis_port'],
-        config['redis_password'],
-        config['redis_connect_timeout'],
-        rq_queue='normal-production',
-        url_api_collection=url_api_collection,
-        url_remote_couchdb=url_remote_couchdb, )
+    for url_api_collection in [x for x in url_api_collections.split(';')]:
+        queue_couch_sync(
+            config['redis_host'],
+            config['redis_port'],
+            config['redis_password'],
+            config['redis_connect_timeout'],
+            rq_queue='normal-production',
+            url_api_collection=url_api_collection,
+            url_remote_couchdb=url_remote_couchdb, )
 
     log_handler.pop_application()
 

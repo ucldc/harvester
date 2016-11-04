@@ -1,7 +1,6 @@
 #! /bin/env python
 # -*- coding: utf-8 -*-
 import sys
-import os
 import logbook
 from harvester.config import config as config_harvest
 from harvester.solr_updater import delete_solr_collection
@@ -41,7 +40,7 @@ def queue_delete_from_solr(redis_host,
     return job
 
 
-def main(collection_key,
+def main(collection_keys,
          log_handler=None,
          config_file='akara.ini',
          rq_queue=None,
@@ -53,16 +52,15 @@ def main(collection_key,
         log_handler = logbook.StderrHandler(level='DEBUG')
 
     log_handler.push_application()
-    print config
-    # the image_harvest should be a separate job, with a long timeout
-    queue_delete_from_solr(
-        config['redis_host'],
-        config['redis_port'],
-        config['redis_password'],
-        config['redis_connect_timeout'],
-        rq_queue=rq_queue,
-        collection_key=collection_key,
-        **kwargs)
+    for collection_key in [str(x) for x in collection_keys.split(';')]:
+        queue_delete_from_solr(
+            config['redis_host'],
+            config['redis_port'],
+            config['redis_password'],
+            config['redis_connect_timeout'],
+            rq_queue=rq_queue,
+            collection_key=collection_key,
+            **kwargs)
 
     log_handler.pop_application()
 

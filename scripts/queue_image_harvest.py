@@ -42,7 +42,8 @@ def def_args():
         '--get_if_object',
         action='store_true',
         default=False,
-        help='Should image harvester not get image if the object field exists for the doc (default: False, always get)'
+        help='Should image harvester not get image if the object '
+        'field exists for the doc (default: False, always get)'
     )
     return parser
 
@@ -76,7 +77,7 @@ def queue_image_harvest(redis_host,
 
 
 def main(user_email,
-         url_api_collection,
+         url_api_collections,
          log_handler=None,
          mail_handler=None,
          dir_profile='profiles',
@@ -93,29 +94,28 @@ def main(user_email,
             EMAIL_RETURN_ADDRESS, emails, level='ERROR', bubble=True)
     mail_handler.push_application()
     config = config_harvest(config_file=config_file)
-
-    try:
-        collection = Collection(url_api_collection)
-    except Exception, e:
-        msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
-                                                           str(e))
-        logbook.error(msg)
-        raise e
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
-
     log_handler.push_application()
-    print config
-    # the image_harvest should be a separate job, with a long timeout
-    job = queue_image_harvest(
-        config['redis_host'],
-        config['redis_port'],
-        config['redis_password'],
-        config['redis_connect_timeout'],
-        rq_queue=rq_queue,
-        collection_key=collection.id,
-        object_auth=collection.auth,
-        **kwargs)
+
+    for url_api_collection in [x for x in url_api_collections.split(';')]:
+        try:
+            collection = Collection(url_api_collection)
+        except Exception, e:
+            msg = 'Exception in Collection {}, init {}'.format(
+                    url_api_collection,
+                    str(e))
+            logbook.error(msg)
+            raise e
+        queue_image_harvest(
+            config['redis_host'],
+            config['redis_port'],
+            config['redis_password'],
+            config['redis_connect_timeout'],
+            rq_queue=rq_queue,
+            collection_key=collection.id,
+            object_auth=collection.auth,
+            **kwargs)
 
     log_handler.pop_application()
     mail_handler.pop_application()
