@@ -34,7 +34,7 @@ def queue_sync_to_solr(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=sync_couch_collection_to_solr.main,
+        func=sync_couch_collection_to_solr,
         kwargs=dict(
             collection_key=collection_key, ))
     return job
