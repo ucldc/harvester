@@ -705,7 +705,7 @@ def delete_solr_collection(collection_key):
     collection_url = COLLECTION_URL_FORMAT.format(collection_key)
     query = 'stream.body=<delete><query>collection_url:\"{}\"</query>' \
             '</delete>&commit=true'.format(collection_url)
-    url_delete = '{}/dc-collection/update?{}'.format(url_solr, query)
+    url_delete = '{}/update?{}'.format(url_solr, query)
     response = requests.get(url_delete)
     response.raise_for_status()
 
