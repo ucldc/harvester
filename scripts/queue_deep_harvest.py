@@ -27,7 +27,7 @@ def queue_deep_harvest(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func=s3stash.stash_collection.main,
-        kwargs=dict(collection_id=collection_id),
+        kwargs=dict(argv={'registry_id': collection_id}),
         timeout=timeout)
     return job
 
