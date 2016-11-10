@@ -8,14 +8,14 @@ import s3stash.stash_collection
 
 JOB_TIMEOUT = 86400  # 24 hrs
 
-def queue_deep_harvest(
-                     redis_host,
-                     redis_port,
-                     redis_password,
-                     redis_timeout,
-                     rq_queue,
-                     collection_id
-                     timeout=JOB_TIMEOUT):
+
+def queue_deep_harvest(redis_host,
+                       redis_port,
+                       redis_password,
+                       redis_timeout,
+                       rq_queue,
+                       collection_id,
+                       timeout=JOB_TIMEOUT):
     '''Queue job onto RQ queue'''
     rQ = Queue(
         rq_queue,
@@ -26,32 +26,27 @@ def queue_deep_harvest(
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func=s3stash.stash_collection.main,
-        kwargs=dict(
-            collection_id=collection_id),
+        kwargs=dict(collection_id=collection_id),
         timeout=timeout)
     return job
 
 
-def main(collection_ids):
+def main(collection_ids, log_handler=None):
     ''' Queue a deep harvest of a nuxeo collection on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
     for cid in [x for x in collection_ids.split(';')]:
-        queue_deep_harvest(
-            collection_id=cid
-            )
+        queue_deep_harvest(collection_id=cid)
     log_handler.pop_application()
 
 
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(
-        description='Queue a Nuxeo deep harvesting job',
+        description='Queue a Nuxeo deep harvesting job')
     parser.add_argument(
-        'collection_ids',
-        type=str,
-        help='Collection ids, ";" delimited')
+        'collection_ids', type=str, help='Collection ids, ";" delimited')
     return parser
 
 
@@ -87,7 +82,6 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
