@@ -4,6 +4,7 @@ import sys
 import logbook
 from rq import Queue
 from redis import Redis
+from harvester.config import parse_env
 import s3stash.stash_collection
 
 JOB_TIMEOUT = 86400  # 24 hrs
@@ -37,7 +38,13 @@ def main(collection_ids, log_handler=None):
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
     for cid in [x for x in collection_ids.split(';')]:
-        queue_deep_harvest(collection_id=cid)
+        queue_deep_harvest(
+            config['redis_host'],
+            config['redis_port'],
+            config['redis_password'],
+            config['redis_connect_timeout'],
+            rq_queue='normal-stage',
+            collection_id=cid)
     log_handler.pop_application()
 
 
@@ -53,6 +60,7 @@ def def_args():
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args()
+    config = parse_env(None)
     if not args.collection_ids:
         parser.print_help()
         sys.exit(27)
