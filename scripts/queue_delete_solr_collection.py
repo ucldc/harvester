@@ -26,7 +26,8 @@ def queue_delete_from_solr(redis_host,
                            redis_password,
                            redis_timeout,
                            rq_queue,
-                           collection_key):
+                           collection_key,
+                           timeout=JOB_TIMEOUT):
     rQ = Queue(
         rq_queue,
         connection=Redis(
@@ -37,8 +38,8 @@ def queue_delete_from_solr(redis_host,
     job = rQ.enqueue_call(
         func=delete_solr_collection,
         kwargs=dict(
-            collection_key=collection_key,
-            timeout=JOB_TIMEOUT))
+            collection_key=collection_key),
+            timeout=timeout)
     return job
 
 
