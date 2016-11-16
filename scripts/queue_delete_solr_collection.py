@@ -7,6 +7,7 @@ from harvester.solr_updater import delete_solr_collection
 from redis import Redis
 from rq import Queue
 
+JOB_TIMEOUT = 86400  # 24 hrs
 
 def def_args():
     import argparse
@@ -36,7 +37,8 @@ def queue_delete_from_solr(redis_host,
     job = rQ.enqueue_call(
         func=delete_solr_collection,
         kwargs=dict(
-            collection_key=collection_key, ))
+            collection_key=collection_key,
+            timeout=JOB_TIMEOUT))
     return job
 
 
