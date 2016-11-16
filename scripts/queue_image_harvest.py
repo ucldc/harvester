@@ -19,6 +19,7 @@ EMAIL_SYS_ADMIN = os.environ.get('EMAIL_SYS_ADMINS', None)
 IMAGE_HARVEST_TIMEOUT = 144000
 
 
+
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(description='Harvest a collection')

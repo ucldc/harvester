@@ -7,6 +7,7 @@ from harvester.solr_updater import sync_couch_collection_to_solr
 from redis import Redis
 from rq import Queue
 
+JOB_TIMEOUT = 28800  # 8 hrs
 
 def def_args():
     import argparse
@@ -36,7 +37,8 @@ def queue_sync_to_solr(redis_host,
     job = rQ.enqueue_call(
         func=sync_couch_collection_to_solr,
         kwargs=dict(
-            collection_key=collection_key, ))
+            collection_key=collection_key,
+            timeout=JOB_TIMEOUT))
     return job
 
 
