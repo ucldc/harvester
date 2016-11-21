@@ -64,14 +64,15 @@ setup(
         'facet_decade',
         'redis_collections',
         'xmljson',
-        'UCLDC-Deep-Harvester'
+        'UCLDC-Deep-Harvester',
+        'pynux'
         ],
     test_suite='test',
     tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
 )
 
 pip_main(['install', 'ansible'])
-pip_main(['install',
-'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
+#pip_main(['install',
+#'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
 ###pip_main(['install',
 ###         'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])
