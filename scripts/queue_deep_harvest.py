@@ -32,7 +32,7 @@ def queue_deep_harvest(redis_host,
     return job
 
 
-def main(collection_ids, log_handler=None):
+def main(collection_ids, log_handler=None, rq_queue='normal-stage'):
     ''' Queue a deep harvest of a nuxeo collection on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
@@ -43,7 +43,7 @@ def main(collection_ids, log_handler=None):
             config['redis_port'],
             config['redis_password'],
             config['redis_connect_timeout'],
-            rq_queue='normal-stage',
+            rq_queue=rq_queue,
             collection_id=cid)
     log_handler.pop_application()
 
@@ -65,6 +65,7 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     main(args.collection_ids)
+
 """
 Copyright © 2016, Regents of the University of California
 All rights reserved.
