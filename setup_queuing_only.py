@@ -12,7 +12,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='UCLDC Harvester',
     version='0.8.1',
-    py_modules=['harvester.config', ],
+    py_modules=['harvester.config', 'harvester.collection_registry_client'],
     include_package_data=True,
     license='BSD License - see LICENSE file',
     description='Harvester installed for queuing jobs for the UCLDC project',
