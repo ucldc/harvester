@@ -5,12 +5,11 @@ Usage:
 """
 import sys
 import os
-import logbook
 from harvester.config import config as config_harvest
 from harvester.collection_registry_client import Collection
+import logbook
 from redis import Redis
 from rq import Queue
-import harvester.image_harvest
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -67,7 +66,7 @@ def queue_image_harvest(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=harvester.image_harvest.main,
+        func='harvester.image_harvest.main',
         kwargs=dict(
             collection_key=collection_key,
             url_couchdb=url_couchdb,

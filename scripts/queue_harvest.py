@@ -6,7 +6,6 @@ from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from rq import Queue
 
-import harvester.run_ingest
 from harvester.config import config
 from harvester.config import RQ_Q_LIST
 
@@ -65,7 +64,7 @@ def main(user_email, url_api_collection,
     url_api_collection = [u.strip() for u in url_api_collection.split(';')]
     results = []
     for url in url_api_collection:
-        result = rQ.enqueue_call(func=harvester.run_ingest.main,
+        result = rQ.enqueue_call(func='harvester.run_ingest.main',
                                  args=(user_email, url),
                                  kwargs={'run_image_harvest':run_image_harvest,
                                          'rq_queue': rq_queue},
