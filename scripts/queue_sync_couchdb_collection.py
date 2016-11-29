@@ -5,7 +5,6 @@ import logbook
 from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
-import harvester.couchdb_sync_db_by_collection
 
 JOB_TIMEOUT = 28800  # 8 hrs
 URL_REMOTE_COUCHDB = 'https://harvest-stg.cdlib.org/couchdb'
@@ -28,7 +27,7 @@ def queue_couch_sync(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=harvester.couchdb_sync_db_by_collection.main,
+        func='harvester.couchdb_sync_db_by_collection.main',
         kwargs=dict(
             url_remote_couchdb=url_remote_couchdb,
             url_api_collection=url_api_collection),

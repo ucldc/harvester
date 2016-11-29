@@ -32,7 +32,6 @@ NO ./bin/activate. You need to run
 . ./bin/activate
 pip install -r requirements.txt
 %%%
-    exit 13;
 fi
 # 48hr timeout = 172800 secs
 python scripts/queue_image_harvest.py --timeout=172800  ${@:1}

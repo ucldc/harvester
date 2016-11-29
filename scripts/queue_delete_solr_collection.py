@@ -3,7 +3,6 @@
 import sys
 import logbook
 from harvester.config import config as config_harvest
-from harvester.solr_updater import delete_solr_collection
 from redis import Redis
 from rq import Queue
 
@@ -36,7 +35,7 @@ def queue_delete_from_solr(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=delete_solr_collection,
+        func='harvester.solr_updater.delete_solr_collection',
         kwargs=dict(
             collection_key=collection_key),
             timeout=timeout)

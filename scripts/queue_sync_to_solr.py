@@ -3,7 +3,6 @@
 import sys
 import logbook
 from harvester.config import config as config_harvest
-from harvester.solr_updater import sync_couch_collection_to_solr
 from redis import Redis
 from rq import Queue
 
@@ -36,7 +35,7 @@ def queue_sync_to_solr(redis_host,
             password=redis_password,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
-        func=sync_couch_collection_to_solr,
+        func='harvester.solr_updater.sync_couch_collection_to_solr',
         kwargs=dict(
             collection_key=collection_key),
             timeout=timeout)
