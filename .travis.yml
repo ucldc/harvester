@@ -10,6 +10,7 @@ install:
   # this next is needed but not installed by setup.py
   # due to "secret" bitbucket with our modifications
   - "pip install httpretty"
+  - "pip install mock>=1.0.1"
   - "pip install git+https://github.com/mredar/ingestion.git"
   - "git clone https://github.com/mredar/ingestion.git ingestion"
   - "cd ingestion ; python setup.py install; cd .."
