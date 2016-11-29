@@ -258,7 +258,7 @@ class ConfigTestCase(TestCase):
         os.environ['REDIS_PASSWORD'] = 'XX'
         conf = config()
         self.assertEqual(conf['redis_host'], 'redis_host_ip')
-        self.assertEqual(conf['redis_port'], '6379')
+        self.assertEqual(conf['redis_port'], '6380')
         self.assertEqual(conf['redis_password'], 'XX')
         self.assertEqual(conf['redis_connect_timeout'], 10)
 
