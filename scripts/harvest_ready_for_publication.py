@@ -1,6 +1,6 @@
 import requests
 from harvester.config import config
-from harvester.queue_harvest import main as queue_harvest
+from harvester.scripts.queue_harvest import main as queue_harvest
 env=config()
 c_prod=[]
 c_harvest=[]

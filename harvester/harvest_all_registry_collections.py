@@ -1,7 +1,7 @@
 from harvester.collection_registry_client import ResourceIterator
 from harvester.collection_registry_client import url_base, api_path
 from harvester.config import config
-from harvester.queue_harvest import main as queue_harvest
+from harvester.scripts.queue_harvest import main as queue_harvest
 
 for c in ResourceIterator(url_base, api_path+'collection', 'collection'):
     if c.harvest_type != 'X':

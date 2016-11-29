@@ -29,4 +29,4 @@ else
     #exit 13;
 fi
 # 24hr timeout = 86400 secs
-python harvester/queue_harvest.py --job_timeout=86400 --run_image_harvest=True ${@:1}
+python scripts/queue_harvest.py --job_timeout=86400 --run_image_harvest=True ${@:1}
