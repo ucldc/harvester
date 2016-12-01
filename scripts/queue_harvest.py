@@ -1,3 +1,4 @@
+#! /bin/env python
 # queue a job on the rq queue
 import sys
 import datetime
