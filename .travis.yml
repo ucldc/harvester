@@ -9,6 +9,8 @@ env: CODE_DIR=.
 install: 
   # this next is needed but not installed by setup.py
   # due to "secret" bitbucket with our modifications
+  - "mkdir -p ${HOME}/.aws"
+  - "cp awsconfig ~/.aws/config"
   - "pip install httpretty==0.8.3"
   - "pip install mock>=1.0.1"
   - "pip install git+https://github.com/mredar/ingestion.git"

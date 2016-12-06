@@ -51,6 +51,8 @@ def def_args():
     import argparse
     parser = argparse.ArgumentParser(
         description='Queue a Nuxeo deep harvesting job')
+    parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
     parser.add_argument(
         'collection_ids', type=str, help='Collection ids, ";" delimited')
     return parser
@@ -60,10 +62,10 @@ if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args()
     config = parse_env(None)
-    if not args.collection_ids:
+    if not args.collection_ids or not args.rq_queue:
         parser.print_help()
         sys.exit(27)
-    main(args.collection_ids)
+    main(args.collection_ids, rq_queue=args.rq_queue)
 
 """
 Copyright © 2016, Regents of the University of California

@@ -65,6 +65,7 @@ setup(
         'redis_collections',
         'xmljson',
         'UCLDC-Deep-Harvester',
+        'boto3',
         'pynux'
         ],
     test_suite='test',
