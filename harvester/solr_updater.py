@@ -12,6 +12,7 @@ import boto
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
+from harvester.sns_message import publish_to_harvesting
 from facet_decade import facet_decade
 import datetime
 
@@ -708,6 +709,8 @@ def delete_solr_collection(collection_key):
     url_delete = '{}/update?{}'.format(url_solr, query)
     response = requests.get(url_delete)
     response.raise_for_status()
+    publish_to_harvesting('Deleted solr collection {}'.format(collection_key),
+                          'DELETED {}'.format(collection_key))
 
 
 def sync_couch_collection_to_solr(collection_key):
@@ -729,6 +732,9 @@ def sync_couch_collection_to_solr(collection_key):
         results.append(solr_doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
+    publish_to_harvesting(
+        'Synced collection {} to solr'.format(collection_key),
+        '{} documents updated'.format(len(results)))
     return results
 
 
