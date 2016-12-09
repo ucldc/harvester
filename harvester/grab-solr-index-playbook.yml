@@ -24,7 +24,7 @@
     - fail: msg="Define server_role to one of production, stage or dev"
       when: server_role not in  server_roles
     - name: create tarball target directory
-      sudo: yes
+      become: yes
       file:
         path: "{{ dir_tarball }}"
         state: directory
