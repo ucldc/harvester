@@ -33,8 +33,11 @@
       command: tar --force-local -cvf "{{ dir_tarball }}/solr-index.{{ datetime }}.tar" index/
       args:
         chdir: "{{ dir_solr_data }}"
+        warn: no
     - name: bzip index file
       command: bzip2 "{{ dir_tarball }}/solr-index.{{ datetime }}.tar"
+      args:
+        warn: no
     - name: push index tarball to s3 for server_role
       shell: aws --region="{{ region }}" s3 cp "{{ dir_tarball }}/solr-index.{{ datetime}}.tar.bz2" "{{ s3_file_path }}"
 ###    - name: push index tarball to s3 for server_role to the latest bucket
