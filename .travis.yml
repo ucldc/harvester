@@ -25,6 +25,7 @@ install:
   - 'python -c "from dplaingestion.mappers.ucldc_nuxeo_mapper import UCLDCNuxeoMapper"'
   - 'python -c "import test.test_run_ingest"'
   - 'pip freeze'
+  - 'export ARN_TOPIC_HARVESTING_REPORT=fakey'
 
 # command to run tests
 script: python setup.py test
