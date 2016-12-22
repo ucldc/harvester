@@ -577,7 +577,10 @@ def fill_in_title(couch_doc):
 
 
 def add_facet_decade(couch_doc, solr_doc):
-    '''Add the facet_decade field to the solr_doc dictionary'''
+    '''Add the facet_decade field to the solr_doc dictionary
+    If no date field in sourceResource, pass fake value to set 
+    as 'unknown' in solr_doc
+    '''
     solr_doc['facet_decade'] = set()
     if 'date' in couch_doc['sourceResource']:
         date_field = couch_doc['sourceResource']['date']
@@ -600,6 +603,9 @@ def add_facet_decade(couch_doc, solr_doc):
                     'Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],
                                                             e),
                     file=sys.stderr)
+    else:
+        facet_decades = get_facet_decades('none')
+        solr_doc['facet_decade'] = facet_decades
 
 
 def map_couch_to_solr_doc(doc):

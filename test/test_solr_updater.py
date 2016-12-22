@@ -255,7 +255,7 @@ class SolrUpdaterTestCase(TestCase):
         # no "date" in sourceResource
         doc = json.load(open(DIR_FIXTURES + '/couchdb_nocampus.json'))
         sdoc = map_couch_to_solr_doc(doc)
-        self.assertEqual(sdoc['facet_decade'], set([]))
+        self.assertEqual(sdoc['facet_decade'], set(['unknown']))
 
     @patch('boto.s3.connect_to_region', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
