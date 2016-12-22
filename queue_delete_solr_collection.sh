@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# script to start from avram when collection selected for harvesting
-# start_harvest.bash <user-email> <url-to-collection-registry-api>
+# script to start from avram when collection selected for syncing collection
+# to production couchdb
+# queue_sync_couchdb.bash <url-to-collection-registry-api>
 
 if [[ -n "$DEBUG" ]]; then 
   set -x
@@ -29,4 +30,4 @@ else
     #exit 13;
 fi
 # 24hr timeout = 86400 secs
-python harvester/queue_harvest.py --job_timeout=86400 --run_image_harvest=True ${@:1}
+python scripts/queue_delete_solr_collection.py ${@:1}

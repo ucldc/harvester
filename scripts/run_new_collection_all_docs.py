@@ -1,3 +1,4 @@
+#! /bin/env python
 '''run grabbing of new collection and updating in couch docs locally.
 
 '''
@@ -18,7 +19,7 @@ def fix_registry_data(doc, c_couch, _couchdb):
     use the HarvestControllers's _add_registry_data to update with @ids &
     name.
     Then for each doc in the collection, remove originalRecord campus &
-    repository. Replace originalRecord & sourceResource collection with 
+    repository. Replace originalRecord & sourceResource collection with
     new collection object.
     Save doc.
     '''

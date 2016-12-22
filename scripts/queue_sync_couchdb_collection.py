@@ -1,65 +1,75 @@
+#! /bin/env python
 # -*- coding: utf-8 -*-
 import sys
 import logbook
 from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
-from harvester.collection_registry_client import Collection
-import harvester.couchdb_sync_db_by_collection
 
-JOB_TIMEOUT = 28800 #8 hrs
+JOB_TIMEOUT = 28800  # 8 hrs
 URL_REMOTE_COUCHDB = 'https://harvest-stg.cdlib.org/couchdb'
 
-def queue_couch_sync(redis_host, redis_port, redis_password, redis_timeout,
-                        rq_queue,
-                        url_api_collection,
-                        url_remote_couchdb=None,
-                        timeout=JOB_TIMEOUT):
+
+def queue_couch_sync(redis_host,
+                     redis_port,
+                     redis_password,
+                     redis_timeout,
+                     rq_queue,
+                     url_api_collection,
+                     url_remote_couchdb=None,
+                     timeout=JOB_TIMEOUT):
     '''Queue job onto RQ queue'''
-    rQ = Queue(rq_queue, connection=Redis(host=redis_host, port=redis_port,
-                                password=redis_password,
-                                socket_connect_timeout=redis_timeout)
-    )
-    job = rQ.enqueue_call(func=harvester.couchdb_sync_db_by_collection.main,
-                          kwargs=dict(url_remote_couchdb=url_remote_couchdb,
-                                      url_api_collection=url_api_collection),
-                                      timeout=timeout
-                          )
+    rQ = Queue(
+        rq_queue,
+        connection=Redis(
+            host=redis_host,
+            port=redis_port,
+            password=redis_password,
+            socket_connect_timeout=redis_timeout))
+    job = rQ.enqueue_call(
+        func='harvester.couchdb_sync_db_by_collection.main',
+        kwargs=dict(
+            url_remote_couchdb=url_remote_couchdb,
+            url_api_collection=url_api_collection),
+        timeout=timeout)
     return job
 
 
-def main(url_api_collection, url_remote_couchdb=URL_REMOTE_COUCHDB,
-        log_handler=None):
+def main(url_api_collections,
+         url_remote_couchdb=URL_REMOTE_COUCHDB,
+         log_handler=None):
     '''This should only be run in production env!
-    Queue is hard coded to normal-prod so that it will be run there
+    Queue is hard coded to normal-production so that it will be run there
     '''
     config = parse_env(None)
-    try:
-        collection = Collection(url_api_collection)
-    except Exception, e:
-        msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
-                                                           str(e))
-        logbook.error(msg)
-        raise e
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
-    job = queue_couch_sync(config['redis_host'], config['redis_port'],
-                              config['redis_password'],
-                              config['redis_connect_timeout'],
-                              rq_queue='normal-prod',
-                              url_api_collection=url_api_collection,
-                              url_remote_couchdb=url_remote_couchdb,
-                              )
+    for url_api_collection in [x for x in url_api_collections.split(';')]:
+        queue_couch_sync(
+            config['redis_host'],
+            config['redis_port'],
+            config['redis_password'],
+            config['redis_connect_timeout'],
+            rq_queue='normal-production',
+            url_api_collection=url_api_collection,
+            url_remote_couchdb=url_remote_couchdb, )
 
     log_handler.pop_application()
 
+
 def def_args():
     import argparse
-    parser = argparse.ArgumentParser(description='Sync collection to production couchdb')
-    parser.add_argument('url_api_collection', type=str,
-            help='URL for the collection Django tastypie api resource')
+    parser = argparse.ArgumentParser(
+        description='Sync collection to production couchdb')
+    parser.add_argument('user_email', type=str, help='user email')
+    parser.add_argument('rq_queue', type=str, help='RQ queue to put job in')
+    parser.add_argument(
+        'url_api_collection',
+        type=str,
+        help='URL for the collection Django tastypie api resource')
     return parser
+
 
 if __name__ == '__main__':
     parser = def_args()
@@ -68,8 +78,6 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     main(args.url_api_collection, URL_REMOTE_COUCHDB)
-    
-
 """
 Copyright © 2016, Regents of the University of California
 All rights reserved.

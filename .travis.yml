@@ -7,12 +7,25 @@ env: CODE_DIR=.
 
 # command to install dependencies
 install: 
+  # this next is needed but not installed by setup.py
+  # due to "secret" bitbucket with our modifications
+  - "mkdir -p ${HOME}/.aws"
+  - "cp awsconfig ~/.aws/config"
+  - "pip install httpretty==0.8.3"
+  - "pip install mock>=1.0.1"
+  - "pip install git+https://github.com/mredar/ingestion.git"
+  - "git clone https://github.com/mredar/ingestion.git ingestion"
+  - "cd ingestion ; python setup.py install; cd .."
   - "python setup.py install"
   - "cp akara.ini.tmpl akara.ini"
   - "mkdir profiles"
   - "mkdir -p ${HOME}/code/harvester/harvester/"
   - "touch ${HOME}/code/harvester/harvester/grab-solr-index-playbook.yml"
   - "touch ${HOME}/code/harvester/harvester/host_inventory"
+  - 'python -c "from dplaingestion.mappers.ucldc_nuxeo_mapper import UCLDCNuxeoMapper"'
+  - 'python -c "import test.test_run_ingest"'
+  - 'pip freeze'
+  - 'export ARN_TOPIC_HARVESTING_REPORT=fakey'
 
 # command to run tests
 script: python setup.py test

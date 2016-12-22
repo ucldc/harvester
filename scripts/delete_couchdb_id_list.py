@@ -1,26 +1,23 @@
+#! /bin/env python
 # -*- coding: utf-8 -*-
 
 import sys
 import argparse
-import os
 from harvester.couchdb_init import get_couchdb
-import couchdb
 from harvester.couchdb_sync_db_by_collection import delete_id_list
 
-if __name__=='__main__':
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Delete all documents in given collection')
-    parser.add_argument('id_list',
-                        help='File with ids in it, one per line')
+    parser.add_argument('id_list', help='File with ids in it, one per line')
     args = parser.parse_args(sys.argv[1:])
     ids = []
     with open(args.id_list) as id_file:
-        ids = [ l.strip() for l in id_file.readlines()]
+        ids = [l.strip() for l in id_file.readlines()]
 
     _couchdb = get_couchdb()
     num_deleted, delete_ids = delete_id_list(ids, _couchdb=_couchdb)
     print 'Deleted {} documents'.format(num_deleted)
-
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
@@ -45,4 +42,3 @@ if __name__=='__main__':
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-

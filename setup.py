@@ -35,7 +35,7 @@ setup(
         'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
         'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
-        'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-1.0',
+        'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-2.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
         'https://github.com/barbarahui/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
@@ -45,9 +45,9 @@ setup(
         'Sickle',
         'argparse==1.2.1',
         'lxml==3.3.5',
-        'requests==2.1.0',
-        'solrpy>=0.9.7',
-        'pysolr>=3.3.0',
+        'requests==2.11.1',
+        'solrpy==0.9.7',
+        'pysolr==3.3.0',
         'pilbox==1.0.3',
         'wsgiref==0.1.2',
         'Logbook==0.6.0',
@@ -56,7 +56,7 @@ setup(
         'python-dateutil==2.2',
         'CouchDB==0.9',
         'redis==2.10.1',
-        'rq==0.4.6',
+        'rq',
         'boto==2.29.1',
         'CouchDB==0.9',
         'md5s3stash',
@@ -64,14 +64,16 @@ setup(
         'facet_decade',
         'redis_collections',
         'xmljson',
-        'UCLDC-Deep-Harvester'
+        'UCLDC-Deep-Harvester',
+        'boto3',
+        'pynux'
         ],
     test_suite='test',
     tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
 )
 
 pip_main(['install', 'ansible'])
-pip_main(['install',
-'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
+#pip_main(['install',
+#'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
 ###pip_main(['install',
 ###         'git+ssh://git@bitbucket.org/mredar/dpla-ingestion.git@ucldc'])

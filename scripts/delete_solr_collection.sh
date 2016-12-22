@@ -1,4 +1,4 @@
-#run this from majorTom or a worker
+# run this from majorTom or a worker
 if [[ -n "$DEBUG" ]]; then 
   set -x
 fi
@@ -18,4 +18,5 @@ query="stream.body=<delete><query>collection_url:\"${c_url}\"</query></delete>&c
 url_get=${URL_SOLR}/update?${query}
 echo $url_get
 
-wget ${url_get}
+# wget ${url_get}
+curl ${url_get}

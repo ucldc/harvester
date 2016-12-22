@@ -25,15 +25,8 @@ set +u
 . ~/workers_local/bin/activate
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 else
-    echo <<%%%
-NO ./bin/activate. You need to run
-
-"virtualenv ."
-. ./bin/activate
-pip install -r requirements.txt
-%%%
-    exit 13;
+    echo "NO ./bin/activate. You need to run \"virtualenv .\" . ./bin/activate"
+    #exit 13;
 fi
-# 48hr timeout = 172800 secs
-python scripts/queue_image_harvest.py --timeout=172800  ${@:1}
-
+# 24hr timeout = 86400 secs
+python scripts/queue_harvest.py --job_timeout=86400 --run_image_harvest=True ${@:1}

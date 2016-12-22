@@ -1,51 +1,23 @@
-#! /bin/env python
 # -*- coding: utf-8 -*-
-import datetime
-import os
-from solr import Solr
-from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
-from harvester.couchdb_init import get_couchdb
-from harvester.solr_updater import map_couch_to_solr_doc, push_doc_to_solr
-from harvester.solr_updater import has_required_fields, fill_in_title
+import re
+from copy import deepcopy
 
-# This works from inside an environment with default URLs for couch & solr
-URL_SOLR = os.environ.get('URL_SOLR', None)
+r=re.compile(r'(\d\d\d\d)-\1')
 
+def fix_repeated_date(doc):
+    dates = doc['sourceResource'].get('date', None)
+    new_doc = {}
+    if dates:
+        new_doc = deepcopy(doc)
+        if isinstance(dates, list):
+            dates_n = new_doc['sourceResource'].get('date', None)
+            for d in dates_n:
+                disp_date =  d.get('displayDate', '')
+                if r.match(disp_date):
+                    new_dd = r.match(disp_date).group(1)
+                    d['displayDate'] = new_dd
+    return new_doc if new_doc else doc
 
-def main(collection_key):
-    v = CouchDBCollectionFilter(
-        couchdb_obj=get_couchdb(), collection_key=collection_key)
-    solr_db = Solr(URL_SOLR)
-    results = []
-    for r in v:
-        dt_start = dt_end = datetime.datetime.now()
-        try:
-            doc = fill_in_title(r.doc)
-            has_required_fields(r.doc)
-        except KeyError, e:
-            print(e.message)
-            continue
-        solr_doc = map_couch_to_solr_doc(r.doc)
-        results.append(solr_doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-        dt_end = datetime.datetime.now()
-    solr_db.commit()
-    return results
-
-
-if __name__ == "__main__":
-    import argparse
-    import sys
-    parser = argparse.ArgumentParser(
-        description='Sync collection to production couchdb')
-    parser.add_argument(
-        'collection_key', type=str, help='Numeric ID for collection')
-    args = parser.parse_args(sys.argv[1:])
-    print "DELETE COLLECTION TO CAPTURE ANY REMOVALS"
-    results = main(args.collection_key)
-    print 'Updated {} docs'.format(len(results))
-
-    # arg will be just id
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
@@ -69,3 +41,4 @@ if __name__ == "__main__":
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+

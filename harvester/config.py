@@ -9,14 +9,14 @@ import os
 from collections import namedtuple
 import ConfigParser
 
-REDIS_HOST = '10.0.0.68'
-REDIS_PORT = '6379'
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6380'
 DPLA_CONFIG_FILE = 'akara.ini'
 
 RQ_Q_LIST = (
-        'high-prod',
-        'normal-prod',
-        'low-prod',
+        'high-production',
+        'normal-production',
+        'low-production',
         'high-stage',
         'normal-stage',
         'low-stage',

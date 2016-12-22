@@ -1,3 +1,4 @@
+#! /bin/env python
 # -*- coding: utf-8 -*-
 
 # We've had a couple of cases where the pre-prodution index has had a
@@ -38,7 +39,7 @@ def get_solr_doc(sid, url_solr, api_key):
                                     headers=solr_auth,
                                     params=query,
                                     verify=False).content)
-    # need to filter out _version_ 
+    # need to filter out _version_
     doc =  resp_obj['response']['docs'][0]
     del doc['_version_']
     for k in doc.keys():

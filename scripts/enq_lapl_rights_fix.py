@@ -1,51 +1,16 @@
-#! /bin/env python
 # -*- coding: utf-8 -*-
-import datetime
-import os
-from solr import Solr
-from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
-from harvester.couchdb_init import get_couchdb
-from harvester.solr_updater import map_couch_to_solr_doc, push_doc_to_solr
-from harvester.solr_updater import has_required_fields, fill_in_title
+from harvester.post_processing.couchdb_runner import CouchDBJobEnqueue
+from harvester.post_processing.run_transform_on_couchdb_docs import run_on_couchdb_doc
+from harvester.post_processing.fix_repeated_displayDate import fix_repeated_date
+import harvester
 
-# This works from inside an environment with default URLs for couch & solr
-URL_SOLR = os.environ.get('URL_SOLR', None)
-
-
-def main(collection_key):
-    v = CouchDBCollectionFilter(
-        couchdb_obj=get_couchdb(), collection_key=collection_key)
-    solr_db = Solr(URL_SOLR)
-    results = []
-    for r in v:
-        dt_start = dt_end = datetime.datetime.now()
-        try:
-            doc = fill_in_title(r.doc)
-            has_required_fields(r.doc)
-        except KeyError, e:
-            print(e.message)
-            continue
-        solr_doc = map_couch_to_solr_doc(r.doc)
-        results.append(solr_doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-        dt_end = datetime.datetime.now()
-    solr_db.commit()
-    return results
+results = CouchDBJobEnqueue().queue_collection(
+    '26094',
+    300,
+    run_on_couchdb_doc,
+    'harvester.post_processing.set_rights_lapl.set_rights_lapl')
 
 
-if __name__ == "__main__":
-    import argparse
-    import sys
-    parser = argparse.ArgumentParser(
-        description='Sync collection to production couchdb')
-    parser.add_argument(
-        'collection_key', type=str, help='Numeric ID for collection')
-    args = parser.parse_args(sys.argv[1:])
-    print "DELETE COLLECTION TO CAPTURE ANY REMOVALS"
-    results = main(args.collection_key)
-    print 'Updated {} docs'.format(len(results))
-
-    # arg will be just id
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
