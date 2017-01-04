@@ -17,6 +17,9 @@ from harvester.config import config
 import harvester.run_ingest as run_ingest
 
 
+if 'ARN_TOPIC_HARVESTING_REPORT' not in os.environ:
+    os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'fakey'
+
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
 
