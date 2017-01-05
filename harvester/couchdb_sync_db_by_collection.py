@@ -61,6 +61,7 @@ def update_from_remote(doc_id,
                        couchdb_env=None):
     '''Update the environment's couchdb from a remote couchdb document
     '''
+    msg = None
     if not couchdb_remote:
         couchdb_remote = get_couchdb(url_remote_couchdb)
     if not couchdb_env:
@@ -74,11 +75,13 @@ def update_from_remote(doc_id,
     if doc_in_target:
         doc_in_target.update(doc)
         couchdb_env[doc_id] = doc_in_target
-        print >> sys.stderr, "updated {}".format(doc_id)
+        msg = "updated {}".format(doc_id)
     else:
         doc_no_rev = doc.copy()
         couchdb_env[doc_id] = doc_no_rev
-        print >> sys.stderr, "created {}".format(doc_id)
+        msg = "created {}".format(doc_id)
+    print >> sys.stderr, msg
+    return msg
 
 
 def queue_update_from_remote(queue,
@@ -110,15 +113,35 @@ def update_collection_from_remote(url_remote_couchdb,
     doc_ids = get_collection_doc_ids(collection.id, url_remote_couchdb)
     couchdb_remote = get_couchdb(url_remote_couchdb)
     couchdb_env = get_couchdb()
+    created = 0
+    updated = 0
+
     for doc_id in doc_ids:
-        update_from_remote(
+        msg = update_from_remote(
             doc_id, couchdb_remote=couchdb_remote, couchdb_env=couchdb_env)
+        if 'created' in msg:
+            created += 1
+        else:
+            updated += 1
+
+    return len(doc_ids), updated, created
 
 
 def main(url_remote_couchdb, url_api_collection):
     '''Update to the current environment's couchdb a remote couchdb collection
     '''
-    update_collection_from_remote(url_remote_couchdb, url_api_collection)
+    collection = Collection(url_api_collection)
+    total, updated, created = update_collection_from_remote(
+        url_remote_couchdb, url_api_collection)
+    msg = 'Synced {} documents to production for CouchDB collection {}'.format(
+        total,
+        collection.id)
+    msg += '\nUpdated {} documents, created {} documents.'.format(
+        updated,
+        created)
+    publish_to_harvesting(
+        'Synced CouchDB Collection {}'.format(collection.id),
+        msg)
 
 
 if __name__ == '__main__':
