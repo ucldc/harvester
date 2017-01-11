@@ -1,8 +1,16 @@
 {
    "_id": "23066--http://ark.cdlib.org/ark:/13030/ft009nb05r",
-   "_rev": "26-ff42a6de0615f7ede0998346e0b3dc74",
-   "@id": "http://ucldc.cdlib.org/api/items/9039707de294bfe965e6f95d0c7da9ac",
+   "_rev": "19-3165aa9461a35991d1a286267b1e4b98",
+   "object": "f2610262f487f013fb96149f98990fb0",
+   "object_dimensions": [
+       1244,
+       1500
+   ],
    "@context": "http://dp.la/api/items/context",
+   "isShownAt": "http://ark.cdlib.org/ark:/13030/ft009nb05r",
+   "isShownBy": "http://content.cdlib.org/ark:/13030/ft009nb05r/FID4",
+   "dataProvider": "UC Berkeley, Bancroft Library",
+   "@id": "http://ucldc.cdlib.org/api/items/9039707de294bfe965e6f95d0c7da9ac",
    "admin": {
        "validation_message": null,
        "valid_after_enrich": true
@@ -107,14 +115,13 @@
    },
    "@type": "ore:Aggregation",
    "aggregatedCHO": "#sourceResource",
-   "ingestDate": "2015-05-22T00:49:06.549435Z",
+   "ingestDate": "2016-11-04T17:44:04.795017Z",
    "id": "9039707de294bfe965e6f95d0c7da9ac",
    "ingestionSequence": 10,
    "provider": {
        "@id": "https://registry.cdlib.org/api/v1/collection/23066/",
        "name": "UC Berkeley, Bancroft Library"
    },
-   "isShownAt": "http://ark.cdlib.org/ark:/13030/ft009nb05r",
    "ingestType": "item",
    "dataProvider": "UC Berkeley, Bancroft Library",
    "originalRecord": {
@@ -410,6 +417,5 @@
                }
            }
        ]
-   },
-   "isShownBy": "http://content.cdlib.org/ark:/13030/ft009nb05r/FID4"
+   }
 }

@@ -63,6 +63,8 @@ COUCHDOC_TO_SOLR_MAPPING = {
                                         d['object_dimensions'][0],
                                         d['object_dimensions'][1])},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
+    # NOTE: if no item_count field, this will be omitted from solr doc
+    'item_count': lambda d: {'item_count': d.get('item_count', 0)},
 }
 
 # So no "coverage" has been in the sourceResource, it's always mapped to
@@ -578,7 +580,7 @@ def fill_in_title(couch_doc):
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary
-    If no date field in sourceResource, pass fake value to set 
+    If no date field in sourceResource, pass fake value to set
     as 'unknown' in solr_doc
     '''
     solr_doc['facet_decade'] = set()

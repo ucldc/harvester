@@ -1,0 +1,78 @@
+{
+  "_id": "test id",
+  "item_count": 2,
+  "sourceResource": {
+    "title": [
+      "Neighbor"
+    ],
+    "date": {
+      "begin": "1885-7-4",
+      "end": "1890-8-3",
+      "displayDate": "between 1885-1890"
+    }
+  },
+  "originalRecord": {
+    "collection": [
+      {
+        "dcmi_type": "X",
+        "qa_completed": false,
+        "featured": false,
+        "ready_for_publication": true,
+        "hosted": "",
+        "campus": [
+          {
+            "name": "UC Berkeley",
+            "position": 0,
+            "ark": "ark:/13030/tf0p3009mq",
+            "@id": "https://registry.cdlib.org/api/v1/campus/1/",
+            "slug": "UCB",
+            "google_analytics_tracking_code": "",
+            "resource_uri": "/api/v1/campus/1/"
+          }
+        ],
+        "url_oac": "http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc",
+        "metadata_in_dams": false,
+        "url_harvest": "http://dsc.cdlib.org/search?facet=type-tab&style=cui&raw=1&relation=ark:/13030/ft6k4007pc",
+        "id": "23066",
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "",
+        "repository": [
+          {
+            "name": "Bancroft Library",
+            "campus": [
+              {
+                "name": "UC Berkeley",
+                "position": 0,
+                "ark": "ark:/13030/tf0p3009mq",
+                "slug": "UCB",
+                "google_analytics_tracking_code": "",
+                "resource_uri": "/api/v1/campus/1/"
+              }
+            ],
+            "ark": "ark:/13030/tf7r29p8s0",
+            "@id": "https://registry.cdlib.org/api/v1/repository/4/",
+            "slug": "bancroft-library",
+            "google_analytics_tracking_code": "",
+            "resource_uri": "/api/v1/repository/4/"
+          }
+        ],
+        "url_local": "",
+        "extent": null,
+        "rights_status": "X",
+        "@id": "https://registry.cdlib.org/api/v1/collection/23066/",
+        "slug": "uchida-yoshiko-photograph-collection",
+        "name": "Uchida (Yoshiko) photograph collection",
+        "enrichments_item": "/select-oac-id, /dpla_mapper?mapper_type=oac_dc, /strip_html, /set_context, /cleanup_value, /move_date_values?prop=sourceResource%2Fsubject, /move_date_values?prop=sourceResource%2Fspatial, /shred?prop=sourceResource%2Fspatial&delim=--, /capitalize_value?exclude=sourceResource%2Frelation, /enrich-subject, /enrich_earliest_date, /enrich_date, /enrich-type, /enrich-format, /enrich_location, /copy_prop?prop=sourceResource%2Fpublisher&to_prop=dataProvider, /enrich_language, /lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fname&substitution=iso639_3, /lookup?prop=sourceResource%2Flanguage%2Fname&target=sourceResource%2Flanguage%2Fiso639_3&substitution=iso639_3&inverse=True, /copy_prop?prop=provider%2Fname&to_prop=dataProvider&skip_if_exists=True, /set_prop?prop=sourceResource%2FstateLocatedIn&value=California, /enrich_location?prop=sourceResource%2FstateLocatedIn, /required-values-from-collection-registry?field=rights&mode=fill, /required-values-from-collection-registry?field=type&mode=fill, /set-ucldc-dataprovider, /dedupe-sourceresource, /validate_mapv3",
+        "harvest_type": "OAC",
+        "harvest_extra_data": "",
+        "rights_statement": "",
+        "staging_notes": "",
+        "local_id": "uchida-yoshiko-photograph-collection",
+        "title": "Uchida (Yoshiko) photograph collection",
+        "resource_uri": "/api/v1/collection/23066/"
+      }
+    ]
+  }
+}
