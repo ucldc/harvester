@@ -31,7 +31,8 @@ def queue_deep_harvest(redis_host,
     return job
 
 
-def main(collection_ids, log_handler=None, rq_queue='normal-stage'):
+def main(collection_ids, log_handler=None, rq_queue='normal-stage'
+        timeout=JOB_TIMEOUT):
     ''' Queue a deep harvest of a nuxeo collection on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
@@ -43,7 +44,8 @@ def main(collection_ids, log_handler=None, rq_queue='normal-stage'):
             config['redis_password'],
             config['redis_connect_timeout'],
             rq_queue=rq_queue,
-            collection_id=cid)
+            collection_id=cid,
+            timeout=timeout)
     log_handler.pop_application()
 
 
