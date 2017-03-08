@@ -63,6 +63,8 @@ COUCHDOC_TO_SOLR_MAPPING = {
                                         d['object_dimensions'][0],
                                         d['object_dimensions'][1])},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
+    # NOTE: if no item_count field, this will be omitted from solr doc
+    'item_count': lambda d: {'item_count': d.get('item_count', 0)},
 }
 
 # So no "coverage" has been in the sourceResource, it's always mapped to
