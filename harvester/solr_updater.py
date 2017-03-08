@@ -578,7 +578,7 @@ def fill_in_title(couch_doc):
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary
-    If no date field in sourceResource, pass fake value to set 
+    If no date field in sourceResource, pass fake value to set
     as 'unknown' in solr_doc
     '''
     solr_doc['facet_decade'] = set()
@@ -735,6 +735,7 @@ def sync_couch_collection_to_solr(collection_key):
             print(e.message)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
+        # TODO: here is where to check if existing and compare collection vals
         results.append(solr_doc)
         solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
