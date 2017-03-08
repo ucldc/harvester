@@ -12,8 +12,8 @@ import json
 import requests
 
 # to get rid of ssl key warning
-# from requests.packages.urllib3.exceptions import InsecureRequestWarning
-# requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 URL_SOLR_API='https://solr.calisphere.org/solr/'
 URL_SOLR=None
