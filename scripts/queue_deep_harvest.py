@@ -31,7 +31,7 @@ def queue_deep_harvest(redis_host,
     return job
 
 
-def main(collection_ids, log_handler=None, rq_queue='normal-stage'
+def main(collection_ids, log_handler=None, rq_queue='normal-stage',
         timeout=JOB_TIMEOUT):
     ''' Queue a deep harvest of a nuxeo collection on a worker'''
     if not log_handler:
