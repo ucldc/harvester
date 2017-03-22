@@ -7,6 +7,7 @@ import argparse
 import re
 import hashlib
 import json
+from urlparse import urlparse
 import requests
 import boto
 from solr import Solr, SolrException
@@ -408,16 +409,26 @@ def normalize_type(solr_doc):
 
 
 def has_required_fields(doc):
-    '''Check the couchdb doc has required fields'''
+    '''Check the couchdb doc has required fields and reasonable values'''
     if 'sourceResource' not in doc:
         raise KeyError('---- OMITTED: Doc:{0} has no sourceResource.'.format(
             doc['_id']))
     if 'title' not in doc['sourceResource']:
         raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc[
             '_id']))
+    if 'rights' not in doc['sourceResource']:
+        raise KeyError('---- OMITTED: Doc:{0} has no rights.'.format(doc[
+            '_id']))
     if 'isShownAt' not in doc:
         raise KeyError('---- OMITTED: Doc:{0} has no isShownAt.'.format(doc[
             '_id']))
+    # check that value in isShownAt is at least a valid URL format
+    parsed = urlparse(doc['isShownAt'])
+    if not parsed.scheme or not parsed.netloc or  \
+            not (parsed.path or parsed.params or parsed.query):
+        raise ValueError(
+        '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be' \
+                'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
@@ -736,6 +747,9 @@ def sync_couch_collection_to_solr(collection_key):
         except KeyError, e:
             print(e.message)
             continue
+        except ValueError, e:
+            print(e.message)
+            continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         # TODO: here is where to check if existing and compare collection vals
         results.append(solr_doc)
@@ -803,6 +817,9 @@ def main(url_couchdb=None,
                 doc = fill_in_title(doc)
                 has_required_fields(doc)
             except KeyError, e:
+                print(e.message)
+                continue
+            except ValueError, e:
                 print(e.message)
                 continue
             try:
