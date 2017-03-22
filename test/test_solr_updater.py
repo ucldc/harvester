@@ -297,44 +297,27 @@ class SolrUpdaterTestCase(TestCase):
     def test_check_required_fields(self):
         doc = {'id': 'test-id'}
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {'id': 'test-id', 'sourceResource': {}}
+        doc = {'id': 'test-id', '_id': 'x', 'sourceResource': {}}
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title',
-                '_id': 'x'
-            }
-        }
+        doc['sourceResource'].update({'title': 'test-title'})
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title'
-            },
-            '_id': 'x',
-            'isShownAt': 'y'
-        }
+        doc['sourceResource'].update({'rights': 'hasRights'})
+        doc.update({'isShownAt': 'y'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
-        self.assertEqual(ret, True)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title',
-                'type': 'image'
-            }
-        }
+        #self.assertRaises(KeyError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc/;params'})
+        ret = has_required_fields(doc)
+        doc.update({'isShownAt': 'http://netloc/?query'})
+        ret = has_required_fields(doc)
+        doc['sourceResource'].update({'type': 'image'})
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'object': 'hasobject',
-            '_id': 'x',
-            'isShownAt': 'y',
-            'sourceResource': {
-                'title': 'test-title',
-                'type': 'image'
-            }
-        }
+        doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
 
