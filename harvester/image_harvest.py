@@ -43,8 +43,10 @@ def link_is_to_image(url, auth=None):
         response = requests.head(url, allow_redirects=True)
     else:
         response = requests.head(url, allow_redirects=True, auth=auth)
-    if response.status_code != 200:
-        return False
+    # have a server that returns a 403 here, does have content-type of
+    # text/html. Dropping this test here. requests throws if can't connect
+    # if response.status_code != 200:
+    #    return False
     content_type = response.headers.get('content-type', None)
     if not content_type:
         return False
