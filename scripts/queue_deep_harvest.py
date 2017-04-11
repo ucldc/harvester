@@ -15,6 +15,7 @@ def queue_deep_harvest(redis_host,
                        redis_timeout,
                        rq_queue,
                        collection_id,
+                       replace=False,
                        timeout=JOB_TIMEOUT):
     '''Queue job onto RQ queue'''
     rQ = Queue(
@@ -26,13 +27,13 @@ def queue_deep_harvest(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='s3stash.stash_collection.main',
-        kwargs=dict(registry_id=collection_id),
+        kwargs=dict(registry_id=collection_id, replace=replace),
         timeout=timeout)
     return job
 
 
 def main(collection_ids, log_handler=None, rq_queue='normal-stage',
-        timeout=JOB_TIMEOUT):
+        timeout=JOB_TIMEOUT, replace=False):
     ''' Queue a deep harvest of a nuxeo collection on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
@@ -45,6 +46,7 @@ def main(collection_ids, log_handler=None, rq_queue='normal-stage',
             config['redis_connect_timeout'],
             rq_queue=rq_queue,
             collection_id=cid,
+            replace=replace,
             timeout=timeout)
     log_handler.pop_application()
 
@@ -57,6 +59,10 @@ def def_args():
     parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
     parser.add_argument(
         'collection_ids', type=str, help='Collection ids, ";" delimited')
+    parser.add_argument(
+        '--replace',
+        action='store_true',
+        help='replace files on s3 if they already exist')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
                         help='Timeout for the RQ job')
     return parser
@@ -73,7 +79,8 @@ if __name__ == '__main__':
         job_timeout = args.job_timeout
     else:
         job_timeout = JOB_TIMEOUT
-    main(args.collection_ids, rq_queue=args.rq_queue, timeout=job_timeout)
+    main(args.collection_ids, rq_queue=args.rq_queue, replace=args.replace,
+            timeout=job_timeout)
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
