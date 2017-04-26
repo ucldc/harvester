@@ -6,7 +6,7 @@ from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
 
-JOB_TIMEOUT = 172800  # 48 hrs
+JOB_TIMEOUT = 345600  # 96 hrs
 
 
 def queue_deep_harvest(redis_host,
