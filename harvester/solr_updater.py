@@ -100,11 +100,11 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
                                                          None))[0]},
     'title': lambda d: dict_for_data_field('title', d, 'title'),
     'type': lambda d: dict_for_data_field('type', d, 'type'),
+    'provenance': lambda d: dict_for_data_field('provenance', d, 'provenance'),
 }
 
 COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
     #    'location': lambda d: {'location': d.get('location', None)},
-    'provenance': lambda d: dict_for_data_field('provenance', d, 'provenance'),
     'dateCopyrighted':
     lambda d: dict_for_data_field('dateCopyrighted', d, 'rights_date'),
     'rightsHolder':
@@ -578,7 +578,7 @@ def fill_in_title(couch_doc):
 
 def add_facet_decade(couch_doc, solr_doc):
     '''Add the facet_decade field to the solr_doc dictionary
-    If no date field in sourceResource, pass fake value to set 
+    If no date field in sourceResource, pass fake value to set
     as 'unknown' in solr_doc
     '''
     solr_doc['facet_decade'] = set()

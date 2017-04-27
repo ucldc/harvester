@@ -68,6 +68,7 @@
     "genre": [
       "Drawing"
     ],
+    "provenance": "Gift of the Naify Family",
     "relation": [
       "The Fairy Queen"
     ],
@@ -239,9 +240,6 @@
       "ucldc_schema:rightsdeterminationdate": null,
       "picture:subheadline": null,
       "picture:caption": null,
-      "ucldc_schema:provenance": [
-        "Gift of Dunya Ramicova, 2014"
-      ],
       "dc:nature": null,
       "ucldc_schema:rightsstatement": "Creative Commons Attribution - NonCommercial-NoDerivatives (CC BY-NC-ND 4.0)",
       "ucldc_schema:place": [],
