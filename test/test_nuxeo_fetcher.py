@@ -32,7 +32,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     # put httppretty here, have sample outputs.
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def testInit(self, mock_deepharvest, mock_boto):
         '''Basic tdd start'''
         httpretty.register_uri(
@@ -53,7 +53,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(h, '_structmap_bucket'))
 
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_structmap_text(self, mock_deepharvest, mock_boto):
         '''Mock test s3 structmap_text getting'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
@@ -80,7 +80,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def testFetch(self, mock_deepharvest, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
@@ -139,7 +139,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def testFetch_missing_media_json(self, mock_deepharvest, mock_boto):
         '''Test the httpretty mocked fetching of documents'''
         deepharvest_mocker(mock_deepharvest)
@@ -183,7 +183,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_component_image(self, mock_deepharvest, mock_boto):
         ''' test getting correct isShownBy value for Nuxeo doc
             with no image at parent level, but an image at the component level
@@ -231,7 +231,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_pdf(self, mock_deepharvest, mock_boto):
         ''' test getting correct isShownBy value for Nuxeo doc
             with no images and PDF at parent level
@@ -265,7 +265,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_video(self, mock_deepharvest, mock_boto):
         ''' test getting correct isShownBy value for Nuxeo video object 
         '''
@@ -303,7 +303,7 @@ class UCLDCNuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     Nuxeo document schema header property not set.
     '''
     @httpretty.activate
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def testNuxeoPropHeader(self, mock_deepharvest):
         '''Test that the Nuxeo document property header has necessary
         settings. This will test the base UCLDC schemas
@@ -360,7 +360,7 @@ class Harvest_UCLDCNuxeo_ControllerTestCase(ConfigFileOverrideMixin,
 
     @httpretty.activate
     @patch('boto.connect_s3', autospec=True)
-    @patch('harvester.fetcher.nuxeofetcher.DeepHarvestNuxeo', autospec=True)
+    @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def testNuxeoHarvest(self, mock_deepharvest, mock_boto):
         '''Test the function of the Nuxeo harvest'''
         media_json = open(DIR_FIXTURES+'/nuxeo_media_structmap.json').read()
