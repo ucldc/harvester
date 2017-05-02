@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from .fetcher import Fetcher
 
 
@@ -11,16 +12,25 @@ class Flickr_Fetcher(Fetcher):
     '''
 
     url_get_photos_template = 'https://api.flickr.com/services/rest/' \
-        '?api_key={api_key}&user_id={user_id}&method=' \
+        '?api_key={api_key}&user_id={user_id}&per_page={per_page}&method=' \
         'flickr.people.getPublicPhotos&page={page}'
 
     def __init__(self, url_harvest, extra_data, page_size=500):
         self.url_base = url_harvest
         self.user_id = extra_data
+        self.api_key = os.environ.get('FLICKR_API_KEY', 'boguskey')
         self.page_size = page_size
         self.page_current = 1
         self.doc_current = 1
         self.docs_fetched = 0
+
+    @property
+    def url_current(self):
+        return self.url_get_photos_template.format(
+            api_key=self.api_key,
+            user_id=self.user_id,
+            per_page=self.page_size,
+            page=self.page_current)
 
 
 # Copyright © 2017, Regents of the University of California
