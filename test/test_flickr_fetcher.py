@@ -3,18 +3,30 @@ from unittest import TestCase
 import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin
+import httpretty
 
 
 class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the fetcher for the Flickr API.'''
+    @httpretty.activate
     def testInit(self):
         '''Basic tdd start'''
         url = 'https://example.edu'
         user_id = 'testuser'
-        h = fetcher.Flickr_Fetcher(url, user_id)
+        page_size = 10
+        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+            api_key='boguskey',
+            user_id=user_id,
+            per_page=page_size,
+            page=1)
+        httpretty.register_uri(
+            httpretty.GET,
+            url_first,
+            body=open(DIR_FIXTURES+'/flickr-public_photos-1.xml').read())
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size)
         self.assertEqual(h.url_base, url)
         self.assertEqual(h.user_id, user_id)
-        self.assertEqual(h.page_size, 500)
+        self.assertEqual(h.page_size, 10)
         self.assertEqual(h.page_current, 1)
         self.assertEqual(h.doc_current, 1)
         self.assertEqual(h.docs_fetched, 0)
@@ -24,10 +36,8 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
                          '={per_page}&method='
                          'flickr.people.getPublicPhotos&page={page}')
         self.assertEqual(h.api_key, 'boguskey')
-        self.assertEqual(h.url_current,
-                         'https://api.flickr.com/services/rest/?'
-                         'api_key=boguskey&user_id=testuser&per_page=500'
-                         '&method=flickr.people.getPublicPhotos&page=1')
+        self.assertEqual(h.url_current, url_first)
+        self.assertEqual(h.docs_total, 30)
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.

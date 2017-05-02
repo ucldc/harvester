@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
+import urllib
+import re
 from .fetcher import Fetcher
 
 
@@ -23,6 +26,9 @@ class Flickr_Fetcher(Fetcher):
         self.page_current = 1
         self.doc_current = 1
         self.docs_fetched = 0
+        xml = urllib.urlopen(self.url_current).read()
+        total = re.search('total="(?P<total>\d+)"', xml)
+        self.docs_total = int(total.group('total'))
 
     @property
     def url_current(self):
