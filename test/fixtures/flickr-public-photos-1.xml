@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<photos page="1" pages="4" perpage="3" total="10">
+	<photo id="1" owner="49487266@N07" secret="4f743f5b12" server="2826" farm="3" title="Ryan Aeronautical Image" ispublic="1" isfriend="0" isfamily="0" />
+	<photo id="2" owner="49487266@N07" secret="d1e49ee296" server="4169" farm="5" title="Ryan Aeronautical Image" ispublic="1" isfriend="0" isfamily="0" />
+	<photo id="3" owner="49487266@N07" secret="b4bf05498d" server="2874" farm="3" title="Ryan Aeronautical Image" ispublic="1" isfriend="0" isfamily="0" />
+</photos>
+</rsp>
+
