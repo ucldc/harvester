@@ -17,6 +17,8 @@ class Flickr_Fetcher(Fetcher):
     url_get_photos_template = 'https://api.flickr.com/services/rest/' \
         '?api_key={api_key}&user_id={user_id}&per_page={per_page}&method=' \
         'flickr.people.getPublicPhotos&page={page}'
+    url_get_photo_info_template = 'https://api.flickr.com/services/rest/' \
+        '?api_key={api_key}&method=flickr.photos.getInfo&photo_id={photo_id}'
 
     def __init__(self, url_harvest, extra_data, page_size=500):
         self.url_base = url_harvest

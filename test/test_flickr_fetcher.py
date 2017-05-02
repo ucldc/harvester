@@ -38,6 +38,10 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.api_key, 'boguskey')
         self.assertEqual(h.url_current, url_first)
         self.assertEqual(h.docs_total, 30)
+        self.assertEqual(h.url_get_photo_info_template,
+                         'https://api.flickr.com/services/rest/'
+                         '?api_key={api_key}&method='
+                         'flickr.photos.getInfo&photo_id={photo_id}')
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
