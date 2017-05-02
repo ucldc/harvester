@@ -40,6 +40,17 @@ class Flickr_Fetcher(Fetcher):
             per_page=self.page_size,
             page=self.page_current)
 
+    def next(self):
+        if self.doc_current == self.docs_total:
+            if self.docs_fetched != self.docs_total:
+                raise ValueError(
+                   "Number of documents fetched ({0}) doesn't match \
+                    total reported by server ({1})".format(
+                        self.docs_fetched,
+                        self.docs_total)
+                    )
+        return None
+
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.

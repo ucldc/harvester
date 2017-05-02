@@ -42,6 +42,9 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
                          'https://api.flickr.com/services/rest/'
                          '?api_key={api_key}&method='
                          'flickr.photos.getInfo&photo_id={photo_id}')
+        h.doc_current = 30
+        self.assertRaises(ValueError, h.next)
+
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
