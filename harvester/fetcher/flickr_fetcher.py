@@ -49,6 +49,8 @@ class Flickr_Fetcher(Fetcher):
                         self.docs_fetched,
                         self.docs_total)
                     )
+            else:
+                raise StopIteration
         return None
 
 

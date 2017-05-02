@@ -44,6 +44,8 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
                          'flickr.photos.getInfo&photo_id={photo_id}')
         h.doc_current = 30
         self.assertRaises(ValueError, h.next)
+        h.docs_fetched = 30
+        self.assertRaises(StopIteration, h.next)
 
 
 # Copyright © 2017, Regents of the University of California
