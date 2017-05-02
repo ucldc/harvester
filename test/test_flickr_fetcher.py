@@ -42,6 +42,22 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
                          'https://api.flickr.com/services/rest/'
                          '?api_key={api_key}&method='
                          'flickr.photos.getInfo&photo_id={photo_id}')
+
+    @httpretty.activate
+    def test_fetching(self):
+        url = 'https://example.edu'
+        user_id = 'testuser'
+        page_size = 10
+        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+            api_key='boguskey',
+            user_id=user_id,
+            per_page=page_size,
+            page=1)
+        httpretty.register_uri(
+            httpretty.GET,
+            url_first,
+            body=open(DIR_FIXTURES+'/flickr-public_photos-1.xml').read())
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size)
         h.doc_current = 30
         self.assertRaises(ValueError, h.next)
         h.docs_fetched = 30
