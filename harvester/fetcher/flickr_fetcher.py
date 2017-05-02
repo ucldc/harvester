@@ -9,10 +9,18 @@ class Flickr_Fetcher(Fetcher):
     It then proceeds to use flickr.photos.getInfo to get metadata for the
     photos
     '''
+
+    url_get_photos_template = 'https://api.flickr.com/services/rest/' \
+        '?api_key={api_key}&user_id={user_id}&method=' \
+        'flickr.people.getPublicPhotos&page={page}'
+
     def __init__(self, url_harvest, extra_data, page_size=500):
         self.url_base = url_harvest
         self.user_id = extra_data
         self.page_size = page_size
+        self.page_current = 1
+        self.doc_current = 1
+        self.docs_fetched = 0
 
 
 # Copyright © 2017, Regents of the University of California

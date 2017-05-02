@@ -15,6 +15,13 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.url_base, url)
         self.assertEqual(h.user_id, user_id)
         self.assertEqual(h.page_size, 500)
+        self.assertEqual(h.page_current, 1)
+        self.assertEqual(h.doc_current, 1)
+        self.assertEqual(h.docs_fetched, 0)
+        self.assertEqual(h.url_get_photos_template,
+                         'https://api.flickr.com/services/rest/'
+                         '?api_key={api_key}&user_id={user_id}&method='
+                         'flickr.people.getPublicPhotos&page={page}')
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
