@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok">
+<photo id="34394586825" secret="375e0b1706" server="4169" farm="5" dateuploaded="1493683350" isfavorite="0" license="7" safety_level="0" rotation="0" originalsecret="d46e9b19cc" originalformat="jpg" views="499" media="photo">
+	<owner nsid="49487266@N07" username="San Diego Air &amp; Space Museum Archives" realname="SDASM Archives" location="" iconserver="4070" iconfarm="5" path_alias="sdasmarchives"/>
+	<title>Ryan Aeronautical Image</title>
+	<description>PictionID:56100666 - Catalog:C87-047-040.tif - Title:Ryan Aeronautical Negative Collection Image - Filename:C87-047-040.tif - - Image from the Teledyne Ryan Archives, donated to SDASM in the 1990s. Many of these images are from Ryan's UAV program-----Please Tag these images so that the information can be permanently stored with the digital file.---Repository: &lt;a href="http://www.sandiegoairandspace.org/library/stillimages.html" rel="nofollow"&gt;San Diego Air and Space Museum &lt;/a&gt;</description>
+	<visibility ispublic="1" isfriend="0" isfamily="0"/>
+	<dates posted="1493683350" taken="2017-05-01 17:02:30" takengranularity="0" takenunknown="1" lastupdate="1493683351"/>
+	<editability cancomment="0" canaddmeta="0"/>
+	<publiceditability cancomment="1" canaddmeta="1"/>
+	<usage candownload="1" canblog="0" canprint="0" canshare="1"/>
+	<comments>0</comments>
+    <notes>
+    <note id="313" author="12037949754@N01" authorname="Bees" x="10" y="10" w="50" h="50">foo</note>
+    </notes>
+    <tags>
+      <tag id="1234" author="12037949754@N01" raw="woo yay">wooyay</tag>
+      <tag id="1235" author="12037949754@N01" raw="hoopla">hoopla</tag>
+    </tags>
+	<people haspeople="0"/>
+	<urls>
+		<url type="photopage">https://www.flickr.com/photos/sdasmarchives/34394586825/</url>
+	</urls>
+</photo>
+</rsp>
