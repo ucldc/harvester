@@ -3,8 +3,17 @@ from .fetcher import Fetcher
 
 
 class Flickr_Fetcher(Fetcher):
-    def __init__(self, url_harvest, extra_data):
+    '''A fetcher for the Flicr API.
+    Currently, it takes a user id and grabs the flickr.people.getPublicPhotos
+    to get the list of all photos.
+    It then proceeds to use flickr.photos.getInfo to get metadata for the
+    photos
+    '''
+    def __init__(self, url_harvest, extra_data, page_size=500):
         self.url_base = url_harvest
+        self.user_id = extra_data
+        self.page_size = page_size
+
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.

@@ -10,7 +10,11 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
     def testInit(self):
         '''Basic tdd start'''
         url = 'https://example.edu'
-        h = fetcher.Flickr_Fetcher(url)
+        user_id = 'testuser'
+        h = fetcher.Flickr_Fetcher(url, user_id)
+        self.assertEqual(h.url_base, url)
+        self.assertEqual(h.user_id, user_id)
+        self.assertEqual(h.page_size, 500)
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
