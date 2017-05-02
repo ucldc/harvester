@@ -14,16 +14,16 @@ from ..collection_registry_client import Collection
 from .. import config
 from .fetcher import Fetcher
 from .fetcher import NoRecordsFetchedException
-from .oaifetcher import OAIFetcher
-from .solrfetcher import SolrFetcher
-from .solrfetcher import PySolrQueryFetcher
-from .solrfetcher import PySolrUCBFetcher
-from .marcfetcher import MARCFetcher
-from .marcfetcher import AlephMARCXMLFetcher
-from .nuxeofetcher import UCLDCNuxeoFetcher
-from .oacfetcher import OAC_XML_Fetcher
-from .oacfetcher import OAC_JSON_Fetcher
-from .cmisatomfeedfetcher import CMISAtomFeedFetcher
+from .oai_fetcher import OAIFetcher
+from .solr_fetcher import SolrFetcher
+from .solr_fetcher import PySolrQueryFetcher
+from .solr_fetcher import PySolrUCBFetcher
+from .marc_fetcher import MARCFetcher
+from .marc_fetcher import AlephMARCXMLFetcher
+from .nuxeo_fetcher import UCLDCNuxeoFetcher
+from .oac_fetcher import OAC_XML_Fetcher
+from .oac_fetcher import OAC_JSON_Fetcher
+from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
