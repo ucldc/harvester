@@ -66,7 +66,7 @@ class Flickr_Fetcher(Fetcher):
         return tag_info
 
     def next(self):
-        if self.doc_current == self.docs_total:
+        if self.doc_current >= self.docs_total:
             if self.docs_fetched != self.docs_total:
                 raise ValueError(
                     "Number of documents fetched ({0}) doesn't match \
