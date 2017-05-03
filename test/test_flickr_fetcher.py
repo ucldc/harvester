@@ -4,7 +4,8 @@ from unittest import TestCase
 import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin
-import httpretty
+from mypretty import httpretty
+# import httpretty
 
 
 class FlickrFetcherTestCase(LogOverrideMixin, TestCase):

@@ -2,7 +2,8 @@ import os
 from unittest import TestCase
 import json
 import re
-import httpretty
+from mypretty import httpretty
+# import httpretty
 from mock import patch
 from test.utils import DIR_FIXTURES
 from harvester.config import config

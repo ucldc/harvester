@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin

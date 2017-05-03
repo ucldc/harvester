@@ -1,0 +1,7 @@
+[nuxeo_account]
+user = user
+password = pswd
+
+[rest_api]
+base = https://nuxeo.cdlib.org/Nuxeo/site/api/v1
+X-NXDocumentProperties = dublincore,ucldc_schema,picture,file,video

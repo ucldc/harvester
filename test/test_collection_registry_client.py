@@ -1,7 +1,8 @@
 from unittest import TestCase
 import json
 import StringIO
-import httpretty
+from mypretty import httpretty
+# import httpretty
 from mock import patch
 from harvester.collection_registry_client import Registry, Collection
 from test.utils import DIR_FIXTURES

@@ -11,6 +11,7 @@ install:
   # due to "secret" bitbucket with our modifications
   - "mkdir -p ${HOME}/.aws"
   - "cp awsconfig ~/.aws/config"
+  - "cp pynuxrc ~/.pynuxrc"
   - "pip install httpretty==0.8.3"
   - "pip install mock>=1.0.1"
   - "pip install git+https://github.com/mredar/ingestion.git"
