@@ -4,7 +4,8 @@ from unittest import skip
 import shutil
 import re
 import json
-import httpretty
+from mypretty import httpretty
+# import httpretty
 from mock import patch
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES, TEST_COUCH_DASHBOARD, TEST_COUCH_DB

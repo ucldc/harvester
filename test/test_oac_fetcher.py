@@ -4,7 +4,8 @@ import json
 from unittest import TestCase
 import shutil
 from xml.etree import ElementTree as ET
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import harvester.fetcher as fetcher
 from harvester.collection_registry_client import Collection
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin

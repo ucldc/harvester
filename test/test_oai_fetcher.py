@@ -5,7 +5,8 @@ from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES
 from harvester.collection_registry_client import Collection
 import harvester.fetcher as fetcher
-import httpretty
+from mypretty import httpretty
+# import httpretty
 
 
 class HarvestOAIControllerTestCase(ConfigFileOverrideMixin,

@@ -4,7 +4,8 @@ from unittest import TestCase
 import shutil
 import re
 import pickle
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import logbook
 from mock import patch
 from mock import MagicMock
@@ -349,7 +350,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mail_handler = MagicMock()
         url_api_collection = 'https://registry.cdlib.org/api/v1/collection/' \
             '178/'
-        httpretty.enable()
+        httpretty.httpretty.enable()
         httpretty.register_uri(
             httpretty.GET,
             url_api_collection,
@@ -398,7 +399,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mail_handler = MagicMock()
         url_api_collection = 'https://registry.cdlib.org/api/v1/' \
             'collection/178/'
-        httpretty.enable()
+        httpretty.httpretty.enable()
         httpretty.register_uri(
             httpretty.GET,
             url_api_collection,

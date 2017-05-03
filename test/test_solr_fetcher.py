@@ -6,7 +6,8 @@ from harvester.collection_registry_client import Collection
 import solr
 import pysolr
 import harvester.fetcher as fetcher
-import httpretty
+from mypretty import httpretty
+# import httpretty
 
 
 class SolrFetcherTestCase(LogOverrideMixin, TestCase):

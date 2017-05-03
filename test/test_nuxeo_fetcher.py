@@ -6,7 +6,8 @@ import json
 import re
 import shutil
 from mock import patch
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import pynux.utils
 from harvester.collection_registry_client import Collection
 from test.utils import DIR_FIXTURES
@@ -267,7 +268,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
     @patch('boto.connect_s3', autospec=True)
     @patch('harvester.fetcher.nuxeo_fetcher.DeepHarvestNuxeo', autospec=True)
     def test_get_isShownBy_video(self, mock_deepharvest, mock_boto):
-        ''' test getting correct isShownBy value for Nuxeo video object 
+        ''' test getting correct isShownBy value for Nuxeo video object
         '''
         deepharvest_mocker(mock_deepharvest)
 

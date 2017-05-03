@@ -3,7 +3,8 @@ from unittest import TestCase
 from collections import namedtuple
 from mock import patch
 from mock import MagicMock
-import httpretty
+from mypretty import httpretty
+# import httpretty
 from harvester import image_harvest
 
 #TODO: make this importable from md5s3stash
@@ -92,7 +93,7 @@ class ImageHarvestTestCase(TestCase):
         db.save.assert_called_with({'_id': 'TESTID',
             'object': 'md5 test value',
             'object_dimensions': 'dimensions-x:y'})
-    
+
     @httpretty.activate
     def test_link_is_to_image(self):
         '''Test the link_is_to_image function'''
@@ -158,7 +159,7 @@ class ImageHarvestTestCase(TestCase):
                 's3 url object', 'mime_type', 'dimensions'))
     @httpretty.activate
     def test_check_content_type(self, mock_stash, mock_couch):
-        '''Test that the check for content type correctly aborts if the 
+        '''Test that the check for content type correctly aborts if the
         type is not a image
         '''
         url = 'http://getthisimage/notanimage'
@@ -199,10 +200,10 @@ class ImageHarvestTestCase(TestCase):
         schema. The LAPL photo feed has URLs like this:
 
         http:/jpg1.lapl.org/pics47/00043006.jpg
-        
-        The code was choking complaining about a "MissingSchema" 
+
+        The code was choking complaining about a "MissingSchema"
         exception.
         '''
         pass
 
-        
+
