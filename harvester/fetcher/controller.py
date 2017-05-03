@@ -24,6 +24,7 @@ from .nuxeo_fetcher import UCLDCNuxeoFetcher
 from .oac_fetcher import OAC_XML_Fetcher
 from .oac_fetcher import OAC_JSON_Fetcher
 from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
+from .flickr_fetcher import Flickr_Fetcher
 
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
@@ -38,6 +39,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'SFX': PySolrQueryFetcher,
                  'UCB': PySolrUCBFetcher,
                  'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
+                 'FLK': Flickr_Fetcher, # All public photos fetcher
                  }
 
 
