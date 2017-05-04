@@ -14,6 +14,7 @@ from .oac_fetcher import OAC_JSON_Fetcher
 from .ucsf_xml_fetcher import UCSF_XML_Fetcher
 from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 from .flickr_fetcher import Flickr_Fetcher
+from .youtube_fetcher import YouTube_Fetcher
 from .controller import HARVEST_TYPES
 from .controller import HarvestController
 from .controller import get_log_file_path
@@ -26,4 +27,5 @@ __all__ = (Fetcher, NoRecordsFetchedException, HARVEST_TYPES, OAIFetcher,
            NuxeoFetcher, UCLDCNuxeoFetcher, OAC_XML_Fetcher, OAC_JSON_Fetcher,
            UCSF_XML_Fetcher, CMISAtomFeedFetcher, HarvestController,
            PySolrQueryFetcher, PySolrUCBFetcher, Flickr_Fetcher,
+           YouTube_Fetcher,
            EMAIL_RETURN_ADDRESS, get_log_file_path, main)

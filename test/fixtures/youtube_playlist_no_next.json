@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "contentDetails": {
+        "videoPublishedAt": "2010-12-30T18:22:17.000Z", 
+        "videoId": "-3jHAjrMDV8"
+      }, 
+      "kind": "youtube#playlistItem", 
+      "etag": "\"m2yskBQFythfE4irbTIeOgYYfBU/YKU-ltLV6go5lmFHqkeMFGgrkdQ\"", 
+      "id": "VVUxN3p3MGNqTjV2OWlSTVozcXhGQWt3Li0zakhBanJNRFY4"
+    }, 
+    {
+      "contentDetails": {
+        "videoPublishedAt": "2010-10-07T17:54:00.000Z", 
+        "videoId": "Wpdn4053Seg"
+      }, 
+      "kind": "youtube#playlistItem", 
+      "etag": "\"m2yskBQFythfE4irbTIeOgYYfBU/Rr0PonAez84OUS3neO0VVB-8jTo\"", 
+      "id": "VVUxN3p3MGNqTjV2OWlSTVozcXhGQWt3LldwZG40MDUzU2Vn"
+    }
+  ], 
+  "kind": "youtube#playlistItemListResponse", 
+  "etag": "\"m2yskBQFythfE4irbTIeOgYYfBU/2Ev87Hx4CnGLKb7h3ZmIbqLHdfw\"", 
+  "prevPageToken": "CLIZEAE", 
+  "pageInfo": {
+    "resultsPerPage": 50, 
+    "totalResults": 3259
+  }
+}
+
+
