@@ -671,6 +671,7 @@ def map_couch_to_solr_doc(doc):
 
 def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
+    n = 1
     try:
         solr_db.add(solr_doc)
         print(
@@ -683,9 +684,10 @@ def push_doc_to_solr(solr_doc, solr_db):
                                              solr_doc['collection_url'],
                                              solr_doc['harvest_id_s']),
             file=sys.stderr)
+        n = 0
         if not e.httpcode == 400:
             raise e
-    return solr_doc
+    return n
 
 
 def get_key_for_env():
@@ -740,24 +742,30 @@ def sync_couch_collection_to_solr(collection_key):
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
     results = []
+    num_added = missing_required = 0
     for r in v:
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
+            missing_required += 1
             print(e.message)
             continue
         except ValueError, e:
+            missing_required += 1
             print(e.message)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         # TODO: here is where to check if existing and compare collection vals
         results.append(solr_doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
+        num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
         'Synced collection {} to solr'.format(collection_key),
-        '{} documents updated'.format(len(results)))
+        '{} Couch Docs. {} solr documents updated\n'
+        '{} docs were missing required fields'.format(len(results),
+                                                      num_added,
+                                                      missing_required))
     return results
 
 
