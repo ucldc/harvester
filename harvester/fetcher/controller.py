@@ -58,7 +58,7 @@ class HarvestController(object):
                    'source', 'language', 'relation', 'coverage', 'rights']
 
     def __init__(self, user_email, collection, profile_path=None,
-                 config_file=None):
+                 config_file=None, **kwargs):
         self.user_email = user_email  # single or list
         self.collection = collection
         self.profile_path = profile_path
@@ -73,7 +73,8 @@ class HarvestController(object):
 
         cls_fetcher = HARVEST_TYPES.get(self.collection.harvest_type, None)
         self.fetcher = cls_fetcher(self.collection.url_harvest,
-                                   self.collection.harvest_extra_data)
+                                   self.collection.harvest_extra_data,
+                                   **kwargs)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
@@ -247,7 +248,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
          dir_profile='profiles', profile_path=None,
-         config_file=None):
+         config_file=None, **kwargs):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.
@@ -307,7 +308,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     try:
         harvester = HarvestController(user_email, collection,
                                       profile_path=profile_path,
-                                      config_file=config_file)
+                                      config_file=config_file, **kwargs)
     except Exception, e:
         import traceback
         msg = 'Exception in harvester init: type: {} TRACE:\n{}'.format(

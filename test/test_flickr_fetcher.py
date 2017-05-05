@@ -44,6 +44,87 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
                          'flickr.photos.getInfo&photo_id={photo_id}')
 
     @httpretty.activate
+    def test_page_range(self):
+        '''Need to break this up into pages, to run as different jobs.'''
+        url = 'https://example.edu'
+        user_id = 'testuser'
+        page_size = 3
+        page_range = '2,3'
+        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+            api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
+        httpretty.register_uri(
+            httpretty.GET,
+            url_first,
+            body=open(DIR_FIXTURES + '/flickr-public-photos-1.xml').read())
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size,
+                page_range=page_range)
+        self.assertEqual(h.page_start, 2)
+        self.assertEqual(h.page_end, 3)
+        self.assertEqual(h.page_current, 2)
+        self.assertEqual(h.docs_total, 6)
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size,
+                page_range='3,5')
+        self.assertEqual(h.page_start, 3)
+        self.assertEqual(h.page_end, 4)
+        self.assertEqual(h.page_current, 3)
+        self.assertEqual(h.docs_total, 4)
+
+    @httpretty.activate
+    def test_fetching_range(self):
+        url = 'https://example.edu'
+        user_id = 'testuser'
+        page_size = 3
+        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+            api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
+        # Ugly but works
+        httpretty.register_uri(
+            httpretty.GET,
+            url_first,
+            responses=[
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-public-photos-1.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-public-photos-1.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-public-photos-1.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                ]
+            )
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size,
+                page_range='3,5')
+        h.doc_current = 10
+        self.assertRaises(ValueError, h.next)
+        h.docs_fetched = 4
+        h.doc_current = 4
+        self.assertRaises(StopIteration, h.next)
+        h.docs_fetched = 2
+        h.doc_current = 2
+        h.page_current = 5
+        self.assertRaises(StopIteration, h.next)
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size,
+                page_range='3,5')
+        total = 0
+        all_objs = []
+        for objs in h:
+            total += len(objs)
+            all_objs.extend(objs)
+        self.assertEqual(total, 4)
+        self.assertEqual(len(all_objs), 4)
+
+    @httpretty.activate
     def test_fetching(self):
         url = 'https://example.edu'
         user_id = 'testuser'
