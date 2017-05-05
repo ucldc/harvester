@@ -23,7 +23,7 @@ class Flickr_Fetcher(Fetcher):
     url_get_photo_info_template = 'https://api.flickr.com/services/rest/' \
         '?api_key={api_key}&method=flickr.photos.getInfo&photo_id={photo_id}'
 
-    def __init__(self, url_harvest, extra_data, page_size=500):
+    def __init__(self, url_harvest, extra_data, page_size=500, page_range=None):
         self.url_base = url_harvest
         self.user_id = extra_data
         self.api_key = os.environ.get('FLICKR_API_KEY', 'boguskey')
@@ -34,6 +34,22 @@ class Flickr_Fetcher(Fetcher):
         xml = urllib.urlopen(self.url_current).read()
         total = re.search('total="(?P<total>\d+)"', xml)
         self.docs_total = int(total.group('total'))
+        page_total = re.search('pages="(?P<page_total>\d+)"', xml)
+        self.page_total = int(page_total.group('page_total'))
+        if page_range:
+            start, end = page_range.split(',')
+            self.page_start = int(start)
+            self.page_end = int(end)
+            self.page_current = self.page_start
+            if self.page_end >= self.page_total:
+                self.page_end = self.page_total
+                docs_last_page = self.docs_total - \
+                        ((self.page_total - 1) * self.page_size)
+                self.docs_total = (self.page_end - self.page_start) * \
+                self.page_size + docs_last_page
+            else:
+                self.docs_total = (self.page_end - self.page_start + 1) * \
+                        self.page_size
 
     @property
     def url_current(self):
@@ -74,6 +90,8 @@ class Flickr_Fetcher(Fetcher):
                     .format(self.docs_fetched, self.docs_total))
             else:
                 raise StopIteration
+        if hasattr(self, 'page_end') and self.page_current > self.page_end:
+            raise StopIteration
         # for the given page of public photos results,
         # for each <photo> tag, create an object with id, server & farm saved
         # then get the info for the photo and add to object
