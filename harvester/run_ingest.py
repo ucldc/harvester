@@ -153,18 +153,6 @@ def main(user_email,
 
     publish_to_harvesting('Harvesting completed for {}'.format(collection.id),
                           'Finished harvest for {}'.format(collection.id))
-    # the image_harvest should be a separate job, with a long timeout
-    if run_image_harvest:
-        job = queue_image_harvest(
-            config['redis_host'],
-            config['redis_port'],
-            config['redis_password'],
-            config['redis_connect_timeout'],
-            config['couchdb_url'],
-            collection.id,
-            rq_queue,
-            object_auth=collection.auth)
-        logger.info("Started job for image_harvest:{}".format(job.result))
 
     log_handler.pop_application()
     mail_handler.pop_application()
