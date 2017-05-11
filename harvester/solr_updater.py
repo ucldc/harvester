@@ -7,6 +7,7 @@ import argparse
 import re
 import hashlib
 import json
+from urlparse import urlparse
 import requests
 import boto
 from solr import Solr, SolrException
@@ -63,6 +64,8 @@ COUCHDOC_TO_SOLR_MAPPING = {
                                         d['object_dimensions'][0],
                                         d['object_dimensions'][1])},
     'isShownAt': lambda d: {'url_item': d['isShownAt']},
+    # NOTE: if no item_count field, this will be omitted from solr doc
+    'item_count': lambda d: {'item_count': d.get('item_count', 0)},
 }
 
 # So no "coverage" has been in the sourceResource, it's always mapped to
@@ -406,16 +409,26 @@ def normalize_type(solr_doc):
 
 
 def has_required_fields(doc):
-    '''Check the couchdb doc has required fields'''
+    '''Check the couchdb doc has required fields and reasonable values'''
     if 'sourceResource' not in doc:
         raise KeyError('---- OMITTED: Doc:{0} has no sourceResource.'.format(
             doc['_id']))
     if 'title' not in doc['sourceResource']:
         raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc[
             '_id']))
+    if 'rights' not in doc['sourceResource']:
+        raise KeyError('---- OMITTED: Doc:{0} has no rights.'.format(doc[
+            '_id']))
     if 'isShownAt' not in doc:
         raise KeyError('---- OMITTED: Doc:{0} has no isShownAt.'.format(doc[
             '_id']))
+    # check that value in isShownAt is at least a valid URL format
+    parsed = urlparse(doc['isShownAt'])
+    if not parsed.scheme or not parsed.netloc or  \
+            not (parsed.path or parsed.params or parsed.query):
+        raise ValueError(
+        '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be' \
+                'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
@@ -658,6 +671,7 @@ def map_couch_to_solr_doc(doc):
 
 def push_doc_to_solr(solr_doc, solr_db):
     '''Push one couch doc to solr'''
+    n = 1
     try:
         solr_db.add(solr_doc)
         print(
@@ -670,9 +684,10 @@ def push_doc_to_solr(solr_doc, solr_db):
                                              solr_doc['collection_url'],
                                              solr_doc['harvest_id_s']),
             file=sys.stderr)
+        n = 0
         if not e.httpcode == 400:
             raise e
-    return solr_doc
+    return n
 
 
 def get_key_for_env():
@@ -727,20 +742,30 @@ def sync_couch_collection_to_solr(collection_key):
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
     results = []
+    num_added = missing_required = 0
     for r in v:
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
+            missing_required += 1
+            print(e.message)
+            continue
+        except ValueError, e:
+            missing_required += 1
             print(e.message)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
+        # TODO: here is where to check if existing and compare collection vals
         results.append(solr_doc)
-        solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
+        num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
         'Synced collection {} to solr'.format(collection_key),
-        '{} documents updated'.format(len(results)))
+        '{} Couch Docs. {} solr documents updated\n'
+        '{} docs were missing required fields'.format(len(results),
+                                                      num_added,
+                                                      missing_required))
     return results
 
 
@@ -800,6 +825,9 @@ def main(url_couchdb=None,
                 doc = fill_in_title(doc)
                 has_required_fields(doc)
             except KeyError, e:
+                print(e.message)
+                continue
+            except ValueError, e:
                 print(e.message)
                 continue
             try:

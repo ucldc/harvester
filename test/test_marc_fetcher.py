@@ -4,7 +4,8 @@ import shutil
 from harvester.collection_registry_client import Collection
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import harvester.fetcher as fetcher
 
 

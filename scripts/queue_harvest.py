@@ -41,6 +41,8 @@ def def_args():
                         help='Timeout for the RQ job')
     parser.add_argument('--run_image_harvest', type=bool, default=True,
             help='Run image harvest set: --run_image_harvest=False to skip')
+    parser.add_argument('--page_range', type=str, default=None,
+            help='The page range as a comma separated pair of numbers')
     return parser
 
 
@@ -49,7 +51,8 @@ def main(user_email, url_api_collection,
         timeout=None, poll_interval=20,
         job_timeout=86400, # 24 hrs
         rq_queue=None,
-        run_image_harvest=False):
+        run_image_harvest=False,
+        page_range=None):
     timeout_dt = datetime.timedelta(seconds=timeout) if timeout else \
                  datetime.timedelta(seconds=TIMEOUT)
     start_time = datetime.datetime.now()
@@ -68,7 +71,8 @@ def main(user_email, url_api_collection,
         result = rQ.enqueue_call(func='harvester.run_ingest.main',
                                  args=(user_email, url),
                                  kwargs={'run_image_harvest':run_image_harvest,
-                                         'rq_queue': rq_queue},
+                                         'rq_queue': rq_queue,
+                                         'page_range': page_range},
                                  timeout=job_timeout,
                                  )
         results.append(result)
@@ -87,5 +91,6 @@ if __name__ == '__main__':
          redis_pswd=env['redis_password'],
          rq_queue=args.rq_queue,
          job_timeout=args.job_timeout,
-         run_image_harvest=args.run_image_harvest
+         run_image_harvest=args.run_image_harvest,
+         page_range=args.page_range
          )

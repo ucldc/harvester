@@ -4,7 +4,8 @@ from unittest import TestCase
 import shutil
 import re
 import pickle
-import httpretty
+from mypretty import httpretty
+# import httpretty
 import logbook
 from mock import patch
 from mock import MagicMock
@@ -17,6 +18,9 @@ from harvester.config import config
 import harvester.run_ingest as run_ingest
 from akara import logger
 
+
+if 'ARN_TOPIC_HARVESTING_REPORT' not in os.environ:
+    os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'fakey'
 
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
@@ -351,7 +355,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mail_handler = MagicMock()
         url_api_collection = 'https://registry.cdlib.org/api/v1/collection/' \
             '178/'
-        httpretty.enable()
+        httpretty.httpretty.enable()
         httpretty.register_uri(
             httpretty.GET,
             url_api_collection,
@@ -400,7 +404,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mail_handler = MagicMock()
         url_api_collection = 'https://registry.cdlib.org/api/v1/' \
             'collection/178/'
-        httpretty.enable()
+        httpretty.httpretty.enable()
         httpretty.register_uri(
             httpretty.GET,
             url_api_collection,

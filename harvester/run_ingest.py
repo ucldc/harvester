@@ -81,7 +81,8 @@ def main(user_email,
          redis_pswd=None,
          redis_timeout=600,
          rq_queue=None,
-         run_image_harvest=False):
+         run_image_harvest=False,
+         **kwargs):
     '''Runs a UCLDC ingest process for the given collection'''
     cleanup_work_dir()  # remove files from /tmp
     emails = [user_email]
@@ -112,7 +113,8 @@ def main(user_email,
         emails,
         url_api_collection,
         log_handler=log_handler,
-        mail_handler=mail_handler)
+        mail_handler=mail_handler,
+        **kwargs)
     if 'prod' in os.environ['DATA_BRANCH'].lower():
         if not collection.ready_for_publication:
             raise Exception(''.join(
@@ -151,18 +153,6 @@ def main(user_email,
 
     publish_to_harvesting('Harvesting completed for {}'.format(collection.id),
                           'Finished harvest for {}'.format(collection.id))
-    # the image_harvest should be a separate job, with a long timeout
-    if run_image_harvest:
-        job = queue_image_harvest(
-            config['redis_host'],
-            config['redis_port'],
-            config['redis_password'],
-            config['redis_connect_timeout'],
-            config['couchdb_url'],
-            collection.id,
-            rq_queue,
-            object_auth=collection.auth)
-        logger.info("Started job for image_harvest:{}".format(job.result))
 
     log_handler.pop_application()
     mail_handler.pop_application()

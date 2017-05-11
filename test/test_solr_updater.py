@@ -131,6 +131,11 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['harvest_id_s'],
                          '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        self.assertEqual(sdoc['reference_image_md5'], 'f2610262f487f013fb96149f98990fb0')
+        self.assertEqual(sdoc['reference_image_dimensions'], '1244:1500')
+        self.assertEqual(sdoc['url_item'],
+                         'http://ark.cdlib.org/ark:/13030/ft009nb05r')
+        self.assertNotIn('item_count', sdoc)
         self.assertNotIn('campus', sdoc)
         self.assertEqual(sdoc['campus_url'],
                          [u'https://registry.cdlib.org/api/v1/campus/1/'])
@@ -292,44 +297,27 @@ class SolrUpdaterTestCase(TestCase):
     def test_check_required_fields(self):
         doc = {'id': 'test-id'}
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {'id': 'test-id', 'sourceResource': {}}
+        doc = {'id': 'test-id', '_id': 'x', 'sourceResource': {}}
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title',
-                '_id': 'x'
-            }
-        }
+        doc['sourceResource'].update({'title': 'test-title'})
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title'
-            },
-            '_id': 'x',
-            'isShownAt': 'y'
-        }
+        doc['sourceResource'].update({'rights': 'hasRights'})
+        doc.update({'isShownAt': 'y'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc'})
+        self.assertRaises(ValueError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
-        self.assertEqual(ret, True)
-        doc = {
-            'id': 'test-id',
-            'sourceResource': {
-                'title': 'test-title',
-                'type': 'image'
-            }
-        }
+        #self.assertRaises(KeyError, has_required_fields, doc)
+        doc.update({'isShownAt': 'http://netloc/;params'})
+        ret = has_required_fields(doc)
+        doc.update({'isShownAt': 'http://netloc/?query'})
+        ret = has_required_fields(doc)
+        doc['sourceResource'].update({'type': 'image'})
         self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {
-            'id': 'test-id',
-            'object': 'hasobject',
-            '_id': 'x',
-            'isShownAt': 'y',
-            'sourceResource': {
-                'title': 'test-title',
-                'type': 'image'
-            }
-        }
+        doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
 
@@ -415,3 +403,15 @@ class SolrUpdaterTestCase(TestCase):
             "Topanga (Calif.)", "Pacific Palisades, Los Angeles (Calif.)",
             "Venice (Los Angeles, Calif.)", "Los Angeles (Calif.)"
         ])
+
+    def test_item_count(self):
+        '''Test that item_count is picked up'''
+        doc = json.load(open(DIR_FIXTURES + '/couchdb_item_count.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['id'], '0c0e6ee502a2afda21128841f0addf23')
+        self.assertEqual(sdoc['item_count'], 2)
+        doc = json.load(open(DIR_FIXTURES + '/couchdb_doc.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
+        self.assertNotIn('item_count', sdoc)
+

@@ -14,16 +14,18 @@ from ..collection_registry_client import Collection
 from .. import config
 from .fetcher import Fetcher
 from .fetcher import NoRecordsFetchedException
-from .oaifetcher import OAIFetcher
-from .solrfetcher import SolrFetcher
-from .solrfetcher import PySolrQueryFetcher
-from .solrfetcher import PySolrUCBFetcher
-from .marcfetcher import MARCFetcher
-from .marcfetcher import AlephMARCXMLFetcher
-from .nuxeofetcher import UCLDCNuxeoFetcher
-from .oacfetcher import OAC_XML_Fetcher
-from .oacfetcher import OAC_JSON_Fetcher
-from .cmisatomfeedfetcher import CMISAtomFeedFetcher
+from .oai_fetcher import OAIFetcher
+from .solr_fetcher import SolrFetcher
+from .solr_fetcher import PySolrQueryFetcher
+from .solr_fetcher import PySolrUCBFetcher
+from .marc_fetcher import MARCFetcher
+from .marc_fetcher import AlephMARCXMLFetcher
+from .nuxeo_fetcher import UCLDCNuxeoFetcher
+from .oac_fetcher import OAC_XML_Fetcher
+from .oac_fetcher import OAC_JSON_Fetcher
+from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
+from .flickr_fetcher import Flickr_Fetcher
+from .youtube_fetcher import YouTube_Fetcher
 
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
@@ -38,6 +40,8 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'SFX': PySolrQueryFetcher,
                  'UCB': PySolrUCBFetcher,
                  'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
+                 'FLK': Flickr_Fetcher, # All public photos fetcher
+                 'YTB': YouTube_Fetcher, # by playlist id, use "uploads" list
                  }
 
 
@@ -54,7 +58,7 @@ class HarvestController(object):
                    'source', 'language', 'relation', 'coverage', 'rights']
 
     def __init__(self, user_email, collection, profile_path=None,
-                 config_file=None):
+                 config_file=None, **kwargs):
         self.user_email = user_email  # single or list
         self.collection = collection
         self.profile_path = profile_path
@@ -69,7 +73,8 @@ class HarvestController(object):
 
         cls_fetcher = HARVEST_TYPES.get(self.collection.harvest_type, None)
         self.fetcher = cls_fetcher(self.collection.url_harvest,
-                                   self.collection.harvest_extra_data)
+                                   self.collection.harvest_extra_data,
+                                   **kwargs)
         self.logger = logbook.Logger('HarvestController')
         self.dir_save = tempfile.mkdtemp('_' + self.collection.slug)
         self.ingest_doc_id = None
@@ -243,7 +248,7 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
 
 def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
          dir_profile='profiles', profile_path=None,
-         config_file=None):
+         config_file=None, **kwargs):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.
@@ -303,7 +308,7 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     try:
         harvester = HarvestController(user_email, collection,
                                       profile_path=profile_path,
-                                      config_file=config_file)
+                                      config_file=config_file, **kwargs)
     except Exception, e:
         import traceback
         msg = 'Exception in harvester init: type: {} TRACE:\n{}'.format(
