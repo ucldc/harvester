@@ -9,7 +9,7 @@ import hashlib
 import json
 from urlparse import urlparse
 import requests
-import boto
+import boto3
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
@@ -702,22 +702,17 @@ class CouchdbLastSeq_S3(object):
     '''
 
     def __init__(self):
-        # self.conn = boto.connect_s3()
-        self.conn = boto.s3.connect_to_region('us-west-2')
-        self.bucket = self.conn.get_bucket(S3_BUCKET)
-        self.key = self.bucket.get_key(get_key_for_env())
-        if not self.key:
-            self.key = boto.s3.key.Key(self.bucket)
-            self.key.key = get_key_for_env()
+        self.s3 = boto3.resource('s3')
+        self.s3object = self.s3.Object(S3_BUCKET, get_key_for_env())
 
     @property
     def last_seq(self):
-        return int(self.key.get_contents_as_string())
+        return int(self.s3object.get()['Body'].read())
 
     @last_seq.setter
     def last_seq(self, value):
         '''value should be last_seq from couchdb _changes'''
-        self.key.set_contents_from_string(value)
+        self.s3object.put(Body=str(value))
 
 
 def delete_solr_collection(collection_key):

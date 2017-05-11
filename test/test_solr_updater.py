@@ -262,29 +262,26 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['facet_decade'], set(['unknown']))
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq = 5
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
             'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).set_contents_from_string.assert_called_with(5)
+        mock_boto('s3').Object().put.assert_called_with(Body='5')
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_get_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq getting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
             'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).get_contents_as_string.assert_called_with()
+        mock_boto('s3').Object().get.assert_called()
+        mock_boto('s3').Object().get()['Body'].read.assert_called()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_norepo.json'))
