@@ -105,7 +105,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['genre'], ['Drawing'])
         self.assertNotIn('identifier', sdoc)
         self.assertEqual(sdoc['language'], ['English', 'eng'])
-        self.assertEqual(sdoc['provenance'], [u'Gift of Dunya Ramicova, 2014'])
+        self.assertEqual(sdoc['provenance'], u'Gift of the Naify Family')
         self.assertNotIn('publisher', sdoc)
         self.assertEqual(sdoc['relation'], [u'The Fairy Queen'])
         self.assertEqual(sdoc['rights'], [

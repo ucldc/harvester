@@ -16,6 +16,7 @@ import harvester.fetcher as fetcher
 from harvester.fetcher import get_log_file_path
 from harvester.config import config
 import harvester.run_ingest as run_ingest
+from akara import logger
 
 
 if 'ARN_TOPIC_HARVESTING_REPORT' not in os.environ:
@@ -321,6 +322,8 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         os.environ['ID_EC2_SOLR_BUILD'] = 'BUILD'
         os.environ['DPLA_CONFIG_FILE'] = 'akara.ini'
         os.environ['DATA_BRANCH'] = 'stage'
+        os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'bogus'
+        os.environ['AWS_DEFAULT_REGION'] = 'us-west-2'
 
     def tearDown(self):
         # remove env vars if created?
@@ -329,6 +332,8 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         del os.environ['ID_EC2_INGEST']
         del os.environ['ID_EC2_SOLR_BUILD']
         del os.environ['DATA_BRANCH']
+        del os.environ['ARN_TOPIC_HARVESTING_REPORT']
+        del os.environ['AWS_DEFAULT_REGION']
         if 'DPLA_CONFIG_FILE' in os.environ:
             del os.environ['DPLA_CONFIG_FILE']
 
