@@ -15,6 +15,7 @@ from harvester.solr_updater import get_sort_collection_data_string
 from harvester.solr_updater import map_registry_data
 from harvester.solr_updater import UTC
 from harvester.solr_updater import dejson
+from harvester.solr_updater import check_nuxeo_media
 
 
 class SolrUpdaterTestCase(TestCase):
@@ -34,6 +35,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
+
 #        mock_solr.add.assert_called_with({'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066/'], 'id': u'23066--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'campus_name': [u'UC Berkeley'], 'reference_image_md5': u'f2610262f487f013fb96149f98990fb0', 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'title': u'Neighbor', 'identifier': [u'http://ark.cdlib.org/ark:/13030/ft009nb05r', u'Banc Pic 1986.059:124--PIC'], 'type': u'image', 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
 
     def test_map_couch_to_solr_no_campus(self):
@@ -73,7 +75,8 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['date'], ['between 1885-1890'])
 
-    def test_map_couch_to_solr_nuxeo_doc(self):
+    @patch('boto3.resource', autospec=True)
+    def test_map_couch_to_solr_nuxeo_doc(self, mock_boto):
         '''Test the mapping of a couch db source json doc from Nuxeo
         to a solr schema compatible doc
         '''
@@ -100,8 +103,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(
             sdoc['format'],
             u'Graphite pencil, and Dr. Ph Martins Liquid Watercolor on '
-            'watercolor paper'
-        )
+            'watercolor paper')
         self.assertEqual(sdoc['genre'], ['Drawing'])
         self.assertNotIn('identifier', sdoc)
         self.assertEqual(sdoc['language'], ['English', 'eng'])
@@ -114,11 +116,9 @@ class SolrUpdaterTestCase(TestCase):
             '(CC BY-NC-ND 4.0)'
         ])
         self.assertEqual(sdoc['structmap_text'], 'Brag')
-        self.assertEqual(
-            sdoc['structmap_url'],
-            u's3://static.ucldc.cdlib.org/media_json/'
-            '0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json'
-        )
+        self.assertEqual(sdoc['structmap_url'],
+                         u's3://static.ucldc.cdlib.org/media_json/'
+                         '0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json')
         self.assertEqual(sdoc['subject'], [None])
         self.assertEqual(sdoc['type'], 'image')
 
@@ -131,7 +131,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['harvest_id_s'],
                          '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
-        self.assertEqual(sdoc['reference_image_md5'], 'f2610262f487f013fb96149f98990fb0')
+        self.assertEqual(sdoc['reference_image_md5'],
+                         'f2610262f487f013fb96149f98990fb0')
         self.assertEqual(sdoc['reference_image_dimensions'], '1244:1500')
         self.assertEqual(sdoc['url_item'],
                          'http://ark.cdlib.org/ark:/13030/ft009nb05r')
@@ -199,8 +200,7 @@ class SolrUpdaterTestCase(TestCase):
             'permission of the copyright owners. Works not in the public '
             'domain cannot be commercially exploited without permission of '
             'the copyright owner. Responsibility for any use rests '
-            'exclusively with the user.',
-            u'The Bancroft Library--assigned',
+            'exclusively with the user.', u'The Bancroft Library--assigned',
             u'All requests to reproduce, publish, quote from, or otherwise '
             'use collection materials must be submitted in writing to the '
             'Head of Public Services, The Bancroft Library, University of '
@@ -222,7 +222,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_title'], u'neighbor')
         self.assertEqual(sdoc['temporal'], [u'1964-1965'])
 
-    def test_sort_title_all_punctuation(self):
+    @patch('boto3.resource', autospec=True)
+    def test_sort_title_all_punctuation(self, mock_boto):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_title_all_punc.json'))
         doc['sourceResource']['title'] = ['????$$%(@*#_!']
         sdoc = map_couch_to_solr_doc(doc)
@@ -262,29 +263,26 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['facet_decade'], set(['unknown']))
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq = 5
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
-            'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).set_contents_from_string.assert_called_with(5)
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
+                                                  'couchdb_since/test_branch')
+        mock_boto('s3').Object().put.assert_called_with(Body='5')
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_get_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq getting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
-            'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).get_contents_as_string.assert_called_with()
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
+                                                  'couchdb_since/test_branch')
+        mock_boto('s3').Object().get.assert_called()
+        mock_boto('s3').Object().get()['Body'].read.assert_called()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_norepo.json'))
@@ -415,3 +413,32 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('item_count', sdoc)
 
+    @patch('boto3.resource', autospec=True)
+    def test_nuxeo_media_check(self, mock_boto):
+        doc = {'_id': 'a-UUID', 'type': 'text'}
+        check_nuxeo_media(doc)  # should just return
+        doc['structmap_url'] = 's3://fakebucket/fakedir/a-UUID-media.json'
+        check_nuxeo_media(doc)  # should just return
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_any_call('fakebucket',
+                                               'fakedir/a-UUID-media.json')
+        mock_boto('s3').Object().content_length = 0
+        self.assertRaisesRegexp(
+            ValueError, '---- OMITTED: Doc:a-UUID is missing media json.',
+            check_nuxeo_media, doc)
+        doc['type'] = 'image'
+        mock_boto('s3').Object().content_length = 5
+        check_nuxeo_media(doc)  # should just return
+        mock_boto('s3').Object.assert_called_with('ucldc-private-files',
+                                                  'jp2000/a-UUID')
+
+        class content_lengths():
+            return_values = [0, 7]
+
+            def __getattr__(self, name):
+                return self.return_values.pop()
+
+        mock_boto('s3').Object.return_value = content_lengths()
+        self.assertRaisesRegexp(ValueError,
+                                '---- OMITTED: Doc:a-UUID is missing jp2000.',
+                                check_nuxeo_media, doc)

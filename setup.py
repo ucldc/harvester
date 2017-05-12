@@ -57,7 +57,7 @@ setup(
         'CouchDB==0.9',
         'redis==2.10.1',
         'rq',
-        'boto==2.29.1',
+        'boto',
         'CouchDB==0.9',
         'md5s3stash',
         'pymarc==3.0.4',
