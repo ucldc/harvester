@@ -5,7 +5,6 @@ from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
 from test.utils import ConfigFileOverrideMixin
-import httpretty
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
@@ -40,8 +39,8 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         os.environ['COUCHDB_URL'] = 'http://couchdb.example.edu/'
         self.old_url_solr = os.environ.get('URL_SOLR', None)
         os.environ['URL_SOLR'] = 'http://solr.example.edu/'
-        self.old_arn_report = os.environ.get(
-            'ARN_TOPIC_HARVESTING_REPORT', None)
+        self.old_arn_report = os.environ.get('ARN_TOPIC_HARVESTING_REPORT',
+                                             None)
         os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'x'
 
     def tearDown(self):
@@ -315,50 +314,36 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
 
     def test_check_required_fields(self):
         doc = {'id': 'sid', '_id': 'hid'}
-        self.assertRaisesRegexp(
-            MissingSourceResource,
-            '---- OMITTED: Doc:hid has no sourceResource.',
-            has_required_fields,
-            doc)
+        self.assertRaisesRegexp(MissingSourceResource,
+                                '---- OMITTED: Doc:hid has no sourceResource.',
+                                has_required_fields, doc)
         doc['sourceResource'] = {}
-        self.assertRaisesRegexp(
-            MissingTitle,
-            '---- OMITTED: Doc:hid has no title.',
-            has_required_fields,
-            doc)
+        self.assertRaisesRegexp(MissingTitle,
+                                '---- OMITTED: Doc:hid has no title.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'title': 'test-title'})
-        self.assertRaisesRegexp(
-            MissingRights,
-            '---- OMITTED: Doc:hid has no rights.',
-            has_required_fields,
-            doc)
+        self.assertRaisesRegexp(MissingRights,
+                                '---- OMITTED: Doc:hid has no rights.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'rights': 'hasRights'})
-        self.assertRaisesRegexp(
-            MissingIsShownAt,
-            '---- OMITTED: Doc:hid has no isShownAt.',
-            has_required_fields,
-            doc)
+        self.assertRaisesRegexp(MissingIsShownAt,
+                                '---- OMITTED: Doc:hid has no isShownAt.',
+                                has_required_fields, doc)
         doc.update({'isShownAt': 'y'})
         self.assertRaisesRegexp(
             isShownAtNotURL,
             '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
-            'a URL: y',
-            has_required_fields,
-            doc)
+            'a URL: y', has_required_fields, doc)
         doc.update({'isShownAt': 'http://'})
         self.assertRaisesRegexp(
             isShownAtNotURL,
             '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
-            'a URL: http://',
-            has_required_fields,
-            doc)
+            'a URL: http://', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc'})
         self.assertRaisesRegexp(
             isShownAtNotURL,
             '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
-            'a URL: http://netloc',
-            has_required_fields,
-            doc)
+            'a URL: http://netloc', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
@@ -372,8 +357,7 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         self.assertRaisesRegexp(
             MissingImage,
             '---- OMITTED: Doc:hid is image type with no harvested image.',
-            has_required_fields,
-            doc)
+            has_required_fields, doc)
         doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
@@ -477,30 +461,24 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         cid = '22222'
         updated_docs = range(10)
         num_added = 4
-        report = {'Missing isShownAt': 2,
-                 'Missing Image': 2,
-                 'Missing SourceResource': 2,
-                 'isShownAt not a URL': 2,
-                 'Missing Rights': 2,
-                 'Missing jp2000': 2}
-        msg =  harvesting_report(
-            cid,
-            updated_docs,
-            num_added,
-            report
-            )
-        self.assertEqual(msg,
-            'Synced collection 22222 to solr.\n'
-            '10 Couch Docs.\n'
-            '4 solr documents updated\n'
-            'Missing isShownAt : 2\n'
-            'Missing Image : 2\n'
-            'Missing SourceResource : 2\n'
-            'isShownAt not a URL : 2\n'
-            'Missing Rights : 2\n'
-            'Missing jp2000 : 2'
-            )
-
+        report = {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Missing jp2000': 2
+        }
+        msg = harvesting_report(cid, updated_docs, num_added, report)
+        self.assertEqual(msg, 'Synced collection 22222 to solr.\n'
+                         '10 Couch Docs.\n'
+                         '4 solr documents updated\n'
+                         'Missing isShownAt : 2\n'
+                         'Missing Image : 2\n'
+                         'Missing SourceResource : 2\n'
+                         'isShownAt not a URL : 2\n'
+                         'Missing Rights : 2\n'
+                         'Missing jp2000 : 2')
 
     @patch('boto3.resource', autospec=True)
     def test_nuxeo_media_check(self, mock_boto):
@@ -515,8 +493,7 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         self.assertRaisesRegexp(
             MissingMediaJSON,
             '---- OMITTED: Doc:a-UUID is missing media json.',
-            check_nuxeo_media,
-            doc)
+            check_nuxeo_media, doc)
         doc['type'] = 'image'
         mock_boto('s3').Object().content_length = 5
         check_nuxeo_media(doc)  # should just return
@@ -530,76 +507,140 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
                 return self.return_values.pop()
 
         mock_boto('s3').Object.return_value = content_lengths()
-        self.assertRaisesRegexp(
-            MissingJP2000,
-            '---- OMITTED: Doc:a-UUID is missing jp2000.',
-            check_nuxeo_media,
-            doc)
+        self.assertRaisesRegexp(MissingJP2000,
+                                '---- OMITTED: Doc:a-UUID is missing jp2000.',
+                                check_nuxeo_media, doc)
 
     @patch('boto3.resource', autospec=True)
     @patch('harvester.solr_updater.publish_to_harvesting')
     @patch('harvester.solr_updater.Solr', autospec=True)
     @patch('harvester.solr_updater.CouchDBCollectionFilter')
     @patch('harvester.solr_updater.get_couchdb')
-    def test_report(
-        self,
-        mock_get_couchdb,
-        mock_couchview,
-        mock_solr,
-        mock_publish,
-        mock_boto):
+    def test_report(self, mock_get_couchdb, mock_couchview, mock_solr,
+                    mock_publish, mock_boto):
         '''Test that the report from sync collection has a tally of the
         various errors
         '''
+
         class viewrow():
             def __init__(self, data):
                 self.doc = data
 
         test_data = [
-            viewrow({'_id':'1'}),
-            viewrow({'_id':'2'}),
-            viewrow({'_id':'3', 'sourceResource':{}}),
-            viewrow({'_id':'4', 'sourceResource':{}}),
-            viewrow({'_id':'5', 'sourceResource':{'rights':'r'}}),
-            viewrow({'_id':'6', 'sourceResource':{'rights':'r'}}),
-            viewrow({'_id':'7', 'isShownAt':'x',
-                'sourceResource':{'rights':'r'}}),
-            viewrow({'_id':'8', 'isShownAt':'x',
-                'sourceResource':{'rights':'r'}}),
-            viewrow({'_id':'9', 'isShownAt':'http://example.edu/',
-                'sourceResource':{'rights':'r', 'type': 'image'}}),
-            viewrow({'_id':'10', 'isShownAt':'http://example.edu/',
-                'sourceResource':{'rights':'r', 'type': 'image'}}),
-            viewrow({'_id':'11', 'isShownAt':'http://example.edu/',
+            viewrow({
+                '_id': '1'
+            }),
+            viewrow({
+                '_id': '2'
+            }),
+            viewrow({
+                '_id': '3',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '4',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '5',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '6',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '7',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '8',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '9',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '10',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '11',
+                'isShownAt': 'http://example.edu/',
                 'object': 'x',
-                'sourceResource':{'rights':'r', 'type': 'image'},
-                'originalRecord': {'collection': [{'harvest_type':'x'}]},
-                }),
-            viewrow({'_id':'12', 'isShownAt':'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }]
+                },
+            }),
+            viewrow({
+                '_id': '12',
+                'isShownAt': 'http://example.edu/',
                 'object': 'x',
-                'sourceResource':{'rights':'r', 'type': 'image'},
-                'originalRecord': {'collection': [{'harvest_type':'x'}],
-                    'structmap_url': 'w/x/y/z-a-b'},
-                }),
-            viewrow({'_id':'13', 'isShownAt':'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
+            viewrow({
+                '_id': '13',
+                'isShownAt': 'http://example.edu/',
                 'object': 'x/y/z/',
-                'sourceResource':{'rights':'r', 'type': 'image'},
-                'originalRecord': {'collection': [{'harvest_type':'x'}],
-                    'structmap_url': 'w/x/y/z-a-b'},
-                }),
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
         ]
         mock_couchview.return_value = test_data
         mock_boto('s3').Object().content_length = 0
         with patch('harvester.solr_updater.map_registry_data') as mock_reg:
             updated_docs, report = sync_couch_collection_to_solr('cid')
-        self.assertEqual(report,
-                {'Missing isShownAt': 2,
-                 'Missing Image': 2,
-                 'Missing SourceResource': 2,
-                 'isShownAt not a URL': 2,
-                 'Missing media_json': 2,
-                 'Missing Rights': 2}
-                )
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing media_json': 2,
+            'Missing Rights': 2
+        })
+
         class content_lengths():
             return_values = [0, 7, 0, 7]
 
@@ -607,13 +648,13 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
                 return self.return_values.pop()
 
         mock_boto('s3').Object.return_value = content_lengths()
-        with patch('harvester.solr_updater.map_registry_data') as mock_reg:
+        with patch('harvester.solr_updater.map_registry_data'):
             updated_docs, report = sync_couch_collection_to_solr('cid')
-        self.assertEqual(report,
-                {'Missing isShownAt': 2,
-                 'Missing Image': 2,
-                 'Missing SourceResource': 2,
-                 'isShownAt not a URL': 2,
-                 'Missing Rights': 2,
-                 'Missing jp2000': 2}
-                )
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Missing jp2000': 2
+        })

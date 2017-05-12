@@ -408,6 +408,7 @@ def normalize_type(solr_doc):
         else:  # string?
             solr_doc['type'] = norm_type(doc_type)
 
+
 class MissingSourceResource(KeyError):
     dict_key = 'Missing SourceResource'
 
@@ -606,7 +607,7 @@ def fill_in_title(couch_doc):
     if 'sourceResource' not in couch_doc:
         raise MissingSourceResource(
             "ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(
-            couch_doc['_id']))
+                couch_doc['_id']))
     if not couch_doc['sourceResource'].get('title', None):
         couch_doc['sourceResource']['title'] = ['Title unknown']
     elif not couch_doc['sourceResource'].get('title'):  # empty string?
@@ -797,9 +798,9 @@ def harvesting_report(collection_key, updated_docs, num_added, report):
     report_list = [' : '.join((key, str(val))) for key, val in report.items()]
     report_msg = '\n'.join(report_list)
     msg = ''.join(('Synced collection {} to solr.\n'.format(collection_key),
-        '{} Couch Docs.\n'.format(len(updated_docs)),
-        '{} solr documents updated\n'.format(num_added),
-        report_msg))
+                   '{} Couch Docs.\n'.format(len(updated_docs)),
+                   '{} solr documents updated\n'.format(num_added),
+                   report_msg))
     return msg
 
 
@@ -907,15 +908,15 @@ def main(url_couchdb=None,
                 print(e.message)
                 continue
             try:
-                check_nuxeo_media(solr_doc)
-            except ValueError, e:
-                print(e.message)
-                continue
-            try:
                 try:
                     solr_doc = map_couch_to_solr_doc(doc)
                 except OldCollectionException:
                     print('---- ERROR: OLD COLLECTION FOR:{}'.format(cur_id))
+                    continue
+                try:
+                    check_nuxeo_media(solr_doc)
+                except ValueError, e:
+                    print(e.message)
                     continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
             except TypeError, e:
