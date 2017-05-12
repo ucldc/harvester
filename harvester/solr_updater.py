@@ -7,6 +7,7 @@ import argparse
 import re
 import hashlib
 import json
+from collections import defaultdict
 from urlparse import urlparse
 import requests
 import boto3
@@ -407,29 +408,28 @@ def normalize_type(solr_doc):
         else:  # string?
             solr_doc['type'] = norm_type(doc_type)
 
-
 class MissingSourceResource(KeyError):
-    pass
+    dict_key = 'Missing SourceResource'
 
 
 class MissingTitle(KeyError):
-    pass
+    dict_key = 'Missing Title'
 
 
 class MissingRights(KeyError):
-    pass
+    dict_key = 'Missing Rights'
 
 
 class MissingIsShownAt(KeyError):
-    pass
+    dict_key = 'Missing isShownAt'
 
 
 class isShownAtNotURL(ValueError):
-    pass
+    dict_key = 'isShownAt not a URL'
 
 
 class MissingImage(KeyError):
-    pass
+    dict_key = 'Missing Image'
 
 
 def has_required_fields(doc):
@@ -604,7 +604,8 @@ def fill_in_title(couch_doc):
     '''if title has no entries, set to ['Title unknown']
     '''
     if 'sourceResource' not in couch_doc:
-        raise KeyError("ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(
+        raise MissingSourceResource(
+            "ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(
             couch_doc['_id']))
     if not couch_doc['sourceResource'].get('title', None):
         couch_doc['sourceResource']['title'] = ['Title unknown']
@@ -646,11 +647,11 @@ def add_facet_decade(couch_doc, solr_doc):
 
 
 class MissingMediaJSON(ValueError):
-    pass
+    dict_key = 'Missing media_json'
 
 
 class MissingJP2000(ValueError):
-    pass
+    dict_key = 'Missing jp2000'
 
 
 def check_nuxeo_media(doc):
@@ -667,7 +668,8 @@ def check_nuxeo_media(doc):
     s3object = s3.Object(bucket, s3key)
     if not s3object.content_length:
         raise MissingMediaJSON(
-            '---- OMITTED: Doc:{0} is missing media json.'.format(doc['_id']))
+            '---- OMITTED: Doc:{0} is missing media json.'.format(
+                doc['harvest_id_s']))
     # for image types, there should be a jp2000
     # jp2000 are in a bucket 'ucldc-private-files' in a "folder" 'jp2000'
     # with UUID as name
@@ -678,7 +680,8 @@ def check_nuxeo_media(doc):
         s3object = s3.Object(bucket, s3key)
         if not s3object.content_length:
             raise MissingJP2000(
-                '---- OMITTED: Doc:{0} is missing jp2000.'.format(doc['_id']))
+                '---- OMITTED: Doc:{0} is missing jp2000.'.format(
+                    doc['harvest_id_s']))
 
 
 def map_couch_to_solr_doc(doc):
@@ -722,7 +725,6 @@ def map_couch_to_solr_doc(doc):
                         doc['_id'], p),
                     file=sys.stderr)
                 raise e
-    check_nuxeo_media(solr_doc)
     normalize_type(solr_doc)
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
@@ -797,32 +799,41 @@ def sync_couch_collection_to_solr(collection_key):
     v = CouchDBCollectionFilter(
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
-    results = []
+    updated_docs = []
     num_added = missing_required = 0
+    report = defaultdict(int)
     for r in v:
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
             missing_required += 1
+            report[e.dict_key] += 1
             print(e.message)
             continue
         except ValueError, e:
             missing_required += 1
+            report[e.dict_key] += 1
             print(e.message)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         # TODO: here is where to check if existing and compare collection vals
-        results.append(solr_doc)
+        try:
+            check_nuxeo_media(solr_doc)
+        except ValueError, e:
+            print(e.message)
+            report[e.dict_key] += 1
+            continue
+        updated_docs.append(solr_doc)
         num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
         'Synced collection {} to solr'.format(collection_key),
         '{} Couch Docs. {} solr documents updated\n'
-        '{} docs were missing required fields'.format(len(results),
+        '{} docs were missing required fields'.format(len(updated_docs),
                                                       num_added,
                                                       missing_required))
-    return results
+    return updated_docs, report
 
 
 def main(url_couchdb=None,
@@ -883,6 +894,11 @@ def main(url_couchdb=None,
             except KeyError, e:
                 print(e.message)
                 continue
+            except ValueError, e:
+                print(e.message)
+                continue
+            try:
+                check_nuxeo_media(solr_doc)
             except ValueError, e:
                 print(e.message)
                 continue

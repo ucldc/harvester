@@ -4,6 +4,8 @@ import json
 from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
+from test.utils import ConfigFileOverrideMixin
+import httpretty
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
@@ -24,18 +26,28 @@ from harvester.solr_updater import isShownAtNotURL
 from harvester.solr_updater import MissingImage
 from harvester.solr_updater import MissingMediaJSON
 from harvester.solr_updater import MissingJP2000
+from harvester.solr_updater import sync_couch_collection_to_solr
 
 
-class SolrUpdaterTestCase(TestCase):
+class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
     '''Test the solr update from couchdb changes feed'''
 
     def setUp(self):
         self.old_data_branch = os.environ.get('DATA_BRANCH', None)
         os.environ['DATA_BRANCH'] = 'test_branch'
+        self.old_couchdb_url = os.environ.get('COUCHDB_URL', None)
+        os.environ['COUCHDB_URL'] = 'http://couchdb.example.edu/'
+        self.old_url_solr = os.environ.get('URL_SOLR', None)
+        os.environ['URL_SOLR'] = 'http://solr.example.edu/'
+        self.old_arn_report = os.environ.get(
+            'ARN_TOPIC_HARVESTING_REPORT', None)
+        os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'x'
 
     def tearDown(self):
         if self.old_data_branch:
             os.environ['DATA_BRANCH'] = self.old_data_branch
+        if self.old_couchdb_url:
+            os.environ['COUCHDB_URL'] = self.old_couchdb_url
 
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
@@ -461,7 +473,7 @@ class SolrUpdaterTestCase(TestCase):
 
     @patch('boto3.resource', autospec=True)
     def test_nuxeo_media_check(self, mock_boto):
-        doc = {'_id': 'a-UUID', 'type': 'text'}
+        doc = {'harvest_id_s': 'a-UUID', 'type': 'text'}
         check_nuxeo_media(doc)  # should just return
         doc['structmap_url'] = 's3://fakebucket/fakedir/a-UUID-media.json'
         check_nuxeo_media(doc)  # should just return
@@ -492,3 +504,85 @@ class SolrUpdaterTestCase(TestCase):
             '---- OMITTED: Doc:a-UUID is missing jp2000.',
             check_nuxeo_media,
             doc)
+
+    @patch('boto3.resource', autospec=True)
+    @patch('harvester.solr_updater.publish_to_harvesting')
+    @patch('harvester.solr_updater.Solr', autospec=True)
+    @patch('harvester.solr_updater.CouchDBCollectionFilter')
+    @patch('harvester.solr_updater.get_couchdb')
+    def test_report(
+        self,
+        mock_get_couchdb,
+        mock_couchview,
+        mock_solr,
+        mock_publish,
+        mock_boto):
+        '''Test that the report from sync collection has a tally of the
+        various errors
+        '''
+        class viewrow():
+            def __init__(self, data):
+                self.doc = data
+
+        test_data = [
+            viewrow({'_id':'1'}),
+            viewrow({'_id':'2'}),
+            viewrow({'_id':'3', 'sourceResource':{}}),
+            viewrow({'_id':'4', 'sourceResource':{}}),
+            viewrow({'_id':'5', 'sourceResource':{'rights':'r'}}),
+            viewrow({'_id':'6', 'sourceResource':{'rights':'r'}}),
+            viewrow({'_id':'7', 'isShownAt':'x',
+                'sourceResource':{'rights':'r'}}),
+            viewrow({'_id':'8', 'isShownAt':'x',
+                'sourceResource':{'rights':'r'}}),
+            viewrow({'_id':'9', 'isShownAt':'http://example.edu/',
+                'sourceResource':{'rights':'r', 'type': 'image'}}),
+            viewrow({'_id':'10', 'isShownAt':'http://example.edu/',
+                'sourceResource':{'rights':'r', 'type': 'image'}}),
+            viewrow({'_id':'11', 'isShownAt':'http://example.edu/',
+                'object': 'x',
+                'sourceResource':{'rights':'r', 'type': 'image'},
+                'originalRecord': {'collection': [{'harvest_type':'x'}]},
+                }),
+            viewrow({'_id':'12', 'isShownAt':'http://example.edu/',
+                'object': 'x',
+                'sourceResource':{'rights':'r', 'type': 'image'},
+                'originalRecord': {'collection': [{'harvest_type':'x'}],
+                    'structmap_url': 'w/x/y/z-a-b'},
+                }),
+            viewrow({'_id':'13', 'isShownAt':'http://example.edu/',
+                'object': 'x/y/z/',
+                'sourceResource':{'rights':'r', 'type': 'image'},
+                'originalRecord': {'collection': [{'harvest_type':'x'}],
+                    'structmap_url': 'w/x/y/z-a-b'},
+                }),
+        ]
+        mock_couchview.return_value = test_data
+        mock_boto('s3').Object().content_length = 0
+        with patch('harvester.solr_updater.map_registry_data') as mock_reg:
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report,
+                {'Missing isShownAt': 2,
+                 'Missing Image': 2,
+                 'Missing SourceResource': 2,
+                 'isShownAt not a URL': 2,
+                 'Missing media_json': 2,
+                 'Missing Rights': 2}
+                )
+        class content_lengths():
+            return_values = [0, 7, 0, 7]
+
+            def __getattr__(self, name):
+                return self.return_values.pop()
+
+        mock_boto('s3').Object.return_value = content_lengths()
+        with patch('harvester.solr_updater.map_registry_data') as mock_reg:
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report,
+                {'Missing isShownAt': 2,
+                 'Missing Image': 2,
+                 'Missing SourceResource': 2,
+                 'isShownAt not a URL': 2,
+                 'Missing Rights': 2,
+                 'Missing jp2000': 2}
+                )
