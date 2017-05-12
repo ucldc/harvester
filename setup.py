@@ -58,7 +58,6 @@ setup(
         'redis==2.10.1',
         'rq',
         'boto',
-        'CouchDB==0.9',
         'md5s3stash',
         'pymarc==3.0.4',
         'facet_decade',
