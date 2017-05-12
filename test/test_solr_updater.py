@@ -27,6 +27,7 @@ from harvester.solr_updater import MissingImage
 from harvester.solr_updater import MissingMediaJSON
 from harvester.solr_updater import MissingJP2000
 from harvester.solr_updater import sync_couch_collection_to_solr
+from harvester.solr_updater import harvesting_report
 
 
 class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
@@ -470,6 +471,36 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('item_count', sdoc)
+
+    def test_harvesting_report(self):
+        '''test format of message to harvesting_report channel'''
+        cid = '22222'
+        updated_docs = range(10)
+        num_added = 4
+        report = {'Missing isShownAt': 2,
+                 'Missing Image': 2,
+                 'Missing SourceResource': 2,
+                 'isShownAt not a URL': 2,
+                 'Missing Rights': 2,
+                 'Missing jp2000': 2}
+        msg =  harvesting_report(
+            cid,
+            updated_docs,
+            num_added,
+            report
+            )
+        self.assertEqual(msg,
+            'Synced collection 22222 to solr.\n'
+            '10 Couch Docs.\n'
+            '4 solr documents updated\n'
+            'Missing isShownAt : 2\n'
+            'Missing Image : 2\n'
+            'Missing SourceResource : 2\n'
+            'isShownAt not a URL : 2\n'
+            'Missing Rights : 2\n'
+            'Missing jp2000 : 2'
+            )
+
 
     @patch('boto3.resource', autospec=True)
     def test_nuxeo_media_check(self, mock_boto):

@@ -792,6 +792,17 @@ def delete_solr_collection(collection_key):
                           'DELETED {}'.format(collection_key))
 
 
+def harvesting_report(collection_key, updated_docs, num_added, report):
+    '''Make the nice report for the harvesting channel'''
+    report_list = [' : '.join((key, str(val))) for key, val in report.items()]
+    report_msg = '\n'.join(report_list)
+    msg = ''.join(('Synced collection {} to solr.\n'.format(collection_key),
+        '{} Couch Docs.\n'.format(len(updated_docs)),
+        '{} solr documents updated\n'.format(num_added),
+        report_msg))
+    return msg
+
+
 def sync_couch_collection_to_solr(collection_key):
     # This works from inside an environment with default URLs for couch & solr
     URL_SOLR = os.environ.get('URL_SOLR', None)
@@ -800,19 +811,17 @@ def sync_couch_collection_to_solr(collection_key):
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
     updated_docs = []
-    num_added = missing_required = 0
+    num_added = 0
     report = defaultdict(int)
     for r in v:
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
-            missing_required += 1
             report[e.dict_key] += 1
             print(e.message)
             continue
         except ValueError, e:
-            missing_required += 1
             report[e.dict_key] += 1
             print(e.message)
             continue
@@ -828,11 +837,11 @@ def sync_couch_collection_to_solr(collection_key):
         num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
-        'Synced collection {} to solr'.format(collection_key),
-        '{} Couch Docs. {} solr documents updated\n'
-        '{} docs were missing required fields'.format(len(updated_docs),
-                                                      num_added,
-                                                      missing_required))
+        harvesting_report(
+            collection_key,
+            updated_docs,
+            num_added,
+            report))
     return updated_docs, report
 
 
