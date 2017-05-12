@@ -16,6 +16,12 @@ from harvester.solr_updater import map_registry_data
 from harvester.solr_updater import UTC
 from harvester.solr_updater import dejson
 from harvester.solr_updater import check_nuxeo_media
+from harvester.solr_updater import MissingSourceResource
+from harvester.solr_updater import MissingTitle
+from harvester.solr_updater import MissingRights
+from harvester.solr_updater import MissingIsShownAt
+from harvester.solr_updater import isShownAtNotURL
+from harvester.solr_updater import MissingImage
 
 
 class SolrUpdaterTestCase(TestCase):
@@ -293,28 +299,66 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
 
     def test_check_required_fields(self):
-        doc = {'id': 'test-id'}
-        self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {'id': 'test-id', '_id': 'x', 'sourceResource': {}}
-        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id': 'sid', '_id': 'hid'}
+        self.assertRaisesRegexp(
+            MissingSourceResource,
+            '---- OMITTED: Doc:hid has no sourceResource.',
+            has_required_fields,
+            doc)
+        doc['sourceResource'] = {}
+        self.assertRaisesRegexp(
+            MissingTitle,
+            '---- OMITTED: Doc:hid has no title.',
+            has_required_fields,
+            doc)
         doc['sourceResource'].update({'title': 'test-title'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            MissingRights,
+            '---- OMITTED: Doc:hid has no rights.',
+            has_required_fields,
+            doc)
         doc['sourceResource'].update({'rights': 'hasRights'})
+        self.assertRaisesRegexp(
+            MissingIsShownAt,
+            '---- OMITTED: Doc:hid has no isShownAt.',
+            has_required_fields,
+            doc)
         doc.update({'isShownAt': 'y'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: y',
+            has_required_fields,
+            doc)
         doc.update({'isShownAt': 'http://'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://',
+            has_required_fields,
+            doc)
         doc.update({'isShownAt': 'http://netloc'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://netloc',
+            has_required_fields,
+            doc)
         doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
-        #self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/;params'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/?query'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc['sourceResource'].update({'type': 'image'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            MissingImage,
+            '---- OMITTED: Doc:hid is image type with no harvested image.',
+            has_required_fields,
+            doc)
         doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)

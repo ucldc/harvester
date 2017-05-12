@@ -408,25 +408,49 @@ def normalize_type(solr_doc):
             solr_doc['type'] = norm_type(doc_type)
 
 
+class MissingSourceResource(KeyError):
+    pass
+
+
+class MissingTitle(KeyError):
+    pass
+
+
+class MissingRights(KeyError):
+    pass
+
+
+class MissingIsShownAt(KeyError):
+    pass
+
+
+class isShownAtNotURL(ValueError):
+    pass
+
+
+class MissingImage(KeyError):
+    pass
+
+
 def has_required_fields(doc):
     '''Check the couchdb doc has required fields and reasonable values'''
     if 'sourceResource' not in doc:
-        raise KeyError('---- OMITTED: Doc:{0} has no sourceResource.'.format(
-            doc['_id']))
+        raise MissingSourceResource(
+            '---- OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
     if 'title' not in doc['sourceResource']:
-        raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc[
-            '_id']))
+        raise MissingTitle(
+            '---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
     if 'rights' not in doc['sourceResource']:
-        raise KeyError('---- OMITTED: Doc:{0} has no rights.'.format(doc[
-            '_id']))
+        raise MissingRights(
+            '---- OMITTED: Doc:{0} has no rights.'.format(doc['_id']))
     if 'isShownAt' not in doc:
-        raise KeyError('---- OMITTED: Doc:{0} has no isShownAt.'.format(doc[
-            '_id']))
+        raise MissingIsShownAt(
+            '---- OMITTED: Doc:{0} has no isShownAt.'.format(doc['_id']))
     # check that value in isShownAt is at least a valid URL format
     parsed = urlparse(doc['isShownAt'])
     if not parsed.scheme or not parsed.netloc or  \
             not (parsed.path or parsed.params or parsed.query):
-        raise ValueError(
+        raise isShownAtNotURL(
             '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be'
             'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
     doc_type = doc['sourceResource'].get('type', '')
@@ -438,7 +462,7 @@ def has_required_fields(doc):
         if collection['harvest_type'] != 'NUX':
             # if doesnt have a reference_image_md5, reject
             if 'object' not in doc:
-                raise KeyError(
+                raise MissingImage(
                     '---- OMITTED: Doc:{0} is image type with no harvested '
                     'image.'.format(doc['_id']))
     return True
