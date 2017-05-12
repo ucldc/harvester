@@ -645,6 +645,14 @@ def add_facet_decade(couch_doc, solr_doc):
         solr_doc['facet_decade'] = facet_decades
 
 
+class MissingMediaJSON(ValueError):
+    pass
+
+
+class MissingJP2000(ValueError):
+    pass
+
+
 def check_nuxeo_media(doc):
     '''Check that the media_json and jp2000 exist for a given solr doc.
     Raise exception if not
@@ -658,8 +666,8 @@ def check_nuxeo_media(doc):
     s3 = boto3.resource('s3')
     s3object = s3.Object(bucket, s3key)
     if not s3object.content_length:
-        raise ValueError('---- OMITTED: Doc:{0} is missing media json.'.format(
-            doc['_id']))
+        raise MissingMediaJSON(
+            '---- OMITTED: Doc:{0} is missing media json.'.format(doc['_id']))
     # for image types, there should be a jp2000
     # jp2000 are in a bucket 'ucldc-private-files' in a "folder" 'jp2000'
     # with UUID as name
@@ -669,8 +677,8 @@ def check_nuxeo_media(doc):
         s3key = '{}/{}'.format('jp2000', uuid)
         s3object = s3.Object(bucket, s3key)
         if not s3object.content_length:
-            raise ValueError('---- OMITTED: Doc:{0} is missing jp2000.'.format(
-                doc['_id']))
+            raise MissingJP2000(
+                '---- OMITTED: Doc:{0} is missing jp2000.'.format(doc['_id']))
 
 
 def map_couch_to_solr_doc(doc):

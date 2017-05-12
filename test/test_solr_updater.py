@@ -22,6 +22,8 @@ from harvester.solr_updater import MissingRights
 from harvester.solr_updater import MissingIsShownAt
 from harvester.solr_updater import isShownAtNotURL
 from harvester.solr_updater import MissingImage
+from harvester.solr_updater import MissingMediaJSON
+from harvester.solr_updater import MissingJP2000
 
 
 class SolrUpdaterTestCase(TestCase):
@@ -468,8 +470,10 @@ class SolrUpdaterTestCase(TestCase):
                                                'fakedir/a-UUID-media.json')
         mock_boto('s3').Object().content_length = 0
         self.assertRaisesRegexp(
-            ValueError, '---- OMITTED: Doc:a-UUID is missing media json.',
-            check_nuxeo_media, doc)
+            MissingMediaJSON,
+            '---- OMITTED: Doc:a-UUID is missing media json.',
+            check_nuxeo_media,
+            doc)
         doc['type'] = 'image'
         mock_boto('s3').Object().content_length = 5
         check_nuxeo_media(doc)  # should just return
@@ -483,6 +487,8 @@ class SolrUpdaterTestCase(TestCase):
                 return self.return_values.pop()
 
         mock_boto('s3').Object.return_value = content_lengths()
-        self.assertRaisesRegexp(ValueError,
-                                '---- OMITTED: Doc:a-UUID is missing jp2000.',
-                                check_nuxeo_media, doc)
+        self.assertRaisesRegexp(
+            MissingJP2000,
+            '---- OMITTED: Doc:a-UUID is missing jp2000.',
+            check_nuxeo_media,
+            doc)
