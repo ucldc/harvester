@@ -427,8 +427,8 @@ def has_required_fields(doc):
     if not parsed.scheme or not parsed.netloc or  \
             not (parsed.path or parsed.params or parsed.query):
         raise ValueError(
-        '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be' \
-                'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
+            '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be'
+            'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
@@ -621,6 +621,34 @@ def add_facet_decade(couch_doc, solr_doc):
         solr_doc['facet_decade'] = facet_decades
 
 
+def check_nuxeo_media(doc):
+    '''Check that the media_json and jp2000 exist for a given solr doc.
+    Raise exception if not
+    '''
+    if 'structmap_url' not in doc:
+        return
+    # check that there is an object at the structmap_url
+    bucket, folder, key = doc['structmap_url'].rsplit('/', 2)
+    bucket = bucket.rsplit('/', 1)[1]
+    s3key = '{}/{}'.format(folder, key)
+    s3 = boto3.resource('s3')
+    s3object = s3.Object(bucket, s3key)
+    if not s3object.content_length:
+        raise ValueError('---- OMITTED: Doc:{0} is missing media json.'.format(
+            doc['_id']))
+    # for image types, there should be a jp2000
+    # jp2000 are in a bucket 'ucldc-private-files' in a "folder" 'jp2000'
+    # with UUID as name
+    if doc['type'] == 'image':
+        bucket = 'ucldc-private-files'
+        uuid, ext = key.rsplit('-', 1)
+        s3key = '{}/{}'.format('jp2000', uuid)
+        s3object = s3.Object(bucket, s3key)
+        if not s3object.content_length:
+            raise ValueError('---- OMITTED: Doc:{0} is missing jp2000.'.format(
+                doc['_id']))
+
+
 def map_couch_to_solr_doc(doc):
     '''Return a json document suitable for updating the solr index
     how to make schema aware mapping?'''
@@ -662,6 +690,7 @@ def map_couch_to_solr_doc(doc):
                         doc['_id'], p),
                     file=sys.stderr)
                 raise e
+    check_nuxeo_media(solr_doc)
     normalize_type(solr_doc)
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)
