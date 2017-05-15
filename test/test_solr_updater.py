@@ -4,6 +4,7 @@ import json
 from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
+from test.utils import ConfigFileOverrideMixin
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
@@ -16,18 +17,36 @@ from harvester.solr_updater import map_registry_data
 from harvester.solr_updater import UTC
 from harvester.solr_updater import dejson
 from harvester.solr_updater import check_nuxeo_media
+from harvester.solr_updater import MissingSourceResource
+from harvester.solr_updater import MissingTitle
+from harvester.solr_updater import MissingRights
+from harvester.solr_updater import MissingIsShownAt
+from harvester.solr_updater import isShownAtNotURL
+from harvester.solr_updater import MissingImage
+from harvester.solr_updater import MediaJSONError
+from harvester.solr_updater import sync_couch_collection_to_solr
+from harvester.solr_updater import harvesting_report
 
 
-class SolrUpdaterTestCase(TestCase):
+class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
     '''Test the solr update from couchdb changes feed'''
 
     def setUp(self):
         self.old_data_branch = os.environ.get('DATA_BRANCH', None)
         os.environ['DATA_BRANCH'] = 'test_branch'
+        self.old_couchdb_url = os.environ.get('COUCHDB_URL', None)
+        os.environ['COUCHDB_URL'] = 'http://couchdb.example.edu/'
+        self.old_url_solr = os.environ.get('URL_SOLR', None)
+        os.environ['URL_SOLR'] = 'http://solr.example.edu/'
+        self.old_arn_report = os.environ.get('ARN_TOPIC_HARVESTING_REPORT',
+                                             None)
+        os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'x'
 
     def tearDown(self):
         if self.old_data_branch:
             os.environ['DATA_BRANCH'] = self.old_data_branch
+        if self.old_couchdb_url:
+            os.environ['COUCHDB_URL'] = self.old_couchdb_url
 
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
@@ -293,28 +312,51 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
 
     def test_check_required_fields(self):
-        doc = {'id': 'test-id'}
-        self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {'id': 'test-id', '_id': 'x', 'sourceResource': {}}
-        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id': 'sid', '_id': 'hid'}
+        self.assertRaisesRegexp(MissingSourceResource,
+                                '---- OMITTED: Doc:hid has no sourceResource.',
+                                has_required_fields, doc)
+        doc['sourceResource'] = {}
+        self.assertRaisesRegexp(MissingTitle,
+                                '---- OMITTED: Doc:hid has no title.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'title': 'test-title'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(MissingRights,
+                                '---- OMITTED: Doc:hid has no rights.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'rights': 'hasRights'})
+        self.assertRaisesRegexp(MissingIsShownAt,
+                                '---- OMITTED: Doc:hid has no isShownAt.',
+                                has_required_fields, doc)
         doc.update({'isShownAt': 'y'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: y', has_required_fields, doc)
         doc.update({'isShownAt': 'http://'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://netloc', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
-        #self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/;params'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/?query'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc['sourceResource'].update({'type': 'image'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            MissingImage,
+            '---- OMITTED: Doc:hid is image type with no harvested image.',
+            has_required_fields, doc)
         doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
@@ -413,32 +455,181 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('item_count', sdoc)
 
-    @patch('boto3.resource', autospec=True)
-    def test_nuxeo_media_check(self, mock_boto):
-        doc = {'_id': 'a-UUID', 'type': 'text'}
+    def test_harvesting_report(self):
+        '''test format of message to harvesting_report channel'''
+        cid = '22222'
+        updated_docs = range(10)
+        num_added = 4
+        report = {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Missing jp2000': 2
+        }
+        msg = harvesting_report(cid, updated_docs, num_added, report)
+        self.assertEqual(msg, 'Synced collection 22222 to solr.\n'
+                         '10 Couch Docs.\n'
+                         '4 solr documents updated\n'
+                         'Missing isShownAt : 2\n'
+                         'Missing Image : 2\n'
+                         'Missing SourceResource : 2\n'
+                         'isShownAt not a URL : 2\n'
+                         'Missing Rights : 2\n'
+                         'Missing jp2000 : 2')
+
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
+    def test_nuxeo_media_check(self, mock_mediajson):
+        doc = {'harvest_id_s': 'a-UUID', 'type': 'text'}
         check_nuxeo_media(doc)  # should just return
         doc['structmap_url'] = 's3://fakebucket/fakedir/a-UUID-media.json'
         check_nuxeo_media(doc)  # should just return
-        mock_boto.assert_called_with('s3')
-        mock_boto('s3').Object.assert_any_call('fakebucket',
-                                               'fakedir/a-UUID-media.json')
-        mock_boto('s3').Object().content_length = 0
+        mock_mediajson.assert_called_with(
+                's3://fakebucket/fakedir/a-UUID-media.json')
+        mock_mediajson.side_effect = ValueError
         self.assertRaisesRegexp(
-            ValueError, '---- OMITTED: Doc:a-UUID is missing media json.',
+            MediaJSONError,
+            '---- OMITTED: Doc:a-UUID Error in media json ',
             check_nuxeo_media, doc)
-        doc['type'] = 'image'
-        mock_boto('s3').Object().content_length = 5
-        check_nuxeo_media(doc)  # should just return
-        mock_boto('s3').Object.assert_called_with('ucldc-private-files',
-                                                  'jp2000/a-UUID')
 
-        class content_lengths():
-            return_values = [0, 7]
 
-            def __getattr__(self, name):
-                return self.return_values.pop()
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
+    @patch('harvester.solr_updater.publish_to_harvesting')
+    @patch('harvester.solr_updater.Solr', autospec=True)
+    @patch('harvester.solr_updater.CouchDBCollectionFilter')
+    @patch('harvester.solr_updater.get_couchdb')
+    def test_report(self, mock_get_couchdb, mock_couchview, mock_solr,
+                    mock_publish, mock_mediajson):
+        '''Test that the report from sync collection has a tally of the
+        various errors
+        '''
 
-        mock_boto('s3').Object.return_value = content_lengths()
-        self.assertRaisesRegexp(ValueError,
-                                '---- OMITTED: Doc:a-UUID is missing jp2000.',
-                                check_nuxeo_media, doc)
+        class viewrow():
+            def __init__(self, data):
+                self.doc = data
+
+        test_data = [
+            viewrow({
+                '_id': '1'
+            }),
+            viewrow({
+                '_id': '2'
+            }),
+            viewrow({
+                '_id': '3',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '4',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '5',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '6',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '7',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '8',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '9',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '10',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '11',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }]
+                },
+            }),
+            viewrow({
+                '_id': '12',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
+            viewrow({
+                '_id': '13',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x/y/z/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
+        ]
+        mock_couchview.return_value = test_data
+        with patch('harvester.solr_updater.map_registry_data') as mock_reg:
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2
+        })
+
+        mock_mediajson.side_effect = ValueError
+        with patch('harvester.solr_updater.map_registry_data'):
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Media JSON Error': 2
+        })
