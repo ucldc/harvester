@@ -16,6 +16,7 @@ from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.sns_message import publish_to_harvesting
 from facet_decade import facet_decade
+from mediajson import MediaJson
 import datetime
 
 reload(sys)
@@ -647,12 +648,8 @@ def add_facet_decade(couch_doc, solr_doc):
         solr_doc['facet_decade'] = facet_decades
 
 
-class MissingMediaJSON(ValueError):
-    dict_key = 'Missing media_json'
-
-
-class MissingJP2000(ValueError):
-    dict_key = 'Missing jp2000'
+class MediaJSONError(ValueError):
+    dict_key = 'Media JSON Error'
 
 
 def check_nuxeo_media(doc):
@@ -667,22 +664,15 @@ def check_nuxeo_media(doc):
     s3key = '{}/{}'.format(folder, key)
     s3 = boto3.resource('s3')
     s3object = s3.Object(bucket, s3key)
-    if not s3object.content_length:
-        raise MissingMediaJSON(
-            '---- OMITTED: Doc:{0} is missing media json.'.format(
-                doc['harvest_id_s']))
-    # for image types, there should be a jp2000
-    # jp2000 are in a bucket 'ucldc-private-files' in a "folder" 'jp2000'
-    # with UUID as name
-    if doc['type'] == 'image':
-        bucket = 'ucldc-private-files'
-        uuid, ext = key.rsplit('-', 1)
-        s3key = '{}/{}'.format('jp2000', uuid)
-        s3object = s3.Object(bucket, s3key)
-        if not s3object.content_length:
-            raise MissingJP2000(
-                '---- OMITTED: Doc:{0} is missing jp2000.'.format(
-                    doc['harvest_id_s']))
+    # check that there is an object at the structmap_url
+    try:
+	    MediaJson(doc['structmap_url']).check_media()
+    except ValueError, e:
+        message = '---- OMITTED: Doc:{} Error in media json {}'.format(
+            doc['harvest_id_s'],
+            e.message)
+        print(message)
+        raise MediaJSONError(message)
 
 
 def map_couch_to_solr_doc(doc):

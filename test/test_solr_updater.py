@@ -23,8 +23,7 @@ from harvester.solr_updater import MissingRights
 from harvester.solr_updater import MissingIsShownAt
 from harvester.solr_updater import isShownAtNotURL
 from harvester.solr_updater import MissingImage
-from harvester.solr_updater import MissingMediaJSON
-from harvester.solr_updater import MissingJP2000
+from harvester.solr_updater import MediaJSONError
 from harvester.solr_updater import sync_couch_collection_to_solr
 from harvester.solr_updater import harvesting_report
 
@@ -480,44 +479,28 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
                          'Missing Rights : 2\n'
                          'Missing jp2000 : 2')
 
-    @patch('boto3.resource', autospec=True)
-    def test_nuxeo_media_check(self, mock_boto):
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
+    def test_nuxeo_media_check(self, mock_mediajson):
         doc = {'harvest_id_s': 'a-UUID', 'type': 'text'}
         check_nuxeo_media(doc)  # should just return
         doc['structmap_url'] = 's3://fakebucket/fakedir/a-UUID-media.json'
         check_nuxeo_media(doc)  # should just return
-        mock_boto.assert_called_with('s3')
-        mock_boto('s3').Object.assert_any_call('fakebucket',
-                                               'fakedir/a-UUID-media.json')
-        mock_boto('s3').Object().content_length = 0
+        mock_mediajson.assert_called_with(
+                's3://fakebucket/fakedir/a-UUID-media.json')
+        mock_mediajson.side_effect = ValueError
         self.assertRaisesRegexp(
-            MissingMediaJSON,
-            '---- OMITTED: Doc:a-UUID is missing media json.',
+            MediaJSONError,
+            '---- OMITTED: Doc:a-UUID Error in media json ',
             check_nuxeo_media, doc)
-        doc['type'] = 'image'
-        mock_boto('s3').Object().content_length = 5
-        check_nuxeo_media(doc)  # should just return
-        mock_boto('s3').Object.assert_called_with('ucldc-private-files',
-                                                  'jp2000/a-UUID')
 
-        class content_lengths():
-            return_values = [0, 7]
 
-            def __getattr__(self, name):
-                return self.return_values.pop()
-
-        mock_boto('s3').Object.return_value = content_lengths()
-        self.assertRaisesRegexp(MissingJP2000,
-                                '---- OMITTED: Doc:a-UUID is missing jp2000.',
-                                check_nuxeo_media, doc)
-
-    @patch('boto3.resource', autospec=True)
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
     @patch('harvester.solr_updater.publish_to_harvesting')
     @patch('harvester.solr_updater.Solr', autospec=True)
     @patch('harvester.solr_updater.CouchDBCollectionFilter')
     @patch('harvester.solr_updater.get_couchdb')
     def test_report(self, mock_get_couchdb, mock_couchview, mock_solr,
-                    mock_publish, mock_boto):
+                    mock_publish, mock_mediajson):
         '''Test that the report from sync collection has a tally of the
         various errors
         '''
@@ -629,7 +612,6 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
             }),
         ]
         mock_couchview.return_value = test_data
-        mock_boto('s3').Object().content_length = 0
         with patch('harvester.solr_updater.map_registry_data') as mock_reg:
             updated_docs, report = sync_couch_collection_to_solr('cid')
         self.assertEqual(report, {
@@ -637,17 +619,10 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
             'Missing Image': 2,
             'Missing SourceResource': 2,
             'isShownAt not a URL': 2,
-            'Missing media_json': 2,
             'Missing Rights': 2
         })
 
-        class content_lengths():
-            return_values = [0, 7, 0, 7]
-
-            def __getattr__(self, name):
-                return self.return_values.pop()
-
-        mock_boto('s3').Object.return_value = content_lengths()
+        mock_mediajson.side_effect = ValueError
         with patch('harvester.solr_updater.map_registry_data'):
             updated_docs, report = sync_couch_collection_to_solr('cid')
         self.assertEqual(report, {
@@ -656,5 +631,5 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
             'Missing SourceResource': 2,
             'isShownAt not a URL': 2,
             'Missing Rights': 2,
-            'Missing jp2000': 2
+            'Media JSON Error': 2
         })

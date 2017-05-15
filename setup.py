@@ -39,6 +39,7 @@ setup(
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
         'https://github.com/barbarahui/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
+        'https://github.com/tingletech/mediajson/archive/master.zip#egg=mediajson',
         'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle'
     ],
     install_requires=[
@@ -65,7 +66,8 @@ setup(
         'xmljson',
         'UCLDC-Deep-Harvester',
         'boto3',
-        'pynux'
+        'pynux',
+        'mediajson'
         ],
     test_suite='test',
     tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
