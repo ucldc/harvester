@@ -659,12 +659,6 @@ def check_nuxeo_media(doc):
     if 'structmap_url' not in doc:
         return
     # check that there is an object at the structmap_url
-    bucket, folder, key = doc['structmap_url'].rsplit('/', 2)
-    bucket = bucket.rsplit('/', 1)[1]
-    s3key = '{}/{}'.format(folder, key)
-    s3 = boto3.resource('s3')
-    s3object = s3.Object(bucket, s3key)
-    # check that there is an object at the structmap_url
     try:
 	    MediaJson(doc['structmap_url']).check_media()
     except ValueError, e:
