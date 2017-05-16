@@ -11,6 +11,7 @@ from collections import defaultdict
 from urlparse import urlparse
 import requests
 import boto3
+from botocore.exceptions import ClientError
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
@@ -652,6 +653,9 @@ class MediaJSONError(ValueError):
     dict_key = 'Media JSON Error'
 
 
+class MissingMediaJSON(ValueError):
+    dict_key = 'Missing Media Json'
+
 def check_nuxeo_media(doc):
     '''Check that the media_json and jp2000 exist for a given solr doc.
     Raise exception if not
@@ -661,6 +665,12 @@ def check_nuxeo_media(doc):
     # check that there is an object at the structmap_url
     try:
 	    MediaJson(doc['structmap_url']).check_media()
+    except ClientError, e:
+        message = '---- OMITTED: Doc:{} missing media json {}'.format(
+            doc['harvest_id_s'],
+            e.message)
+        print(message)
+        raise MissingMediaJSON(message)
     except ValueError, e:
         message = '---- OMITTED: Doc:{} Error in media json {}'.format(
             doc['harvest_id_s'],

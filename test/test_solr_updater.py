@@ -24,8 +24,10 @@ from harvester.solr_updater import MissingIsShownAt
 from harvester.solr_updater import isShownAtNotURL
 from harvester.solr_updater import MissingImage
 from harvester.solr_updater import MediaJSONError
+from harvester.solr_updater import MissingMediaJSON
 from harvester.solr_updater import sync_couch_collection_to_solr
 from harvester.solr_updater import harvesting_report
+from botocore.exceptions import ClientError
 
 
 class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
@@ -487,6 +489,12 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         check_nuxeo_media(doc)  # should just return
         mock_mediajson.assert_called_with(
                 's3://fakebucket/fakedir/a-UUID-media.json')
+        mock_resp = {'Error':{'Code': 'NoSuchKey'}}
+        mock_mediajson.side_effect = ClientError(mock_resp, 'GetObject')
+        self.assertRaisesRegexp(
+            MissingMediaJSON,
+            '---- OMITTED: Doc:a-UUID missing media json ',
+            check_nuxeo_media, doc)
         mock_mediajson.side_effect = ValueError
         self.assertRaisesRegexp(
             MediaJSONError,
