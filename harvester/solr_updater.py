@@ -669,13 +669,13 @@ def check_nuxeo_media(doc):
         message = '---- OMITTED: Doc:{} missing media json {}'.format(
             doc['harvest_id_s'],
             e.message)
-        print(message)
+        print(message, file=sys.stderr)
         raise MissingMediaJSON(message)
     except ValueError, e:
         message = '---- OMITTED: Doc:{} Error in media json {}'.format(
             doc['harvest_id_s'],
             e.message)
-        print(message)
+        print(message, file=sys.stderr)
         raise MediaJSONError(message)
 
 
@@ -814,18 +814,18 @@ def sync_couch_collection_to_solr(collection_key):
             has_required_fields(r.doc)
         except KeyError, e:
             report[e.dict_key] += 1
-            print(e.message)
+            print(e.message, file=sys.stderr)
             continue
         except ValueError, e:
             report[e.dict_key] += 1
-            print(e.message)
+            print(e.message, file=sys.stderr)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         # TODO: here is where to check if existing and compare collection vals
         try:
             check_nuxeo_media(solr_doc)
         except ValueError, e:
-            print(e.message)
+            print(e.message, file=sys.stderr)
             report[e.dict_key] += 1
             continue
         updated_docs.append(solr_doc)
