@@ -828,6 +828,7 @@ def sync_couch_collection_to_solr(collection_key):
         num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
+        'Synced collection {} to solr'.format(collection_key),
         harvesting_report(
             collection_key,
             updated_docs,
