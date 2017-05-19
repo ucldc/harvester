@@ -288,7 +288,7 @@ class ImageHarvester(object):
         report_msg = '\n'.join(report_list)
         publish_to_harvesting(
             'Image harvested {}'.format(collection_key),
-            ''.join(('Processed {} documents'.format(len(doc_ids)),
+            ''.join(('Processed {} documents\n'.format(len(doc_ids)),
                      report_msg)))
         return doc_ids, report_errors
 
