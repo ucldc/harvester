@@ -51,6 +51,10 @@ class IsShownByError(ImageHarvestError):
     dict_key = 'isShownBy Error'
 
 
+class FailsImageTest(ImageHarvestError):
+    dict_key = 'Fails the link is to image test'
+
+
 def link_is_to_image(url, auth=None):
     '''Check if the link points to an image content type.
     Return True or False accordingly
@@ -92,7 +96,7 @@ def stash_image_for_doc(doc,
     in case some idiot (me) deletes one of the copies. Not tons of data so
     cheap to replicate them.
     Return md5s3stash report if image found
-    If link is not an image type, don't stash & return None
+    If link is not an image type, don't stash & raise
     '''
     try:
         url_image = doc['isShownBy']
@@ -110,7 +114,7 @@ def stash_image_for_doc(doc,
     elif not url_parsed.scheme or not url_parsed.netloc:
         print >> sys.stderr, 'Link not http URL for {} - {}'.format(doc['_id'],
                                                                     url_image)
-        return None
+        raise FailsImageTest
     reports = []
     if link_is_to_image(url_image, auth):
         for bucket_base in bucket_bases:
@@ -136,7 +140,7 @@ def stash_image_for_doc(doc,
     else:
         print >> sys.stderr, 'Not an image for {} - {}'.format(doc['_id'],
                                                                url_image)
-        return None
+        raise FailsImageTest
 
 
 class ImageHarvester(object):
