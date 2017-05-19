@@ -15,6 +15,7 @@ import md5s3stash
 import boto.s3
 import logging
 from collections import namedtuple
+from collections import defaultdict
 from harvester.couchdb_init import get_couchdb
 from harvester.config import config
 from redis import Redis
@@ -33,6 +34,21 @@ URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
 logging.basicConfig(level=logging.DEBUG, )
+
+class ImageHarvestError(Exception):
+    pass
+
+
+class HasObject(ImageHarvestError):
+    dict_key = 'Has Object already'
+
+
+class RestoreFromObjectCache(ImageHarvestError):
+    dict_key = 'Restored From Object Cache'
+
+
+class IsShownByError(ImageHarvestError):
+    dict_key = 'isShownBy Error'
 
 
 def link_is_to_image(url, auth=None):
@@ -196,7 +212,7 @@ class ImageHarvester(object):
                 self._object_cache[did] = [
                     doc['object'], doc['object_dimensions']
                 ]
-            return
+            raise HasObject
         if not self.get_if_object and object_cached:
             # have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
@@ -204,7 +220,7 @@ class ImageHarvester(object):
             self.update_doc_object(doc,
                                    ImageReport(object_cached[0],
                                                object_cached[1]))
-            return None
+            raise RestoreFromObjectCache
         try:
             reports = self.stash_image(doc)
             if reports is not None and len(reports) > 0:
@@ -215,11 +231,13 @@ class ImageHarvester(object):
         except KeyError, e:
             if 'isShownBy' in e.message:
                 print >> sys.stderr, e
+                raise IsShownByError
             else:
                 raise e
         except ValueError, e:
             if 'isShownBy' in e.message:
                 print >> sys.stderr, e
+                raise IsShownByError
             else:
                 raise e
         except IOError, e:
@@ -231,9 +249,14 @@ class ImageHarvester(object):
         for doc_id in doc_ids:
             doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
-            reports = self.harvest_image_for_doc(doc)
+            report_errors = defaultdict(int)
+            try:
+                reports = self.harvest_image_for_doc(doc)
+            except ImageHarvestError, e:
+                report_errors[e.dict_key] += 1
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
+            return report_errors
 
     def by_collection(self, collection_key=None):
         '''If collection_key is none, trying to grab all of the images. (Not
@@ -250,15 +273,24 @@ class ImageHarvester(object):
             # use _all_docs view
             v = couchdb_pager(self._couchdb, include_docs='true')
         doc_ids = []
+        report_errors = defaultdict(int)
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
-            reports = self.harvest_image_for_doc(r.doc)
+            try:
+                reports = self.harvest_image_for_doc(r.doc)
+            except ImageHarvestError, e:
+                report_errors[e.dict_key] += 1
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
-        publish_to_harvesting('Image harvested {}'.format(collection_key),
-                              'Processed {} documents'.format(len(doc_ids)))
-        return doc_ids
+        report_list = [' : '.join((key, str(val))) for key, val in
+                report_errors.items()]
+        report_msg = '\n'.join(report_list)
+        publish_to_harvesting(
+            'Image harvested {}'.format(collection_key),
+            ''.join(('Processed {} documents'.format(len(doc_ids)),
+                     report_msg)))
+        return doc_ids, report_errors
 
 
 def harvest_image_for_doc(doc_id,
@@ -286,7 +318,7 @@ def main(collection_key=None,
          object_auth=None,
          get_if_object=False):
     cleanup_work_dir()  # remove files from /tmp
-    ImageHarvester(
+    doc_ids, report_errors = ImageHarvester(
         url_couchdb=url_couchdb,
         object_auth=object_auth,
         get_if_object=get_if_object).by_collection(collection_key)
