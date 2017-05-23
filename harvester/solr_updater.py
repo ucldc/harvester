@@ -587,7 +587,10 @@ def get_sort_collection_data_string(collection):
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
-    sort_title = couch_doc['sourceResource']['title'][0]
+    if isinstance(couch_doc['sourceResource']['title'], basestring):
+        sort_title = couch_doc['sourceResource']['title']
+    else:
+        sort_title = couch_doc['sourceResource']['title'][0]
     if 'sort-title' in couch_doc['originalRecord']:  # OAC mostly
         sort_obj = couch_doc['originalRecord']['sort-title']
         if isinstance(sort_obj, list):

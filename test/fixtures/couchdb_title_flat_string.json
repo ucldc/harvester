@@ -1,0 +1,371 @@
+{
+  "id": "cc89248b4f733bf87ad1a6a64cff071b",
+  "ingestDate": "2015-07-27T23:22:13.715644Z",
+  "object": "2f58c981bf53e85aca52a58f74a6d5a5",
+  "@id": "http://ucldc.cdlib.org/api/items/cc89248b4f733bf87ad1a6a64cff071b",
+  "admin": {
+    "valid_after_enrich": false,
+    "validation_message": "Additional properties are not allowed (u'genre' was unexpected)"
+  },
+  "object_dimensions": [
+    899,
+    1199
+  ],
+  "@context": "http://dp.la/api/items/context",
+  "_rev": "6-39146b79021989b0b811032949e0398f",
+  "_id": "26098--0025ad8f-a44e-4f58-8238-c7b60b2fb850",
+  "isShownBy": "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/Medium:content/",
+  "ingestionSequence": 3,
+  "isShownAt": "http://example.edu",
+  "provider": {
+    "name": "UC Merced, Library and Special Collections",
+    "@id": "https://registry.cdlib.org/api/v1/collection/26098/"
+  },
+  "sourceResource": {
+    "subject": [
+      null
+    ],
+    "alternativeTitle": ["test alt title"],
+    "type": "image",
+    "title": "Atlas Negative Collection Image",
+    "stateLocatedIn": [
+      {
+        "name": "California"
+      }
+    ],
+    "rights": [
+      "copyrighted",
+      "Creative Commons Attribution - NonCommercial-NoDerivatives (CC BY-NC-ND 4.0)"
+    ],
+    "description": [
+      {
+        "type": "marks",
+        "item": "\"Design #39; BRAG; Entourage; Principle Base A\" written on drawing. No signature on drawing."
+      },
+      {
+        "type": "creationprod",
+        "item": "Director: David Pountney; Scene Designer: Robert Israel; Producer: English National Opera, London, UK"
+      },
+      {
+        "type": "venue",
+        "item": "English National Opera"
+      }
+    ],
+    "language": [
+      {
+        "iso639_3": "English"
+      },
+      {
+        "iso639_3": "eng"
+      }
+    ],
+    "format": "Graphite pencil, and Dr. Ph Martins Liquid Watercolor on watercolor paper",
+    "creator": [
+      "Dunya Ramicova"
+    ],
+    "genre": [
+      "Drawing"
+    ],
+    "relation": [
+      "The Fairy Queen"
+    ],
+    "extent": "9\" x 12\" "
+  },
+  "ingestType": "item",
+  "dataProvider": "UC Merced, Library and Special Collections",
+  "originalRecord": {
+    "properties": {
+      "ucldc_schema:physlocation": null,
+      "picture:views": [
+        {
+          "filename": "Medium_ucm_dr_060_045_a.jpg",
+          "tag": "medium",
+          "width": 899,
+          "content": {
+            "digest": "2f58c981bf53e85aca52a58f74a6d5a5",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/picture:views/0/content/Medium_ucm_dr_060_045_a.jpg",
+            "length": "189284",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Medium_ucm_dr_060_045_a.jpg"
+          },
+          "height": 1200,
+          "title": "Medium",
+          "description": "Medium Size"
+        },
+        {
+          "filename": "Original_ucm_dr_060_045_a.tif",
+          "tag": "original",
+          "width": 3596,
+          "content": {
+            "digest": "9b7e4b6e6f2ad3f916517fac4f6fcc12",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/picture:views/1/content/Original_ucm_dr_060_045_a.tif",
+            "length": "25624078",
+            "mime-type": "image/tiff",
+            "encoding": null,
+            "name": "Original_ucm_dr_060_045_a.tif"
+          },
+          "height": 4796,
+          "title": "Original",
+          "description": null
+        },
+        {
+          "filename": "Small_ucm_dr_060_045_a.jpg",
+          "tag": "small",
+          "width": 262,
+          "content": {
+            "digest": "b3602d489fa04a9214f8538fe0339108",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/picture:views/2/content/Small_ucm_dr_060_045_a.jpg",
+            "length": "19096",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Small_ucm_dr_060_045_a.jpg"
+          },
+          "height": 350,
+          "title": "Small",
+          "description": "Small Size"
+        },
+        {
+          "filename": "Thumbnail_ucm_dr_060_045_a.jpg",
+          "tag": "thumb",
+          "width": 112,
+          "content": {
+            "digest": "a98dbc061e68efc4f40f5e39cb6fbd46",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/picture:views/3/content/Thumbnail_ucm_dr_060_045_a.jpg",
+            "length": "4967",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "Thumbnail_ucm_dr_060_045_a.jpg"
+          },
+          "height": 150,
+          "title": "Thumbnail",
+          "description": "Thumbnail Size"
+        },
+        {
+          "filename": "OriginalJpeg_ucm_dr_060_045_a.jpg",
+          "tag": "originalJpeg",
+          "width": 3596,
+          "content": {
+            "digest": "1eb412df44b39c5ab71d82d879473d6f",
+            "data": "https://nuxeo.cdlib.org/nuxeo/nxbigfile/default/0025ad8f-a44e-4f58-8238-c7b60b2fb850/picture:views/4/content/OriginalJpeg_ucm_dr_060_045_a.jpg",
+            "length": "2871607",
+            "mime-type": "image/jpeg",
+            "encoding": null,
+            "name": "OriginalJpeg_ucm_dr_060_045_a.jpg"
+          },
+          "height": 4796,
+          "title": "OriginalJpeg",
+          "description": "Original Picture in JPEG format"
+        }
+      ],
+      "ucldc_schema:type": "image",
+      "ucldc_schema:rightsnotice": null,
+      "picture:origin": null,
+      "dc:rights": null,
+      "picture:headline": null,
+      "dc:description": null,
+      "ucldc_schema:transcription": null,
+      "picture:typage": null,
+      "ucldc_schema:physdesc": "Graphite pencil, and Dr. Ph Martins Liquid Watercolor on watercolor paper",
+      "ucldc_schema:accessrestrict": "public",
+      "ucldc_schema:subjecttopic": [
+        {
+          "headingtype": null,
+          "heading": null,
+          "authorityid": null,
+          "source": null
+        }
+      ],
+      "dc:format": null,
+      "ucldc_schema:publisher": [],
+      "ucldc_schema:localidentifier": [],
+      "picture:credit": null,
+      "ucldc_schema:description": [
+        {
+          "type": "marks",
+          "item": "\"Design #39; BRAG; Entourage; Principle Base A\" written on drawing. No signature on drawing."
+        },
+        {
+          "type": "creationprod",
+          "item": "Director: David Pountney; Scene Designer: Robert Israel; Producer: English National Opera, London, UK"
+        },
+        {
+          "type": "venue",
+          "item": "English National Opera"
+        }
+      ],
+      "ucldc_schema:creator": [
+        {
+          "source": null,
+          "name": "Dunya Ramicova",
+          "role": "persname",
+          "authorityid": null,
+          "nametype": null
+        }
+      ],
+      "dc:title": "Brag",
+      "ucldc_schema:contributor": [],
+      "picture:genre": null,
+      "dc:subjects": [],
+      "ucldc_schema:date": [],
+      "dc:valid": null,
+      "dc:coverage": null,
+      "ucldc_schema:identifier": null,
+      "dc:language": null,
+      "picture:cropCoords": null,
+      "dc:lastContributor": "jshiroma@ucmerced.edu",
+      "dc:created": "2015-02-20T14:06:01.04Z",
+      "ucldc_schema:extent": "9\" x 12\" ",
+      "dc:contributors": [
+        "system",
+        "Administrator",
+        "jshiroma@ucmerced.edu"
+      ],
+      "dc:publisher": null,
+      "dc:source": null,
+      "ucldc_schema:subjectname": [],
+      "picture:language": null,
+      "picture:source": null,
+      "ucldc_schema:collection": [
+        "https://registry.cdlib.org/api/v1/collection/26098/"
+      ],
+      "ucldc_schema:campusunit": [
+        "https://registry.cdlib.org/api/v1/repository/18/"
+      ],
+      "picture:dateline": null,
+      "dc:expired": null,
+      "ucldc_schema:rightsdeterminationdate": null,
+      "picture:subheadline": null,
+      "picture:caption": null,
+      "ucldc_schema:provenance": [
+        "Gift of Dunya Ramicova, 2014"
+      ],
+      "dc:nature": null,
+      "ucldc_schema:rightsstatement": "Creative Commons Attribution - NonCommercial-NoDerivatives (CC BY-NC-ND 4.0)",
+      "ucldc_schema:place": [],
+      "picture:byline": null,
+      "dc:modified": "2015-05-29T18:16:49.02Z",
+      "ucldc_schema:rightsjurisdiction": null,
+      "ucldc_schema:rightsstatus": "copyrighted",
+      "picture:slugline": null,
+      "ucldc_schema:rightsnote": null,
+      "ucldc_schema:rightscontact": null,
+      "ucldc_schema:alternativetitle": [],
+      "ucldc_schema:rightsstartdate": null,
+      "ucldc_schema:rightsenddate": null,
+      "dc:issued": null,
+      "ucldc_schema:temporalcoverage": [],
+      "ucldc_schema:rightsholder": [],
+      "ucldc_schema:language": [
+        {
+          "language": "English",
+          "languagecode": "eng"
+        }
+      ],
+      "dc:creator": "system",
+      "ucldc_schema:formgenre": [
+        {
+          "heading": "Drawing",
+          "authorityid": null,
+          "source": null
+        }
+      ],
+      "ucldc_schema:source": null,
+      "ucldc_schema:relatedresource": [
+        "The Fairy Queen"
+      ]
+    },
+    "type": "SampleCustomPicture",
+    "path": "/asset-library/UCM/Ramicova/ucm_dr_060_045_a.tif",
+    "facets": [
+      "Picture",
+      "Commentable",
+      "MultiviewPicture",
+      "Versionable",
+      "Publishable",
+      "HasRelatedText",
+      "Thumbnail",
+      "Folderish",
+      "NotCollectionMember",
+      "Orderable"
+    ],
+    "lastModified": "2015-05-29T18:16:49.02Z",
+    "structmap_url": "s3://static.ucldc.cdlib.org/media_json/0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json",
+    "title": "Brag",
+    "repository": "default",
+    "uid": "0025ad8f-a44e-4f58-8238-c7b60b2fb850",
+    "changeToken": "1432923409022",
+    "versionLabel": "0.1+",
+    "provenance": [
+      "Gift of Dunya Ramicova, 2014"
+    ],
+    "entity-type": "document",
+    "collection": [
+      {
+        "resource_uri": "/api/v1/collection/26098/",
+        "title": "Dunya Ramicova costume design collection",
+        "local_id": "dunya-ramicova-costume-design-collection",
+        "staging_notes": "Approximately 1,000 images.  Simple objects.",
+        "rights_statement": "",
+        "harvest_extra_data": "asset-library/UCM/Ramicova",
+        "harvest_type": "NUX",
+        "enrichments_item": "/select-id?prop=uid,\n/dpla_mapper?mapper_type=ucldc_nuxeo,\n/required-values-from-collection-registry?field=rights&mode=fill,\n/required-values-from-collection-registry?field=type&mode=fill,\n/required-values-from-collection-registry?field=title&mode=fill,\n/set-ucldc-dataprovider,\n/dedupe-sourceresource,\n/validate_mapv3",
+        "name": "Dunya Ramicova costume design collection",
+        "slug": "dunya-ramicova-costume-design-collection",
+        "@id": "https://registry.cdlib.org/api/v1/collection/26098/",
+        "rights_status": "X",
+        "extent": null,
+        "metadata_in_dams": false,
+        "url_oac": "",
+        "campus": [
+          {
+            "resource_uri": "/api/v1/campus/4/",
+            "google_analytics_tracking_code": "",
+            "slug": "UCM",
+            "@id": "https://registry.cdlib.org/api/v1/campus/4/",
+            "ark": "ark:/13030/c8668fhk",
+            "position": 4,
+            "name": "UC Merced"
+          }
+        ],
+        "hosted": "Tab-delimited files",
+        "ready_for_publication": false,
+        "featured": true,
+        "qa_completed": false,
+        "dcmi_type": "X",
+        "url_harvest": "https://nuxeo.cdlib.org/Nuxeo/site/api/v1",
+        "id": "26098",
+        "files_in_dams": false,
+        "files_in_hand": false,
+        "ingestType": "collection",
+        "description": "UC Merced faculty member Dunya Ramicova has designed costumes for hundreds of productions of theater, opera, film, and television both in the United States and abroad. This collection of drawings spans the entirety of her oeuvre, and stands as one of the few complete collections of costume designs by a single designer held by an academic institution.",
+        "repository": [
+          {
+            "resource_uri": "/api/v1/repository/18/",
+            "google_analytics_tracking_code": "",
+            "slug": "library-and-special-collections",
+            "@id": "https://registry.cdlib.org/api/v1/repository/18/",
+            "ark": "ark:/13030/kt6n39q2pc",
+            "campus": [
+              {
+                "resource_uri": "/api/v1/campus/4/",
+                "google_analytics_tracking_code": "",
+                "slug": "UCM",
+                "ark": "ark:/13030/c8668fhk",
+                "position": 4,
+                "name": "UC Merced"
+              }
+            ],
+            "name": "Library and Special Collections"
+          }
+        ],
+        "url_local": ""
+      }
+    ],
+    "structmap_text": "Brag",
+    "state": "project",
+    "isCheckedOut": true,
+    "parentRef": "afa37e7d-051f-4fbc-a5b4-e83aa6171aef",
+    "contextParameters": {}
+  }
+}
