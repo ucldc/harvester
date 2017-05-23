@@ -251,6 +251,14 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         self.assertEqual(sdoc['id'], u'0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['sort_title'], '~title unknown')
 
+    def test_sort_title_string_only(self):
+        '''Many of the sourceResource title fields are flat strings.
+        Deal with this'''
+        doc = json.load(open(DIR_FIXTURES + '/couchdb_title_flat_string.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_title'],
+                'atlas negative collection image')
+
     def test_sort_collection_data_string(self):
         '''
         '''
