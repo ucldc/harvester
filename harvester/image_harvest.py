@@ -66,7 +66,13 @@ def link_is_to_image(url, auth=None):
     # have a server that returns a 403 here, does have content-type of
     # text/html. Dropping this test here. requests throws if can't connect
     if response.status_code != 200:
-        response.raise_for_status()
+        # many servers do not support HEAD requests, try get
+        if md5s3stash.is_s3_url(url):
+            response = requests.get(url, allow_redirects=True)
+        else:
+            response = requests.get(url, allow_redirects=True, auth=auth)
+        if response.status_code != 200:
+            response.raise_for_status()
     content_type = response.headers.get('content-type', None)
     if not content_type:
         return False
