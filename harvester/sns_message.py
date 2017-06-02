@@ -1,7 +1,9 @@
 import os
 import boto3
 import botocore.exceptions
+import logging
 
+logger = logging.getLogger(__name__)
 
 def publish_to_harvesting(subject, message):
     '''Publish a SNS message to the harvesting topic channel'''
@@ -14,5 +16,4 @@ def publish_to_harvesting(subject, message):
             Subject=subject
             )
     except botocore.exceptions.BotoCoreError, e:
-        import sys
-        print >> sys.stderr, 'Exception in Boto SNS: {}'.format(e)
+        logger.error('Exception in Boto SNS: {}'.format(e))
