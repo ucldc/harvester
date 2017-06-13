@@ -6,6 +6,7 @@ from harvester.sns_message import publish_to_harvesting
 
 logger = logging.getLogger(__name__)
 
+
 class SNSWorker(Worker):
     def execute_job(self, job, queue):
         """Spawns a work horse to perform the actual work and passes it a job.
@@ -14,14 +15,15 @@ class SNSWorker(Worker):
         SIGALRM.
         """
         worker_name = (self.key.rsplit(':', 1)[1]).rsplit('.', 1)[0]
-        subject = 'Starting job {} on worker {}'.format(job.description,
-                worker_name)
+        subject = 'Worker {} starting job {}'.format(
+            worker_name,
+            job.description)
         publish_to_harvesting(subject, subject)
         self.set_state('busy')
         self.fork_work_horse(job, queue)
         self.monitor_work_horse(job)
-        subject = 'Finished job {} on worker {}'.format(job.description,
-                worker_name)
+        subject = 'Worker {} finished job {}'.format(
+            worker_name,
+            job.description)
         publish_to_harvesting(subject, subject)
         self.set_state('idle')
-
