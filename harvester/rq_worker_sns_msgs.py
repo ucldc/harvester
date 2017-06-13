@@ -13,21 +13,15 @@ class SNSWorker(Worker):
         within the given timeout bounds, or will end the work horse with
         SIGALRM.
         """
-        self.log.error(dir(job))
-        for v in vars(job):
-            self.log.error(v)
-            self.log.error(getattr(job, v))
-        inst = job._instance
-        self.log.error(dir(inst))
-        self.log.error(dir(self))
-        self.log.error(self.key)
         worker_name = (self.key.rsplit(':', 1)[1]).rsplit('.', 1)[0]
         subject = 'Starting job {} on worker {}'.format(job.description,
                 worker_name)
-        self.log.error(subject)
         publish_to_harvesting(subject, subject)
         self.set_state('busy')
         self.fork_work_horse(job, queue)
         self.monitor_work_horse(job)
+        subject = 'Finished job {} on worker {}'.format(job.description,
+                worker_name)
+        publish_to_harvesting(subject, subject)
         self.set_state('idle')
 
