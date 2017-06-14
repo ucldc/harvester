@@ -28,12 +28,12 @@ class SNSWorker(Worker):
         subject = 'Worker {} starting job {}'.format(
             worker_name,
             job.description)
-        #publish_to_harvesting(subject, subject)
+        publish_to_harvesting(subject, subject)
         self.set_state('busy')
         self.fork_work_horse(job, queue)
         self.monitor_work_horse(job)
         subject = 'Worker {} finished job {}'.format(
             worker_name,
             job.description)
-        #publish_to_harvesting(subject, subject)
+        publish_to_harvesting(subject, subject)
         self.set_state('idle')
