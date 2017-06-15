@@ -13,20 +13,27 @@ logger = logging.getLogger(__name__)
 # and parse out the collection id
 message_match_list = (
     ("sync_couch_collection_to_solr\(collection_key='(?P<cid>\d+)'\)",
-     "{status}: Sync from Couchdb to Solr {env} on {worker} for CID: {cid}"),
+     "{status}: Sync from Couchdb to Solr {env} on "
+     ":worker: {worker} for CID: {cid}"),
     ("run_ingest.main.*/collection/(?P<cid>\d+)/",
-     "{status}: Metadata Harvest to Couchdb {env} on {worker} for CID: {cid}"),
+     "{status}: Metadata Harvest to Couchdb {env} on "
+     ":worker: {worker} for CID: {cid}"),
     ("image_harvest.main\(collection_key=.*'(?P<cid>\d+)'",
-     "{status}: Image Harvest {env} on {worker} for CID: {cid}"),
+     "{status}: Image Harvest {env} on "
+     ":worker: {worker} for CID: {cid}"),
     ("delete_solr_collection\(collection_key='(?P<cid>\d+)'\)",
-     "{status}: Delete from Solr {env} on {worker} for CID: {cid}"), (
-         "s3stash.stash_collection.main\(registry_id=(?P<cid>\d+)",
-         "{status}: Nuxeo Deep Harvest on {env} {worker} for CID: {cid}"), (
-             "delete_collection\((?P<cid>\d+)\)",
-             "{status}: Delete CouchDB {env} on {worker} for CID: {cid}"),
+     "{status}: Delete from Solr {env} on "
+     ":worker: {worker} for CID: {cid}"),
+    ("s3stash.stash_collection.main\(registry_id=(?P<cid>\d+)",
+     "{status}: Nuxeo Deep Harvest on "
+     ":worker: {env} {worker} for CID: {cid}"),
+    ("delete_collection\((?P<cid>\d+)\)",
+     "{status}: Delete CouchDB {env} on "
+     ":worker: {worker} for CID: {cid}"),
     ("couchdb_sync_db_by_collection.main\(url_api_collection="
      "'https://registry.cdlib.org/api/v1/collection/(?P<cid>\d+)/'",
-     "{status}: Sync CouchDB to production on {env} {worker} for CID: {cid}"),
+     "{status}: Sync CouchDB to production on "
+     ":worker: {env} {worker} for CID: {cid}"),
     ("<fn--name> -- parse out collection id as cid ",
      "replacement template for message- needs cid env variables"))
 
