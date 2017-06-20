@@ -16,6 +16,7 @@ from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 from facet_decade import facet_decade
 from mediajson import MediaJson
 import datetime
@@ -659,6 +660,7 @@ class MediaJSONError(ValueError):
 class MissingMediaJSON(ValueError):
     dict_key = 'Missing Media Json'
 
+
 def check_nuxeo_media(doc):
     '''Check that the media_json and jp2000 exist for a given solr doc.
     Raise exception if not
@@ -667,7 +669,7 @@ def check_nuxeo_media(doc):
         return
     # check that there is an object at the structmap_url
     try:
-	    MediaJson(doc['structmap_url']).check_media()
+        MediaJson(doc['structmap_url']).check_media()
     except ClientError, e:
         message = '---- OMITTED: Doc:{} missing media json {}'.format(
             doc['harvest_id_s'],
@@ -786,7 +788,9 @@ def delete_solr_collection(collection_key):
     url_delete = '{}/update?{}'.format(url_solr, query)
     response = requests.get(url_delete)
     response.raise_for_status()
-    publish_to_harvesting('Deleted solr collection {}'.format(collection_key),
+    subject = format_results_subject(collection_key,
+                                     'Deleted documents from Solr {env} ')
+    publish_to_harvesting(subject,
                           'DELETED {}'.format(collection_key))
 
 

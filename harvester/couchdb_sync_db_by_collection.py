@@ -13,6 +13,7 @@ from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.post_processing.couchdb_runner import get_collection_doc_ids
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 
 COUCHDB_VIEW_COLL_IDS = 'all_provider_docs/by_provider_name'
 
@@ -40,10 +41,13 @@ def delete_collection(cid):
     rows = CouchDBCollectionFilter(collection_key=cid, couchdb_obj=_couchdb)
     ids = [row['id'] for row in rows]
     num_deleted, deleted_docs = delete_id_list(ids, _couchdb=_couchdb)
+    subject = format_results_subject(cid,
+                                     'Deleted documents from CouchDB {env} ')
     publish_to_harvesting(
-        'Deleted CouchDB Collection {}'.format(cid),
-        'Deleted {} documents from CouchDB collection {}'.format(num_deleted,
-                                                                 cid))
+        subject,
+        'Deleted {} documents from CouchDB collection CID: {}'.format(
+            num_deleted,
+            cid))
     return num_deleted, deleted_docs
 
 
