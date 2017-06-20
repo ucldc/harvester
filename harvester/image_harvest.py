@@ -23,17 +23,18 @@ import redis_collections
 from harvester.couchdb_pager import couchdb_pager
 from harvester.cleanup_dir import cleanup_work_dir
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 
 BUCKET_BASES = os.environ.get(
     'S3_BUCKET_IMAGE_BASE',
     'us-west-2:static-ucldc-cdlib-org/harvested_images;us-east-1:'
-    'static.ucldc.cdlib.org/harvested_images'
-).split(';')
+    'static.ucldc.cdlib.org/harvested_images').split(';')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
 logging.basicConfig(level=logging.DEBUG, )
+
 
 class ImageHarvestError(Exception):
     pass
@@ -140,8 +141,8 @@ def stash_image_for_doc(doc,
                 reports.append(report)
             except TypeError, e:
                 print >> sys.stderr, 'TypeError for doc:{} {} Msg: {} Args:' \
-                        ' {}'.format(
-                                doc['_id'], url_image, e.message, e.args)
+                    ' {}'.format(
+                        doc['_id'], url_image, e.message, e.args)
         return reports
     else:
         print >> sys.stderr, 'Not an image for {} - {}'.format(doc['_id'],
@@ -187,9 +188,10 @@ class ImageHarvester(object):
             redis_collections.Dict(key='ucldc-image-hash-cache',
                                    redis=self._redis)
         self._object_cache = harvested_object_cache if harvested_object_cache \
-            else redis_collections.Dict(
-                        key='ucldc:harvester:harvested-images',
-                        redis=self._redis)
+            else \
+            redis_collections.Dict(
+                key='ucldc:harvester:harvested-images',
+                redis=self._redis)
 
     def stash_image(self, doc):
         return stash_image_for_doc(
@@ -293,13 +295,14 @@ class ImageHarvester(object):
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
-        report_list = [' : '.join((key, str(val))) for key, val in
-                report_errors.items()]
+        report_list = [
+            ' : '.join((key, str(val))) for key, val in report_errors.items()
+        ]
         report_msg = '\n'.join(report_list)
-        publish_to_harvesting(
-            'Image harvested {}'.format(collection_key),
-            ''.join(('Processed {} documents\n'.format(len(doc_ids)),
-                     report_msg)))
+        subject = format_results_subject(collection_key,
+                                         'Image harvest to CouchDB {env}')
+        publish_to_harvesting(subject, ''.join(
+            ('Processed {} documents\n'.format(len(doc_ids)), report_msg)))
         return doc_ids, report_errors
 
 
@@ -350,8 +353,7 @@ if __name__ == '__main__':
         action='store_true',
         default=False,
         help='Should image harvester not get image if the object field exists '
-        'for the doc (default: False, always get)'
-    )
+        'for the doc (default: False, always get)')
     args = parser.parse_args()
     print(args)
     object_auth = None
