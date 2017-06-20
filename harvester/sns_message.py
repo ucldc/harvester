@@ -20,7 +20,7 @@ def format_results_subject(cid, registry_action):
     resp = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4')
     worker_ip = resp.text
     worker_id = worker_ip.replace('.', '-')
-    return 'Results: {} on {} for CID: {}'.format(
+    return 'Results: {} on :worker: {} for CID: {}'.format(
         registry_action,
         worker_id,
         cid)
