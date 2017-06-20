@@ -16,11 +16,11 @@ import harvester.fetcher as fetcher
 from harvester.fetcher import get_log_file_path
 from harvester.config import config
 import harvester.run_ingest as run_ingest
-from akara import logger
 
 
 if 'ARN_TOPIC_HARVESTING_REPORT' not in os.environ:
     os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'fakey'
+
 
 class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
     '''Test the main function'''
@@ -349,7 +349,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
                       mock_remove, mock_save, mock_enrich, mock_couchdb,
                       mock_redis):
         mock_couch.return_value._create_ingestion_document.return_value = \
-                'test-id'
+            'test-id'
         # this next is because the redis client unpickles....
         mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
         mail_handler = MagicMock()
@@ -374,6 +374,10 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         </PublishResult> <ResponseMetadata>
         <RequestId>d74b8436-ae13-5ab4-a9ff-ce54dfea72a0</RequestId>
         </ResponseMetadata> </PublishResponse>''')
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://169.254.169.254/latest/meta-data/local-ipv4',
+            body='0.0.0.0')
         run_ingest.main(
             'mark.redar@ucop.edu',
             url_api_collection,
@@ -398,7 +402,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
                                         mock_check, mock_remove, mock_save,
                                         mock_enrich, mock_couchdb, mock_redis):
         mock_couch.return_value._create_ingestion_document.return_value = \
-                'test-id'
+            'test-id'
         # this next is because the redis client unpickles....
         mock_redis.return_value.hget.return_value = pickle.dumps('RQ-result!')
         mail_handler = MagicMock()

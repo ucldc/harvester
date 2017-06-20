@@ -132,10 +132,11 @@ def main(user_email,
     logger.info('Enriched records')
 
     resp = save_records.main([None, ingest_doc_id])
-    if not resp == 0:
+    if not resp >= 0:
         logger.error("Error saving records {0}".format(str(resp)))
         raise Exception("Error saving records {0}".format(str(resp)))
-    logger.info("SAVED RECS")
+    num_saved = resp
+    logger.info("SAVED RECS : {}".format(num_saved))
 
     resp = remove_deleted_records.main([None, ingest_doc_id])
     if not resp == 0:
@@ -154,8 +155,10 @@ def main(user_email,
     subject = format_results_subject(collection.id,
                                      'Harvest to CouchDB {env} ')
     publish_to_harvesting(subject,
-                          'Finished metadata harvest for CID: {}'.format(
-                              collection.id))
+                          'Finished metadata harvest for CID: {}\n'
+                          'Saved: {}'.format(
+                              collection.id,
+                              num_saved))
 
     log_handler.pop_application()
     mail_handler.pop_application()
