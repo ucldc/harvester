@@ -5,6 +5,7 @@ from .solr_fetcher import SolrFetcher
 from .solr_fetcher import PySolrFetcher
 from .solr_fetcher import PySolrQueryFetcher
 from .solr_fetcher import PySolrUCBFetcher
+from .solr_fetcher import RequestsSolrFetcher
 from .marc_fetcher import MARCFetcher
 from .marc_fetcher import AlephMARCXMLFetcher
 from .nuxeo_fetcher import NuxeoFetcher
@@ -27,5 +28,5 @@ __all__ = (Fetcher, NoRecordsFetchedException, HARVEST_TYPES, OAIFetcher,
            NuxeoFetcher, UCLDCNuxeoFetcher, OAC_XML_Fetcher, OAC_JSON_Fetcher,
            UCSF_XML_Fetcher, CMISAtomFeedFetcher, HarvestController,
            PySolrQueryFetcher, PySolrUCBFetcher, Flickr_Fetcher,
-           YouTube_Fetcher,
+           YouTube_Fetcher, RequestsSolrFetcher,
            EMAIL_RETURN_ADDRESS, get_log_file_path, main)

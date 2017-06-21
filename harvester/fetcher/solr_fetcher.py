@@ -18,26 +18,30 @@ class SolrFetcher(Fetcher):
     def next(self):
         if self.index < len(self.resp.results):
             self.index += 1
-            return self.resp.results[self.index-1]
+            return self.resp.results[self.index - 1]
         self.index = 1
         self.resp = self.resp.next_batch()
         if not len(self.resp.results):
             raise StopIteration
-        return self.resp.results[self.index-1]
+        return self.resp.results[self.index - 1]
 
 
 class PySolrFetcher(Fetcher):
-    def __init__(self, url_harvest, query, handler_path='select',
+    def __init__(self,
+                 url_harvest,
+                 query,
+                 handler_path='select',
                  **query_params):
         super(PySolrFetcher, self).__init__(url_harvest, query)
         self.solr = pysolr.Solr(url_harvest, timeout=1)
         self._handler_path = handler_path
         self._query_params = {
-                'q': query,
-                'wt': 'json',
-                'sort': 'id asc',
-                'rows': 100,
-                'cursorMark': '*'}
+            'q': query,
+            'wt': 'json',
+            'sort': 'id asc',
+            'rows': 100,
+            'cursorMark': '*'
+        }
         self._query_params.update(query_params)
         self._nextCursorMark = '*'
         self.get_next_results()
@@ -47,8 +51,7 @@ class PySolrFetcher(Fetcher):
     @property
     def _query_path(self):
         self._query_params_encoded = pysolr.safe_urlencode(self._query_params)
-        return '{}?{}'.format(self._handler_path,
-                              self._query_params_encoded)
+        return '{}?{}'.format(self._handler_path, self._query_params_encoded)
 
     def get_next_results(self):
         self._query_params['cursorMark'] = self._nextCursorMark
@@ -79,19 +82,20 @@ class PySolrQueryFetcher(PySolrFetcher):
     ''' Use the `select` url path for querying instead of 'query'. This is
     more typical for most Solr applications.
     '''
+
     def __init__(self, url_harvest, query, **query_params):
-        super(PySolrQueryFetcher, self).__init__(url_harvest,
-                                                 query,
-                                                 handler_path='query',
-                                                 **query_params)
+        super(PySolrQueryFetcher, self).__init__(
+            url_harvest, query, handler_path='query', **query_params)
 
 
 class PySolrUCBFetcher(PySolrFetcher):
     '''Add the qt=document parameter for UCB blacklight'''
+
     def __init__(self, url_harvest, query, **query_params):
         query_params.update({'qt': 'document'})
         super(PySolrUCBFetcher, self).__init__(url_harvest, query,
                                                **query_params)
+
 
 class RequestsSolrFetcher(Fetcher):
     '''A fetcher for solr that uses just the requests library
@@ -101,29 +105,30 @@ class RequestsSolrFetcher(Fetcher):
         URL encoded query string -> q=<query>&auth=<auth code>
     The auth parameter will be parsed to figure out type of authentication
     needed, right now just deal with "header" token authentication'''
+
     def __init__(self, url_harvest, extra_data):
         super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
         qs = urlparse.parse_qs(extra_data)
         self.q = self.auth = None
         if qs:
             self.q = qs.get('q', [None])[0]
-            self.auth = qs.get('auth', []) # BAMPFA has 2 headers
+            self.auth = qs.get('auth', [])  # BAMPFA has 2 headers
             # what to do with other params, can handle UCB this way
         if not self.q:
-            self.q = extra_data #original meaning of extra_data
+            self.q = extra_data  # original meaning of extra_data
         self._page_size = 1000
         self._cursorMark = None
         self._nextCursorMark = '*'
         self._query_params = {
-                'wt': 'json',
-                'sort': 'id asc',
-                }
+            'wt': 'json',
+            'sort': 'id asc',
+        }
         self._headers = {}
         if self.auth:
             for value in self.auth:
                 # currently only support header auth
                 auth_type, header_name, header_value = value.split(':', 2)
-                self._headers.update({header_name:header_value})
+                self._headers.update({header_name: header_value})
 
     @property
     def end_of_feed(self):
@@ -132,13 +137,9 @@ class RequestsSolrFetcher(Fetcher):
     def get_response(self):
         '''Get the correct response for the given combo of params'''
         # build current URL
-        url_request = ''.join((self.url,
-                               '/select?q=',
-                               self.q,
-                               '&rows=',
-                               str(self._page_size),
-                               '&cursorMark=',
-                               self._cursorMark))
+        url_request = ''.join(
+            (self.url, '/select?q=', self.q, '&rows=', str(self._page_size),
+             '&cursorMark=', self._cursorMark))
         for name, value in self._query_params.items():
             url_request = ''.join((url_request, '&', name, '=', value))
         return requests.get(url_request, headers=self._headers)
