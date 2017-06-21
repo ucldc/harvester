@@ -200,6 +200,51 @@ class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(len(docs), 4)
 
 
+class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the Request Solr fetcher which uses cursorMark'''
+    @httpretty.activate
+    def testIterateOverResults(self):
+        '''Test the RequestSolrFetcher iteration over a mock set of data'''
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://example.edu/solr/select',
+            responses=[
+                httpretty.Response(body=open(
+                    DIR_FIXTURES +
+                    '/ucb-cursor-results-0.json').read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES +
+                    '/ucb-cursor-results-1.json').read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES +
+                    '/ucb-cursor-results-2.json').read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES +
+                    '/ucb-cursor-results-3.json').read()),
+            ]
+        )
+        h = fetcher.RequestsSolrFetcher('http://example.edu/solr',
+                'q=extra:data&auth=header:app-name:Value-with:in-it'
+                '&auth=header:app_key:111222333')
+        h._page_size = 1
+        self.assertEqual(h.q, 'extra:data')
+        self.assertEqual(h._headers, {'app-name': 'Value-with:in-it',
+                                      'app_key': '111222333'})
+        cursor = h._nextCursorMark
+        docs = []
+        docs.append(h.next())  # gets the one from init, no get_next_results
+        self.assertEqual(cursor, h._cursorMark)
+        docs.append(h.next())  # get_next_results
+        self.assertNotEqual(cursor, h._nextCursorMark)
+        cursor = h._nextCursorMark
+        docs.append(h.next())  # get_next_results
+        self.assertEqual(cursor, h._cursorMark)
+        cursor = h._nextCursorMark
+        docs.append(h.next())   # get_next_results
+        self.assertEqual(cursor, h._cursorMark)
+        self.assertEqual(len(docs), 4)
+
+
 class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
                                      TestCase):
     '''Test the function of Solr harvest controller'''

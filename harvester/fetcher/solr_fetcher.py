@@ -2,6 +2,8 @@
 import solr
 import pysolr
 from .fetcher import Fetcher
+import urlparse
+import requests
 
 
 class SolrFetcher(Fetcher):
@@ -90,6 +92,70 @@ class PySolrUCBFetcher(PySolrFetcher):
         query_params.update({'qt': 'document'})
         super(PySolrUCBFetcher, self).__init__(url_harvest, query,
                                                **query_params)
+
+class RequestsSolrFetcher(Fetcher):
+    '''A fetcher for solr that uses just the requests library
+    The URL is the URL up to the "select" bit (may change in future)
+    Extra_data is one of 2 formats:
+        just a string -- it is the "q" string
+        URL encoded query string -> q=<query>&auth=<auth code>
+    The auth parameter will be parsed to figure out type of authentication
+    needed, right now just deal with "header" token authentication'''
+    def __init__(self, url_harvest, extra_data):
+        super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
+        qs = urlparse.parse_qs(extra_data)
+        self.q = self.auth = None
+        if qs:
+            self.q = qs.get('q', [None])[0]
+            self.auth = qs.get('auth', []) # BAMPFA has 2 headers
+            # what to do with other params, can handle UCB this way
+        if not self.q:
+            self.q = extra_data #original meaning of extra_data
+        self._page_size = 1000
+        self._cursorMark = None
+        self._nextCursorMark = '*'
+        self._query_params = {
+                'wt': 'json',
+                'sort': 'id asc',
+                }
+        self._headers = {}
+        if self.auth:
+            for value in self.auth:
+                # currently only support header auth
+                auth_type, header_name, header_value = value.split(':', 2)
+                self._headers.update({header_name:header_value})
+
+    @property
+    def end_of_feed(self):
+        return self._cursorMark == self._nextCursorMark
+
+    def get_response(self):
+        '''Get the correct response for the given combo of params'''
+        # build current URL
+        url_request = ''.join((self.url,
+                               '/select?q=',
+                               self.q,
+                               '&rows=',
+                               str(self._page_size),
+                               '&cursorMark=',
+                               self._cursorMark))
+        for name, value in self._query_params.items():
+            url_request = ''.join((url_request, '&', name, '=', value))
+        return requests.get(url_request, headers=self._headers)
+
+    def next(self):
+        '''get the next page of solr data, using the cursor mark to build
+        URL
+        '''
+        if (self.end_of_feed):
+            raise StopIteration
+        # get resp
+        self._cursorMark = self._nextCursorMark
+        resp = self.get_response()
+        resp.raise_for_status()
+        resp_obj = resp.json()
+        self._nextCursorMark = resp_obj['nextCursorMark']
+        return resp_obj['response']['docs']
 
 
 # Copyright © 2016, Regents of the University of California
