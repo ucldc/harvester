@@ -111,10 +111,6 @@ class RequestsSolrFetcher(Fetcher):
         self._page_size = 1000
         self._cursorMark = None
         self._nextCursorMark = '*'
-        self._query_params.update({
-            'wt': ['json'],
-            'sort': ['id asc'],
-        })
         self._headers = {}
         for name, value in self._query_params.items():
             if name == 'header':
@@ -122,6 +118,10 @@ class RequestsSolrFetcher(Fetcher):
                     header_name, header_value = value.split(':', 1)
                     self._headers[header_name] = header_value
                 del self._query_params[name]
+        if 'wt' not in self._query_params:
+            self._query_params.update({'wt': ['json']})
+        if 'sort' not in self._query_params:
+            self._query_params.update({'sort': ['id asc']})
 
     @property
     def end_of_feed(self):
