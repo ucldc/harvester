@@ -110,9 +110,10 @@ class RequestsSolrFetcher(Fetcher):
 
     def __init__(self, url_harvest, extra_data):
         super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
+        if '/select' not in self.url and '/query' not in self.url:
+            self.url = ''.join((self.url, '/select'))
         self._query_iter_template = \
             '?rows={rows}&cursorMark={cursorMark}'
-        self.solr_path = '/select'
         self._query_params = urlparse.parse_qs(extra_data)
         if not self._query_params:  # Old style, just "q" bit of query
             self._query_params = {'q': [extra_data]}
@@ -140,7 +141,6 @@ class RequestsSolrFetcher(Fetcher):
         # build current URL
         url_request = ''.join((
             self.url,
-            self.solr_path,
             self._query_iter_template.format(
                 rows=self._page_size,
                 cursorMark=self._cursorMark),
