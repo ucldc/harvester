@@ -208,10 +208,10 @@ class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
             ])
         h = fetcher.RequestsSolrFetcher(
             'http://example.edu/solr',
-            'q=extra:data&auth=header:app-name:Value-with:in-it'
-            '&auth=header:app_key:111222333')
+            'q=extra:data&header=app-name:Value-with:in-it'
+            '&header=app_key:111222333')
         h._page_size = 1
-        self.assertEqual(h.q, 'extra:data')
+        self.assertEqual(h._query_params['q'], ['extra:data'])
         self.assertEqual(h._headers, {
             'app-name': 'Value-with:in-it',
             'app_key': '111222333'
@@ -229,6 +229,22 @@ class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
         docs.append(h.next())  # get_next_results
         self.assertEqual(cursor, h._cursorMark)
         self.assertEqual(len(docs), 4)
+
+    def test_url_request(self):
+        '''Test the url_request dynamic property of the fetcher'''
+        h = fetcher.RequestsSolrFetcher(
+            'http://example.edu/solr',
+            'q=extra:data&header=app-name:Value-with:in-it'
+            '&header=app_key:111222333')
+        self.assertEqual(
+            'http://example.edu/solr/select?rows=1000&cursorMark=None'
+            '&q=extra:data&wt=j&sort=i',
+            h.url_request)
+        h._cursorMark = 'XXXX'
+        self.assertEqual(
+            'http://example.edu/solr/select?rows=1000&cursorMark=XXXX'
+            '&q=extra:data&wt=j&sort=i',
+            h.url_request)
 
 
 class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,

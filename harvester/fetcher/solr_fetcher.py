@@ -102,47 +102,57 @@ class RequestsSolrFetcher(Fetcher):
     The URL is the URL up to the "select" bit (may change in future)
     Extra_data is one of 2 formats:
         just a string -- it is the "q" string
-        URL encoded query string -> q=<query>&auth=<auth code>
+        URL encoded query string ->
+        q=<query>&header=<name>:<value>&header=<name>:<value>
     The auth parameter will be parsed to figure out type of authentication
-    needed, right now just deal with "header" token authentication'''
+    needed, right now just deal with "header" token authentication
+    '''
 
     def __init__(self, url_harvest, extra_data):
         super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
-        qs = urlparse.parse_qs(extra_data)
-        self.q = self.auth = None
-        if qs:
-            self.q = qs.get('q', [None])[0]
-            self.auth = qs.get('auth', [])  # BAMPFA has 2 headers
-            # what to do with other params, can handle UCB this way
-        if not self.q:
-            self.q = extra_data  # original meaning of extra_data
+        self._query_iter_template = \
+            '?rows={rows}&cursorMark={cursorMark}'
+        self.solr_path = '/select'
+        self._query_params = urlparse.parse_qs(extra_data)
+        if not self._query_params:  # Old style, just "q" bit of query
+            self._query_params = {'q': [extra_data]}
         self._page_size = 1000
         self._cursorMark = None
         self._nextCursorMark = '*'
-        self._query_params = {
+        self._query_params.update({
             'wt': 'json',
             'sort': 'id asc',
-        }
+        })
         self._headers = {}
-        if self.auth:
-            for value in self.auth:
-                # currently only support header auth
-                auth_type, header_name, header_value = value.split(':', 2)
-                self._headers.update({header_name: header_value})
+        for name, value in self._query_params.items():
+            if name == 'header':
+                for value in self._query_params[name]:  # its a list
+                    header_name, header_value = value.split(':', 1)
+                    self._headers[header_name] = header_value
+                del self._query_params[name]
 
     @property
     def end_of_feed(self):
         return self._cursorMark == self._nextCursorMark
 
+    @property
+    def url_request(self):
+        # build current URL
+        url_request = ''.join((
+            self.url,
+            self.solr_path,
+            self._query_iter_template.format(
+                rows=self._page_size,
+                cursorMark=self._cursorMark),
+            ))
+        # join 'q' and all other params
+        for name, value in self._query_params.items():
+            url_request = ''.join((url_request, '&', name, '=', value[0]))
+        return url_request
+
     def get_response(self):
         '''Get the correct response for the given combo of params'''
-        # build current URL
-        url_request = ''.join(
-            (self.url, '/select?q=', self.q, '&rows=', str(self._page_size),
-             '&cursorMark=', self._cursorMark))
-        for name, value in self._query_params.items():
-            url_request = ''.join((url_request, '&', name, '=', value))
-        return requests.get(url_request, headers=self._headers)
+        return requests.get(self.url_request, headers=self._headers)
 
     def next(self):
         '''get the next page of solr data, using the cursor mark to build
@@ -159,7 +169,7 @@ class RequestsSolrFetcher(Fetcher):
         return resp_obj['response']['docs']
 
 
-# Copyright © 2016, Regents of the University of California
+# Copyright © 2017, Regents of the University of California
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
