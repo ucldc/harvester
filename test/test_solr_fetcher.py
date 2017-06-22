@@ -195,7 +195,7 @@ class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
         '''Test the RequestSolrFetcher iteration over a mock set of data'''
         httpretty.register_uri(
             httpretty.GET,
-            'http://example.edu/solr/select',
+            'http://example.edu/solr',
             responses=[
                 httpretty.Response(body=open(
                     DIR_FIXTURES + '/ucb-cursor-results-0.json').read()),
@@ -237,12 +237,12 @@ class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
             'q=extra:data&header=app-name:Value-with:in-it'
             '&header=app_key:111222333')
         self.assertEqual(
-            'http://example.edu/solr/select?rows=1000&cursorMark=None'
+            'http://example.edu/solr?rows=1000&cursorMark=None'
             '&q=extra:data&wt=json&sort=id asc',
             h.url_request)
         h._cursorMark = 'XXXX'
         self.assertEqual(
-            'http://example.edu/solr/select?rows=1000&cursorMark=XXXX'
+            'http://example.edu/solr?rows=1000&cursorMark=XXXX'
             '&q=extra:data&wt=json&sort=id asc',
             h.url_request)
 

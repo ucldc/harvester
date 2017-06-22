@@ -110,8 +110,8 @@ class RequestsSolrFetcher(Fetcher):
 
     def __init__(self, url_harvest, extra_data):
         super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
-        if '/select' not in self.url and '/query' not in self.url:
-            self.url = ''.join((self.url, '/select'))
+        # will need to change URLs for existing to add /select in general
+        # the bampfa has NO /select or /query
         self._query_iter_template = \
             '?rows={rows}&cursorMark={cursorMark}'
         self._query_params = urlparse.parse_qs(extra_data)
