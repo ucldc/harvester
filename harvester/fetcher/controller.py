@@ -17,7 +17,7 @@ from .fetcher import NoRecordsFetchedException
 from .oai_fetcher import OAIFetcher
 from .solr_fetcher import SolrFetcher
 from .solr_fetcher import PySolrQueryFetcher
-from .solr_fetcher import PySolrUCBFetcher
+from .solr_fetcher import RequestsSolrFetcher
 from .marc_fetcher import MARCFetcher
 from .marc_fetcher import AlephMARCXMLFetcher
 from .nuxeo_fetcher import UCLDCNuxeoFetcher
@@ -27,22 +27,24 @@ from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 from .flickr_fetcher import Flickr_Fetcher
 from .youtube_fetcher import YouTube_Fetcher
 
-
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
-HARVEST_TYPES = {'OAI': OAIFetcher,
-                 'OAJ': OAC_JSON_Fetcher,
-                 'OAC': OAC_XML_Fetcher,
-                 'SLR': SolrFetcher,
-                 'MRC': MARCFetcher,
-                 'NUX': UCLDCNuxeoFetcher,
-                 'ALX': AlephMARCXMLFetcher,
-                 'SFX': PySolrQueryFetcher,
-                 'UCB': PySolrUCBFetcher,
-                 'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
-                 'FLK': Flickr_Fetcher, # All public photos fetcher
-                 'YTB': YouTube_Fetcher, # by playlist id, use "uploads" list
-                 }
+HARVEST_TYPES = {
+    'OAI': OAIFetcher,
+    'OAJ': OAC_JSON_Fetcher,
+    'OAC': OAC_XML_Fetcher,
+    'SLR': SolrFetcher,
+    'MRC': MARCFetcher,
+    'NUX': UCLDCNuxeoFetcher,
+    'ALX': AlephMARCXMLFetcher,
+    'SFX': PySolrQueryFetcher,
+    'UCB': RequestsSolrFetcher,  # Now points to more generic
+    # class, accepts parameters
+    # from extra data field
+    'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
+    'FLK': Flickr_Fetcher,  # All public photos fetcher
+    'YTB': YouTube_Fetcher,  # by playlist id, use "uploads" list
+}
 
 
 class HarvestController(object):
@@ -51,14 +53,22 @@ class HarvestController(object):
     disk.
     TODO: produce profile file
     '''
-    campus_valid = ['UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC',
-                    'UCSD', 'UCSF', 'UCDL']
-    dc_elements = ['title', 'creator', 'subject', 'description', 'publisher',
-                   'contributor', 'date', 'type', 'format', 'identifier',
-                   'source', 'language', 'relation', 'coverage', 'rights']
+    campus_valid = [
+        'UCB', 'UCD', 'UCI', 'UCLA', 'UCM', 'UCR', 'UCSB', 'UCSC', 'UCSD',
+        'UCSF', 'UCDL'
+    ]
+    dc_elements = [
+        'title', 'creator', 'subject', 'description', 'publisher',
+        'contributor', 'date', 'type', 'format', 'identifier', 'source',
+        'language', 'relation', 'coverage', 'rights'
+    ]
 
-    def __init__(self, user_email, collection, profile_path=None,
-                 config_file=None, **kwargs):
+    def __init__(self,
+                 user_email,
+                 collection,
+                 profile_path=None,
+                 config_file=None,
+                 **kwargs):
         self.user_email = user_email  # single or list
         self.collection = collection
         self.profile_path = profile_path
@@ -99,17 +109,17 @@ class HarvestController(object):
         if not type(objset) == list:
             objset = [objset]
         with open(filename, 'w') as foo:
-            foo.write(json.dumps(objset,
-                      default=HarvestController.dt_json_handler))
+            foo.write(
+                json.dumps(
+                    objset, default=HarvestController.dt_json_handler))
 
     def create_ingest_doc(self):
         '''Create the DPLA style ingest doc in couch for this harvest session.
         Update with the current information. Status is running'''
         self.couch = dplaingestion.couch.Couch(
-                config_file=self.config_file,
-                dpla_db_name=self.couch_db_name,
-                dashboard_db_name=self.couch_dashboard_name
-                )
+            config_file=self.config_file,
+            dpla_db_name=self.couch_db_name,
+            dashboard_db_name=self.couch_dashboard_name)
         uri_base = "http://localhost:" + self._config['akara_port']
         self.ingest_doc_id = self.couch._create_ingestion_document(
             self.collection.provider, uri_base, self.profile_path,
@@ -132,7 +142,10 @@ class HarvestController(object):
             raise e
         return self.ingest_doc_id
 
-    def update_ingest_doc(self, status, error_msg=None, items=None,
+    def update_ingest_doc(self,
+                          status,
+                          error_msg=None,
+                          items=None,
                           num_coll=None):
         '''Update the ingest doc with status'''
         if not items:
@@ -162,7 +175,8 @@ class HarvestController(object):
         url_tuple = urlparse.urlparse(self.collection.url)
         base_url = ''.join((url_tuple.scheme, '://', url_tuple.netloc))
         self.collection['@id'] = self.collection.url
-        self.collection['id'] = self.collection.url.strip('/').rsplit('/', 1)[1]
+        self.collection['id'] = self.collection.url.strip('/').rsplit('/',
+                                                                      1)[1]
         self.collection['ingestType'] = 'collection'
         self.collection['title'] = self.collection.name
         if 'collection' in obj:
@@ -185,10 +199,10 @@ class HarvestController(object):
 
     def harvest(self):
         '''Harvest the collection'''
-        self.logger.info(' '.join(('Starting harvest for:',
-                                   str(self.user_email), self.collection.url,
-                                   str(self.collection['campus']),
-                                   str(self.collection['repository']))))
+        self.logger.info(' '.join(('Starting harvest for:', str(
+            self.user_email), self.collection.url,
+            str(self.collection['campus']),
+            str(self.collection['repository']))))
         self.num_records = 0
         next_log_n = interval = 100
         for objset in self.fetcher:
@@ -203,9 +217,10 @@ class HarvestController(object):
             self.save_objset(objset)
             if self.num_records >= next_log_n:
                 self.logger.info(' '.join((str(self.num_records),
-                                 'records harvested')))
-                if self.num_records < 10000 and self.num_records >= 10*interval:
-                    interval = 10*interval
+                                           'records harvested')))
+                if self.num_records < 10000 and \
+                        self.num_records >= 10 * interval:
+                    interval = 10 * interval
                 next_log_n += interval
 
         if self.num_records == 0:
@@ -220,21 +235,23 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Harvest a collection')
     parser.add_argument('user_email', type=str, nargs='?', help='user email')
     parser.add_argument(
-            'url_api_collection', type=str, nargs='?',
-            help='URL for the collection Django tastypie api resource')
+        'url_api_collection',
+        type=str,
+        nargs='?',
+        help='URL for the collection Django tastypie api resource')
     return parser.parse_args()
 
 
 def get_log_file_path(collection_slug):
-    '''Get the log file name for the given collection, start time and environment
+    '''Get the log file name for the given collection, start time and
+    environment
     '''
     log_file_dir = os.environ.get('DIR_HARVESTER_LOG',
-                                  os.path.join(os.environ.get('HOME', '.'),
-                                               'log')
-                                  )
-    log_file_name = '-'.join(('harvester', collection_slug,
-                             datetime.datetime.now().strftime('%Y%m%d-%H%M%S'),
-                             '.log'))
+                                  os.path.join(
+                                      os.environ.get('HOME', '.'), 'log'))
+    log_file_name = '-'.join(
+        ('harvester', collection_slug,
+         datetime.datetime.now().strftime('%Y%m%d-%H%M%S'), '.log'))
     return os.path.join(log_file_dir, log_file_name)
 
 
@@ -246,9 +263,14 @@ def create_mimetext_msg(mail_from, mail_to, subject, message):
     return msg
 
 
-def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
-         dir_profile='profiles', profile_path=None,
-         config_file=None, **kwargs):
+def main(user_email,
+         url_api_collection,
+         log_handler=None,
+         mail_handler=None,
+         dir_profile='profiles',
+         profile_path=None,
+         config_file=None,
+         **kwargs):
     '''Executes a harvest with given parameters.
     Returns the ingest_doc_id, directory harvest saved to and number of
     records.
@@ -258,10 +280,8 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     num_recs = -1
     my_mail_handler = None
     if not mail_handler:
-        my_mail_handler = logbook.MailHandler(EMAIL_RETURN_ADDRESS,
-                                              user_email,
-                                              level='ERROR',
-                                              bubble=True)
+        my_mail_handler = logbook.MailHandler(
+            EMAIL_RETURN_ADDRESS, user_email, level='ERROR', bubble=True)
         my_mail_handler.push_application()
         mail_handler = my_mail_handler
     try:
@@ -271,13 +291,12 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
                                                            str(e))
         logbook.error(msg)
         raise e
-    if not(collection['harvest_type'] in HARVEST_TYPES):
+    if not (collection['harvest_type'] in HARVEST_TYPES):
         msg = 'Collection {} wrong type {} for harvesting. Harvest type {} \
                 is not in {}'.format(url_api_collection,
                                      collection['harvest_type'],
                                      collection['harvest_type'],
-                                     HARVEST_TYPES.keys()
-                                     )
+                                     HARVEST_TYPES.keys())
         logbook.error(msg)
         raise ValueError(msg)
     mail_handler.subject = "Error during harvest of " + collection.url
@@ -289,10 +308,8 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     msg = 'Init harvester next. Collection:{}'.format(collection.url)
     logger.info(msg)
     # email directly
-    mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email,
-                                   ' '.join(('Starting harvest for ',
-                                            collection.slug)),
-                                   msg)
+    mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email, ' '.join(
+        ('Starting harvest for ', collection.slug)), msg)
     try:  # TODO: request more emails from AWS
         mail_handler.deliver(mimetext, 'mredar@gmail.com')
     except:
@@ -300,19 +317,22 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     logger.info('Create DPLA profile document')
     if not profile_path:
         profile_path = os.path.abspath(
-            os.path.join(dir_profile, collection.id+'.pjs'))
+            os.path.join(dir_profile, collection.id + '.pjs'))
     with codecs.open(profile_path, 'w', 'utf8') as pfoo:
         pfoo.write(collection.dpla_profile)
-    logger.info('DPLA profile document : '+profile_path)
+    logger.info('DPLA profile document : ' + profile_path)
     harvester = None
     try:
-        harvester = HarvestController(user_email, collection,
-                                      profile_path=profile_path,
-                                      config_file=config_file, **kwargs)
+        harvester = HarvestController(
+            user_email,
+            collection,
+            profile_path=profile_path,
+            config_file=config_file,
+            **kwargs)
     except Exception, e:
         import traceback
         msg = 'Exception in harvester init: type: {} TRACE:\n{}'.format(
-              type(e), traceback.format_exc())
+            type(e), traceback.format_exc())
         logger.error(msg)
         raise e
     logger.info('Create ingest doc in couch')
@@ -321,18 +341,15 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     logger.info('Start harvesting next')
     try:
         num_recs = harvester.harvest()
-        msg = ''.join(('Finished harvest of ', collection.slug,
-                       '. ', str(num_recs), ' records harvested.'))
+        msg = ''.join(('Finished harvest of ', collection.slug, '. ',
+                       str(num_recs), ' records harvested.'))
         harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
         logger.info(msg)
         # email directly
-        mimetext = create_mimetext_msg(EMAIL_RETURN_ADDRESS, user_email,
-                                       ' '.join((
-                                           'Finished harvest of raw records '
-                                           'for ',
-                                           collection.slug,
-                                           ' enriching next')),
-                                       msg)
+        mimetext = create_mimetext_msg(
+            EMAIL_RETURN_ADDRESS, user_email, ' '.join(
+                ('Finished harvest of raw records '
+                 'for ', collection.slug, ' enriching next')), msg)
         try:
             mail_handler.deliver(mimetext, 'mredar@gmail.com')
         except:
@@ -340,16 +357,17 @@ def main(user_email, url_api_collection, log_handler=None, mail_handler=None,
     except Exception, e:
         import traceback
         error_msg = ''.join(("Error while harvesting: type-> ", str(type(e)),
-                             " TRACE:\n"+str(traceback.format_exc())))
+                             " TRACE:\n" + str(traceback.format_exc())))
         logger.error(error_msg)
-        harvester.update_ingest_doc('error', error_msg=error_msg,
-                                    items=num_recs)
+        harvester.update_ingest_doc(
+            'error', error_msg=error_msg, items=num_recs)
         raise e
     if my_log_handler:
         my_log_handler.pop_application()
     if my_mail_handler:
         my_mail_handler.pop_application()
     return ingest_doc_id, num_recs, harvester.dir_save, harvester
+
 
 __all__ = (Fetcher, NoRecordsFetchedException, HARVEST_TYPES)
 
