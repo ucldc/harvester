@@ -88,15 +88,6 @@ class PySolrQueryFetcher(PySolrFetcher):
             url_harvest, query, handler_path='query', **query_params)
 
 
-class PySolrUCBFetcher(PySolrFetcher):
-    '''Add the qt=document parameter for UCB blacklight'''
-
-    def __init__(self, url_harvest, query, **query_params):
-        query_params.update({'qt': 'document'})
-        super(PySolrUCBFetcher, self).__init__(url_harvest, query,
-                                               **query_params)
-
-
 class RequestsSolrFetcher(Fetcher):
     '''A fetcher for solr that uses just the requests library
     The URL is the URL up to the "select" bit (may change in future)

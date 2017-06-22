@@ -17,7 +17,7 @@ from .fetcher import NoRecordsFetchedException
 from .oai_fetcher import OAIFetcher
 from .solr_fetcher import SolrFetcher
 from .solr_fetcher import PySolrQueryFetcher
-from .solr_fetcher import PySolrUCBFetcher
+from .solr_fetcher import RequestsSolrFetcher
 from .marc_fetcher import MARCFetcher
 from .marc_fetcher import AlephMARCXMLFetcher
 from .nuxeo_fetcher import UCLDCNuxeoFetcher
@@ -38,7 +38,9 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'NUX': UCLDCNuxeoFetcher,
                  'ALX': AlephMARCXMLFetcher,
                  'SFX': PySolrQueryFetcher,
-                 'UCB': PySolrUCBFetcher,
+                 'UCB': RequestsSolrFetcher,  # Now points to more generic
+                                              # class, accepts parameters
+                                              # from extra data field
                  'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
                  'FLK': Flickr_Fetcher, # All public photos fetcher
                  'YTB': YouTube_Fetcher, # by playlist id, use "uploads" list
