@@ -121,8 +121,8 @@ class RequestsSolrFetcher(Fetcher):
         self._cursorMark = None
         self._nextCursorMark = '*'
         self._query_params.update({
-            'wt': 'json',
-            'sort': 'id asc',
+            'wt': ['json'],
+            'sort': ['id asc'],
         })
         self._headers = {}
         for name, value in self._query_params.items():

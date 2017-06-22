@@ -238,12 +238,12 @@ class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
             '&header=app_key:111222333')
         self.assertEqual(
             'http://example.edu/solr/select?rows=1000&cursorMark=None'
-            '&q=extra:data&wt=j&sort=i',
+            '&q=extra:data&wt=json&sort=id asc',
             h.url_request)
         h._cursorMark = 'XXXX'
         self.assertEqual(
             'http://example.edu/solr/select?rows=1000&cursorMark=XXXX'
-            '&q=extra:data&wt=j&sort=i',
+            '&q=extra:data&wt=json&sort=id asc',
             h.url_request)
 
 
