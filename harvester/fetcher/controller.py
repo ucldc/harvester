@@ -26,6 +26,7 @@ from .oac_fetcher import OAC_JSON_Fetcher
 from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 from .flickr_fetcher import Flickr_Fetcher
 from .youtube_fetcher import YouTube_Fetcher
+from .xml_fetcher import XML_Fetcher
 
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
@@ -42,6 +43,7 @@ HARVEST_TYPES = {'OAI': OAIFetcher,
                  'PRE': CMISAtomFeedFetcher,  # 'Preservica CMIS Atom Feed'),
                  'FLK': Flickr_Fetcher, # All public photos fetcher
                  'YTB': YouTube_Fetcher, # by playlist id, use "uploads" list
+                 'XML': XML_Fetcher,
                  }
 
 
