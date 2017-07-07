@@ -12,6 +12,7 @@ class XML_Fetcher(Fetcher):
 
     def __init__(self, url_harvest, extra_data):
         self.url_base = url_harvest
+        self.doc_current = 1
         self.docs_fetched = 0
         xml = urllib.urlopen(self.url_base).read()
         total = re.findall('<record>', xml)
@@ -48,6 +49,7 @@ class XML_Fetcher(Fetcher):
             raise StopIteration
         tree = ET.fromstring(urllib.urlopen(self.url_base).read())
         hits = tree.findall(".//record")
+        self.doc_current += 1
         return self._dochits_to_objset(hits)
 
 # Copyright © 2016, Regents of the University of California
