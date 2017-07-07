@@ -17,6 +17,7 @@ from harvester import fetcher
 from harvester.config import config as config_harvest
 from harvester.collection_registry_client import Collection
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 from redis import Redis
 from rq import Queue
 import harvester.image_harvest
@@ -131,10 +132,11 @@ def main(user_email,
     logger.info('Enriched records')
 
     resp = save_records.main([None, ingest_doc_id])
-    if not resp == 0:
+    if not resp >= 0:
         logger.error("Error saving records {0}".format(str(resp)))
         raise Exception("Error saving records {0}".format(str(resp)))
-    logger.info("SAVED RECS")
+    num_saved = resp
+    logger.info("SAVED RECS : {}".format(num_saved))
 
     resp = remove_deleted_records.main([None, ingest_doc_id])
     if not resp == 0:
@@ -150,9 +152,13 @@ def main(user_email,
     if not resp == 0:
         logger.error("Error cleaning up dashboard {0}".format(resp))
         raise Exception("Error cleaning up dashboard {0}".format(resp))
-
-    publish_to_harvesting('Harvesting completed for {}'.format(collection.id),
-                          'Finished harvest for {}'.format(collection.id))
+    subject = format_results_subject(collection.id,
+                                     'Harvest to CouchDB {env} ')
+    publish_to_harvesting(subject,
+                          'Finished metadata harvest for CID: {}\n'
+                          'Saved: {}'.format(
+                              collection.id,
+                              num_saved))
 
     log_handler.pop_application()
     mail_handler.pop_application()

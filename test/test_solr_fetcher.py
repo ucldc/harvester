@@ -7,6 +7,7 @@ import solr
 import pysolr
 import harvester.fetcher as fetcher
 from mypretty import httpretty
+
 # import httpretty
 
 
@@ -20,13 +21,11 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(
             httpretty.POST,
             'http://example.edu/solr/select',
-            body=open(
-                DIR_FIXTURES +
-                '/ucsd-new-feed-missions-bb3038949s-0.xml').read()
-            )
+            body=open(DIR_FIXTURES +
+                      '/ucsd-new-feed-missions-bb3038949s-0.xml').read())
         self.assertRaises(TypeError, fetcher.SolrFetcher)
-        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
-                                rows=3)
+        h = fetcher.SolrFetcher(
+            'http://example.edu/solr', 'extra_data', rows=3)
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, solr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
@@ -47,24 +46,23 @@ class SolrFetcherTestCase(LogOverrideMixin, TestCase):
             'http://example.edu/solr/select',
             responses=[
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-0.xml')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-1.xml')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-2.xml')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-3.xml')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-4.xml').read())
-            ]
-            )
-        h = fetcher.SolrFetcher('http://example.edu/solr', 'extra_data',
-                                rows=3)
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-4.xml')
+                    .read())
+            ])
+        h = fetcher.SolrFetcher(
+            'http://example.edu/solr', 'extra_data', rows=3)
         self.assertEqual(len(h.resp.results), 3)
         n = 0
         for r in h:
@@ -81,15 +79,14 @@ class PySolrQueryFetcherTestCase(LogOverrideMixin, TestCase):
         '''Test that the class exists and gives good error messages
         if initial data not correct'''
         httpretty.register_uri(
-                httpretty.GET,
-                'http://example.edu/solr/query',
-                body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-0.json').read()
-                )
+            httpretty.GET,
+            'http://example.edu/solr/query',
+            body=open(DIR_FIXTURES +
+                      '/ucsd-new-feed-missions-bb3038949s-0.json').read())
         self.assertRaises(TypeError, fetcher.PySolrQueryFetcher)
-        h = fetcher.PySolrQueryFetcher('http://example.edu/solr',
-                                       'extra_data',)
+        h = fetcher.PySolrQueryFetcher(
+            'http://example.edu/solr',
+            'extra_data', )
         self.assertTrue(hasattr(h, 'solr'))
         self.assertTrue(isinstance(h.solr, pysolr.Solr))
         self.assertEqual(h.solr.url, 'http://example.edu/solr')
@@ -107,25 +104,24 @@ class PySolrQueryFetcherTestCase(LogOverrideMixin, TestCase):
             'http://example.edu/solr/query',
             responses=[
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-0.json').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-0.json')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-1.json').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-1.json')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-2.json').read()),
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-2.json')
+                    .read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucsd-new-feed-missions-bb3038949s-3.json').read()),
-            ]
-        )
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-3.json')
+                    .read()),
+            ])
         self.assertRaises(TypeError, fetcher.PySolrFetcher)
         h = fetcher.PySolrQueryFetcher('http://example.edu/solr', 'extra_data',
                                        **{'rows': 3})
         self.assertEqual(
-                h._query_path,
-                'query?q=extra_data&sort=id+asc&cursorMark=%2A&wt=json&rows=3')
+            h._query_path,
+            'query?q=extra_data&sort=id+asc&cursorMark=%2A&wt=json&rows=3')
         n = 0
         for r in h:
             n += 1
@@ -133,76 +129,78 @@ class PySolrQueryFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(['Mission Santa Ynez'], r['title_tesim'])
 
 
-class PySolrUCBFetcherTestCase(LogOverrideMixin, TestCase):
-    '''Test the UCB fetcher'''
-    @httpretty.activate
-    def testClassInit(self):
-        '''Test that the class exists and gives good error messages
-        if initial data not correct'''
-        httpretty.register_uri(
-                httpretty.GET,
-                'http://example.edu/solr/select',
-                body=open(
-                    DIR_FIXTURES +
-                    '/ucb-cursor-results-0.json').read()
-                )
-        self.assertRaises(TypeError, fetcher.PySolrUCBFetcher)
-        h = fetcher.PySolrUCBFetcher('http://example.edu/solr',
-                                     'extra_data',
-                                     **{'rows': 1})
-        self.assertTrue(hasattr(h, 'solr'))
-        self.assertTrue(isinstance(h.solr, pysolr.Solr))
-        self.assertEqual(h.solr.url, 'http://example.edu/solr')
-        self.assertTrue(hasattr(h, 'results'))
-        self.assertEqual(h.results['response']['numFound'], 4)
-        self.assertEqual(h.numFound, 4)
-        self.assertTrue(hasattr(h, 'index'))
+class RequestsSolrFetcherTestCase(LogOverrideMixin, TestCase):
+    '''Test the Request Solr fetcher which uses cursorMark'''
 
     @httpretty.activate
     def testIterateOverResults(self):
-        '''Test the SolrUCBFetcher iteration over a mock set of data'''
+        '''Test the RequestSolrFetcher iteration over a mock set of data'''
         httpretty.register_uri(
             httpretty.GET,
-            'http://example.edu/solr/select',
+            'http://example.edu/solr',
             responses=[
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucb-cursor-results-0.json').read()),
+                    DIR_FIXTURES + '/ucb-cursor-results-0.json').read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucb-cursor-results-1.json').read()),
+                    DIR_FIXTURES + '/ucb-cursor-results-1.json').read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucb-cursor-results-2.json').read()),
+                    DIR_FIXTURES + '/ucb-cursor-results-2.json').read()),
                 httpretty.Response(body=open(
-                    DIR_FIXTURES +
-                    '/ucb-cursor-results-3.json').read()),
-            ]
-        )
-        h = fetcher.PySolrUCBFetcher('http://example.edu/solr', 'extra_data',
-                                     **{'rows': 1})
-        self.assertEqual(
-                h._query_path,
-                'select?q=extra_data&sort=id+asc&cursorMark=%2A'
-                '&qt=document&wt=json&rows=1')
+                    DIR_FIXTURES + '/ucb-cursor-results-3.json').read()),
+            ])
+        h = fetcher.RequestsSolrFetcher(
+            'http://example.edu/solr',
+            'q=extra:data&header=app-name:Value-with:in-it'
+            '&header=app_key:111222333')
+        h._page_size = 1
+        self.assertEqual(h._query_params['q'], ['extra:data'])
+        self.assertEqual(h._headers, {
+            'app-name': 'Value-with:in-it',
+            'app_key': '111222333'
+        })
         cursor = h._nextCursorMark
         docs = []
         docs.append(h.next())  # gets the one from init, no get_next_results
-        self.assertEqual(cursor, h._nextCursorMark)
+        self.assertEqual(cursor, h._cursorMark)
         docs.append(h.next())  # get_next_results
         self.assertNotEqual(cursor, h._nextCursorMark)
         cursor = h._nextCursorMark
         docs.append(h.next())  # get_next_results
-        self.assertNotEqual(cursor, h._nextCursorMark)
+        self.assertEqual(cursor, h._cursorMark)
         cursor = h._nextCursorMark
-        docs.append(h.next())   # get_next_results
-        self.assertNotEqual(cursor, h._nextCursorMark)
+        docs.append(h.next())  # get_next_results
+        self.assertEqual(cursor, h._cursorMark)
         self.assertEqual(len(docs), 4)
+
+    def test_url_request(self):
+        '''Test the url_request dynamic property of the fetcher'''
+        h = fetcher.RequestsSolrFetcher(
+            'http://example.edu/solr',
+            'q=extra:data&header=app-name:Value-with:in-it'
+            '&header=app_key:111222333')
+        self.assertEqual(
+            'http://example.edu/solr?rows=1000&cursorMark=None'
+            '&q=extra:data&sort=id asc&wt=json',
+            h.url_request)
+        h._cursorMark = 'XXXX'
+        self.assertEqual(
+            'http://example.edu/solr?rows=1000&cursorMark=XXXX'
+            '&q=extra:data&sort=id asc&wt=json',
+            h.url_request)
+        h = fetcher.RequestsSolrFetcher(
+            'http://example.edu/solr',
+            'q=extra:data&header=app-name:Value-with:in-it'
+            '&header=app_key:111222333&wt=xml&sort=PID asc')
+        self.assertEqual(
+            'http://example.edu/solr?rows=1000&cursorMark=None'
+            '&q=extra:data&wt=xml&sort=PID asc',
+            h.url_request)
 
 
 class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
                                      TestCase):
     '''Test the function of Solr harvest controller'''
+
     @httpretty.activate
     def setUp(self):
         super(HarvestSolr_ControllerTestCase, self).setUp()
@@ -210,20 +208,21 @@ class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         httpretty.register_uri(
             httpretty.GET,
             "https://registry.cdlib.org/api/v1/collection/183/",
-            body=open(DIR_FIXTURES+'/collection_api_solr_harvest.json').read())
+            body=open(DIR_FIXTURES + '/collection_api_solr_harvest.json').read(
+            ))
         httpretty.register_uri(
             httpretty.POST,
             'http://example.edu/solr/blacklight/select',
-            body=open(
-                DIR_FIXTURES +
-                '/ucsd-new-feed-missions-bb3038949s-0.xml').read()
-                )
+            body=open(DIR_FIXTURES +
+                      '/ucsd-new-feed-missions-bb3038949s-0.xml').read())
         self.collection = Collection(
-                'https://registry.cdlib.org/api/v1/collection/183/')
+            'https://registry.cdlib.org/api/v1/collection/183/')
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController(
-                'email@example.com', self.collection,
-                config_file=self.config_file, profile_path=self.profile_path)
+            'email@example.com',
+            self.collection,
+            config_file=self.config_file,
+            profile_path=self.profile_path)
         print "DIR SAVE::::: {}".format(self.controller.dir_save)
 
     def tearDown(self):
@@ -239,32 +238,31 @@ class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
             httpretty.POST,
             'http://example.edu/solr/blacklight/select',
             responses=[
-               httpretty.Response(body=open(
-                   DIR_FIXTURES +
-                   '/ucsd-new-feed-missions-bb3038949s-0.xml').read()),
-               httpretty.Response(body=open(
-                   DIR_FIXTURES +
-                   '/ucsd-new-feed-missions-bb3038949s-1.xml').read()),
-               httpretty.Response(body=open(
-                   DIR_FIXTURES +
-                   '/ucsd-new-feed-missions-bb3038949s-2.xml').read()),
-               httpretty.Response(body=open(
-                   DIR_FIXTURES +
-                   '/ucsd-new-feed-missions-bb3038949s-3.xml').read()),
-               httpretty.Response(body=open(
-                   DIR_FIXTURES +
-                   '/ucsd-new-feed-missions-bb3038949s-4.xml').read())
-            ]
-            )
+                httpretty.Response(body=open(
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-0.xml')
+                    .read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-1.xml')
+                    .read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-2.xml')
+                    .read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-3.xml')
+                    .read()),
+                httpretty.Response(body=open(
+                    DIR_FIXTURES + '/ucsd-new-feed-missions-bb3038949s-4.xml')
+                    .read())
+            ])
         self.assertTrue(hasattr(self.controller, 'harvest'))
         self.controller.harvest()
         print "LOGS:{}".format(self.test_log_handler.formatted_records)
         self.assertEqual(len(self.test_log_handler.records), 2)
         self.assertTrue(
-                'UC San Diego' in self.test_log_handler.formatted_records[0])
-        self.assertEqual(
-                self.test_log_handler.formatted_records[1],
-                '[INFO] HarvestController: 13 records harvested')
+            'UC San Diego' in self.test_log_handler.formatted_records[0])
+        self.assertEqual(self.test_log_handler.formatted_records[1],
+                         '[INFO] HarvestController: 13 records harvested')
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.

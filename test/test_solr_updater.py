@@ -4,6 +4,7 @@ import json
 from datetime import datetime as DT
 from mock import patch
 from test.utils import DIR_FIXTURES
+from test.utils import ConfigFileOverrideMixin
 from harvester.solr_updater import push_doc_to_solr, map_couch_to_solr_doc
 from harvester.solr_updater import OldCollectionException
 from harvester.solr_updater import CouchdbLastSeq_S3
@@ -15,18 +16,39 @@ from harvester.solr_updater import get_sort_collection_data_string
 from harvester.solr_updater import map_registry_data
 from harvester.solr_updater import UTC
 from harvester.solr_updater import dejson
+from harvester.solr_updater import check_nuxeo_media
+from harvester.solr_updater import MissingSourceResource
+from harvester.solr_updater import MissingTitle
+from harvester.solr_updater import MissingRights
+from harvester.solr_updater import MissingIsShownAt
+from harvester.solr_updater import isShownAtNotURL
+from harvester.solr_updater import MissingImage
+from harvester.solr_updater import MediaJSONError
+from harvester.solr_updater import MissingMediaJSON
+from harvester.solr_updater import sync_couch_collection_to_solr
+from harvester.solr_updater import harvesting_report
+from botocore.exceptions import ClientError
 
 
-class SolrUpdaterTestCase(TestCase):
+class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
     '''Test the solr update from couchdb changes feed'''
 
     def setUp(self):
         self.old_data_branch = os.environ.get('DATA_BRANCH', None)
         os.environ['DATA_BRANCH'] = 'test_branch'
+        self.old_couchdb_url = os.environ.get('COUCHDB_URL', None)
+        os.environ['COUCHDB_URL'] = 'http://couchdb.example.edu/'
+        self.old_url_solr = os.environ.get('URL_SOLR', None)
+        os.environ['URL_SOLR'] = 'http://solr.example.edu/'
+        self.old_arn_report = os.environ.get('ARN_TOPIC_HARVESTING_REPORT',
+                                             None)
+        os.environ['ARN_TOPIC_HARVESTING_REPORT'] = 'x'
 
     def tearDown(self):
         if self.old_data_branch:
             os.environ['DATA_BRANCH'] = self.old_data_branch
+        if self.old_couchdb_url:
+            os.environ['COUCHDB_URL'] = self.old_couchdb_url
 
     @patch('solr.Solr', autospec=True)
     def test_push_doc_to_solr(self, mock_solr):
@@ -34,6 +56,7 @@ class SolrUpdaterTestCase(TestCase):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_doc.json'))
         sdoc = map_couch_to_solr_doc(doc)
         push_doc_to_solr(sdoc, mock_solr)
+
 #        mock_solr.add.assert_called_with({'repository_name': [u'Bancroft Library'], 'url_item': u'http://ark.cdlib.org/ark:/13030/ft009nb05r', 'repository': [u'https://registry.cdlib.org/api/v1/repository/4/'], 'publisher': u'The Bancroft Library, University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu, URL: http://bancroft.berkeley.edu/', 'collection_name': [u'Uchida (Yoshiko) photograph collection'], 'format': u'mods', 'rights': [u'Transmission or reproduction of materials protected by copyright beyond that allowed by fair use requires the written permission of the copyright owners. Works not in the public domain cannot be commercially exploited without permission of the copyright owner. Responsibility for any use rests exclusively with the user.', u'The Bancroft Library--assigned', u'All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html', u'University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu'], 'collection': [u'https://registry.cdlib.org/api/v1/collection/23066/'], 'id': u'23066--http://ark.cdlib.org/ark:/13030/ft009nb05r', 'campus_name': [u'UC Berkeley'], 'reference_image_md5': u'f2610262f487f013fb96149f98990fb0', 'relation': [u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://bancroft.berkeley.edu/collections/jarda.html', u'hb158005k9', u'BANC PIC 1986.059--PIC', u'http://www.oac.cdlib.org/findaid/ark:/13030/ft6k4007pc', u'http://calisphere.universityofcalifornia.edu/', u'http://bancroft.berkeley.edu/'], 'title': u'Neighbor', 'identifier': [u'http://ark.cdlib.org/ark:/13030/ft009nb05r', u'Banc Pic 1986.059:124--PIC'], 'type': u'image', 'campus': [u'https://registry.cdlib.org/api/v1/campus/1/'], 'subject': [u'Yoshiko Uchida photograph collection', u'Japanese American Relocation Digital Archive']})
 
     def test_map_couch_to_solr_no_campus(self):
@@ -73,7 +96,8 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['date'], ['between 1885-1890'])
 
-    def test_map_couch_to_solr_nuxeo_doc(self):
+    @patch('boto3.resource', autospec=True)
+    def test_map_couch_to_solr_nuxeo_doc(self, mock_boto):
         '''Test the mapping of a couch db source json doc from Nuxeo
         to a solr schema compatible doc
         '''
@@ -100,8 +124,7 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(
             sdoc['format'],
             u'Graphite pencil, and Dr. Ph Martins Liquid Watercolor on '
-            'watercolor paper'
-        )
+            'watercolor paper')
         self.assertEqual(sdoc['genre'], ['Drawing'])
         self.assertNotIn('identifier', sdoc)
         self.assertEqual(sdoc['language'], ['English', 'eng'])
@@ -114,11 +137,9 @@ class SolrUpdaterTestCase(TestCase):
             '(CC BY-NC-ND 4.0)'
         ])
         self.assertEqual(sdoc['structmap_text'], 'Brag')
-        self.assertEqual(
-            sdoc['structmap_url'],
-            u's3://static.ucldc.cdlib.org/media_json/'
-            '0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json'
-        )
+        self.assertEqual(sdoc['structmap_url'],
+                         u's3://static.ucldc.cdlib.org/media_json/'
+                         '0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json')
         self.assertEqual(sdoc['subject'], [None])
         self.assertEqual(sdoc['type'], 'image')
 
@@ -131,7 +152,8 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertEqual(sdoc['harvest_id_s'],
                          '23066--http://ark.cdlib.org/ark:/13030/ft009nb05r')
-        self.assertEqual(sdoc['reference_image_md5'], 'f2610262f487f013fb96149f98990fb0')
+        self.assertEqual(sdoc['reference_image_md5'],
+                         'f2610262f487f013fb96149f98990fb0')
         self.assertEqual(sdoc['reference_image_dimensions'], '1244:1500')
         self.assertEqual(sdoc['url_item'],
                          'http://ark.cdlib.org/ark:/13030/ft009nb05r')
@@ -199,8 +221,7 @@ class SolrUpdaterTestCase(TestCase):
             'permission of the copyright owners. Works not in the public '
             'domain cannot be commercially exploited without permission of '
             'the copyright owner. Responsibility for any use rests '
-            'exclusively with the user.',
-            u'The Bancroft Library--assigned',
+            'exclusively with the user.', u'The Bancroft Library--assigned',
             u'All requests to reproduce, publish, quote from, or otherwise '
             'use collection materials must be submitted in writing to the '
             'Head of Public Services, The Bancroft Library, University of '
@@ -222,12 +243,21 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['sort_title'], u'neighbor')
         self.assertEqual(sdoc['temporal'], [u'1964-1965'])
 
-    def test_sort_title_all_punctuation(self):
+    @patch('boto3.resource', autospec=True)
+    def test_sort_title_all_punctuation(self, mock_boto):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_title_all_punc.json'))
         doc['sourceResource']['title'] = ['????$$%(@*#_!']
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['id'], u'0025ad8f-a44e-4f58-8238-c7b60b2fb850')
         self.assertEqual(sdoc['sort_title'], '~title unknown')
+
+    def test_sort_title_string_only(self):
+        '''Many of the sourceResource title fields are flat strings.
+        Deal with this'''
+        doc = json.load(open(DIR_FIXTURES + '/couchdb_title_flat_string.json'))
+        sdoc = map_couch_to_solr_doc(doc)
+        self.assertEqual(sdoc['sort_title'],
+                'atlas negative collection image')
 
     def test_sort_collection_data_string(self):
         '''
@@ -262,29 +292,26 @@ class SolrUpdaterTestCase(TestCase):
         sdoc = map_couch_to_solr_doc(doc)
         self.assertEqual(sdoc['facet_decade'], set(['unknown']))
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_set_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq setting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq = 5
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
-            'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).set_contents_from_string.assert_called_with(5)
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
+                                                  'couchdb_since/test_branch')
+        mock_boto('s3').Object().put.assert_called_with(Body='5')
 
-    @patch('boto.s3.connect_to_region', autospec=True)
+    @patch('boto3.resource', autospec=True)
     def test_get_couchdb_last_seq(self, mock_boto):
         '''Mock test s3 last_seq getting'''
         self.seq_obj = CouchdbLastSeq_S3()
         self.seq_obj.last_seq
-        mock_boto.assert_called_with('us-west-2')
-        mock_boto('us-west-2').get_bucket.assert_called_with('solr.ucldc')
-        mock_boto('us-west-2').get_bucket().get_key.assert_called_with(
-            'couchdb_since/test_branch')
-        mock_boto('us-west-2').get_bucket().get_key(
-        ).get_contents_as_string.assert_called_with()
+        mock_boto.assert_called_with('s3')
+        mock_boto('s3').Object.assert_called_with('solr.ucldc',
+                                                  'couchdb_since/test_branch')
+        mock_boto('s3').Object().get.assert_called()
+        mock_boto('s3').Object().get()['Body'].read.assert_called()
 
     def test_old_collection(self):
         doc = json.load(open(DIR_FIXTURES + '/couchdb_norepo.json'))
@@ -295,28 +322,51 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(get_key_for_env(), 'couchdb_since/test_branch')
 
     def test_check_required_fields(self):
-        doc = {'id': 'test-id'}
-        self.assertRaises(KeyError, has_required_fields, doc)
-        doc = {'id': 'test-id', '_id': 'x', 'sourceResource': {}}
-        self.assertRaises(KeyError, has_required_fields, doc)
+        doc = {'id': 'sid', '_id': 'hid'}
+        self.assertRaisesRegexp(MissingSourceResource,
+                                '---- OMITTED: Doc:hid has no sourceResource.',
+                                has_required_fields, doc)
+        doc['sourceResource'] = {}
+        self.assertRaisesRegexp(MissingTitle,
+                                '---- OMITTED: Doc:hid has no title.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'title': 'test-title'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(MissingRights,
+                                '---- OMITTED: Doc:hid has no rights.',
+                                has_required_fields, doc)
         doc['sourceResource'].update({'rights': 'hasRights'})
+        self.assertRaisesRegexp(MissingIsShownAt,
+                                '---- OMITTED: Doc:hid has no isShownAt.',
+                                has_required_fields, doc)
         doc.update({'isShownAt': 'y'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: y', has_required_fields, doc)
         doc.update({'isShownAt': 'http://'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc'})
-        self.assertRaises(ValueError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            isShownAtNotURL,
+            '---- OMITTED: Doc:hid isShownAt doesn\'t appear to be'
+            'a URL: http://netloc', has_required_fields, doc)
         doc.update({'isShownAt': 'http://netloc/path'})
         ret = has_required_fields(doc)
-        #self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/;params'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc.update({'isShownAt': 'http://netloc/?query'})
         ret = has_required_fields(doc)
+        self.assertEqual(ret, True)
         doc['sourceResource'].update({'type': 'image'})
-        self.assertRaises(KeyError, has_required_fields, doc)
+        self.assertRaisesRegexp(
+            MissingImage,
+            '---- OMITTED: Doc:hid is image type with no harvested image.',
+            has_required_fields, doc)
         doc['object'] = 'has object'
         ret = has_required_fields(doc)
         self.assertEqual(ret, True)
@@ -415,3 +465,187 @@ class SolrUpdaterTestCase(TestCase):
         self.assertEqual(sdoc['id'], 'ark:/13030/ft009nb05r')
         self.assertNotIn('item_count', sdoc)
 
+    def test_harvesting_report(self):
+        '''test format of message to harvesting_report channel'''
+        cid = '22222'
+        updated_docs = range(10)
+        num_added = 4
+        report = {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Missing jp2000': 2
+        }
+        msg = harvesting_report(cid, updated_docs, num_added, report)
+        self.assertEqual(msg, 'Synced collection 22222 to solr.\n'
+                         '10 Couch Docs.\n'
+                         '4 solr documents updated\n'
+                         'Missing isShownAt : 2\n'
+                         'Missing Image : 2\n'
+                         'Missing SourceResource : 2\n'
+                         'isShownAt not a URL : 2\n'
+                         'Missing Rights : 2\n'
+                         'Missing jp2000 : 2')
+
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
+    def test_nuxeo_media_check(self, mock_mediajson):
+        doc = {'harvest_id_s': 'a-UUID', 'type': 'text'}
+        check_nuxeo_media(doc)  # should just return
+        doc['structmap_url'] = 's3://fakebucket/fakedir/a-UUID-media.json'
+        check_nuxeo_media(doc)  # should just return
+        mock_mediajson.assert_called_with(
+                's3://fakebucket/fakedir/a-UUID-media.json')
+        mock_resp = {'Error':{'Code': 'NoSuchKey'}}
+        mock_mediajson.side_effect = ClientError(mock_resp, 'GetObject')
+        self.assertRaisesRegexp(
+            MissingMediaJSON,
+            '---- OMITTED: Doc:a-UUID missing media json ',
+            check_nuxeo_media, doc)
+        mock_mediajson.side_effect = ValueError
+        self.assertRaisesRegexp(
+            MediaJSONError,
+            '---- OMITTED: Doc:a-UUID Error in media json ',
+            check_nuxeo_media, doc)
+
+
+    @patch('harvester.solr_updater.MediaJson', autospec=True)
+    @patch('harvester.solr_updater.publish_to_harvesting')
+    @patch('harvester.solr_updater.Solr', autospec=True)
+    @patch('harvester.solr_updater.CouchDBCollectionFilter')
+    @patch('harvester.solr_updater.get_couchdb')
+    def test_report(self, mock_get_couchdb, mock_couchview, mock_solr,
+                    mock_publish, mock_mediajson):
+        '''Test that the report from sync collection has a tally of the
+        various errors
+        '''
+
+        class viewrow():
+            def __init__(self, data):
+                self.doc = data
+
+        test_data = [
+            viewrow({
+                '_id': '1'
+            }),
+            viewrow({
+                '_id': '2'
+            }),
+            viewrow({
+                '_id': '3',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '4',
+                'sourceResource': {}
+            }),
+            viewrow({
+                '_id': '5',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '6',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '7',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '8',
+                'isShownAt': 'x',
+                'sourceResource': {
+                    'rights': 'r'
+                    }
+            }),
+            viewrow({
+                '_id': '9',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '10',
+                'isShownAt': 'http://example.edu/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    }
+            }),
+            viewrow({
+                '_id': '11',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }]
+                },
+            }),
+            viewrow({
+                '_id': '12',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
+            viewrow({
+                '_id': '13',
+                'isShownAt': 'http://example.edu/',
+                'object': 'x/y/z/',
+                'sourceResource': {
+                    'rights': 'r',
+                    'type': 'image'
+                    },
+                'originalRecord': {
+                    'collection': [{
+                        'harvest_type': 'x'
+                    }],
+                    'structmap_url': 'w/x/y/z-a-b'
+                },
+            }),
+        ]
+        mock_couchview.return_value = test_data
+        with patch('harvester.solr_updater.map_registry_data') as mock_reg:
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2
+        })
+
+        mock_mediajson.side_effect = ValueError
+        with patch('harvester.solr_updater.map_registry_data'):
+            updated_docs, report = sync_couch_collection_to_solr('cid')
+        self.assertEqual(report, {
+            'Missing isShownAt': 2,
+            'Missing Image': 2,
+            'Missing SourceResource': 2,
+            'isShownAt not a URL': 2,
+            'Missing Rights': 2,
+            'Media JSON Error': 2
+        })

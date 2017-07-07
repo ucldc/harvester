@@ -15,6 +15,7 @@ import md5s3stash
 import boto.s3
 import logging
 from collections import namedtuple
+from collections import defaultdict
 from harvester.couchdb_init import get_couchdb
 from harvester.config import config
 from redis import Redis
@@ -22,17 +23,37 @@ import redis_collections
 from harvester.couchdb_pager import couchdb_pager
 from harvester.cleanup_dir import cleanup_work_dir
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 
 BUCKET_BASES = os.environ.get(
     'S3_BUCKET_IMAGE_BASE',
     'us-west-2:static-ucldc-cdlib-org/harvested_images;us-east-1:'
-    'static.ucldc.cdlib.org/harvested_images'
-).split(';')
+    'static.ucldc.cdlib.org/harvested_images').split(';')
 COUCHDB_VIEW = 'all_provider_docs/by_provider_name'
 URL_OAC_CONTENT_BASE = os.environ.get('URL_OAC_CONTENT_BASE',
                                       'http://content.cdlib.org')
 
 logging.basicConfig(level=logging.DEBUG, )
+
+
+class ImageHarvestError(Exception):
+    pass
+
+
+class HasObject(ImageHarvestError):
+    dict_key = 'Has Object already'
+
+
+class RestoreFromObjectCache(ImageHarvestError):
+    dict_key = 'Restored From Object Cache'
+
+
+class IsShownByError(ImageHarvestError):
+    dict_key = 'isShownBy Error'
+
+
+class FailsImageTest(ImageHarvestError):
+    dict_key = 'Fails the link is to image test'
 
 
 def link_is_to_image(url, auth=None):
@@ -45,8 +66,14 @@ def link_is_to_image(url, auth=None):
         response = requests.head(url, allow_redirects=True, auth=auth)
     # have a server that returns a 403 here, does have content-type of
     # text/html. Dropping this test here. requests throws if can't connect
-    # if response.status_code != 200:
-    #    return False
+    if response.status_code != 200:
+        # many servers do not support HEAD requests, try get
+        if md5s3stash.is_s3_url(url):
+            response = requests.get(url, allow_redirects=True)
+        else:
+            response = requests.get(url, allow_redirects=True, auth=auth)
+        if response.status_code != 200:
+            response.raise_for_status()
     content_type = response.headers.get('content-type', None)
     if not content_type:
         return False
@@ -57,7 +84,7 @@ def link_is_to_image(url, auth=None):
     if reg_type != 'image':
         response = requests.get(url, allow_redirects=True, auth=auth)
         if response.status_code != 200:
-            return False
+            response.raise_for_status()
         content_type = response.headers.get('content-type', None)
         if not content_type:
             return False
@@ -76,7 +103,7 @@ def stash_image_for_doc(doc,
     in case some idiot (me) deletes one of the copies. Not tons of data so
     cheap to replicate them.
     Return md5s3stash report if image found
-    If link is not an image type, don't stash & return None
+    If link is not an image type, don't stash & raise
     '''
     try:
         url_image = doc['isShownBy']
@@ -94,7 +121,7 @@ def stash_image_for_doc(doc,
     elif not url_parsed.scheme or not url_parsed.netloc:
         print >> sys.stderr, 'Link not http URL for {} - {}'.format(doc['_id'],
                                                                     url_image)
-        return None
+        raise FailsImageTest
     reports = []
     if link_is_to_image(url_image, auth):
         for bucket_base in bucket_bases:
@@ -114,13 +141,13 @@ def stash_image_for_doc(doc,
                 reports.append(report)
             except TypeError, e:
                 print >> sys.stderr, 'TypeError for doc:{} {} Msg: {} Args:' \
-                        ' {}'.format(
-                                doc['_id'], url_image, e.message, e.args)
+                    ' {}'.format(
+                        doc['_id'], url_image, e.message, e.args)
         return reports
     else:
         print >> sys.stderr, 'Not an image for {} - {}'.format(doc['_id'],
                                                                url_image)
-        return None
+        raise FailsImageTest
 
 
 class ImageHarvester(object):
@@ -161,9 +188,10 @@ class ImageHarvester(object):
             redis_collections.Dict(key='ucldc-image-hash-cache',
                                    redis=self._redis)
         self._object_cache = harvested_object_cache if harvested_object_cache \
-            else redis_collections.Dict(
-                        key='ucldc:harvester:harvested-images',
-                        redis=self._redis)
+            else \
+            redis_collections.Dict(
+                key='ucldc:harvester:harvested-images',
+                redis=self._redis)
 
     def stash_image(self, doc):
         return stash_image_for_doc(
@@ -196,7 +224,7 @@ class ImageHarvester(object):
                 self._object_cache[did] = [
                     doc['object'], doc['object_dimensions']
                 ]
-            return
+            raise HasObject
         if not self.get_if_object and object_cached:
             # have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
@@ -204,7 +232,7 @@ class ImageHarvester(object):
             self.update_doc_object(doc,
                                    ImageReport(object_cached[0],
                                                object_cached[1]))
-            return None
+            raise RestoreFromObjectCache
         try:
             reports = self.stash_image(doc)
             if reports is not None and len(reports) > 0:
@@ -215,11 +243,13 @@ class ImageHarvester(object):
         except KeyError, e:
             if 'isShownBy' in e.message:
                 print >> sys.stderr, e
+                raise IsShownByError
             else:
                 raise e
         except ValueError, e:
             if 'isShownBy' in e.message:
                 print >> sys.stderr, e
+                raise IsShownByError
             else:
                 raise e
         except IOError, e:
@@ -231,9 +261,14 @@ class ImageHarvester(object):
         for doc_id in doc_ids:
             doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
-            reports = self.harvest_image_for_doc(doc)
+            report_errors = defaultdict(int)
+            try:
+                reports = self.harvest_image_for_doc(doc)
+            except ImageHarvestError, e:
+                report_errors[e.dict_key] += 1
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
+            return report_errors
 
     def by_collection(self, collection_key=None):
         '''If collection_key is none, trying to grab all of the images. (Not
@@ -250,15 +285,25 @@ class ImageHarvester(object):
             # use _all_docs view
             v = couchdb_pager(self._couchdb, include_docs='true')
         doc_ids = []
+        report_errors = defaultdict(int)
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
-            reports = self.harvest_image_for_doc(r.doc)
+            try:
+                reports = self.harvest_image_for_doc(r.doc)
+            except ImageHarvestError, e:
+                report_errors[e.dict_key] += 1
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
-        publish_to_harvesting('Image harvested {}'.format(collection_key),
-                              'Processed {} documents'.format(len(doc_ids)))
-        return doc_ids
+        report_list = [
+            ' : '.join((key, str(val))) for key, val in report_errors.items()
+        ]
+        report_msg = '\n'.join(report_list)
+        subject = format_results_subject(collection_key,
+                                         'Image harvest to CouchDB {env}')
+        publish_to_harvesting(subject, ''.join(
+            ('Processed {} documents\n'.format(len(doc_ids)), report_msg)))
+        return doc_ids, report_errors
 
 
 def harvest_image_for_doc(doc_id,
@@ -286,7 +331,7 @@ def main(collection_key=None,
          object_auth=None,
          get_if_object=False):
     cleanup_work_dir()  # remove files from /tmp
-    ImageHarvester(
+    doc_ids, report_errors = ImageHarvester(
         url_couchdb=url_couchdb,
         object_auth=object_auth,
         get_if_object=get_if_object).by_collection(collection_key)
@@ -308,8 +353,7 @@ if __name__ == '__main__':
         action='store_true',
         default=False,
         help='Should image harvester not get image if the object field exists '
-        'for the doc (default: False, always get)'
-    )
+        'for the doc (default: False, always get)')
     args = parser.parse_args()
     print(args)
     object_auth = None

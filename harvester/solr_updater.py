@@ -7,14 +7,18 @@ import argparse
 import re
 import hashlib
 import json
+from collections import defaultdict
 from urlparse import urlparse
 import requests
-import boto
+import boto3
+from botocore.exceptions import ClientError
 from solr import Solr, SolrException
 from harvester.couchdb_init import get_couchdb
 from harvester.post_processing.couchdb_runner import CouchDBCollectionFilter
 from harvester.sns_message import publish_to_harvesting
+from harvester.sns_message import format_results_subject
 from facet_decade import facet_decade
+from mediajson import MediaJson
 import datetime
 
 reload(sys)
@@ -408,27 +412,51 @@ def normalize_type(solr_doc):
             solr_doc['type'] = norm_type(doc_type)
 
 
+class MissingSourceResource(KeyError):
+    dict_key = 'Missing SourceResource'
+
+
+class MissingTitle(KeyError):
+    dict_key = 'Missing Title'
+
+
+class MissingRights(KeyError):
+    dict_key = 'Missing Rights'
+
+
+class MissingIsShownAt(KeyError):
+    dict_key = 'Missing isShownAt'
+
+
+class isShownAtNotURL(ValueError):
+    dict_key = 'isShownAt not a URL'
+
+
+class MissingImage(KeyError):
+    dict_key = 'Missing Image'
+
+
 def has_required_fields(doc):
     '''Check the couchdb doc has required fields and reasonable values'''
     if 'sourceResource' not in doc:
-        raise KeyError('---- OMITTED: Doc:{0} has no sourceResource.'.format(
-            doc['_id']))
+        raise MissingSourceResource(
+            '---- OMITTED: Doc:{0} has no sourceResource.'.format(doc['_id']))
     if 'title' not in doc['sourceResource']:
-        raise KeyError('---- OMITTED: Doc:{0} has no title.'.format(doc[
-            '_id']))
+        raise MissingTitle(
+            '---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
     if 'rights' not in doc['sourceResource']:
-        raise KeyError('---- OMITTED: Doc:{0} has no rights.'.format(doc[
-            '_id']))
+        raise MissingRights(
+            '---- OMITTED: Doc:{0} has no rights.'.format(doc['_id']))
     if 'isShownAt' not in doc:
-        raise KeyError('---- OMITTED: Doc:{0} has no isShownAt.'.format(doc[
-            '_id']))
+        raise MissingIsShownAt(
+            '---- OMITTED: Doc:{0} has no isShownAt.'.format(doc['_id']))
     # check that value in isShownAt is at least a valid URL format
     parsed = urlparse(doc['isShownAt'])
     if not parsed.scheme or not parsed.netloc or  \
             not (parsed.path or parsed.params or parsed.query):
-        raise ValueError(
-        '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be' \
-                'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
+        raise isShownAtNotURL(
+            '---- OMITTED: Doc:{0} isShownAt doesn\'t appear to be'
+            'a URL: {1}'.format(doc['_id'], doc['isShownAt']))
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
@@ -438,7 +466,7 @@ def has_required_fields(doc):
         if collection['harvest_type'] != 'NUX':
             # if doesnt have a reference_image_md5, reject
             if 'object' not in doc:
-                raise KeyError(
+                raise MissingImage(
                     '---- OMITTED: Doc:{0} is image type with no harvested '
                     'image.'.format(doc['_id']))
     return True
@@ -560,7 +588,10 @@ def get_sort_collection_data_string(collection):
 
 def add_sort_title(couch_doc, solr_doc):
     '''Add a sort title to the solr doc'''
-    sort_title = couch_doc['sourceResource']['title'][0]
+    if isinstance(couch_doc['sourceResource']['title'], basestring):
+        sort_title = couch_doc['sourceResource']['title']
+    else:
+        sort_title = couch_doc['sourceResource']['title'][0]
     if 'sort-title' in couch_doc['originalRecord']:  # OAC mostly
         sort_obj = couch_doc['originalRecord']['sort-title']
         if isinstance(sort_obj, list):
@@ -580,8 +611,9 @@ def fill_in_title(couch_doc):
     '''if title has no entries, set to ['Title unknown']
     '''
     if 'sourceResource' not in couch_doc:
-        raise KeyError("ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(
-            couch_doc['_id']))
+        raise MissingSourceResource(
+            "ERROR: KeyError - NO SOURCE RESOURCE in DOC:{}".format(
+                couch_doc['_id']))
     if not couch_doc['sourceResource'].get('title', None):
         couch_doc['sourceResource']['title'] = ['Title unknown']
     elif not couch_doc['sourceResource'].get('title'):  # empty string?
@@ -619,6 +651,37 @@ def add_facet_decade(couch_doc, solr_doc):
     else:
         facet_decades = get_facet_decades('none')
         solr_doc['facet_decade'] = facet_decades
+
+
+class MediaJSONError(ValueError):
+    dict_key = 'Media JSON Error'
+
+
+class MissingMediaJSON(ValueError):
+    dict_key = 'Missing Media Json'
+
+
+def check_nuxeo_media(doc):
+    '''Check that the media_json and jp2000 exist for a given solr doc.
+    Raise exception if not
+    '''
+    if 'structmap_url' not in doc:
+        return
+    # check that there is an object at the structmap_url
+    try:
+        MediaJson(doc['structmap_url']).check_media()
+    except ClientError, e:
+        message = '---- OMITTED: Doc:{} missing media json {}'.format(
+            doc['harvest_id_s'],
+            e.message)
+        print(message, file=sys.stderr)
+        raise MissingMediaJSON(message)
+    except ValueError, e:
+        message = '---- OMITTED: Doc:{} Error in media json {}'.format(
+            doc['harvest_id_s'],
+            e.message)
+        print(message, file=sys.stderr)
+        raise MediaJSONError(message)
 
 
 def map_couch_to_solr_doc(doc):
@@ -702,22 +765,17 @@ class CouchdbLastSeq_S3(object):
     '''
 
     def __init__(self):
-        # self.conn = boto.connect_s3()
-        self.conn = boto.s3.connect_to_region('us-west-2')
-        self.bucket = self.conn.get_bucket(S3_BUCKET)
-        self.key = self.bucket.get_key(get_key_for_env())
-        if not self.key:
-            self.key = boto.s3.key.Key(self.bucket)
-            self.key.key = get_key_for_env()
+        self.s3 = boto3.resource('s3')
+        self.s3object = self.s3.Object(S3_BUCKET, get_key_for_env())
 
     @property
     def last_seq(self):
-        return int(self.key.get_contents_as_string())
+        return int(self.s3object.get()['Body'].read())
 
     @last_seq.setter
     def last_seq(self, value):
         '''value should be last_seq from couchdb _changes'''
-        self.key.set_contents_from_string(value)
+        self.s3object.put(Body=str(value))
 
 
 def delete_solr_collection(collection_key):
@@ -730,8 +788,21 @@ def delete_solr_collection(collection_key):
     url_delete = '{}/update?{}'.format(url_solr, query)
     response = requests.get(url_delete)
     response.raise_for_status()
-    publish_to_harvesting('Deleted solr collection {}'.format(collection_key),
+    subject = format_results_subject(collection_key,
+                                     'Deleted documents from Solr {env} ')
+    publish_to_harvesting(subject,
                           'DELETED {}'.format(collection_key))
+
+
+def harvesting_report(collection_key, updated_docs, num_added, report):
+    '''Make the nice report for the harvesting channel'''
+    report_list = [' : '.join((key, str(val))) for key, val in report.items()]
+    report_msg = '\n'.join(report_list)
+    msg = ''.join(('Synced collection {} to solr.\n'.format(collection_key),
+                   '{} Couch Docs.\n'.format(len(updated_docs)),
+                   '{} solr documents updated\n'.format(num_added),
+                   report_msg))
+    return msg
 
 
 def sync_couch_collection_to_solr(collection_key):
@@ -741,32 +812,40 @@ def sync_couch_collection_to_solr(collection_key):
     v = CouchDBCollectionFilter(
         couchdb_obj=get_couchdb(), collection_key=collection_key)
     solr_db = Solr(URL_SOLR)
-    results = []
-    num_added = missing_required = 0
+    updated_docs = []
+    num_added = 0
+    report = defaultdict(int)
     for r in v:
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
         except KeyError, e:
-            missing_required += 1
-            print(e.message)
+            report[e.dict_key] += 1
+            print(e.message, file=sys.stderr)
             continue
         except ValueError, e:
-            missing_required += 1
-            print(e.message)
+            report[e.dict_key] += 1
+            print(e.message, file=sys.stderr)
             continue
         solr_doc = map_couch_to_solr_doc(r.doc)
         # TODO: here is where to check if existing and compare collection vals
-        results.append(solr_doc)
+        try:
+            check_nuxeo_media(solr_doc)
+        except ValueError, e:
+            print(e.message, file=sys.stderr)
+            report[e.dict_key] += 1
+            continue
+        updated_docs.append(solr_doc)
         num_added += push_doc_to_solr(solr_doc, solr_db=solr_db)
     solr_db.commit()
     publish_to_harvesting(
         'Synced collection {} to solr'.format(collection_key),
-        '{} Couch Docs. {} solr documents updated\n'
-        '{} docs were missing required fields'.format(len(results),
-                                                      num_added,
-                                                      missing_required))
-    return results
+        harvesting_report(
+            collection_key,
+            updated_docs,
+            num_added,
+            report))
+    return updated_docs, report
 
 
 def main(url_couchdb=None,
@@ -835,6 +914,11 @@ def main(url_couchdb=None,
                     solr_doc = map_couch_to_solr_doc(doc)
                 except OldCollectionException:
                     print('---- ERROR: OLD COLLECTION FOR:{}'.format(cur_id))
+                    continue
+                try:
+                    check_nuxeo_media(solr_doc)
+                except ValueError, e:
+                    print(e.message)
                     continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
             except TypeError, e:

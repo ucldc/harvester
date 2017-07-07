@@ -6,6 +6,8 @@ from mock import MagicMock
 from mypretty import httpretty
 # import httpretty
 from harvester import image_harvest
+from harvester.image_harvest import FailsImageTest
+from requests.exceptions import HTTPError
 
 #TODO: make this importable from md5s3stash
 StashReport = namedtuple('StashReport', 'url, md5, s3_url, mime_type, dimensions')
@@ -97,6 +99,24 @@ class ImageHarvestTestCase(TestCase):
     @httpretty.activate
     def test_link_is_to_image(self):
         '''Test the link_is_to_image function'''
+        url = 'http://getthisimage/notauthorized'
+        httpretty.register_uri(httpretty.HEAD,
+                url,
+                body='',
+                content_length='0',
+                content_type='text/plain; charset=utf-8',
+                connection='close',
+                status=401
+                )
+        httpretty.register_uri(httpretty.GET,
+                url,
+                body='',
+                content_length='0',
+                content_type='text/html; charset=utf-8',
+                connection='close',
+                status=401
+                )
+        self.assertRaises(HTTPError, image_harvest.link_is_to_image, url)
         url = 'http://getthisimage/notanimage'
         httpretty.register_uri(httpretty.HEAD,
                 url,
@@ -181,8 +201,7 @@ class ImageHarvestTestCase(TestCase):
         image_harvester = image_harvest.ImageHarvester(url_cache={},
                 hash_cache={},
                 bucket_bases=['region:x'])
-        ret = image_harvester.stash_image(doc)
-        self.assertEqual(ret, None)
+        self.assertRaises(FailsImageTest, image_harvester.stash_image, doc)
         httpretty.register_uri(httpretty.HEAD,
                 url,
                 body='',

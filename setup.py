@@ -33,13 +33,15 @@ setup(
     dependency_links=[
         'https://github.com/zepheira/amara/archive/master.zip#egg=amara',
         'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-        'https://github.com/mredar/md5s3stash/archive/master.zip#egg=md5s3stash',
+        'https://github.com/ucldc/md5s3stash/archive/7c32a3270198ae9b84f22a4852fe60105f74651b.zip#egg=md5s3stash',
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-2.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
         'https://github.com/barbarahui/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
-        'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle'
+        'https://github.com/tingletech/mediajson/archive/master.zip#egg=mediajson',
+        'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle',
+        'https://github.com/nvie/rq/archive/4875331b60ddf8ddfe5b374ec75c938eb9749602.zip#egg=rq',
     ],
     install_requires=[
         'Sickle',
@@ -57,8 +59,7 @@ setup(
         'CouchDB==0.9',
         'redis==2.10.1',
         'rq',
-        'boto==2.29.1',
-        'CouchDB==0.9',
+        'boto',
         'md5s3stash',
         'pymarc==3.0.4',
         'facet_decade',
@@ -66,7 +67,8 @@ setup(
         'xmljson',
         'UCLDC-Deep-Harvester',
         'boto3',
-        'pynux'
+        'pynux',
+        'mediajson'
         ],
     test_suite='test',
     tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
