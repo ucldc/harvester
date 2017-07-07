@@ -45,7 +45,7 @@ class XML_Fetcher(Fetcher):
 
     def next(self):
         '''get next objset, use etree to pythonize'''
-        if self.docs_fetched == self.docs_total:
+        if self.docs_fetched >= self.docs_total:
             raise StopIteration
         tree = ET.fromstring(urllib.urlopen(self.url_base).read())
         hits = tree.findall(".//record")
