@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<PPO-XML xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <ListRecords>
+  <record>
+    <metadata>
+      <PPO-Data>
+         <dc:title>California desperadoes : stories of early California outlaws in their own word</dc:title>
+         <date q="taken" d="Kodak">2000</date>
+         <collection>Sacramento Bee</collection>
+         <description>&#x22;I shot him in the left temple; the gun dropped from his hands; he quivered one instant, and Andy McGinnis climbed the Golden Stairs....&#x22;This was Chris Evans speaking. Evans, the killer, train robber and fugitive, was describing the famous 1892 shootout at Young&#x27;s cabin when he and his partner John Sontag ambushed and killed two members of a posse that was pursuing them.</description>
+         <subject>Outlaws -- California -- Biography -- Anecdotes.|Frontier and pioneer life -- California -- Anecdotes.|California -- History -- 1846-1850 -- Anecdotes.|California -- History -- 1850-1950 -- Anecdotes.</subject>
+         <rights></rights>
+         <thumbnail></thumbnail>
+         <url>http://sacramento.pastperfectonline.com/library/9C126808-4A97-4EED-A7D1-436292020025</url>
+         <identifier>9C126808-4A97-4EED-A7D1-436292020025</identifier>
+       </PPO-Data>
+     </metadata>
+  </record>
+  <record>
+    <metadata>
+      <PPO-Data>
+         <title>Print, Photographic, Black and White</title>
+         <date></date>
+         <collection>Sacramento Bee</collection>
+         <description></description>
+         <subject>Elk Grove, Ca.|Sacramento County</subject>
+         <rights></rights>
+         <thumbnail>https://s3.amazonaws.com/pastperfectonline/images/museum_231/026/thumbs/083_1983001sbpm05143.jpg</thumbnail>
+         <url>http://sacramento.pastperfectonline.com/photo/0E57FAAD-B40A-47F0-A57A-220045702333</url>
+         <identifier>0E57FAAD-B40A-47F0-A57A-220045702333</identifier>
+       </PPO-Data>
+     </metadata>
+  </record>
+  <record>
+    <metadata>
+      <PPO-Data>
+         <title>Print, Photographic, Black and White</title>
+         <date q="scanned" d="Epson"></date>
+         <collection>Sacramento Bee</collection>
+         <description></description>
+         <subject>Elk Grove, Ca.|Sacramento County</subject>
+         <rights></rights>
+         <thumbnail>https://s3.amazonaws.com/pastperfectonline/images/museum_231/026/thumbs/083_1983001sbpm05144.jpg</thumbnail>
+         <url>http://sacramento.pastperfectonline.com/photo/B9AE1BD1-00AC-4CD3-ACC9-752741402146</url>
+         <identifier>B9AE1BD1-00AC-4CD3-ACC9-752741402146</identifier>
+       </PPO-Data>
+     </metadata>
+  </record>
+  <record>
+    <metadata>
+      <PPO-Data>
+         <title>Children of C.K. McClatchy</title>
+         <date>c. 1895</date>
+         <collection>Eleanor McClatchy Collectrion</collection>
+         <description>A studio portrait of three children, Charlotte, Carlos, and Eleanor McClatchy, c.1895</description>
+         <subject></subject>
+         <rights></rights>
+         <thumbnail>https://s3.amazonaws.com/pastperfectonline/images/museum_231/008/thumbs/097_19820054616.jpg</thumbnail>
+         <url>http://sacramento.pastperfectonline.com/photo/48F22631-DF87-4A1C-95E1-796032358489</url>
+         <identifier>48F22631-DF87-4A1C-95E1-796032358489</identifier>
+       </PPO-Data>
+     </metadata>
+  </record>
+ </ListRecords>
+</PPO-XML>
