@@ -6,7 +6,6 @@ import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin
 
-
 class XMLFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the fetcher for the generic xml search interface'''
 
