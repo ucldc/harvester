@@ -5,7 +5,6 @@ from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
 
-
 class XML_Fetcher(Fetcher):
     '''General XML Fetcher. Currently only harvests from
     static XML documents at url_harvest'''
@@ -38,7 +37,7 @@ class XML_Fetcher(Fetcher):
                 if mdata.attrib and (len(mdata) is 0):
                     for elem in mdata.attrib:
                         obj_mdata[elem].append(mdata.get(elem))
-            obj['metadata'] = obj_mdata
+            obj['metadata'] = dict(obj_mdata)
             self.docs_fetched += 1
             objset.append(obj)
         return objset
