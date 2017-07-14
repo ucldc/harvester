@@ -4,6 +4,7 @@ from unittest import skip
 import shutil
 import re
 import json
+import datetime
 from mypretty import httpretty
 # import httpretty
 from mock import patch
@@ -43,16 +44,21 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
 
     @httpretty.activate
     def testHarvestControllerExists(self):
+        class myNow(datetime.datetime):
+            @classmethod
+            def now(cls):
+                return cls(2017, 7, 14, 12, 1)
+        datetime.datetime = myNow
         httpretty.register_uri(
                 httpretty.GET,
-                "https://registry.cdlib.org/api/v1/collection/101/",
+                "https://registry.cdlib.org/api/v1/collection/197/",
                 body=open(DIR_FIXTURES+'/collection_api_test.json').read())
         httpretty.register_uri(
                 httpretty.GET,
                 re.compile("http://content.cdlib.org/oai?.*"),
                 body=open(DIR_FIXTURES+'/testOAI-128-records.xml').read())
         collection = Collection(
-                'https://registry.cdlib.org/api/v1/collection/101/')
+                'https://registry.cdlib.org/api/v1/collection/197/')
         controller = fetcher.HarvestController(
                 'email@example.com', collection,
                 config_file=self.config_file, profile_path=self.profile_path)
@@ -60,6 +66,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.assertIsInstance(controller.fetcher, fetcher.OAIFetcher)
         self.assertTrue(hasattr(controller, 'campus_valid'))
         self.assertTrue(hasattr(controller, 'dc_elements'))
+        self.assertTrue(hasattr(controller, 'datetime_start'))
+        print(controller.s3path)
+        self.assertEqual(controller.s3path,
+                'data-fetched/197/2017-07-14-1201/')
         shutil.rmtree(controller.dir_save)
 
     def testOAIFetcherType(self):
