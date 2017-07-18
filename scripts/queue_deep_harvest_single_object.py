@@ -27,19 +27,19 @@ def queue_deep_harvest_path(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_file',
-        args=path,
+        args=(path,),
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_image',
-        args=path,
+        args=(path,),
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_media_json',
-        args=path,
+        args=(path,),
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_thumb',
-        args=path,
+        args=(path,),
         timeout=timeout)
 
 
