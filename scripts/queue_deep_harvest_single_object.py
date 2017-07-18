@@ -83,7 +83,7 @@ if __name__ == '__main__':
         job_timeout = args.job_timeout
     else:
         job_timeout = JOB_TIMEOUT
-    main(path, rq_queue=args.rq_queue, replace=True,
+    main(args.path, rq_queue=args.rq_queue, replace=True,
             timeout=job_timeout)
 
 # Copyright © 2017, Regents of the University of California
