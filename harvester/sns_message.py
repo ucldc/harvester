@@ -34,7 +34,7 @@ def publish_to_harvesting(subject, message):
         client.publish(
             TopicArn=os.environ['ARN_TOPIC_HARVESTING_REPORT'],
             Message=message,
-            Subject=subject if len(subject) <= 100 else subject[:100]
+            Subject=subject[:100]
             )
     except botocore.exceptions.BotoCoreError, e:
         logger.error('Exception in Boto SNS: {}'.format(e))
