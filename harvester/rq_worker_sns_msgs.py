@@ -37,6 +37,7 @@ message_match_list = (
     ("<fn--name> -- parse out collection id as cid ",
      "replacement template for message- needs cid env variables"))
 
+re_object_auth = re.compile("object_auth=(\('\w+', '\S+'\))")`
 
 def create_execute_job_message(status, worker, job):
     '''Create a formatted message for the job.
@@ -58,6 +59,7 @@ def create_execute_job_message(status, worker, job):
                 cid=mdict.get('cid', '?'))
             message = ''.join((subject, '\n', job.description))
             break
+    message = re_object_auth.sub('object_auth=<REDACTED>', message)
     return subject, message
 
 
