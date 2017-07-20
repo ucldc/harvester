@@ -38,7 +38,7 @@ setup(
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-2.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
-        'https://github.com/barbarahui/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
+        'https://github.com/mredar/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
         'https://github.com/tingletech/mediajson/archive/master.zip#egg=mediajson',
         'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle',
         'https://github.com/nvie/rq/archive/4875331b60ddf8ddfe5b374ec75c938eb9749602.zip#egg=rq',

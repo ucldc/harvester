@@ -23,11 +23,28 @@ from .controller import main
 from .controller import EMAIL_RETURN_ADDRESS
 
 
-__all__ = (Fetcher, NoRecordsFetchedException, HARVEST_TYPES, OAIFetcher,
-           SolrFetcher, PySolrFetcher, MARCFetcher, AlephMARCXMLFetcher,
-           NuxeoFetcher, UCLDCNuxeoFetcher, OAC_XML_Fetcher, OAC_JSON_Fetcher,
-           UCSF_XML_Fetcher, CMISAtomFeedFetcher, HarvestController,
-           XML_Fetcher,
-           PySolrQueryFetcher, Flickr_Fetcher,
-           YouTube_Fetcher, RequestsSolrFetcher,
-           EMAIL_RETURN_ADDRESS, get_log_file_path, main)
+__all__ = (
+        Fetcher,
+        NoRecordsFetchedException,
+        HARVEST_TYPES,
+        OAIFetcher,
+        SolrFetcher,
+        PySolrFetcher,
+        MARCFetcher,
+        AlephMARCXMLFetcher,
+        NuxeoFetcher,
+        UCLDCNuxeoFetcher,
+        OAC_XML_Fetcher,
+        OAC_JSON_Fetcher,
+        UCSF_XML_Fetcher,
+        CMISAtomFeedFetcher,
+        HarvestController,
+        XML_Fetcher,
+        PySolrQueryFetcher,
+        Flickr_Fetcher,
+        YouTube_Fetcher,
+        RequestsSolrFetcher,
+        EMAIL_RETURN_ADDRESS,
+        get_log_file_path,
+        main
+)

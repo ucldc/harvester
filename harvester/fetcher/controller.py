@@ -64,6 +64,8 @@ class HarvestController(object):
         'contributor', 'date', 'type', 'format', 'identifier', 'source',
         'language', 'relation', 'coverage', 'rights'
     ]
+    bucket = 'ucldc-ingest'
+    tmpl_s3path = 'data-fetched/{cid}/{datetime_start}/'
 
     def __init__(self,
                  user_email,
@@ -93,6 +95,15 @@ class HarvestController(object):
         self.ingestion_doc = None
         self.couch = None
         self.num_records = 0
+        self.datetime_start = datetime.datetime.now()
+
+    @property
+    def s3path(self):
+        return self.tmpl_s3path.format(
+                cid=self.collection.id,
+                datetime_start=self.datetime_start.strftime('%Y-%m-%d-%H%M')
+                )
+
 
     @staticmethod
     def dt_json_handler(obj):
@@ -103,6 +114,10 @@ class HarvestController(object):
             return obj.isoformat()
         else:
             return json.JSONEncoder.default(obj)
+
+    def save_objset_s3(self, objset):
+        '''Save the objset to a bucket'''
+        pass
 
     def save_objset(self, objset):
         '''Save an object set to disk. If it is a single object, wrap in a
