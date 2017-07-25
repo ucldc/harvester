@@ -1,6 +1,8 @@
 language: python
 python:
   - "2.7"
+dist: trusty
+sudo: false
 
 #env: HOME=/home/travis/mredar -- doesn't work
 env: CODE_DIR=.
