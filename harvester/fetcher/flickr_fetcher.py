@@ -23,7 +23,12 @@ class Flickr_Fetcher(Fetcher):
     url_get_photo_info_template = 'https://api.flickr.com/services/rest/' \
         '?api_key={api_key}&method=flickr.photos.getInfo&photo_id={photo_id}'
 
-    def __init__(self, url_harvest, extra_data, page_size=500, page_range=None):
+    def __init__(self,
+                 url_harvest,
+                 extra_data,
+                 page_size=500,
+                 page_range=None,
+                 **kwargs):
         self.url_base = url_harvest
         self.user_id = extra_data
         self.api_key = os.environ.get('FLICKR_API_KEY', 'boguskey')
@@ -44,12 +49,12 @@ class Flickr_Fetcher(Fetcher):
             if self.page_end >= self.page_total:
                 self.page_end = self.page_total
                 docs_last_page = self.docs_total - \
-                        ((self.page_total - 1) * self.page_size)
+                    ((self.page_total - 1) * self.page_size)
                 self.docs_total = (self.page_end - self.page_start) * \
-                self.page_size + docs_last_page
+                    self.page_size + docs_last_page
             else:
                 self.docs_total = (self.page_end - self.page_start + 1) * \
-                        self.page_size
+                    self.page_size
 
     @property
     def url_current(self):

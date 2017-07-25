@@ -7,7 +7,7 @@ from .fetcher import Fetcher
 
 
 class UCSF_XML_Fetcher(Fetcher):
-    def __init__(self, url_harvest, extra_data, page_size=100):
+    def __init__(self, url_harvest, extra_data, page_size=100, **kwargs):
         self.url_base = url_harvest
         self.page_size = page_size
         self.page_current = 1
@@ -55,16 +55,14 @@ class UCSF_XML_Fetcher(Fetcher):
         if self.doc_current == self.docs_total:
             if self.docs_fetched != self.docs_total:
                 raise ValueError(
-                   "Number of documents fetched ({0}) doesn't match \
-                    total reported by server ({1})".format(
-                        self.docs_fetched,
-                        self.docs_total)
-                    )
+                    "Number of documents fetched ({0}) doesn't match \
+                    total reported by server ({1})"
+                    .format(self.docs_fetched, self.docs_total))
             else:
                 raise StopIteration
         tree = ET.fromstring(urllib.urlopen(self.url_current).read())
         hits = tree.findall(
-                ".//{http://legacy.library.ucsf.edu/search/1.0}search-hit")
+            ".//{http://legacy.library.ucsf.edu/search/1.0}search-hit")
         self.page_current += 1
         self.doc_current = int(hits[-1].attrib['number'])
         return self._dochits_to_objset(hits)

@@ -9,16 +9,16 @@ from .fetcher import Fetcher
 
 class MARCFetcher(Fetcher):
     '''Harvest a MARC FILE. Can be local or at a URL'''
-    def __init__(self, url_harvest, extra_data):
+
+    def __init__(self, url_harvest, extra_data, **kwargs):
         '''Grab file and copy to local temp file'''
-        super(MARCFetcher, self).__init__(url_harvest, extra_data)
+        super(MARCFetcher, self).__init__(url_harvest, extra_data, **kwargs)
         self.url_marc_file = url_harvest
         self.marc_file = tempfile.TemporaryFile()
         self.marc_file.write(urllib.urlopen(self.url_marc_file).read())
         self.marc_file.seek(0)
-        self.marc_reader = MARCReader(self.marc_file,
-                                      to_unicode=True,
-                                      utf8_handling='replace')
+        self.marc_reader = MARCReader(
+            self.marc_file, to_unicode=True, utf8_handling='replace')
 
     def next(self):
         '''Return MARC record by record to the controller'''
@@ -28,9 +28,11 @@ class MARCFetcher(Fetcher):
 class AlephMARCXMLFetcher(Fetcher):
     '''Harvest a MARC XML feed from Aleph. Currently used for the
     UCSB cylinders project'''
-    def __init__(self, url_harvest, extra_data, page_size=500):
+
+    def __init__(self, url_harvest, extra_data, page_size=500, **kwargs):
         '''Grab file and copy to local temp file'''
-        super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data)
+        super(AlephMARCXMLFetcher, self).__init__(url_harvest, extra_data,
+                                                  **kwargs)
         self.ns = {'zs': "http://www.loc.gov/zing/srw/"}
         self.page_size = page_size
         self.url_base = url_harvest + '&maximumRecords=' + str(self.page_size)
@@ -42,7 +44,7 @@ class AlephMARCXMLFetcher(Fetcher):
         '''Set the next URL to retrieve according to page size and current
         record'''
         return ''.join((self.url_base, '&startRecord=',
-                       str(self.current_record)))
+                        str(self.current_record)))
 
     def get_current_xml_tree(self):
         '''Return an ElementTree for the next xml_page'''
@@ -63,15 +65,17 @@ class AlephMARCXMLFetcher(Fetcher):
         tree = self.get_current_xml_tree()
         recs_xml = tree.findall('.//zs:record', self.ns)
         # advance current record to end of set
-        self.current_record = int(recs_xml[-1].find(
-                                './/zs:recordPosition', self.ns).text)
+        self.current_record = int(recs_xml[-1].find('.//zs:recordPosition',
+                                                    self.ns).text)
         self.current_record += 1
         # translate to pymarc records & return
         marc_xml_file = tempfile.TemporaryFile()
         marc_xml_file.write(ET.tostring(tree))
         marc_xml_file.seek(0)
-        recs = [rec.as_dict() for rec in
-                pymarc.parse_xml_to_array(marc_xml_file) if rec is not None]
+        recs = [
+            rec.as_dict() for rec in pymarc.parse_xml_to_array(marc_xml_file)
+            if rec is not None
+        ]
         return recs
 
 

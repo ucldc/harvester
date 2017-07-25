@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import logbook
 
+
 class NoRecordsFetchedException(Exception):
     pass
 
+
 class Fetcher(object):
     '''Base class for harvest objects.'''
-    def __init__(self, url_harvest, extra_data):
+
+    def __init__(self, url_harvest, extra_data, **kwargs):
         self.url = url_harvest
         self.extra_data = extra_data
         self.logger = logbook.Logger('FetcherBaseClass')
@@ -19,6 +22,7 @@ class Fetcher(object):
         Set can be only one json object.
         '''
         raise NotImplementedError
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
@@ -43,4 +47,3 @@ class Fetcher(object):
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-

@@ -19,7 +19,7 @@ class YouTube_Fetcher(Fetcher):
     url_video = 'https://www.googleapis.com/youtube/v3/videos?' \
         'key={api_key}&part=snippet&id={video_ids}'
 
-    def __init__(self, url_harvest, extra_data, page_size=50):
+    def __init__(self, url_harvest, extra_data, page_size=50, **kwargs):
         self.url_base = url_harvest
         self.playlist_id = extra_data
         self.api_key = os.environ.get('YOUTUBE_API_KEY', 'boguskey')
@@ -31,20 +31,23 @@ class YouTube_Fetcher(Fetcher):
             nextPageToken = self.playlistitems['nextPageToken']
         except KeyError:
             raise StopIteration
-        self.playlistitems = json.loads(urllib.urlopen(
-            self.url_playlistitems.format(
-                api_key=self.api_key,
-                page_size=self.page_size,
-                playlist_id=self.playlist_id,
-                page_token=nextPageToken)).read())
-        video_ids = [i['contentDetails']['videoId'] for i in
-                     self.playlistitems['items']]
-        video_items = json.loads(urllib.urlopen(
-            self.url_video.format(
-                api_key=self.api_key,
-                video_ids=','.join(video_ids))
-            ).read())['items']
+        self.playlistitems = json.loads(
+            urllib.urlopen(
+                self.url_playlistitems.format(
+                    api_key=self.api_key,
+                    page_size=self.page_size,
+                    playlist_id=self.playlist_id,
+                    page_token=nextPageToken)).read())
+        video_ids = [
+            i['contentDetails']['videoId'] for i in self.playlistitems['items']
+        ]
+        video_items = json.loads(
+            urllib.urlopen(
+                self.url_video.format(
+                    api_key=self.api_key, video_ids=','.join(video_ids))).read(
+                ))['items']
         return video_items
+
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.
