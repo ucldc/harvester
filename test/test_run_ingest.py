@@ -57,7 +57,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertTrue(hasattr(fetcher, 'EMAIL_RETURN_ADDRESS'))
 
     @httpretty.activate
-    def testMainCreatesCollectionProfile(self):
+    @patch('boto3.resource', autospec=True)
+    def testMainCreatesCollectionProfile(self, mock_boto3):
         '''Test that the main function produces a collection profile
         file for DPLA. The path to this file is needed when creating a
         DPLA ingestion document.
@@ -70,7 +71,7 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
             httpretty.GET,
             re.compile("http://content.cdlib.org/oai?.*"),
             body=open(DIR_FIXTURES + '/testOAI-128-records.xml').read())
-        c = Collection("https://registry.cdlib.org/api/v1/collection/197/")
+        Collection("https://registry.cdlib.org/api/v1/collection/197/")
         with patch('dplaingestion.couch.Couch') as mock_couch:
             instance = mock_couch.return_value
             instance._create_ingestion_document.return_value = 'test-id'
@@ -202,7 +203,8 @@ class MainTestCase(ConfigFileOverrideMixin, LogOverrideMixin, TestCase):
         self.assertTrue("Boom!" in self.test_log_handler.formatted_records[6])
 
     @httpretty.activate
-    def testMainFn(self):
+    @patch('boto3.resource', autospec=True)
+    def testMainFn(self, mock_boto3):
         httpretty.register_uri(
             httpretty.GET,
             "https://registry.cdlib.org/api/v1/collection/197/",
@@ -337,6 +339,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         if 'DPLA_CONFIG_FILE' in os.environ:
             del os.environ['DPLA_CONFIG_FILE']
 
+    @patch('boto3.resource', autospec=True)
     @patch('harvester.run_ingest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
@@ -347,7 +350,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     @patch('dplaingestion.couch.Couch')
     def testRunIngest(self, mock_couch, mock_dash_clean, mock_check,
                       mock_remove, mock_save, mock_enrich, mock_couchdb,
-                      mock_redis):
+                      mock_redis, mock_boto3):
         mock_couch.return_value._create_ingestion_document.return_value = \
             'test-id'
         # this next is because the redis client unpickles....
@@ -390,6 +393,7 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
         mock_enrich.assert_called_with([None, 'test-id'])
         self.assertEqual(len(self.test_log_handler.records), 14)
 
+    @patch('boto3.resource', autospec=True)
     @patch('harvester.run_ingest.Redis', autospec=True)
     @patch('couchdb.Server')
     @patch('dplaingestion.scripts.enrich_records.main', return_value=0)
@@ -400,7 +404,8 @@ class RunIngestTestCase(LogOverrideMixin, TestCase):
     @patch('dplaingestion.couch.Couch')
     def testRunIngestProductionNotReady(self, mock_couch, mock_dash_clean,
                                         mock_check, mock_remove, mock_save,
-                                        mock_enrich, mock_couchdb, mock_redis):
+                                        mock_enrich, mock_couchdb, mock_redis,
+                                        mock_boto3):
         mock_couch.return_value._create_ingestion_document.return_value = \
             'test-id'
         # this next is because the redis client unpickles....

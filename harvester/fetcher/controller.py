@@ -251,6 +251,7 @@ class HarvestController(object):
                 self.num_records += 1
                 self._add_registry_data(objset)
             self.save_objset(objset)
+            self.save_objset_s3(objset)
             if self.num_records >= next_log_n:
                 self.logger.info(' '.join((str(self.num_records),
                                            'records harvested')))

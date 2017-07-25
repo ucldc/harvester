@@ -281,7 +281,8 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.assertEqual(obj['collection'][0]['repository'][0]['@id'],
                          'https://registry.cdlib.org/api/v1/repository/37/')
 
-    def testObjectsHaveRegistryData(self):
+    @patch('boto3.resource', autospec=True)
+    def testObjectsHaveRegistryData(self, mock_boto3):
         '''Test that the registry data is being attached to objects from
         the harvest controller'''
         self.controller_oai.harvest()
