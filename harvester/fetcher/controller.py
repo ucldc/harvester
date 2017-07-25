@@ -6,6 +6,7 @@ import datetime
 import uuid
 import json
 import codecs
+import boto3
 from email.mime.text import MIMEText
 import logbook
 from logbook import FileHandler
@@ -96,14 +97,13 @@ class HarvestController(object):
         self.couch = None
         self.num_records = 0
         self.datetime_start = datetime.datetime.now()
+        self.objset_page = 0
 
     @property
     def s3path(self):
         return self.tmpl_s3path.format(
-                cid=self.collection.id,
-                datetime_start=self.datetime_start.strftime('%Y-%m-%d-%H%M')
-                )
-
+            cid=self.collection.id,
+            datetime_start=self.datetime_start.strftime('%Y-%m-%d-%H%M'))
 
     @staticmethod
     def dt_json_handler(obj):
@@ -115,9 +115,26 @@ class HarvestController(object):
         else:
             return json.JSONEncoder.default(obj)
 
+    @staticmethod
+    def jsonl(objset):
+        '''Return a JSONL string for a given set of python objects
+        '''
+        jsonl = ''
+        for obj in objset:
+            jsonl += ''.join((json.dumps(
+                obj, default=HarvestController.dt_json_handler), '\n'))
+        return jsonl
+
     def save_objset_s3(self, objset):
         '''Save the objset to a bucket'''
-        pass
+        if not hasattr(self, 's3'):
+            self.s3 = boto3.resource('s3')
+        body = HarvestController.jsonl(objset)
+        bucket = self.s3.Bucket('ucldc-ingest')
+        key = ''.join((self.s3path, 'page-{}.jsonl'.format(self.objset_page)))
+        self.objset_page += 1
+        print "++++++++++++++++KEY :{}".format(key)
+        bucket.put_object(Body=body, Key=key)
 
     def save_objset(self, objset):
         '''Save an object set to disk. If it is a single object, wrap in a
@@ -216,8 +233,10 @@ class HarvestController(object):
 
     def harvest(self):
         '''Harvest the collection'''
-        self.logger.info(' '.join(('Starting harvest for:', str(
-            self.user_email), self.collection.url,
+        self.logger.info(' '.join((
+            'Starting harvest for:',
+            str(self.user_email),
+            self.collection.url,
             str(self.collection['campus']),
             str(self.collection['repository']))))
         self.num_records = 0
