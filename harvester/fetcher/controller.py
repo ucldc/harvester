@@ -120,6 +120,8 @@ class HarvestController(object):
         '''Return a JSONL string for a given set of python objects
         '''
         jsonl = ''
+        if isinstance(objset, dict):
+            objset = [objset]
         for obj in objset:
             jsonl += ''.join((json.dumps(
                 obj, default=HarvestController.dt_json_handler), '\n'))
@@ -133,7 +135,6 @@ class HarvestController(object):
         bucket = self.s3.Bucket('ucldc-ingest')
         key = ''.join((self.s3path, 'page-{}.jsonl'.format(self.objset_page)))
         self.objset_page += 1
-        print "++++++++++++++++KEY :{}".format(key)
         bucket.put_object(Body=body, Key=key)
 
     def save_objset(self, objset):

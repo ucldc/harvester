@@ -91,6 +91,10 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         self.assertEqual(
             HarvestController.jsonl(objset),
             '{"x": "y"}\n["z", "a"]\n[{"b": ["c", "d"]}, [{"e": "f"}]]\n')
+        objset = {'x':'y', 'z':'a', 'b': [1,2,3]}
+        self.assertEqual(
+            HarvestController.jsonl(objset),
+            '{"x": "y", "z": "a", "b": [1, 2, 3]}\n')
 
     @httpretty.activate
     @patch('boto3.resource', autospec=True)
@@ -114,7 +118,7 @@ class HarvestControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         mock_boto3.assert_called_with('s3')
         mock_boto3().Bucket.assert_called_with('ucldc-ingest')
         mock_boto3().Bucket().put_object.assert_called_with(
-            Body='"xxxx"\n',
+                Body='{"xxxx": "yyyy"}\n',
             Key='data-fetched/197/2017-07-14-1201/page-0.jsonl')
 
     def testOAIFetcherType(self):
