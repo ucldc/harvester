@@ -8,14 +8,15 @@ from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 
 STRUCTMAP_S3_BUCKET = 'static.ucldc.cdlib.org/media_json'
 NUXEO_MEDIUM_IMAGE_URL_FORMAT = "https://nuxeo.cdlib.org/Nuxeo/nxpicsfile/" \
-        "default/{}/Medium:content/"
+    "default/{}/Medium:content/"
 NUXEO_S3_THUMB_URL_FORMAT = "https://s3.amazonaws.com/" \
-        "static.ucldc.cdlib.org/ucldc-nuxeo-thumb-media/{}"
+    "static.ucldc.cdlib.org/ucldc-nuxeo-thumb-media/{}"
 
 
 class NuxeoFetcher(Fetcher):
     '''Harvest a Nuxeo FILE. Can be local or at a URL'''
-    def __init__(self, url_harvest, extra_data, conf_pynux={}):
+
+    def __init__(self, url_harvest, extra_data, conf_pynux={}, **kwargs):
         '''
         uses pynux (https://github.com/ucldc/pynux) to grab objects from
         the Nuxeo API
@@ -26,7 +27,7 @@ class NuxeoFetcher(Fetcher):
         the pynux config file should have user & password
         and X-NXDocumemtProperties values filled in.
         '''
-        super(NuxeoFetcher, self).__init__(url_harvest, extra_data)
+        super(NuxeoFetcher, self).__init__(url_harvest, extra_data, **kwargs)
         self._url = url_harvest
         self._path = extra_data
         self._nx = pynux.utils.Nuxeo(conf=conf_pynux)
@@ -62,8 +63,7 @@ class NuxeoFetcher(Fetcher):
         bucket = conn.get_bucket(bucketbase)
         key = bucket.get_key(parts.path)
         if not key:  # media_json hasn't been harvested yet for this record
-            self.logger.error(
-                'Media json at: {} missing.'.format(parts.path))
+            self.logger.error('Media json at: {} missing.'.format(parts.path))
             return structmap_text
         mediajson = key.get_contents_as_string()
         mediajson_dict = json.loads(mediajson)
@@ -81,7 +81,8 @@ class NuxeoFetcher(Fetcher):
             Get isShownBy value for object
             1) if object has image at parent level, use this
             2) if component(s) have image, use first one we can find
-            3) if object has PDF or video at parent level, use image stashed on S3
+            3) if object has PDF or video at parent level,
+                use image stashed on S3
             4) return None
         '''
         is_shown_by = None
@@ -92,31 +93,31 @@ class NuxeoFetcher(Fetcher):
         if self._has_image(nuxeo_metadata):
             self.logger.info("Nuxeo doc with uid {} has an image at the "
                              "parent level".format(uid))
-            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(
-                    nuxeo_metadata['uid'])
+            is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(nuxeo_metadata[
+                'uid'])
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
         # 2) if component(s) have image, use first one we can find
         first_image_component_uid = self._get_first_image_component(
-                nuxeo_metadata)
+            nuxeo_metadata)
         self.logger.info("first_image_component_uid: {}".format(
             first_image_component_uid))
         if first_image_component_uid:
             self.logger.info("Nuxeo doc with uid {} has an image at the"
                              "component level".format(uid))
             is_shown_by = NUXEO_MEDIUM_IMAGE_URL_FORMAT.format(
-                    first_image_component_uid)
+                first_image_component_uid)
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
         # 3) if object has PDF at parent level, use image stashed on S3
         if self._has_s3_thumbnail(nuxeo_metadata):
-            self.logger.info(
-                    "Nuxeo doc with uid {} has a thumbnail for"
-                    "parent file (probably PDF) stashed on S3".format(uid))
-            is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(
-                    nuxeo_metadata['uid'])
+            self.logger.info("Nuxeo doc with uid {} has a thumbnail for"
+                             "parent file (probably PDF) stashed on S3".format(
+                                 uid))
+            is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(nuxeo_metadata[
+                'uid'])
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
@@ -177,7 +178,7 @@ class NuxeoFetcher(Fetcher):
                                                      doc['uid'])
         self.metadata['structmap_url'] = self.structmap_url
         self.metadata['structmap_text'] = self._get_structmap_text(
-                self.structmap_url)
+            self.structmap_url)
         self.metadata['isShownBy'] = self._get_isShownBy(self.metadata)
 
         return self.metadata
@@ -189,13 +190,14 @@ class UCLDCNuxeoFetcher(NuxeoFetcher):
     Essentially, this checks that the X-NXDocumentProperties is correct
     for the UCLDC
     '''
-    def __init__(self, url_harvest, extra_data, conf_pynux={}):
+
+    def __init__(self, url_harvest, extra_data, conf_pynux={}, **kwargs):
         '''Check that required UCLDC properties in conf setting'''
-        super(UCLDCNuxeoFetcher, self).__init__(url_harvest,
-                                                extra_data, conf_pynux)
-        assert('dublincore' in self._nx.conf['X-NXDocumentProperties'])
-        assert('ucldc_schema' in self._nx.conf['X-NXDocumentProperties'])
-        assert('picture' in self._nx.conf['X-NXDocumentProperties'])
+        super(UCLDCNuxeoFetcher, self).__init__(url_harvest, extra_data,
+                                                conf_pynux, **kwargs)
+        assert ('dublincore' in self._nx.conf['X-NXDocumentProperties'])
+        assert ('ucldc_schema' in self._nx.conf['X-NXDocumentProperties'])
+        assert ('picture' in self._nx.conf['X-NXDocumentProperties'])
 
 
 # Copyright © 2016, Regents of the University of California

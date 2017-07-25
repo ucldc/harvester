@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 import shutil
+from mock import patch
 from harvester.collection_registry_client import Collection
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES
@@ -11,19 +12,20 @@ import harvester.fetcher as fetcher
 
 class MARCFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test MARC fetching'''
+
     def testInit(self):
         '''Basic tdd start'''
 
-        h = fetcher.MARCFetcher('file:'+DIR_FIXTURES+'/marc-test', None)
+        h = fetcher.MARCFetcher('file:' + DIR_FIXTURES + '/marc-test', None)
         self.assertTrue(hasattr(h, 'url_marc_file'))
         self.assertTrue(hasattr(h, 'marc_file'))
         self.assertIsInstance(h.marc_file, file)
         self.assertTrue(hasattr(h, 'marc_reader'))
-        self.assertEqual(str(type(h.marc_reader)),
-                         "<class 'pymarc.reader.MARCReader'>")
+        self.assertEqual(
+            str(type(h.marc_reader)), "<class 'pymarc.reader.MARCReader'>")
 
     def testLocalFileLoad(self):
-        h = fetcher.MARCFetcher('file:'+DIR_FIXTURES+'/marc-test', None)
+        h = fetcher.MARCFetcher('file:' + DIR_FIXTURES + '/marc-test', None)
         for n, rec in enumerate(h):  # enum starts at 0
             pass
             # print("NUM->{}:{}".format(n,rec))
@@ -34,15 +36,14 @@ class MARCFetcherTestCase(LogOverrideMixin, TestCase):
 
 
 class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
-
     @httpretty.activate
     def testInit(self):
         httpretty.register_uri(
-           httpretty.GET,
-           'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
-           body=open(DIR_FIXTURES+'/ucsb-aleph-resp-1-3.xml').read())
-        h = fetcher.AlephMARCXMLFetcher('http://ucsb-fake-aleph/endpoint',
-                                        None, page_size=3)
+            httpretty.GET,
+            'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
+            body=open(DIR_FIXTURES + '/ucsb-aleph-resp-1-3.xml').read())
+        h = fetcher.AlephMARCXMLFetcher(
+            'http://ucsb-fake-aleph/endpoint', None, page_size=3)
         self.assertTrue(hasattr(h, 'ns'))
         self.assertTrue(hasattr(h, 'url_base'))
         self.assertEqual(h.page_size, 3)
@@ -51,19 +52,19 @@ class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
     @httpretty.activate
     def testFetching(self):
         httpretty.register_uri(
-           httpretty.GET,
-           'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
-           body=open(DIR_FIXTURES+'/ucsb-aleph-resp-1-3.xml').read())
+            httpretty.GET,
+            'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=1',
+            body=open(DIR_FIXTURES + '/ucsb-aleph-resp-1-3.xml').read())
         httpretty.register_uri(
-           httpretty.GET,
-           'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=4',
-           body=open(DIR_FIXTURES+'/ucsb-aleph-resp-4-6.xml').read())
+            httpretty.GET,
+            'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=4',
+            body=open(DIR_FIXTURES + '/ucsb-aleph-resp-4-6.xml').read())
         httpretty.register_uri(
             httpretty.GET,
             'http://ucsb-fake-aleph/endpoint&maximumRecords=3&startRecord=7',
-            body=open(DIR_FIXTURES+'/ucsb-aleph-resp-7-8.xml').read())
-        h = fetcher.AlephMARCXMLFetcher('http://ucsb-fake-aleph/endpoint',
-                                        None, page_size=3)
+            body=open(DIR_FIXTURES + '/ucsb-aleph-resp-7-8.xml').read())
+        h = fetcher.AlephMARCXMLFetcher(
+            'http://ucsb-fake-aleph/endpoint', None, page_size=3)
         num_fetched = 0
         for objset in h:
             num_fetched += len(objset)
@@ -73,6 +74,7 @@ class AlephMARCXMLFetcherTestCase(LogOverrideMixin, TestCase):
 class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin,
                                       LogOverrideMixin, TestCase):
     '''Test the function of an MARC harvest controller'''
+
     def setUp(self):
         super(Harvest_MARC_ControllerTestCase, self).setUp()
 
@@ -81,19 +83,22 @@ class Harvest_MARC_ControllerTestCase(ConfigFileOverrideMixin,
         shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    def testMARCHarvest(self):
+    @patch('boto3.resource', autospec=True)
+    def testMARCHarvest(self, mock_boto3):
         '''Test the function of the MARC harvest'''
         httpretty.register_uri(
             httpretty.GET,
             'http://registry.cdlib.org/api/v1/collection/',
-            body=open(DIR_FIXTURES+'/collection_api_test_marc.json').read())
+            body=open(DIR_FIXTURES + '/collection_api_test_marc.json').read())
         self.collection = Collection(
-                'http://registry.cdlib.org/api/v1/collection/')
-        self.collection.url_harvest = 'file:'+DIR_FIXTURES+'/marc-test'
+            'http://registry.cdlib.org/api/v1/collection/')
+        self.collection.url_harvest = 'file:' + DIR_FIXTURES + '/marc-test'
         self.setUp_config(self.collection)
         self.controller = fetcher.HarvestController(
-                'email@example.com', self.collection,
-                config_file=self.config_file, profile_path=self.profile_path)
+            'email@example.com',
+            self.collection,
+            config_file=self.config_file,
+            profile_path=self.profile_path)
         self.assertTrue(hasattr(self.controller, 'harvest'))
         num = self.controller.harvest()
         self.assertEqual(num, 10)

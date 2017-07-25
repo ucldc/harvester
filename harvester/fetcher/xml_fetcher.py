@@ -5,11 +5,12 @@ from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
 
+
 class XML_Fetcher(Fetcher):
     '''General XML Fetcher. Currently only harvests from
     static XML documents at url_harvest'''
 
-    def __init__(self, url_harvest, extra_data):
+    def __init__(self, url_harvest, extra_data, **kwargs):
         self.url_base = url_harvest
         self.doc_current = 1
         self.docs_fetched = 0
@@ -50,6 +51,7 @@ class XML_Fetcher(Fetcher):
         hits = tree.findall(".//record")
         self.doc_current += 1
         return self._dochits_to_objset(hits)
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.

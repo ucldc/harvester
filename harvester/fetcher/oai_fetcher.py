@@ -26,9 +26,10 @@ class SickleDIDLRecord(SickleDCRecord):
     Only the Resource & Component have unique data in them
 
     '''
+
     def __init__(self, record_element, strip_ns=True):
-        super(SickleDIDLRecord, self).__init__(record_element,
-                                               strip_ns=strip_ns)
+        super(SickleDIDLRecord, self).__init__(
+            record_element, strip_ns=strip_ns)
         # need to grab the didl components here
         if not self.deleted:
             didl = self.xml.find('.//{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDL')
@@ -40,8 +41,9 @@ class SickleDIDLRecord(SickleDCRecord):
 
 class OAIFetcher(Fetcher):
     '''Fetcher for oai'''
-    def __init__(self, url_harvest, extra_data):
-        super(OAIFetcher, self).__init__(url_harvest, extra_data)
+
+    def __init__(self, url_harvest, extra_data, **kwargs):
+        super(OAIFetcher, self).__init__(url_harvest, extra_data, **kwargs)
         # TODO: check extra_data?
         self.oai_client = Sickle(self.url)
         self._metadataPrefix = self.get_metadataPrefix(extra_data)
@@ -59,13 +61,12 @@ class OAIFetcher(Fetcher):
                 self.oai_client.class_mapping['ListRecords'] = SickleDIDLRecord
                 self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
             self.records = self.oai_client.ListRecords(
-                                    metadataPrefix=self._metadataPrefix,
-                                    set=self._set,
-                                    ignore_deleted=True)
+                metadataPrefix=self._metadataPrefix,
+                set=self._set,
+                ignore_deleted=True)
         else:
             self.records = self.oai_client.ListRecords(
-                                    metadataPrefix=self._metadataPrefix,
-                                    ignore_deleted=True)
+                metadataPrefix=self._metadataPrefix, ignore_deleted=True)
 
     def get_metadataPrefix(self, extra_data):
         '''Set the metadata format for the feed.
@@ -95,12 +96,13 @@ class OAIFetcher(Fetcher):
         while True:
             sickle_rec = self.records.next()
             if not sickle_rec.deleted:
-                break   # good record to harvest, don't do deleted
-                        # update process looks for deletions
+                break  # good record to harvest, don't do deleted
+                # update process looks for deletions
         rec = sickle_rec.metadata
         rec['datestamp'] = sickle_rec.header.datestamp
         rec['id'] = sickle_rec.header.identifier
         return rec
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.

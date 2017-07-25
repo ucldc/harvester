@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
+from mock import patch
 from test.utils import ConfigFileOverrideMixin, LogOverrideMixin
 from test.utils import DIR_FIXTURES
 from harvester.collection_registry_client import Collection
@@ -231,7 +232,8 @@ class HarvestSolr_ControllerTestCase(ConfigFileOverrideMixin, LogOverrideMixin,
         # shutil.rmtree(self.controller.dir_save)
 
     @httpretty.activate
-    def testSolrHarvest(self):
+    @patch('boto3.resource', autospec=True)
+    def testSolrHarvest(self, mock_boto3):
         '''Test the function of the Solr harvest with <date> objects
         in stream'''
         httpretty.register_uri(

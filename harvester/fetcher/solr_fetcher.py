@@ -32,7 +32,7 @@ class PySolrFetcher(Fetcher):
                  query,
                  handler_path='select',
                  **query_params):
-        super(PySolrFetcher, self).__init__(url_harvest, query)
+        super(PySolrFetcher, self).__init__(url_harvest, query, **query_params)
         self.solr = pysolr.Solr(url_harvest, timeout=1)
         self._handler_path = handler_path
         self._query_params = {
@@ -99,8 +99,9 @@ class RequestsSolrFetcher(Fetcher):
     needed, right now just deal with "header" token authentication
     '''
 
-    def __init__(self, url_harvest, extra_data):
-        super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data)
+    def __init__(self, url_harvest, extra_data, **kwargs):
+        super(RequestsSolrFetcher, self).__init__(url_harvest, extra_data,
+                                                  **kwargs)
         # will need to change URLs for existing to add /select in general
         # the bampfa has NO /select or /query
         self._query_iter_template = \
@@ -133,9 +134,7 @@ class RequestsSolrFetcher(Fetcher):
         url_request = ''.join((
             self.url,
             self._query_iter_template.format(
-                rows=self._page_size,
-                cursorMark=self._cursorMark),
-            ))
+                rows=self._page_size, cursorMark=self._cursorMark), ))
         # join 'q' and all other params
         for name, value in self._query_params.items():
             url_request = ''.join((url_request, '&', name, '=', value[0]))
