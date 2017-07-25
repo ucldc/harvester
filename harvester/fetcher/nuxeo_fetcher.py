@@ -191,10 +191,10 @@ class UCLDCNuxeoFetcher(NuxeoFetcher):
     for the UCLDC
     '''
 
-    def __init__(self, url_harvest, extra_data, conf_pynux={}):
+    def __init__(self, url_harvest, extra_data, conf_pynux={}, **kwargs):
         '''Check that required UCLDC properties in conf setting'''
         super(UCLDCNuxeoFetcher, self).__init__(url_harvest, extra_data,
-                                                conf_pynux)
+                                                conf_pynux, **kwargs)
         assert ('dublincore' in self._nx.conf['X-NXDocumentProperties'])
         assert ('ucldc_schema' in self._nx.conf['X-NXDocumentProperties'])
         assert ('picture' in self._nx.conf['X-NXDocumentProperties'])
