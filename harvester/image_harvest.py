@@ -37,7 +37,14 @@ logging.basicConfig(level=logging.DEBUG, )
 
 
 class ImageHarvestError(Exception):
-    pass
+    def __init__(self, message, doc_id=None):
+        super(ImageHarvestError, self).__init__(message)
+        self.doc_id = doc_id
+
+
+class ImageHTTPError(ImageHarvestError):
+    # will waap exceptions from the HTTP request
+    dict_key = 'HTTP Error'
 
 
 class HasObject(ImageHarvestError):
@@ -56,7 +63,7 @@ class FailsImageTest(ImageHarvestError):
     dict_key = 'Fails the link is to image test'
 
 
-def link_is_to_image(url, auth=None):
+def link_is_to_image(doc_id, url, auth=None):
     '''Check if the link points to an image content type.
     Return True or False accordingly
     '''
@@ -73,7 +80,8 @@ def link_is_to_image(url, auth=None):
         else:
             response = requests.get(url, allow_redirects=True, auth=auth)
         if response.status_code != 200:
-            response.raise_for_status()
+            raise ImageHTTPError(
+                'HTTP ERROR: {}'.format(response.status_code), doc_id=doc_id)
     content_type = response.headers.get('content-type', None)
     if not content_type:
         return False
@@ -84,7 +92,8 @@ def link_is_to_image(url, auth=None):
     if reg_type != 'image':
         response = requests.get(url, allow_redirects=True, auth=auth)
         if response.status_code != 200:
-            response.raise_for_status()
+            raise ImageHTTPError(
+                'HTTP ERROR: {}'.format(response.status_code), doc_id=doc_id)
         content_type = response.headers.get('content-type', None)
         if not content_type:
             return False
@@ -108,9 +117,12 @@ def stash_image_for_doc(doc,
     try:
         url_image = doc['isShownBy']
         if not url_image:
-            raise ValueError("isShownBy empty for {0}".format(doc['_id']))
+            raise IsShownByError(
+                "isShownBy empty for {0}".format(doc['_id']),
+                doc_id=doc['_id'])
     except KeyError, e:
-        raise KeyError("isShownBy missing for {0}".format(doc['_id']))
+        raise IsShownByError(
+            "isShownBy missing for {0}".format(doc['_id']), doc_id=doc['_id'])
     if isinstance(url_image, list):  # need to fix marc map_is_shown_at
         url_image = url_image[0]
     # try to parse url, check values of scheme & netloc at least
@@ -119,11 +131,11 @@ def stash_image_for_doc(doc,
         # for some OAC objects, the reference image is not a url but a path.
         url_image = '/'.join((URL_OAC_CONTENT_BASE, url_image))
     elif not url_parsed.scheme or not url_parsed.netloc:
-        print >> sys.stderr, 'Link not http URL for {} - {}'.format(doc['_id'],
-                                                                    url_image)
-        raise FailsImageTest
+        msg = 'Link not http URL for {} - {}'.format(doc['_id'], url_image)
+        print >> sys.stderr, msg
+        raise FailsImageTest(msg, doc_id=doc['_id'])
     reports = []
-    if link_is_to_image(url_image, auth):
+    if link_is_to_image(doc['_id'], url_image, auth):
         for bucket_base in bucket_bases:
             try:
                 logging.getLogger('image_harvest.stash_image').info(
@@ -145,9 +157,9 @@ def stash_image_for_doc(doc,
                         doc['_id'], url_image, e.message, e.args)
         return reports
     else:
-        print >> sys.stderr, 'Not an image for {} - {}'.format(doc['_id'],
-                                                               url_image)
-        raise FailsImageTest
+        msg = 'Not an image for {} - {}'.format(doc['_id'], url_image)
+        print >> sys.stderr, msg
+        raise FailsImageTest(msg, doc_id=doc['_id'])
 
 
 class ImageHarvester(object):
@@ -208,8 +220,9 @@ class ImageHarvester(object):
         try:
             self._couchdb.save(doc)
         except ResourceConflict, e:
-            print >> sys.stderr, 'ResourceConflictfor doc: {}'.format(doc[
-                'id'])
+            msg = 'ResourceConflictfor doc: {} - {}'.format(doc[
+                '_id'], e.message)
+            print >> sys.stderr, msg
         return doc['object']
 
     def harvest_image_for_doc(self, doc):
@@ -218,40 +231,31 @@ class ImageHarvester(object):
         did = doc['_id']
         object_cached = self._object_cache.get(did, False)
         if not self.get_if_object and doc.get('object', False):
-            print >> sys.stderr, 'Skipping {}, has object field'.format(did)
+            msg = 'Skipping {}, has object field'.format(did)
+            print >> sys.stderr, msg
             if not object_cached:
-                print >> sys.stderr, 'Save to object cache {}'.format(did)
+                msg = 'Save to object cache {}'.format(did)
+                print >> sys.stderr, msg
                 self._object_cache[did] = [
                     doc['object'], doc['object_dimensions']
                 ]
-            raise HasObject
+            raise HasObject(msg, doc_id=doc['_id'])
         if not self.get_if_object and object_cached:
             # have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
-            print >> sys.stderr, 'Restore from object_cache: {}'.format(did)
+            msg = 'Restore from object_cache: {}'.format(did)
+            print >> sys.stderr, msg
             self.update_doc_object(doc,
                                    ImageReport(object_cached[0],
                                                object_cached[1]))
-            raise RestoreFromObjectCache
+            raise RestoreFromObjectCache(msg, doc_id=doc['_id'])
         try:
             reports = self.stash_image(doc)
             if reports is not None and len(reports) > 0:
                 self._object_cache[did] = [
                     reports[0].md5, reports[0].dimensions
                 ]
-                obj_val = self.update_doc_object(doc, reports[0])
-        except KeyError, e:
-            if 'isShownBy' in e.message:
-                print >> sys.stderr, e
-                raise IsShownByError
-            else:
-                raise e
-        except ValueError, e:
-            if 'isShownBy' in e.message:
-                print >> sys.stderr, e
-                raise IsShownByError
-            else:
-                raise e
+                self.update_doc_object(doc, reports[0])
         except IOError, e:
             print >> sys.stderr, e
         return reports
@@ -261,11 +265,11 @@ class ImageHarvester(object):
         for doc_id in doc_ids:
             doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
-            report_errors = defaultdict(int)
+            report_errors = defaultdict(list)
             try:
                 reports = self.harvest_image_for_doc(doc)
             except ImageHarvestError, e:
-                report_errors[e.dict_key] += 1
+                report_errors[e.dict_key].append((e.doc_id, str(e)))
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
             return report_errors
@@ -285,13 +289,13 @@ class ImageHarvester(object):
             # use _all_docs view
             v = couchdb_pager(self._couchdb, include_docs='true')
         doc_ids = []
-        report_errors = defaultdict(int)
+        report_errors = defaultdict(list)
         for r in v:
             dt_start = dt_end = datetime.datetime.now()
             try:
                 reports = self.harvest_image_for_doc(r.doc)
             except ImageHarvestError, e:
-                report_errors[e.dict_key] += 1
+                report_errors[e.dict_key].append((e.doc_id, str(e)))
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
