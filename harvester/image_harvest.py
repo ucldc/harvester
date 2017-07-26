@@ -269,7 +269,7 @@ class ImageHarvester(object):
             try:
                 reports = self.harvest_image_for_doc(doc)
             except ImageHarvestError, e:
-                report_errors[e.dict_key].append(e.doc_id, str(e))
+                report_errors[e.dict_key].append((e.doc_id, str(e)))
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
             return report_errors
@@ -295,7 +295,7 @@ class ImageHarvester(object):
             try:
                 reports = self.harvest_image_for_doc(r.doc)
             except ImageHarvestError, e:
-                report_errors[e.dict_key].append(e.doc_id, str(e))
+                report_errors[e.dict_key].append((e.doc_id, str(e)))
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
