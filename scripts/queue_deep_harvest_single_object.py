@@ -44,7 +44,7 @@ def queue_deep_harvest_path(redis_host,
 
 
 
-def main(path, log_handler=None, rq_queue='normal-stage',
+def main(path, log_handler=None, config=None, rq_queue='normal-stage',
         timeout=JOB_TIMEOUT, replace=True):
     ''' Queue a deep harvest of a nuxeo object on a worker'''
     if not log_handler:
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         job_timeout = args.job_timeout
     else:
         job_timeout = JOB_TIMEOUT
-    main(args.path, rq_queue=args.rq_queue, replace=True,
+    main(args.path, rq_queue=args.rq_queue, config=config, replace=True,
             timeout=job_timeout)
 
 # Copyright © 2017, Regents of the University of California
