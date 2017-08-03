@@ -58,19 +58,32 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
 
         dh = DeepHarvestNuxeo(coll.harvest_extra_data, '', pynuxrc=pynuxrc)
 
-        for object in dh.fetch_objects():
+        for obj in dh.fetch_objects():
             log.info('Queueing {} :-: {}'.format(
-                object['uid'],
-                object['path']))
+                obj['uid'],
+                obj['path']))
+            # deep harvest top level object
             queue_deep_harvest_path(
                 config['redis_host'],
                 config['redis_port'],
                 config['redis_password'],
                 config['redis_connect_timeout'],
                 rq_queue=rq_queue,
-                path=object['path'],
+                path=obj['path'],
                 replace=replace,
                 timeout=timeout)
+            # deep harvest component sub-objects
+            for c in dh.fetch_components(obj):
+                queue_deep_harvest_path(
+                    config['redis_host'],
+                    config['redis_port'],
+                    config['redis_password'],
+                    config['redis_connect_timeout'],
+                    rq_queue=rq_queue,
+                    path=c['path'],
+                    replace=replace,
+                    timeout=timeout)
+
     log_handler.pop_application()
 
 def def_args():
