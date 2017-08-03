@@ -50,6 +50,7 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
+    log = logbook.Logger('QDH')
     for cid in [x for x in collection_ids.split(';')]:
         url_api = ''.join(('https://registry.cdlib.org/api/v1/collection/',
                     cid, '/'))
@@ -58,9 +59,9 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
         dh = DeepHarvestNuxeo(coll.harvest_extra_data, '', pynuxrc=pynuxrc)
 
         for object in dh.fetch_objects():
-            log_handler.info('Queueing {} :-: {}'.format(
+            log.info('Queueing {} :-: {}'.format(
                 object['uid'],
-                object['path'])
+                object['path']))
             queue_deep_harvest_path(
                 config['redis_host'],
                 config['redis_port'],
