@@ -6,8 +6,6 @@ from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
 from harvester.collection_registry_client import Collection
-from scripts.queue_deep_harvest_single_object import \
-    queue_deep_harvest_path
 from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 
 JOB_TIMEOUT = 345600  # 96 hrs
@@ -57,9 +55,12 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
                     cid, '/'))
         coll = Collection(url_api)
 
-        dh = DeepHarvestNuxeo(coll.extra_data, '', pynuxrc=pynuxrc)
+        dh = DeepHarvestNuxeo(coll.harvest_extra_data, '', pynuxrc=pynuxrc)
 
-        for object in self.dh.fetch_objects()
+        for object in dh.fetch_objects():
+            log_handler.info('Queueing {} :-: {}'.format(
+                object['uid'],
+                object['path'])
             queue_deep_harvest_path(
                 config['redis_host'],
                 config['redis_port'],
@@ -82,15 +83,14 @@ def def_args():
     #parser.add_argument(
     #    'path', type=str, help='Nuxeo path to root folder')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
-                        help='Timeout for the RQ job')
+        help='Timeout for the RQ job')
     parser.add_argument(
         '--pynuxrc', default='~/.pynuxrc', help='rc file for use by pynux')
     parser.add_argument(
         '--replace',
         action='store_true',
         help='replace files on s3 if they already exist')
-    parser.add_argument('--loglevel', default=_loglevel_)
-                        help='Timeout for the RQ job')
+
     return parser
 
 if __name__=='__main__':
