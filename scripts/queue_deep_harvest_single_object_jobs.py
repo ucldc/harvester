@@ -59,7 +59,7 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
         dh = DeepHarvestNuxeo(coll.harvest_extra_data, '', pynuxrc=pynuxrc)
 
         for obj in dh.fetch_objects():
-            log.info('Queueing {} :-: {}'.format(
+            log.info('Queueing TOPLEVEL {} :-: {}'.format(
                 obj['uid'],
                 obj['path']))
             # deep harvest top level object
@@ -74,6 +74,9 @@ def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
                 timeout=timeout)
             # deep harvest component sub-objects
             for c in dh.fetch_components(obj):
+                log.info('Queueing {} :-: {}'.format(
+                    c['uid'],
+                    c['path']))
                 queue_deep_harvest_path(
                     config['redis_host'],
                     config['redis_port'],
