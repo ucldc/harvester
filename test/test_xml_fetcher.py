@@ -6,6 +6,7 @@ import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin
 
+
 class XMLFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test the fetcher for the generic xml search interface'''
 
@@ -22,7 +23,7 @@ class XMLFetcherTestCase(LogOverrideMixin, TestCase):
         docs = []
         for d in h:
             docs.extend(d)
-        self.assertEqual(len(docs), 4)
+        self.assertEqual(len(docs), 2320)
         test1 = docs[0]
         test2 = docs[2]
         self.assertIn('title', test1['metadata'])
