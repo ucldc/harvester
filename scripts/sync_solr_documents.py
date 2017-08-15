@@ -49,8 +49,7 @@ def get_solr_doc(sid, url_solr, api_key):
             del doc[k]
     return doc
 
-def add_doc(doc, dest_solr):
-    solr_endpoint = dest_solr + 'update/json/docs'
+def add_doc(doc, solr_endpoint):
     resp = requests.post(solr_endpoint,
             headers={'Content-Type': 'application/json'},
             data=json.dumps(doc),
@@ -59,21 +58,31 @@ def add_doc(doc, dest_solr):
         print 'synced {}'.format(doc['id'])
     else:
         print 'failed {} : {}'.format(doc['id'], resp.status_code)
+    return True if resp.status_code == 200 else False
 
 def sync_id_list(ids, source_solr=None, dest_solr=None,
         source_api_key=None):
+    solr_endpoint = dest_solr + '/update/json/docs'
+    print "DESTINANTION ENDPOINT: {}".format(solr_endpoint)
+    #raw_input('Press any key to continue')
+    n_success = n_failed = 0
     for sid in ids:
         source_doc = get_solr_doc(sid, url_solr=source_solr,
                 api_key=source_api_key)
-        add_doc(source_doc, dest_solr=dest_solr)
+        added = add_doc(source_doc, solr_endpoint)
+        if added:
+            n_success += 1
+        else:
+            n_failed += 1
     # commit to index
-    requests.get(dest_solr+'update?commit=true')
+    requests.get(dest_solr+'/update?commit=true')
+    return n_success, n_failed
 
 def sync_collection(url_collection, source_solr=None, dest_solr=None,
         source_api_key=None):#, dest_api_key=None):
     ids = get_ids_for_collection(url_collection, source_solr, source_api_key)
     print "Syncing {} records".format(len(ids))
-    sync_id_list(ids, source_solr=source_solr, dest_solr=dest_solr,
+    return sync_id_list(ids, source_solr=source_solr, dest_solr=dest_solr,
             source_api_key=source_api_key)
 
 
@@ -86,11 +95,15 @@ if __name__=='__main__':
     source_solr = os.environ.get('URL_SOLR_API', URL_SOLR_API)
     source_api_key = os.environ.get('SOLR_API_KEY', '')
     dest_solr = os.environ.get('URL_SOLR', None)
-    print "SOLR SOURCE: {}  SOLR DESTINATION: {}".format(source_solr,
+    print "CID:{} SOLR SOURCE: {}  SOLR DESTINATION: {}".format(
+        argv.collection_id,
+        source_solr,
         dest_solr)
-    sync_collection(url_collection, source_solr=source_solr,
+    #raw_input('Press any key to continue')
+    success, failed = sync_collection(url_collection, source_solr=source_solr,
             dest_solr=dest_solr,
             source_api_key=source_api_key)
+    print "{} updated successfully. {} failed".format(success, failed)
 
 
 # Copyright © 2016, Regents of the University of California
