@@ -60,16 +60,16 @@ def add_doc(doc, solr_endpoint):
         print 'failed {} : {}'.format(doc['id'], resp.status_code)
     return True if resp.status_code == 200 else False
 
-def sync_id_list(ids, source_solr=None, dest_solr=None,
+def get_update_endpoint(dest_solr):
+    return dest_solr + '/update/json/docs'
+
+def sync_id_list(ids, source_solr=None, update_endpoint=None,
         source_api_key=None):
-    solr_endpoint = dest_solr + '/update/json/docs'
-    print "DESTINANTION ENDPOINT: {}".format(solr_endpoint)
-    #raw_input('Press any key to continue')
     n_success = n_failed = 0
     for sid in ids:
         source_doc = get_solr_doc(sid, url_solr=source_solr,
                 api_key=source_api_key)
-        added = add_doc(source_doc, solr_endpoint)
+        added = add_doc(source_doc, update_endpoint)
         if added:
             n_success += 1
         else:
@@ -78,19 +78,25 @@ def sync_id_list(ids, source_solr=None, dest_solr=None,
     requests.get(dest_solr+'/update?commit=true')
     return n_success, n_failed
 
-def sync_collection(url_collection, source_solr=None, dest_solr=None,
+def sync_collection(url_collection, source_solr=None, update_endpoint=None,
         source_api_key=None):#, dest_api_key=None):
     ids = get_ids_for_collection(url_collection, source_solr, source_api_key)
     print "Syncing {} records".format(len(ids))
-    return sync_id_list(ids, source_solr=source_solr, dest_solr=dest_solr,
-            source_api_key=source_api_key)
+    return sync_id_list(
+        ids,
+        source_solr=source_solr,
+        update_endpoint=update_endpoint,
+        source_api_key=source_api_key)
 
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('collection_id')
+    parser.add_argument('-y', action='store_true',
+        help="-y to answer yes to input")
 
     argv = parser.parse_args()
+    print "Y? {}".format(argv.y)
     url_collection = URL_REGISTRY_API + argv.collection_id + '/'
     source_solr = os.environ.get('URL_SOLR_API', URL_SOLR_API)
     source_api_key = os.environ.get('SOLR_API_KEY', '')
@@ -99,9 +105,12 @@ if __name__=='__main__':
         argv.collection_id,
         source_solr,
         dest_solr)
-    #raw_input('Press any key to continue')
+    solr_endpoint = get_update_endpoint(dest_solr)
+    print "DESTINANTION ENDPOINT: {}".format(solr_endpoint)
+    if not argv.y:
+        raw_input('Press any key to continue')
     success, failed = sync_collection(url_collection, source_solr=source_solr,
-            dest_solr=dest_solr,
+            update_endpoint=solr_endpoint,
             source_api_key=source_api_key)
     print "{} updated successfully. {} failed".format(success, failed)
 
