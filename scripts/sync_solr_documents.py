@@ -26,11 +26,13 @@ def get_ids_for_collection(url_collection, url_solr=URL_SOLR_API,
     query = { 'q': 'collection_url:{}'.format(url_collection), 'rows':100000,
             'fl': 'id'}
     solr_endpoint = url_solr + 'query'
-    resp_obj =  json.loads(requests.get(url_solr+'query',
+    print "Getting ids from : {}\n{}".format(solr_endpoint, query)
+    resp_obj =  requests.get(solr_endpoint,
                                     headers=solr_auth,
                                     params=query,
-                                    verify=False).content)
-    return [ d['id'] for d in resp_obj['response']['docs']]
+                                    verify=False)
+    print resp_obj
+    return [ d['id'] for d in resp_obj.json()['response']['docs']]
 
 def get_solr_doc(sid, url_solr, api_key):
     solr_auth = { 'X-Authentication-Token': api_key } if api_key else None
@@ -53,6 +55,10 @@ def add_doc(doc, dest_solr):
             headers={'Content-Type': 'application/json'},
             data=json.dumps(doc),
             verify=False)
+    if resp.status_code == 200:
+        print 'synced {}'.format(doc['id'])
+    else:
+        print 'failed {} : {}'.format(doc['id'], resp.status_code)
 
 def sync_id_list(ids, source_solr=None, dest_solr=None,
         source_api_key=None):
@@ -66,6 +72,7 @@ def sync_id_list(ids, source_solr=None, dest_solr=None,
 def sync_collection(url_collection, source_solr=None, dest_solr=None,
         source_api_key=None):#, dest_api_key=None):
     ids = get_ids_for_collection(url_collection, source_solr, source_api_key)
+    print "Syncing {} records".format(len(ids))
     sync_id_list(ids, source_solr=source_solr, dest_solr=dest_solr,
             source_api_key=source_api_key)
 
@@ -79,6 +86,8 @@ if __name__=='__main__':
     source_solr = os.environ.get('URL_SOLR_API', URL_SOLR_API)
     source_api_key = os.environ.get('SOLR_API_KEY', '')
     dest_solr = os.environ.get('URL_SOLR', None)
+    print "SOLR SOURCE: {}  SOLR DESTINATION: {}".format(source_solr,
+        dest_solr)
     sync_collection(url_collection, source_solr=source_solr,
             dest_solr=dest_solr,
             source_api_key=source_api_key)
