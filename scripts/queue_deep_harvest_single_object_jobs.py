@@ -16,7 +16,7 @@ def queue_deep_harvest_path(redis_host,
                        redis_timeout,
                        rq_queue,
                        path,
-                       replace=True,
+                       replace=False,
                        timeout=JOB_TIMEOUT):
     '''Queue job onto RQ queue'''
     rQ = Queue(
@@ -28,24 +28,28 @@ def queue_deep_harvest_path(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_file',
-        args=(path,),
+        args=(path, ),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_image',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_media_json',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_thumb',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
 
 
-def main(collection_ids, rq_queue='normal-stage', config=None, pynuxrc=None,
-        replace=True, timeout=JOB_TIMEOUT, log_handler=None):
+def main(collection_ids, rq_queue='dh-q', config=None, pynuxrc=None,
+        replace=False, timeout=JOB_TIMEOUT, log_handler=None):
     ''' Queue a deep harvest of a nuxeo object on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
@@ -94,7 +98,7 @@ def def_args():
     parser = argparse.ArgumentParser(
         description='Queue a Nuxeo deep harvesting job for a single object')
     parser.add_argument('--rq_queue', type=str, help='RQ Queue to put job in',
-            default='normal-stage')
+            default='dh-q')
     parser.add_argument(
         'collection_ids', type=str, help='Collection ids, ";" delimited')
     #parser.add_argument(
