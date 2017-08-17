@@ -33,7 +33,7 @@ def publish_to_harvesting(subject, message):
     try:
         client.publish(
             TopicArn=os.environ['ARN_TOPIC_HARVESTING_REPORT'],
-            Message=message,
+            Message=message[:100000],
             Subject=subject[:100]
             )
     except botocore.exceptions.BotoCoreError, e:
