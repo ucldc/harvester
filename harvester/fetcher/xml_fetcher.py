@@ -4,11 +4,13 @@ import re
 from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
+from itertools import islice
+
 
 
 class XML_Fetcher(Fetcher):
-    '''General XML Fetcher. Currently only harvests from
-    static XML documents at url_harvest'''
+    '''Harvests 1,000 records at a time from
+    static XML document at url_harvest'''
 
     def __init__(self, url_harvest, extra_data, **kwargs):
         self.url_base = url_harvest
@@ -17,13 +19,17 @@ class XML_Fetcher(Fetcher):
         xml = urllib.urlopen(self.url_base).read()
         total = re.findall('<record>', xml)
         self.docs_total = len(total)
+        # Use etree to pythonize
+        tree = ET.fromstring(xml)
+        self.hits = tree.findall(".//record")
         self.re_ns_strip = re.compile('{.*}(?P<tag>.*)$')
 
     def _dochits_to_objset(self, docHits):
         '''Returns list of objects.
         '''
         objset = []
-        for d in docHits:
+        # Use islice w/ self.docs_fetched  to iterate through docHits
+        for d in islice(docHits, self.docs_fetched, None):
             obj = {}
             obj_mdata = defaultdict(list)
             for mdata in d.iter():
@@ -39,18 +45,20 @@ class XML_Fetcher(Fetcher):
                     for elem in mdata.attrib:
                         obj_mdata[elem].append(mdata.get(elem))
             obj['metadata'] = dict(obj_mdata)
-            self.docs_fetched += 1
             objset.append(obj)
+            self.docs_fetched += 1
+            self.doc_current += 1
+            # Once 1000 records in objset, reset self.doc_current & break/return
+            if self.doc_current == 1000 or self.docs_fetched >= self.docs_total:
+                self.doc_current = 0
+                break
         return objset
 
     def next(self):
         '''get next objset, use etree to pythonize'''
         if self.docs_fetched >= self.docs_total:
             raise StopIteration
-        tree = ET.fromstring(urllib.urlopen(self.url_base).read())
-        hits = tree.findall(".//record")
-        self.doc_current += 1
-        return self._dochits_to_objset(hits)
+        return self._dochits_to_objset(self.hits)
 
 
 # Copyright © 2016, Regents of the University of California
