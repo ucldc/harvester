@@ -21,6 +21,9 @@ class XMLFetcherTestCase(LogOverrideMixin, TestCase):
         h = fetcher.XML_Fetcher(url, None)
         self.assertEqual(h.url_base, url)
         docs = []
+        d = h.next()
+        self.assertEqual(len(d), 999)
+        docs.extend(d)
         for d in h:
             docs.extend(d)
         self.assertEqual(len(docs), 2320)
