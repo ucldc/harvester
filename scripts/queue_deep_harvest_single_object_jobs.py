@@ -5,9 +5,10 @@ import logbook
 from rq import Queue
 from redis import Redis
 from harvester.config import parse_env
+from harvester.collection_registry_client import Collection
+from deepharvest.deepharvest_nuxeo import DeepHarvestNuxeo
 
 JOB_TIMEOUT = 345600  # 96 hrs
-
 
 def queue_deep_harvest_path(redis_host,
                        redis_port,
@@ -15,7 +16,7 @@ def queue_deep_harvest_path(redis_host,
                        redis_timeout,
                        rq_queue,
                        path,
-                       replace=True,
+                       replace=False,
                        timeout=JOB_TIMEOUT):
     '''Queue job onto RQ queue'''
     rQ = Queue(
@@ -27,64 +28,99 @@ def queue_deep_harvest_path(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_file',
-        args=(path,),
+        args=(path, ),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_image',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_media_json',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
     job = rQ.enqueue_call(
         func='s3stash.stash_single_rqworker.stash_thumb',
         args=(path,),
+        kwargs={'replace': replace},
         timeout=timeout)
 
 
-
-def main(path, log_handler=None, config=None, rq_queue='normal-stage',
-        timeout=JOB_TIMEOUT, replace=True):
+def main(collection_ids, rq_queue='dh-q', config=None, pynuxrc=None,
+        replace=False, timeout=JOB_TIMEOUT, log_handler=None):
     ''' Queue a deep harvest of a nuxeo object on a worker'''
     if not log_handler:
         log_handler = logbook.StderrHandler(level='DEBUG')
     log_handler.push_application()
-    queue_deep_harvest_path(
-            config['redis_host'],
-            config['redis_port'],
-            config['redis_password'],
-            config['redis_connect_timeout'],
-            rq_queue=rq_queue,
-            path=path,
-            replace=replace,
-            timeout=timeout)
-    log_handler.pop_application()
+    log = logbook.Logger('QDH')
+    for cid in [x for x in collection_ids.split(';')]:
+        url_api = ''.join(('https://registry.cdlib.org/api/v1/collection/',
+                    cid, '/'))
+        coll = Collection(url_api)
 
+        dh = DeepHarvestNuxeo(coll.harvest_extra_data, '', pynuxrc=pynuxrc)
+
+        for obj in dh.fetch_objects():
+            log.info('Queueing TOPLEVEL {} :-: {}'.format(
+                obj['uid'],
+                obj['path']))
+            # deep harvest top level object
+            queue_deep_harvest_path(
+                config['redis_host'],
+                config['redis_port'],
+                config['redis_password'],
+                config['redis_connect_timeout'],
+                rq_queue=rq_queue,
+                path=obj['path'],
+                replace=replace,
+                timeout=timeout)
+            # deep harvest component sub-objects
+            for c in dh.fetch_components(obj):
+                log.info('Queueing {} :-: {}'.format(
+                    c['uid'],
+                    c['path']))
+                queue_deep_harvest_path(
+                    config['redis_host'],
+                    config['redis_port'],
+                    config['redis_password'],
+                    config['redis_connect_timeout'],
+                    rq_queue=rq_queue,
+                    path=c['path'],
+                    replace=replace,
+                    timeout=timeout)
+
+    log_handler.pop_application()
 
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(
         description='Queue a Nuxeo deep harvesting job for a single object')
     parser.add_argument('--rq_queue', type=str, help='RQ Queue to put job in',
-            default='normal-stage')
+            default='dh-q')
     parser.add_argument(
-        'path', type=str, help='Nuxeo path to object')
+        'collection_ids', type=str, help='Collection ids, ";" delimited')
+    #parser.add_argument(
+    #    'path', type=str, help='Nuxeo path to root folder')
     parser.add_argument('--job_timeout', type=int, default=JOB_TIMEOUT,
-                        help='Timeout for the RQ job')
+        help='Timeout for the RQ job')
+    parser.add_argument(
+        '--pynuxrc', default='~/.pynuxrc', help='rc file for use by pynux')
+    parser.add_argument(
+        '--replace',
+        action='store_true',
+        help='replace files on s3 if they already exist')
+
     return parser
 
-
-if __name__ == '__main__':
+if __name__=='__main__':
     parser = def_args()
     args = parser.parse_args()
     config = parse_env(None)
-    if args.job_timeout:
-        job_timeout = args.job_timeout
-    else:
-        job_timeout = JOB_TIMEOUT
-    main(args.path, rq_queue=args.rq_queue, config=config, replace=True,
-            timeout=job_timeout)
+    main(args.collection_ids, rq_queue=args.rq_queue, config=config,
+        replace=args.replace, timeout=args.job_timeout,
+        pynuxrc=args.pynuxrc)
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.

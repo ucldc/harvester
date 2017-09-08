@@ -7,11 +7,12 @@ from .fetcher import Fetcher
 from itertools import islice
 
 
+
 class XML_Fetcher(Fetcher):
     '''Harvests 1,000 records at a time from
     static XML document at url_harvest'''
 
-    def __init__(self, url_harvest, extra_data):
+    def __init__(self, url_harvest, extra_data, **kwargs):
         self.url_base = url_harvest
         self.doc_current = 1
         self.docs_fetched = 0
@@ -58,6 +59,7 @@ class XML_Fetcher(Fetcher):
         if self.docs_fetched >= self.docs_total:
             raise StopIteration
         return self._dochits_to_objset(self.hits)
+
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.

@@ -865,10 +865,10 @@ def main(url_couchdb=None,
     sys.stdout.flush()  # put pd
     db = get_couchdb(url=url_couchdb, dbname=dbname)
     s3_seq_cache = CouchdbLastSeq_S3()
-    if all_docs:
-        since = '0'
     if not since:
         since = s3_seq_cache.last_seq
+    if all_docs:
+        since = '0'
     print('Attempt to connect to {0} - db:{1}'.format(url_couchdb, dbname))
     print('Getting changes since:{}'.format(since))
     sys.stdout.flush()  # put pd

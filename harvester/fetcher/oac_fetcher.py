@@ -22,7 +22,8 @@ class OAC_XML_Fetcher(Fetcher):
     The results are returned in 3 groups, image, text and website.
     Image and text are the ones we care about.
     '''
-    def __init__(self, url_harvest, extra_data, docsPerPage=100):
+
+    def __init__(self, url_harvest, extra_data, docsPerPage=100, **kwargs):
         super(OAC_XML_Fetcher, self).__init__(url_harvest, extra_data)
         self.logger = logbook.Logger('FetcherOACXML')
         self.docsPerPage = docsPerPage
@@ -32,10 +33,7 @@ class OAC_XML_Fetcher(Fetcher):
         self.currentGroup = ('image', 0)
         # this will be used to track counts for the 3 groups
         self.groups = dict(
-            image=BunchDict(),
-            text=BunchDict(),
-            website=BunchDict()
-        )
+            image=BunchDict(), text=BunchDict(), website=BunchDict())
         facet_type_tab = self._get_next_result_set()
         # set total number of hits across the 3 groups
         self.totalDocs = int(facet_type_tab.attrib['totalDocs'])
@@ -99,10 +97,11 @@ class OAC_XML_Fetcher(Fetcher):
                         y = 0
                     src = ''.join((CONTENT_SERVER, t.attrib['src']))
                     src = src.replace('//', '/').replace('/', '//', 1)
-                    data = {'X': x,
-                            'Y': y,
-                            'src': src,
-                            }
+                    data = {
+                        'X': x,
+                        'Y': y,
+                        'src': src,
+                    }
                     obj[t.tag].append(data)
                 elif t.tag == 'thumbnail':
                     try:
@@ -115,10 +114,11 @@ class OAC_XML_Fetcher(Fetcher):
                         y = 0
                     src = ''.join((CONTENT_SERVER, '/', ark, '/thumbnail'))
                     src = src.replace('//', '/').replace('/', '//', 1)
-                    data = {'X': x,
-                            'Y': y,
-                            'src': src,
-                            }
+                    data = {
+                        'X': x,
+                        'Y': y,
+                        'src': src,
+                    }
                     obj[t.tag] = data
                 elif len(list(t)) > 0:
                     # <snippet> tag breaks up text for findaid <relation>
@@ -157,7 +157,7 @@ class OAC_XML_Fetcher(Fetcher):
                     raise e
                 # backoff
                 time.sleep(pause)
-                pause = pause*2
+                pause = pause * 2
         # resp.encoding = 'utf-8'  # thinks it's ISO-8859-1
         crossQueryResult = ET.fromstring(resp.read())
         # crossQueryResult = ET.fromstring(resp.text.encode('utf-8'))
@@ -173,15 +173,14 @@ class OAC_XML_Fetcher(Fetcher):
                 self.currentGroup = 'text'
                 if self.groups['text']['total'] == 0:
                     raise StopIteration
-        self._url_current = ''.join((
-            self.url, '&startDoc=',
-            str(self.groups[self.currentGroup]['currentDoc']),
-            '&group=', self.currentGroup))
+        self._url_current = ''.join(
+            (self.url, '&startDoc=',
+             str(self.groups[self.currentGroup]['currentDoc']), '&group=',
+             self.currentGroup))
         facet_type_tab = self._get_next_result_set()
         self._update_groups(facet_type_tab.findall('group'))
         objset = self._docHits_to_objset(
-            facet_type_tab.findall('./group/docHit')
-        )
+            facet_type_tab.findall('./group/docHit'))
         self.currentDoc += len(objset)
         self.groups[self.currentGroup]['currentDoc'] += len(objset)
         return objset
@@ -190,6 +189,7 @@ class OAC_XML_Fetcher(Fetcher):
 class OAC_JSON_Fetcher(Fetcher):
     '''Fetcher for oac, using the JSON objset interface
     This is being deprecated in favor of the xml interface'''
+
     def __init__(self, url_harvest, extra_data):
         super(OAC_JSON_Fetcher, self).__init__(url_harvest, extra_data)
         self.oac_findaid_ark = self._parse_oac_findaid_ark(self.url)
@@ -229,7 +229,7 @@ class OAC_JSON_Fetcher(Fetcher):
                     self.resp = None
                     raise StopIteration
             url_next = ''.join((self.url, '&startDoc=',
-                                unicode(self.objset_end+1)))
+                                unicode(self.objset_end + 1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             # self.objset_total = api_resp['objset_total']
@@ -254,7 +254,7 @@ class OAC_JSON_Fetcher(Fetcher):
             self.objset_last = True
         else:
             url_next = ''.join((self.url, '&startDoc=',
-                                unicode(self.objset_end+1)))
+                                unicode(self.objset_end + 1)))
             self.resp = requests.get(url_next, headers=self.headers)
             self.api_resp = self.resp.json()
             self.objset_start = self.api_resp['objset_start']

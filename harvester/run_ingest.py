@@ -156,8 +156,9 @@ def main(user_email,
                                      'Harvest to CouchDB {env} ')
     publish_to_harvesting(subject,
                           'Finished metadata harvest for CID: {}\n'
-                          'Saved: {}'.format(
+                          'Fetched: {}\nSaved: {}'.format(
                               collection.id,
+                              num_recs,
                               num_saved))
 
     log_handler.pop_application()

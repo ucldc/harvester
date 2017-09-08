@@ -15,20 +15,22 @@ class CMISAtomFeedFetcher(Fetcher):
     data. This might not work if we get collections much bigger than the
     current ones (~1000 objects max)
     '''
-    def __init__(self, url_harvest, extra_data):
+
+    def __init__(self, url_harvest, extra_data, **kwargs):
         '''Grab file and copy to local temp file'''
         super(CMISAtomFeedFetcher, self).__init__(url_harvest, extra_data)
         # parse extra data for username,password
         uname, pswd = extra_data.split(',')
-        resp = requests.get(url_harvest, auth=HTTPBasicAuth(uname.strip(),
-                            pswd.strip()))
+        resp = requests.get(url_harvest,
+                            auth=HTTPBasicAuth(uname.strip(), pswd.strip()))
         self.tree = ET.fromstring(resp.content)
-        self.objects = [badgerfish.data(x) for x in
-                        self.tree.findall('./{http://www.w3.org/2005/Atom}'
-                                          'entry/{http://docs.oasis-open.org/'
-                                          'ns/cmis/restatom/200908/}children//'
-                                          '{http://www.w3.org/2005/Atom}entry')
-                        ]
+        self.objects = [
+            badgerfish.data(x)
+            for x in self.tree.findall('./{http://www.w3.org/2005/Atom}'
+                                       'entry/{http://docs.oasis-open.org/'
+                                       'ns/cmis/restatom/200908/}children//'
+                                       '{http://www.w3.org/2005/Atom}entry')
+        ]
         self.objects_iter = iter(self.objects)
 
     def next(self):
