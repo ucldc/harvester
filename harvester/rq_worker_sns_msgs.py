@@ -3,7 +3,7 @@
 import logging
 import os
 import re
-from rq.worker import Worker
+from rq.worker import HerokuWorker
 from harvester.sns_message import publish_to_harvesting
 
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ def exception_to_sns(job, *exc_info):
     publish_to_harvesting(subject, message)
 
 
-class SNSWorker(Worker):
+class SNSWorker(HerokuWorker):
     def execute_job(self, job, queue):
         """Spawns a work horse to perform the actual work and passes it a job.
         The worker will wait for the work horse and make sure it executes
