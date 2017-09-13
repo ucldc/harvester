@@ -41,7 +41,7 @@ setup(
         'https://github.com/mredar/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
         'https://github.com/tingletech/mediajson/archive/master.zip#egg=mediajson',
         'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle',
-        'https://github.com/nvie/rq/archive/4875331b60ddf8ddfe5b374ec75c938eb9749602.zip#egg=rq',
+        # 'https://github.com/nvie/rq/archive/4875331b60ddf8ddfe5b374ec75c938eb9749602.zip#egg=rq',
     ],
     install_requires=[
         'Sickle',
@@ -57,7 +57,7 @@ setup(
         'akara',
         'python-dateutil==2.2',
         'CouchDB==0.9',
-        'redis==2.10.1',
+        'redis>=2.10.1',
         'rq',
         'boto',
         'md5s3stash',
@@ -71,7 +71,7 @@ setup(
         'mediajson'
         ],
     test_suite='test',
-    tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
+    tests_require=['mock>=1.0.1', 'httpretty>=0.8.3', ],
 )
 
 pip_main(['install', 'ansible'])
