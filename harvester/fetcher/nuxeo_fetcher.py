@@ -136,7 +136,9 @@ class NuxeoFetcher(Fetcher):
 
         properties = metadata['properties']
         file_content = properties.get('file:content')
-        if file_content and 'data' in file_content:
+        if file_content and 'name' in file_content and file_content['name'] == 'empty_picture.png':
+            return False
+        elif file_content and 'data' in file_content:
             return True
         else:
             return False
