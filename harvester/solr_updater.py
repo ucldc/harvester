@@ -125,6 +125,10 @@ COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING = {
     lambda d: dict_for_data_field('structmap_url', d, 'structmap_url'),
     'transcription':
     lambda d: dict_for_data_field('transcription', d, 'transcription'),
+
+    # UCLDC/DC metadata: use schema prefix & d['properties']
+    'ucldc_schema:physlocation':
+    lambda d: dict_for_data_field('ucldc_schema:physlocation', d['properties'], 'location'),
 }
 
 
@@ -714,17 +718,29 @@ def map_couch_to_solr_doc(doc):
                     file=sys.stderr)
                 raise e
     originalRecord = doc['originalRecord']
-    for p in originalRecord.keys():
-        if p in COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING:
+    for k in originalRecord.keys():
+        if k in COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING:
             try:
-                solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[p](
-                    originalRecord))
+                solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[k](originalRecord))
+
             except TypeError, e:
                 print(
                     'TypeError for doc {} on originalRecord {}'.format(
-                        doc['_id'], p),
+                        doc['_id'], k),
                     file=sys.stderr)
                 raise e
+        if k == 'properties':
+            for p in originalRecord['properties']:
+                if p in COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING:
+                    try:
+                        solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[p](
+                            originalRecord))
+                    except TypeError, e:
+                        print(
+                            'TypeError for doc {} on originalRecord {}'.format(
+                                doc['_id'], p),
+                            file=sys.stderr)
+                        raise e
     normalize_type(solr_doc)
     add_sort_title(doc, solr_doc)
     add_facet_decade(doc, solr_doc)

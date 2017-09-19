@@ -28,6 +28,7 @@ from harvester.solr_updater import MissingMediaJSON
 from harvester.solr_updater import sync_couch_collection_to_solr
 from harvester.solr_updater import harvesting_report
 from botocore.exceptions import ClientError
+from akara import logger
 
 
 class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
@@ -142,6 +143,7 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
                          '0025ad8f-a44e-4f58-8238-c7b60b2fb850-media.json')
         self.assertEqual(sdoc['subject'], [None])
         self.assertEqual(sdoc['type'], 'image')
+        self.assertEqual(sdoc['location'], u'Box 13, Folder 25')
 
     def test_map_couch_to_solr_doc(self):
         '''Test the mapping of a couch db source json doc to a solr schema

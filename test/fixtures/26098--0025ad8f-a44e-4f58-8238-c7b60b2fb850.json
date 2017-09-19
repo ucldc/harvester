@@ -78,7 +78,7 @@
   "dataProvider": "UC Merced, Library and Special Collections",
   "originalRecord": {
     "properties": {
-      "ucldc_schema:physlocation": null,
+      "ucldc_schema:physlocation": "Box 13, Folder 25",
       "picture:views": [
         {
           "filename": "Medium_ucm_dr_060_045_a.jpg",
