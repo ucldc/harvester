@@ -43,7 +43,7 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(27)
     kwargs = {}
-    id_list = args.doc_ids.split(',')
+    id_list = [s for s in args.doc_ids.split(',')]
     main(args.user_email,
             id_list,
             **kwargs)
