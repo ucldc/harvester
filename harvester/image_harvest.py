@@ -330,6 +330,21 @@ def harvest_image_for_doc(doc_id,
         harvester.harvest_image_for_doc(doc)
 
 
+def harvest_image_by_list_of_ids(doc_ids,
+                          url_couchdb=None,
+                          object_auth=None):
+    '''Wrapper to call from rqworker.
+    Creates ImageHarvester object & then calls by_list_of_doc_ids
+    '''
+    harvester = ImageHarvester(
+        url_couchdb=url_couchdb,
+        object_auth=object_auth,
+        get_if_object=get_if_object)
+    # get doc from couchdb
+    couchdb = get_couchdb(url=url_couchdb)
+    harvester.by_list_of_doc_ids(doc_ids)
+
+
 def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
