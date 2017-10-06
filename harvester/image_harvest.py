@@ -328,7 +328,7 @@ def harvest_image_for_doc(doc_id,
     if not get_if_object and 'object' in doc and not force:
         print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
     else:
-        harvester.harvest_image_for_doc(doc)
+        harvester.harvest_image_for_doc(doc, force=force)
 
 
 def main(collection_key=None,
