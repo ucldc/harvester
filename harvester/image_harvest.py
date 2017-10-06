@@ -225,12 +225,12 @@ class ImageHarvester(object):
             print >> sys.stderr, msg
         return doc['object']
 
-    def harvest_image_for_doc(self, doc):
+    def harvest_image_for_doc(self, doc, force=False):
         '''Try to harvest an image for a couchdb doc'''
         reports = None
         did = doc['_id']
         object_cached = self._object_cache.get(did, False)
-        if not self.get_if_object and doc.get('object', False):
+        if not self.get_if_object and doc.get('object', False) and not force:
             msg = 'Skipping {}, has object field'.format(did)
             print >> sys.stderr, msg
             if not object_cached:
@@ -240,7 +240,7 @@ class ImageHarvester(object):
                     doc['object'], doc['object_dimensions']
                 ]
             raise HasObject(msg, doc_id=doc['_id'])
-        if not self.get_if_object and object_cached:
+        if not self.get_if_object and object_cached and not force:
             # have already downloaded an image for this, just fill in data
             ImageReport = namedtuple('ImageReport', 'md5, dimensions')
             msg = 'Restore from object_cache: {}'.format(did)
@@ -267,12 +267,12 @@ class ImageHarvester(object):
             dt_start = dt_end = datetime.datetime.now()
             report_errors = defaultdict(list)
             try:
-                reports = self.harvest_image_for_doc(doc)
+                reports = self.harvest_image_for_doc(doc, force=True)
             except ImageHarvestError, e:
                 report_errors[e.dict_key].append((e.doc_id, str(e)))
             dt_end = datetime.datetime.now()
             time.sleep((dt_end - dt_start).total_seconds())
-            return report_errors
+        return report_errors
 
     def by_collection(self, collection_key=None):
         '''If collection_key is none, trying to grab all of the images. (Not
