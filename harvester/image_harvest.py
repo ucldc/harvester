@@ -338,8 +338,7 @@ def harvest_image_by_list_of_ids(doc_ids,
     '''
     harvester = ImageHarvester(
         url_couchdb=url_couchdb,
-        object_auth=object_auth,
-        get_if_object=get_if_object)
+        object_auth=object_auth)
     # get doc from couchdb
     couchdb = get_couchdb(url=url_couchdb)
     harvester.by_list_of_doc_ids(doc_ids)
