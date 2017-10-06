@@ -264,7 +264,7 @@ class ImageHarvester(object):
     def by_list_of_doc_ids(self, doc_ids):
         '''For a list of ids, harvest images'''
         for doc_id in doc_ids:
-            doc = self._couchdb[urllib.quote(doc_id)]
+            doc = self._couchdb[doc_id]
             dt_start = dt_end = datetime.datetime.now()
             report_errors = defaultdict(list)
             try:
@@ -341,7 +341,6 @@ def harvest_image_by_list_of_ids(doc_ids,
         url_couchdb=url_couchdb,
         object_auth=object_auth)
     # get doc from couchdb
-    couchdb = get_couchdb(url=url_couchdb)
     harvester.by_list_of_doc_ids(doc_ids)
 
 
