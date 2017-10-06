@@ -28,6 +28,7 @@ def def_args():
     return parser
 
 def main(user_email, doc_ids, url_couchdb=None):
+    enq = CouchDBJobEnqueue()
     timeout = 10000
     enq.queue_list_of_ids(doc_ids,
                      timeout,
