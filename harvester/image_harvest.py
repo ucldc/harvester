@@ -9,6 +9,7 @@ import sys
 import datetime
 import time
 import urlparse
+import urllib
 from couchdb import ResourceConflict
 import requests
 import md5s3stash
@@ -263,7 +264,7 @@ class ImageHarvester(object):
     def by_list_of_doc_ids(self, doc_ids):
         '''For a list of ids, harvest images'''
         for doc_id in doc_ids:
-            doc = self._couchdb[doc_id]
+            doc = self._couchdb[urllib.quote(doc_id)]
             dt_start = dt_end = datetime.datetime.now()
             report_errors = defaultdict(list)
             try:
