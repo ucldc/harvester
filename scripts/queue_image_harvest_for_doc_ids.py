@@ -3,7 +3,7 @@
 import sys
 import os
 from harvester.post_processing.couchdb_runner import CouchDBJobEnqueue
-from harvester.image_harvest import by_list_of_doc_ids
+from harvester.image_harvest import harvest_image_by_list_of_ids
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -31,7 +31,7 @@ def main(user_email, doc_ids, url_couchdb=None):
     timeout = 10000
     enq.queue_list_of_ids(doc_ids,
                      timeout,
-                     harvest_image_for_doc,
+                     harvest_image_by_list_of_ids,
                      url_couchdb=url_couchdb,
                      )
 
