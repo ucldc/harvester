@@ -261,18 +261,17 @@ class ImageHarvester(object):
             print >> sys.stderr, e
         return reports
 
-    def by_list_of_doc_ids(self, doc_ids):
+    def by_doc_id(self, doc_id):
         '''For a list of ids, harvest images'''
-        for doc_id in doc_ids:
-            doc = self._couchdb[doc_id]
-            dt_start = dt_end = datetime.datetime.now()
-            report_errors = defaultdict(list)
-            try:
-                reports = self.harvest_image_for_doc(doc, force=True)
-            except ImageHarvestError, e:
-                report_errors[e.dict_key].append((e.doc_id, str(e)))
-            dt_end = datetime.datetime.now()
-            time.sleep((dt_end - dt_start).total_seconds())
+        doc = self._couchdb[doc_id]
+        dt_start = dt_end = datetime.datetime.now()
+        report_errors = defaultdict(list)
+        try:
+            reports = self.harvest_image_for_doc(doc, force=True)
+        except ImageHarvestError, e:
+            report_errors[e.dict_key].append((e.doc_id, str(e)))
+        dt_end = datetime.datetime.now()
+        time.sleep((dt_end - dt_start).total_seconds())
         return report_errors
 
     def by_collection(self, collection_key=None):
@@ -314,7 +313,8 @@ class ImageHarvester(object):
 def harvest_image_for_doc(doc_id,
                           url_couchdb=None,
                           object_auth=None,
-                          get_if_object=False):
+                          get_if_object=False,
+                          force=False):
     '''Wrapper to call from rqworker.
     Creates ImageHarvester object & then calls harvest_image_for_doc
     '''
@@ -325,23 +325,10 @@ def harvest_image_for_doc(doc_id,
     # get doc from couchdb
     couchdb = get_couchdb(url=url_couchdb)
     doc = couchdb[doc_id]
-    if not get_if_object and 'object' in doc:
+    if not get_if_object and 'object' in doc and not force:
         print >> sys.stderr, 'Skipping {}, has object field'.format(doc['_id'])
     else:
         harvester.harvest_image_for_doc(doc)
-
-
-def harvest_image_by_list_of_ids(doc_ids,
-                          url_couchdb=None,
-                          object_auth=None):
-    '''Wrapper to call from rqworker.
-    Creates ImageHarvester object & then calls by_list_of_doc_ids
-    '''
-    harvester = ImageHarvester(
-        url_couchdb=url_couchdb,
-        object_auth=object_auth)
-    # get doc from couchdb
-    harvester.by_list_of_doc_ids(doc_ids)
 
 
 def main(collection_key=None,
