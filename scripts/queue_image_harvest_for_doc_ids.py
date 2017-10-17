@@ -27,29 +27,37 @@ def def_args():
             help='Comma separated CouchDB document ids')
     return parser
 
-def main(user_email, doc_ids, url_couchdb=None):
-    enq = CouchDBJobEnqueue()
+
+def main(doc_ids, **kwargs):
+    enq = CouchDBJobEnqueue(rq_queue=kwargs['rq_queue'])
     timeout = 10000
+    if 'rq_queue' in kwargs:
+        del kwargs['rq_queue']
+    if 'timeout' in kwargs:
+        if type(kwargs['timeout']) == int:
+            timeout = kwargs['timeout']
+        del kwargs['timeout']
+    if 'object_auth' in kwargs:
+        kwargs['object_auth'] = (kwargs['object_auth'].split(':')[0],
+                                 kwargs['object_auth'].split(':')[1])
     enq.queue_list_of_ids(doc_ids,
                      timeout,
                      harvest_image_for_doc,
-                     url_couchdb=url_couchdb,
-                     force=True
+                     force=True,
+                     **kwargs
                      )
 
 if __name__ == '__main__':
     parser = def_args()
     args = parser.parse_args(sys.argv[1:])
-    if not args.user_email or not args.doc_ids:
+    if not args.rq_queue or not args.doc_ids:
         parser.print_help()
         sys.exit(27)
-    kwargs = {}
     id_list = [s for s in args.doc_ids.split(',')]
-    main(args.user_email,
-            id_list,
-            **kwargs)
-
-
+    kwargs = vars(args)
+    del kwargs['doc_ids']
+    main(id_list,
+         **kwargs)
 
 
 # Copyright © 2017, Regents of the University of California
