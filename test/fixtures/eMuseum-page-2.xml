@@ -1,0 +1,218 @@
+<objects xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Interview with Carolina and Mauricio Nabuco</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1960/1999</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80080.97</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52714</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Ten Years of Firing Line: 1966-1976:  Part II</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>September 20, 1976</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Kunstler, William Moses</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80040.492</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>6426</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>The Future of Philanthropy:  Part I</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>April 29, 1982</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Marting, Leeda P.</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80040.748</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>6682</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Harvest of Despair</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>September 04, 1986</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Hitchens, Christopher</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80040.947</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>6881</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Democracy Asian Style</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>May 26, 1992</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Han, Sŭng-ju</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80040.1189</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>7123</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Mdme. Chiang's Warphanage &amp; PCD at CBI HQ in Chungking</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1936/1945</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>78027.1</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52509</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Mildred Merland Reels 1 &amp; 2</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1929</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79023.1</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52530</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Herman Axelbank collected motion picture film: reel 24</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1919</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79073.1</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52536</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Herman Axelbank collected motion picture film: reel 36</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1923</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79073.2</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52537</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Herman Axelbank collected motion picture film: reel 11</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1916</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79073.3</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52538</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Herman Axelbank collected motion picture film: reel 22</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1918</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79073.4</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52539</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Herman Axelbank collected motion picture film: reel 41</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1924/1929</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>79073.5</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52540</value>
+</field>
+</object>
+</objects>

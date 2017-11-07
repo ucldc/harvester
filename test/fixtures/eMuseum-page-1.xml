@@ -1,0 +1,212 @@
+<objects xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>AF Afghani Service ID</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1951/2005</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>RFE/RL. Radio Free Afghanistan</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2000C120.4463</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>45850</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Interview with Dina Kaminskaya</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1977-11-13/1977-11-16</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2000C120.4464</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>45851</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Crusade for Freedom: This is Radio Free Europe Bulgarian Christmas carols compilation 1313-T</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1950/2005</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2000C71.94</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>47087</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Music recordings</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1961/2003</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2010C14.27</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>50339</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Lee Edwards interviews Ralph de Toledano on 18 March 1992</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>March 18, 1992</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2010C14.354</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>50666</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Lee Edwards interviews Lew Lehrman on 13 December 1996</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>December 13, 1996</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2010C14.419</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>50731</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Origins of Detente</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1976-06</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Judd, Walter H.</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2014C58.22</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>51000</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Willetts lecture</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>June 23, 1976</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2014C58.23</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>51001</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Vanden Hecvel lecture</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1976-06</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2014C58.24</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>51002</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Willetts lecture</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1976-06</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2014C58.25</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>51003</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>East Asian broadcasts</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1942-03-06/1942-03-07</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>58011.294</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>51738</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Interview with Ricardo Levene</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1960/1999</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>80080.8</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>52625</value>
+</field>
+</object>
+</objects>

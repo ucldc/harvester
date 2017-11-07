@@ -28,6 +28,7 @@ from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 from .flickr_fetcher import Flickr_Fetcher
 from .youtube_fetcher import YouTube_Fetcher
 from .xml_fetcher import XML_Fetcher
+from .emuseum_fetcher import eMuseum_Fetcher
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -47,6 +48,7 @@ HARVEST_TYPES = {
     'FLK': Flickr_Fetcher,  # All public photos fetcher
     'YTB': YouTube_Fetcher,  # by playlist id, use "uploads" list
     'XML': XML_Fetcher,
+    'EMS': eMuseum_Fetcher
 }
 
 
