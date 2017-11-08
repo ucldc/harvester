@@ -658,7 +658,7 @@ def add_facet_decade(couch_doc, solr_doc):
 
 
 class MediaJSONError(ValueError):
-    dict_key = 'Media JSON Error'
+    dict_key = 'Missing reference media file'
 
 
 class MissingMediaJSON(ValueError):
