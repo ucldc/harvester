@@ -835,11 +835,11 @@ def sync_couch_collection_to_solr(collection_key):
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
-        except KeyError, e:
+        except KeyError as e:
             report[e.dict_key] += 1
             print(e.message, file=sys.stderr)
             continue
-        except ValueError, e:
+        except ValueError as e:
             report[e.dict_key] += 1
             print(e.message, file=sys.stderr)
             continue
@@ -847,7 +847,7 @@ def sync_couch_collection_to_solr(collection_key):
         # TODO: here is where to check if existing and compare collection vals
         try:
             check_nuxeo_media(solr_doc)
-        except ValueError, e:
+        except ValueError as e:
             print(e.message, file=sys.stderr)
             report[e.dict_key] += 1
             continue
@@ -919,10 +919,10 @@ def main(url_couchdb=None,
             try:
                 doc = fill_in_title(doc)
                 has_required_fields(doc)
-            except KeyError, e:
+            except KeyError as e:
                 print(e.message)
                 continue
-            except ValueError, e:
+            except ValueError as e:
                 print(e.message)
                 continue
             try:
@@ -933,11 +933,11 @@ def main(url_couchdb=None,
                     continue
                 try:
                     check_nuxeo_media(solr_doc)
-                except ValueError, e:
+                except ValueError as e:
                     print(e.message)
                     continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-            except TypeError, e:
+            except TypeError as e:
                 print('TypeError for {0} : {1}'.format(cur_id, e))
                 continue
         n_up += 1
