@@ -171,7 +171,7 @@ class HarvestController(object):
         }
         try:
             self.couch.update_ingestion_doc(self.ingestion_doc, **kwargs)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Error updating ingestion doc %s in %s" %
                               (self.ingestion_doc["_id"], __name__))
             raise e
@@ -198,7 +198,7 @@ class HarvestController(object):
             self.create_ingest_doc()
         try:
             self.couch.update_ingestion_doc(self.ingestion_doc, **kwargs)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Error updating ingestion doc %s in %s" %
                               (self.ingestion_doc["_id"], __name__))
             raise e
@@ -324,7 +324,7 @@ def main(user_email,
         mail_handler = my_mail_handler
     try:
         collection = Collection(url_api_collection)
-    except Exception, e:
+    except Exception as e:
         msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
                                                            str(e))
         logbook.error(msg)
@@ -367,7 +367,7 @@ def main(user_email,
             profile_path=profile_path,
             config_file=config_file,
             **kwargs)
-    except Exception, e:
+    except Exception as e:
         import traceback
         msg = 'Exception in harvester init: type: {} TRACE:\n{}'.format(
             type(e), traceback.format_exc())
@@ -392,7 +392,7 @@ def main(user_email,
             mail_handler.deliver(mimetext, 'mredar@gmail.com')
         except:
             pass
-    except Exception, e:
+    except Exception as e:
         import traceback
         error_msg = ''.join(("Error while harvesting: type-> ", str(type(e)),
                              " TRACE:\n" + str(traceback.format_exc())))

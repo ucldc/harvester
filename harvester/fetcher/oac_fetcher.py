@@ -151,7 +151,7 @@ class OAC_XML_Fetcher(Fetcher):
             try:
                 resp = urllib.urlopen(self._url_current)
                 break
-            except DecodeError, e:
+            except DecodeError as e:
                 n_tries += 1
                 if n_tries > 5:
                     raise e

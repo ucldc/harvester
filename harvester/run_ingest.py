@@ -100,7 +100,7 @@ def main(user_email,
 
     try:
         collection = Collection(url_api_collection)
-    except Exception, e:
+    except Exception as e:
         msg = 'Exception in Collection {}, init {}'.format(url_api_collection,
                                                            str(e))
         logbook.error(msg)

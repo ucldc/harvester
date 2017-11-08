@@ -204,7 +204,7 @@ def make_datetime(dstring):
         dt = datetime.datetime(dint, 1, 1)
     except ValueError:
         pass
-    except TypeError, e:
+    except TypeError as e:
         print(
             'Date type err DATA:{} ERROR:{}'.format(dstring, e),
             file=sys.stderr)
@@ -213,7 +213,7 @@ def make_datetime(dstring):
         dt = datetime.datetime.strptime(dstring, strfmt)
     except ValueError:
         pass
-    except TypeError, e:
+    except TypeError as e:
         print(
             'Date type err in strptime:{} {}'.format(dstring, e),
             file=sys.stderr)
@@ -638,7 +638,7 @@ def add_facet_decade(couch_doc, solr_doc):
                 try:
                     facet_decades = get_facet_decades(date)
                     solr_doc['facet_decade'] = facet_decades
-                except AttributeError, e:
+                except AttributeError as e:
                     print(
                         'Attr Error for facet_decades in doc:{} ERROR:{}'.
                         format(couch_doc['_id'], e),
@@ -647,7 +647,7 @@ def add_facet_decade(couch_doc, solr_doc):
             try:
                 facet_decades = get_facet_decades(date_field)
                 solr_doc['facet_decade'] = facet_decades
-            except AttributeError, e:
+            except AttributeError as e:
                 print(
                     'Attr Error for doc:{} ERROR:{}'.format(couch_doc['_id'],
                                                             e),
@@ -674,16 +674,16 @@ def check_nuxeo_media(doc):
     # check that there is an object at the structmap_url
     try:
         MediaJson(doc['structmap_url']).check_media()
-    except ClientError, e:
+    except ClientError as e:
         message = '---- OMITTED: Doc:{} missing media json {}'.format(
             doc['harvest_id_s'],
-            e.message)
+            e)
         print(message, file=sys.stderr)
         raise MissingMediaJSON(message)
-    except ValueError, e:
+    except ValueError as e:
         message = '---- OMITTED: Doc:{} Missing reference media file: {}'.format(
             doc['harvest_id_s'],
-            e.message)
+            e)
         print(message, file=sys.stderr)
         raise MediaJSONError(message)
 
@@ -696,7 +696,7 @@ def map_couch_to_solr_doc(doc):
         if p in COUCHDOC_TO_SOLR_MAPPING:
             try:
                 solr_doc.update(COUCHDOC_TO_SOLR_MAPPING[p](doc))
-            except TypeError, e:
+            except TypeError as e:
                 print(
                     'TypeError for doc {} on COUCHDOC_TO_SOLR_MAPPING {}'.
                     format(doc['_id'], p),
@@ -711,7 +711,7 @@ def map_couch_to_solr_doc(doc):
             try:
                 solr_doc.update(COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING[p](
                     sourceResource))
-            except TypeError, e:
+            except TypeError as e:
                 print(
                     'TypeError for doc {} on sourceResource {}'.format(
                         doc['_id'], p),
@@ -723,7 +723,7 @@ def map_couch_to_solr_doc(doc):
             try:
                 solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[k](originalRecord))
 
-            except TypeError, e:
+            except TypeError as e:
                 print(
                     'TypeError for doc {} on originalRecord {}'.format(
                         doc['_id'], k),
@@ -735,7 +735,7 @@ def map_couch_to_solr_doc(doc):
                     try:
                         solr_doc.update(COUCHDOC_ORIGINAL_RECORD_TO_SOLR_MAPPING[p](
                             originalRecord))
-                    except TypeError, e:
+                    except TypeError as e:
                         print(
                             'TypeError for doc {} on originalRecord {}'.format(
                                 doc['_id'], p),
@@ -757,7 +757,7 @@ def push_doc_to_solr(solr_doc, solr_db):
             "++++ ADDED: {} :harvest_id_s {}".format(solr_doc['id'],
                                                      solr_doc['harvest_id_s']),
             file=sys.stderr)
-    except SolrException, e:
+    except SolrException as e:
         print(
             "ERROR for {} : {} {} {}".format(solr_doc['id'], e,
                                              solr_doc['collection_url'],
@@ -835,11 +835,11 @@ def sync_couch_collection_to_solr(collection_key):
         try:
             fill_in_title(r.doc)
             has_required_fields(r.doc)
-        except KeyError, e:
+        except KeyError as e:
             report[e.dict_key] += 1
             print(e.message, file=sys.stderr)
             continue
-        except ValueError, e:
+        except ValueError as e:
             report[e.dict_key] += 1
             print(e.message, file=sys.stderr)
             continue
@@ -847,7 +847,7 @@ def sync_couch_collection_to_solr(collection_key):
         # TODO: here is where to check if existing and compare collection vals
         try:
             check_nuxeo_media(solr_doc)
-        except ValueError, e:
+        except ValueError as e:
             print(e.message, file=sys.stderr)
             report[e.dict_key] += 1
             continue
@@ -919,10 +919,10 @@ def main(url_couchdb=None,
             try:
                 doc = fill_in_title(doc)
                 has_required_fields(doc)
-            except KeyError, e:
+            except KeyError as e:
                 print(e.message)
                 continue
-            except ValueError, e:
+            except ValueError as e:
                 print(e.message)
                 continue
             try:
@@ -933,11 +933,11 @@ def main(url_couchdb=None,
                     continue
                 try:
                     check_nuxeo_media(solr_doc)
-                except ValueError, e:
+                except ValueError as e:
                     print(e.message)
                     continue
                 solr_doc = push_doc_to_solr(solr_doc, solr_db=solr_db)
-            except TypeError, e:
+            except TypeError as e:
                 print('TypeError for {0} : {1}'.format(cur_id, e))
                 continue
         n_up += 1

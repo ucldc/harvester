@@ -13,7 +13,7 @@ def _get_source(doc):
     try:
         source = doc['originalRecord']['collection'][0]['@id']
         return source
-    except KeyError, e:
+    except KeyError as e:
         print("No originalRecord.collection for document ID: {}".format(
                                     doc['_id']))
         print("KEYS:{}".format(doc['originalRecord'].keys()))

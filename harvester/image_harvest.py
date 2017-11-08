@@ -121,7 +121,7 @@ def stash_image_for_doc(doc,
             raise IsShownByError(
                 "isShownBy empty for {0}".format(doc['_id']),
                 doc_id=doc['_id'])
-    except KeyError, e:
+    except KeyError as e:
         raise IsShownByError(
             "isShownBy missing for {0}".format(doc['_id']), doc_id=doc['_id'])
     if isinstance(url_image, list):  # need to fix marc map_is_shown_at
@@ -152,7 +152,7 @@ def stash_image_for_doc(doc,
                     url_cache=url_cache,
                     hash_cache=hash_cache)
                 reports.append(report)
-            except TypeError, e:
+            except TypeError as e:
                 print >> sys.stderr, 'TypeError for doc:{} {} Msg: {} Args:' \
                     ' {}'.format(
                         doc['_id'], url_image, e.message, e.args)
@@ -220,7 +220,7 @@ class ImageHarvester(object):
         doc['object_dimensions'] = report.dimensions
         try:
             self._couchdb.save(doc)
-        except ResourceConflict, e:
+        except ResourceConflict as e:
             msg = 'ResourceConflictfor doc: {} - {}'.format(doc[
                 '_id'], e.message)
             print >> sys.stderr, msg
@@ -257,7 +257,7 @@ class ImageHarvester(object):
                     reports[0].md5, reports[0].dimensions
                 ]
                 self.update_doc_object(doc, reports[0])
-        except IOError, e:
+        except IOError as e:
             print >> sys.stderr, e
         return reports
 
@@ -268,7 +268,7 @@ class ImageHarvester(object):
         report_errors = defaultdict(list)
         try:
             reports = self.harvest_image_for_doc(doc, force=True)
-        except ImageHarvestError, e:
+        except ImageHarvestError as e:
             report_errors[e.dict_key].append((e.doc_id, str(e)))
         dt_end = datetime.datetime.now()
         time.sleep((dt_end - dt_start).total_seconds())
@@ -294,7 +294,7 @@ class ImageHarvester(object):
             dt_start = dt_end = datetime.datetime.now()
             try:
                 reports = self.harvest_image_for_doc(r.doc)
-            except ImageHarvestError, e:
+            except ImageHarvestError as e:
                 report_errors[e.dict_key].append((e.doc_id, str(e)))
             doc_ids.append(r.doc['_id'])
             dt_end = datetime.datetime.now()
