@@ -508,7 +508,7 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
         mock_mediajson.side_effect = ValueError
         self.assertRaisesRegexp(
             MediaJSONError,
-            '---- OMITTED: Doc:a-UUID Error in media json ',
+            '---- OMITTED: Doc:a-UUID Missing reference media file: ',
             check_nuxeo_media, doc)
 
 
@@ -649,5 +649,5 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
             'Missing SourceResource': 2,
             'isShownAt not a URL': 2,
             'Missing Rights': 2,
-            'Media JSON Error': 2
+            'Missing reference media file': 2
         })
