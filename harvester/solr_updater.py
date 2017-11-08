@@ -681,7 +681,7 @@ def check_nuxeo_media(doc):
         print(message, file=sys.stderr)
         raise MissingMediaJSON(message)
     except ValueError, e:
-        message = '---- OMITTED: Doc:{} Error in media json {}'.format(
+        message = '---- OMITTED: Doc:{} Missing reference media file: {}'.format(
             doc['harvest_id_s'],
             e.message)
         print(message, file=sys.stderr)
