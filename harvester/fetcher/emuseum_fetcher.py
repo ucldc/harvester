@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import httplib
-import urllib
 import requests
 import re
 import ssl
+import logging
 from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
@@ -16,7 +16,7 @@ class eMuseum_Fetcher(Fetcher):
 
     def __init__(self, url_harvest, extra_data, **kwargs):
         self.url_base = url_harvest
-        self.page_current = 4515
+        self.page_current = 1
         self.doc_current = 1
         self.docs_fetched = 0
 
@@ -26,31 +26,47 @@ class eMuseum_Fetcher(Fetcher):
         return '{0}{1}{2}'.format(self.url_base, quote_param, self.page_current)
 
     def _dochits_to_objset(self, docHits):
-        '''Returns list of objects.
+        '''Returns list of objects. Use 'name' attribute
+        as JSON field name and 'value' as main 'text' field in CouchDB; save any other attributes as nested dict 'attrib'
         '''
         objset = []
         # iterate through docHits
         for d in docHits:
-            # doc = d.find()
+            numb = 1
             obj = {}
+            attributes = {}
             obj_mdata = defaultdict(list)
-            for mdata in d.iter():
-                logger.error(mdata.text)
-            obj['metadata'] = dict(obj_mdata)
+            for mdata in d:
+                '''assign CouchDB fieldname from what's available, else use iterative unknown'''
+                if 'name' in mdata.attrib:
+                    md_fieldname = mdata.attrib['name']
+                elif 'label' in mdata.attrib:
+                    md_fieldname = mdata.attrib['label']
+                else:
+                    md_fieldname = ''.join('unknown', numb)
+                    numb += 1
+                for value in mdata:
+                    obj_mdata['text'] = value.text
+                for att in mdata.attrib:
+                    if 'name' not in att:
+                        att_dict = {att: mdata.attrib[att]}
+                        attributes.update(att_dict)
+                obj_mdata['attrib'] = dict(attributes)
+                attributes.clear()
+                obj[md_fieldname] = dict(obj_mdata)
             objset.append(obj)
         return objset
 
     def next(self):
         '''get next objset, use etree to pythonize. Stop
         iterating when no more <object>s are found'''
-        # httplib.HTTPConnection.debuglevel = 1
+        xml = requests.get(self.url_current).text
         logger.error(self.url_current)
-        xml = urllib.urlopen(self.url_current).read()
         total = re.findall('<object>', xml)
         self.docs_total = len(total)
         if self.docs_total == 0:
             raise StopIteration
-        tree = ET.fromstring(xml)
+        tree = ET.fromstring(xml.encode('utf-8'))
         hits = tree.findall(
             "object")
         self.page_current += 1

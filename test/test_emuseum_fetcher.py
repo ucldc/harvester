@@ -13,34 +13,23 @@ class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     def testFetch(self):
-        '''Test the httpretty mocked fetching of documents'''
-        url = 'http://digitalcollections.hoover.org'
         httpretty.register_uri(
-                httpretty.GET,
-                url,
-                responses=[
-                    httpretty.Response(
-                        body=open(
-                        DIR_FIXTURES +
-                        '/eMuseum-page-1.xml')
-                        .read()),
-                    httpretty.Response(
-                        body=open(
-                        DIR_FIXTURES +
-                        '/eMuseum-page-2.xml')
-                        .read()),
-                    httpretty.Response(
-                        body=open(
-                        DIR_FIXTURES +
-                        '/eMuseum-page-3.xml')
-                        .read())
+            httpretty.POST,
+            'http://digitalcollections.hoover.org/search/*/objects/xml?filter=approved:true&page=1',
+            responses=[
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/eMuseum-page-1.xml').read()),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/eMuseum-page-2.xml').read()),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/eMuseum-page-3.xml').read()),
                 ]
-        )
+            )
+        url = 'http://digitalcollections.hoover.org'
         h = fetcher.eMuseum_Fetcher(url, None)
         self.assertEqual(h.url_base, url)
         docs = []
         d = h.next()
-        self.assertEqual(len(d), 12)
         docs.extend(d)
         for d in h:
             docs.extend(d)

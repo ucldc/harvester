@@ -17,6 +17,7 @@ from .flickr_fetcher import Flickr_Fetcher
 from .youtube_fetcher import YouTube_Fetcher
 from .xml_fetcher import XML_Fetcher
 from .emuseum_fetcher import eMuseum_Fetcher
+from .FAKE_fetcher import FAKE_Fetcher
 from .controller import HARVEST_TYPES
 from .controller import HarvestController
 from .controller import get_log_file_path
@@ -41,6 +42,7 @@ __all__ = (
         CMISAtomFeedFetcher,
         HarvestController,
         XML_Fetcher,
+        FAKE_Fetcher,
         eMuseum_Fetcher,
         PySolrQueryFetcher,
         Flickr_Fetcher,
