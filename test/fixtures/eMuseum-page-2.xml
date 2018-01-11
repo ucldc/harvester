@@ -8,11 +8,12 @@
 </field>
 <field label="Date Created" order="0" name="displayDate">
 <value>1960/1999</value>
+<value>2016</value>
 </field>
-<field label="Record Number" order="0" name="invno">
+<field>
 <value>80080.97</value>
 </field>
-<field label="Id" order="0" name="id">
+<field order="0">
 <value>52714</value>
 </field>
 </object>

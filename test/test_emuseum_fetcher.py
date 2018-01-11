@@ -5,7 +5,6 @@ from mypretty import httpretty
 import harvester.fetcher as fetcher
 from test.utils import DIR_FIXTURES
 from test.utils import LogOverrideMixin
-from akara import logger
 
 
 class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
@@ -14,7 +13,7 @@ class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
     @httpretty.activate
     def testFetch(self):
         httpretty.register_uri(
-            httpretty.POST,
+            httpretty.GET,
             'http://digitalcollections.hoover.org/search/*/objects/xml?filter=approved:true&page=1',
             responses=[
                 httpretty.Response(
@@ -23,8 +22,7 @@ class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
                     body=open(DIR_FIXTURES + '/eMuseum-page-2.xml').read()),
                 httpretty.Response(
                     body=open(DIR_FIXTURES + '/eMuseum-page-3.xml').read()),
-                ]
-            )
+            ])
         url = 'http://digitalcollections.hoover.org'
         h = fetcher.eMuseum_Fetcher(url, None)
         self.assertEqual(h.url_base, url)
@@ -33,12 +31,14 @@ class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
         docs.extend(d)
         for d in h:
             docs.extend(d)
-        self.assertEqual(len(docs), 64)
-        test1 = docs[0]
-        self.assertIn('title', test1['metadata'])
-        self.assertEqual(test1['metadata']['title'], [
-            'AF Afghani Service ID'
-        ])
+        self.assertEqual(len(docs), 24)
+        test1 = docs[12]
+        self.assertIn('title', test1)
+        self.assertEqual(test1['title']['text'],
+                         'Interview with Carolina and Mauricio Nabuco')
+        self.assertIn('unknown2', test1)
+        self.assertIn('text2', test1['displayDate'])
+        self.assertNotIn('attrib', test1['unknown1'])
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.

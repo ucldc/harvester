@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-import httplib
 import requests
 import re
-import ssl
-import logging
 from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
-from akara import logger
 
 
 class eMuseum_Fetcher(Fetcher):
@@ -23,7 +19,8 @@ class eMuseum_Fetcher(Fetcher):
     @property
     def url_current(self):
         quote_param = '/search/*/objects/xml?filter=approved%3Atrue&page='
-        return '{0}{1}{2}'.format(self.url_base, quote_param, self.page_current)
+        return '{0}{1}{2}'.format(self.url_base, quote_param,
+                                  self.page_current)
 
     def _dochits_to_objset(self, docHits):
         '''Returns list of objects. Use 'name' attribute
@@ -32,7 +29,8 @@ class eMuseum_Fetcher(Fetcher):
         objset = []
         # iterate through docHits
         for d in docHits:
-            numb = 1
+            fieldnumb = 1
+            textnumb = 1
             obj = {}
             attributes = {}
             obj_mdata = defaultdict(list)
@@ -43,17 +41,24 @@ class eMuseum_Fetcher(Fetcher):
                 elif 'label' in mdata.attrib:
                     md_fieldname = mdata.attrib['label']
                 else:
-                    md_fieldname = ''.join('unknown', numb)
-                    numb += 1
+                    md_fieldname = ''.join(('unknown', str(fieldnumb)))
+                    fieldnumb += 1
                 for value in mdata:
-                    obj_mdata['text'] = value.text
+                    if len(mdata) > 1:
+                        txt_fieldname = ''.join(('text', str(textnumb)))
+                        obj_mdata[txt_fieldname] = value.text
+                        textnumb += 1
+                    else:
+                        obj_mdata['text'] = value.text
                 for att in mdata.attrib:
                     if 'name' not in att:
                         att_dict = {att: mdata.attrib[att]}
                         attributes.update(att_dict)
-                obj_mdata['attrib'] = dict(attributes)
+                if mdata.attrib:
+                    obj_mdata['attrib'] = dict(attributes)
                 attributes.clear()
                 obj[md_fieldname] = dict(obj_mdata)
+                obj_mdata.clear()
             objset.append(obj)
         return objset
 
@@ -61,17 +66,14 @@ class eMuseum_Fetcher(Fetcher):
         '''get next objset, use etree to pythonize. Stop
         iterating when no more <object>s are found'''
         xml = requests.get(self.url_current).text
-        logger.error(self.url_current)
         total = re.findall('<object>', xml)
         self.docs_total = len(total)
         if self.docs_total == 0:
             raise StopIteration
         tree = ET.fromstring(xml.encode('utf-8'))
-        hits = tree.findall(
-            "object")
+        hits = tree.findall("object")
         self.page_current += 1
         return self._dochits_to_objset(hits)
-
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
