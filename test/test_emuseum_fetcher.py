@@ -35,9 +35,9 @@ class eMuseumFetcherTestCase(LogOverrideMixin, TestCase):
         test1 = docs[12]
         self.assertIn('title', test1)
         self.assertEqual(test1['title']['text'],
-                         'Interview with Carolina and Mauricio Nabuco')
+                         'Money is power.  A war savings certificate in every Canadian home.  Get yours now at post offices or banks.')
         self.assertIn('unknown2', test1)
-        self.assertIn('text2', test1['displayDate'])
+        self.assertIn('text2', test1['primaryMaker'])
         self.assertNotIn('attrib', test1['unknown1'])
 
 # Copyright © 2016, Regents of the University of California

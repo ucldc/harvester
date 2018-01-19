@@ -5,7 +5,6 @@ from xml.etree import ElementTree as ET
 from collections import defaultdict
 from .fetcher import Fetcher
 
-
 class eMuseum_Fetcher(Fetcher):
     '''Paginates through eMuseum API XML search results until
         no more records are found'''

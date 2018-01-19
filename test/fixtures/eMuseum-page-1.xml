@@ -1,212 +1,350 @@
 <objects xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/596/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>AF Afghani Service ID</value>
+<value>California Earthquake Hazard Reduction</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1951/2005</value>
+<value>December 08, 1985</value>
 </field>
 <field label="Primary Maker" order="3" name="primaryMaker">
-<value>RFE/RL. Radio Free Afghanistan</value>
+<value>Bolt, Bruce A.</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>2000C120.4463</value>
+<value>2003C87.1384</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>45850</value>
+<value>1695</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/597/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>Interview with Dina Kaminskaya</value>
+<value>California and the World of Wine</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1977-11-13/1977-11-16</value>
-</field>
-<field label="Record Number" order="0" name="invno">
-<value>2000C120.4464</value>
-</field>
-<field label="Id" order="0" name="id">
-<value>45851</value>
-</field>
-</object>
-<object>
-<field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
-</field>
-<field label="Item Title" order="2" name="title">
-<value>Crusade for Freedom: This is Radio Free Europe Bulgarian Christmas carols compilation 1313-T</value>
-</field>
-<field label="Date Created" order="0" name="displayDate">
-<value>1950/2005</value>
-</field>
-<field label="Record Number" order="0" name="invno">
-<value>2000C71.94</value>
-</field>
-<field label="Id" order="0" name="id">
-<value>47087</value>
-</field>
-</object>
-<object>
-<field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
-</field>
-<field label="Item Title" order="2" name="title">
-<value>Music recordings</value>
-</field>
-<field label="Date Created" order="0" name="displayDate">
-<value>1961/2003</value>
-</field>
-<field label="Record Number" order="0" name="invno">
-<value>2010C14.27</value>
-</field>
-<field label="Id" order="0" name="id">
-<value>50339</value>
-</field>
-</object>
-<object>
-<field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
-</field>
-<field label="Item Title" order="2" name="title">
-<value>Lee Edwards interviews Ralph de Toledano on 18 March 1992</value>
-</field>
-<field label="Date Created" order="0" name="displayDate">
-<value>March 18, 1992</value>
-</field>
-<field label="Record Number" order="0" name="invno">
-<value>2010C14.354</value>
-</field>
-<field label="Id" order="0" name="id">
-<value>50666</value>
-</field>
-</object>
-<object>
-<field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
-</field>
-<field label="Item Title" order="2" name="title">
-<value>Lee Edwards interviews Lew Lehrman on 13 December 1996</value>
-</field>
-<field label="Date Created" order="0" name="displayDate">
-<value>December 13, 1996</value>
-</field>
-<field label="Record Number" order="0" name="invno">
-<value>2010C14.419</value>
-</field>
-<field label="Id" order="0" name="id">
-<value>50731</value>
-</field>
-</object>
-<object>
-<field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
-</field>
-<field label="Item Title" order="2" name="title">
-<value>Origins of Detente</value>
-</field>
-<field label="Date Created" order="0" name="displayDate">
-<value>1976-06</value>
+<value>September 28, 1984</value>
 </field>
 <field label="Primary Maker" order="3" name="primaryMaker">
-<value>Judd, Walter H.</value>
+<value>Mondavi, Robert</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>2014C58.22</value>
+<value>2003C87.1279</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>51000</value>
+<value>1590</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/598/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>Willetts lecture</value>
+<value>California's Changing Image: Gold to Silicon</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>June 23, 1976</value>
+<value>September 05, 1986</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Holliday, J. S.</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>2014C58.23</value>
+<value>2003C87.1444</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>51001</value>
+<value>1755</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/599/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>Vanden Hecvel lecture</value>
+<value>California's Legislative Process: Last Year and Next Year</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1976-06</value>
+<value>December 14, 1988</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Speier, Jackie</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>2014C58.24</value>
+<value>2003C87.1693</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>51002</value>
+<value>2004</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/600/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>Willetts lecture</value>
+<value>Progress in Removing Earthquake Risks</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1976-06</value>
+<value>March 02, 1990</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Bolt, Bruce A.</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>2014C58.25</value>
+<value>2003C87.1813</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>51003</value>
+<value>2124</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/606/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>East Asian broadcasts</value>
+<value>BART: Countdown to San Francisco</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1942-03-06/1942-03-07</value>
+<value>February 15, 1974</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Wattenberg, Bill H.</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>58011.294</value>
+<value>2003C87.629</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>51738</value>
+<value>530</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
 </field>
 </object>
 <object>
 <field label="primaryMedia" order="1" name="primaryMedia">
-<value>/internal/media/dispatcher/-1/resize%3Aformat%3Dpreview</value>
+<value>/internal/media/dispatcher/607/resize%3Aformat%3Dpreview</value>
 </field>
 <field label="Item Title" order="2" name="title">
-<value>Interview with Ricardo Levene</value>
+<value>Bye-Bye Baby</value>
 </field>
 <field label="Date Created" order="0" name="displayDate">
-<value>1960/1999</value>
+<value>March 19, 1976</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Lurie, Robert A.</value>
 </field>
 <field label="Record Number" order="0" name="invno">
-<value>80080.8</value>
+<value>2003C87.744</value>
 </field>
 <field label="Id" order="0" name="id">
-<value>52625</value>
+<value>645</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/608/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>California 2000</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>January 13, 1978</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>McCarthy, Leo T.</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2003C87.842</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>743</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/609/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Does California Need Proposition 15, the Gun Registration Initiative?</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>September 29, 1982</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Rainey, Richard</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2003C87.1131</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>1442</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/610/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Discussion of Propositions 8 and 13</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>May 12, 1978</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Jarvis, Howard</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>2003C87.859</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>1170</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Commonwealth Club of California records</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>0</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3331/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war savings certificate in every Canadian home.  Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1901</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11525</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3334/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war savings certificate in every Canadian home.  Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1903</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11527</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
 </field>
 </object>
 </objects>
