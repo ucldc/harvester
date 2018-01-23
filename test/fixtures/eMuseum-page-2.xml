@@ -1,0 +1,342 @@
+<objects xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3337/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war savings certificate in every Canadian home.  Get yours now at post offices or banks.</value>
+</field>
+<field>
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+<value>TestMaker</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1904</value>
+</field>
+<field order="0">
+<value>11528</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3340/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war saving certificate in every Canadian home.  Get yours now at Post Offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1905</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11529</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3343/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war saving certificate in every Canadian home.  Get yours now at Post Offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1906</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11530</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3346/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power. A war savings certificate in every Canadian home. Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1907</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11531</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3349/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power. A war savings certificate in every Canadian home. Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1908</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11532</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3352/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power. A war savings certificate in every Canadian home. Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1909</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11533</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3355/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power. A war savings certificate in every Canadian home. Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1910</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11534</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3358/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Money is power.  A war savings certificate in every Canadian home.  Get yours now at post offices or banks.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>National Service Board of Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1911</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11535</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3361/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Come on boys - join the great throng that's marching along. 6,000 boys are pledging themselves to earn and give ten dollars each ... for YMCA war work ...</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1912</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11536</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3367/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Canadian YMCA finances.  What your money did last year, what your Y.M.C.A. plans to do this year. ... Y.M.C.A. receipts during 1918: ... Y.M.C.A. budget for 1919 ... .</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1918?</value>
+</field>
+<field label="Primary Maker" order="3" name="primaryMaker">
+<value>Young Men's Christian Associations. Canada</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1914</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11538</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3370/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Champs-Elysees Theatre, Salle A Concert ... The "Eegrek em. see ah" Canadian on Saturday ... present the great Canadian 3rd Brigade Garrison Artillery concert company in a revue ... Open to allied troops.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1915</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11539</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+<object>
+<field label="primaryMedia" order="1" name="primaryMedia">
+<value>/internal/media/dispatcher/3373/resize%3Aformat%3Dpreview</value>
+</field>
+<field label="Item Title" order="2" name="title">
+<value>Peace means that Daddy will come home. Bring him back with victory bonds.</value>
+</field>
+<field label="Date Created" order="0" name="displayDate">
+<value>1914/1918?</value>
+</field>
+<field label="Record Number" order="0" name="invno">
+<value>XX343.1916</value>
+</field>
+<field label="Id" order="0" name="id">
+<value>11540</value>
+</field>
+<field label="Online only" order="15" name="approved">
+<value>1</value>
+</field>
+<field label="Collection Title" order="4" name="collectionTitle">
+<value>Poster collection</value>
+</field>
+<field order="0" name="parentCollectionId">
+<value>310</value>
+</field>
+</object>
+</objects>
