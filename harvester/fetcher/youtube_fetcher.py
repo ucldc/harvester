@@ -6,13 +6,14 @@ from .fetcher import Fetcher
 
 class YouTube_Fetcher(Fetcher):
     '''A fetcher for the youtube API.
-    Find the "upload" playlist id for the user.
-    This will be the extra_data value in the registry.
-    Put a dummy URL in harvest url
+    Find and put one of the IDs in the 'extra_data' field, depending on the type of harvest you want:
 
-    PLAYLIST ID (for harvesting from a single playlist): Navigate to the YouTube user’s home page and click “playlists”. Find the playlist you wish to harvest and click “Play All”. The URL of the resulting page will include the Playlist ID following the “list=” parameter, beginning with PL. Example: https://www.youtube.com/watch?v=CNCmIMeASk0&list=PLiCFxUIHgTjXT_tJGE-h8V1PIMcr6FLXI
+    PLAYLIST ID (for harvesting from a single playlist): Put a dummy URL in harvest url field. Navigate to the YouTube user’s home page and click “playlists”. Find the playlist you wish to harvest and click “Play All”. The URL of the resulting page will include the Playlist ID following the “list=” parameter, beginning with PL. Example: https://www.youtube.com/watch?v=CNCmIMeASk0&list=PLiCFxUIHgTjXT_tJGE-h8V1PIMcr6FLXI
 
-    USER UPLOAD ID (for harvesting all videos from a user’s account): Navigate to the video page for any video uploaded by the user. Beneath the video, click the hyperlinked username. DO NOT click the round image for the user, as this will take you to a separate user page. Clicking the hyperlinked username will take you to a URL with the user’s Channel ID after “/channel”, beginning with UC. Example: https://www.youtube.com/channel/UC4iOlcoyvdpGKda86Ih9M1w . To turn this into the user upload ID, replace the second letter “C” with a “U”--for the above example, you get UU4iOlcoyvdpGKda86Ih9M1w
+    USER UPLOAD ID (for harvesting all videos from a user’s account): Put a dummy URL in harvest url field. Navigate to the video page for any video uploaded by the user. Beneath the video, click the hyperlinked username. DO NOT click the round image for the user, as this will take you to a separate user page. Clicking the hyperlinked username will take you to a URL with the user’s Channel ID after “/channel”, beginning with UC. Example: https://www.youtube.com/channel/UC4iOlcoyvdpGKda86Ih9M1w . To turn this into the user upload ID, replace the second letter “C” with a “U”--for the above example, you get UU4iOlcoyvdpGKda86Ih9M1w
+
+    VIDEO ID (for harvesting a single YouTube video): Put "Single" in the harvest url field to indicate single video harvesting. Navigate to the video page; the URL will include the video ID following the "v=" parameter. Example:
+    https://www.youtube.com/watch?v=GCqS7DhJrzA
 
     '''
 
