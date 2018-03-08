@@ -1,0 +1,23 @@
+{
+ "kind": "youtube#videoListResponse",
+ "etag": "\"m2yskBQFythfE4irbTIeOgYYfBU/0Vu1NlS-26nIj3vHVb6zVywRaSs\"",
+ "pageInfo": {
+  "totalResults": 3,
+  "resultsPerPage": 3
+ },
+ "items": [
+  {
+   "kind": "youtube#video",
+   "etag": "\"m2yskBQFythfE4irbTIeOgYYfBU/-3AtVAYcRLEynWZprpf0OGaY8zo\"",
+   "id": "0Yx8zrbsUu8",
+   "contentDetails": {
+    "duration": "PT19M35S",
+    "dimension": "2d",
+    "definition": "sd",
+    "caption": "false",
+    "licensedContent": true,
+    "projection": "rectangular"
+   }
+  }
+ ]
+}

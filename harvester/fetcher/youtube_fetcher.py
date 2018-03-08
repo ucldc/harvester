@@ -4,7 +4,6 @@ import urllib
 import json
 from .fetcher import Fetcher
 
-
 class YouTube_Fetcher(Fetcher):
     '''A fetcher for the youtube API.
     Find the "upload" playlist id for the user.
@@ -34,24 +33,31 @@ class YouTube_Fetcher(Fetcher):
     def next(self):
         try:
             nextPageToken = self.playlistitems['nextPageToken']
-        except KeyError:
+        except KeyError as err:
             raise StopIteration
-        self.playlistitems = json.loads(
-            urllib.urlopen(
-                self.url_playlistitems.format(
-                    api_key=self.api_key,
-                    page_size=self.page_size,
-                    playlist_id=self.playlist_id,
-                    page_token=nextPageToken)).read())
-        video_ids = [
-            i['contentDetails']['videoId'] for i in self.playlistitems['items']
-        ]
-        video_items = json.loads(
-            urllib.urlopen(
-                self.url_video.format(
-                    api_key=self.api_key, video_ids=','.join(video_ids))).read(
-                ))['items']
-        return video_items
+        # Single video harvesting, don't need playlist page
+        if self.url_base.lower() == 'single':
+            video_items = json.loads(
+                urllib.urlopen(self.url_video.format(
+                    api_key=self.api_key, video_ids=self.playlist_id)).read())['items']
+            # Delete nextPageToken to stop iteration
+            del self.playlistitems['nextPageToken']
+            return video_items
+        else:
+            self.playlistitems = json.loads(
+                urllib.urlopen(
+                    self.url_playlistitems.format(
+                        api_key=self.api_key,
+                        page_size=self.page_size,
+                        playlist_id=self.playlist_id,
+                        page_token=nextPageToken)).read())
+            video_ids = [
+                i['contentDetails']['videoId'] for i in self.playlistitems['items']
+            ]
+            video_items = json.loads(
+                urllib.urlopen(self.url_video.format(
+                    api_key=self.api_key, video_ids=','.join(video_ids))).read())['items']
+            return video_items
 
 
 # Copyright © 2017, Regents of the University of California

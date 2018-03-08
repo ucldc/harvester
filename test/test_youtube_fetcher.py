@@ -62,7 +62,8 @@ class YouTubeFetcherTestCase(LogOverrideMixin, TestCase):
             responses=[
                 httpretty.Response(
                     body=open(DIR_FIXTURES +
-                              '/youtube_playlist_with_next.json').read(),
+                    '/youtube_playlist_with_next.json')
+                    .read(),
                     status=200),
                 httpretty.Response(
                     body=open(DIR_FIXTURES + '/youtube_playlist_no_next.json')
@@ -72,19 +73,47 @@ class YouTubeFetcherTestCase(LogOverrideMixin, TestCase):
         httpretty.register_uri(
             httpretty.GET,
             url_vids,
-            responses=[
-                httpretty.Response(
-                    body=open(DIR_FIXTURES + '/youtube_video.json').read(),
-                    status=200),
-                httpretty.Response(
-                    body=open(DIR_FIXTURES + '/youtube_video.json').read(),
-                    status=200),
-            ])
+            body=open(DIR_FIXTURES + '/youtube_video.json').read(),
+            status=200)
         h = fetcher.YouTube_Fetcher(url, playlist_id, page_size=page_size)
         vids = []
         for v in h:
             vids.extend(v)
         self.assertEqual(len(vids), 6)
+        self.assertEqual(vids[0], {
+            u'contentDetails': {
+                u'definition': u'sd',
+                u'projection': u'rectangular',
+                u'caption': u'false',
+                u'duration': u'PT19M35S',
+                u'licensedContent': True,
+                u'dimension': u'2d'
+            },
+            u'kind': u'youtube#video',
+            u'etag':
+            u'"m2yskBQFythfE4irbTIeOgYYfBU/-3AtVAYcRLEynWZprpf0OGaY8zo"',
+            u'id': u'0Yx8zrbsUu8'
+        })
+
+    @httpretty.activate
+    def test_single_fetching(self):
+        url = 'Single'
+        playlist_id = 'PLwtrWl_IBMJtjP5zMk6dVR-BRjzKqCPOM'
+        url_vids = fetcher.YouTube_Fetcher.url_video
+        # Ugly but works
+        httpretty.register_uri(
+            httpretty.GET,
+            url_vids,
+            responses=[
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/youtube_single_video.json').read(),
+                    status=200)
+            ])
+        h = fetcher.YouTube_Fetcher(url, playlist_id)
+        vids = []
+        for v in h:
+            vids.extend(v)
+        self.assertEqual(len(vids), 1)
         self.assertEqual(vids[0], {
             u'contentDetails': {
                 u'definition': u'sd',
