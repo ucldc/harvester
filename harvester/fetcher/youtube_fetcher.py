@@ -12,7 +12,7 @@ class YouTube_Fetcher(Fetcher):
 
     USER UPLOAD ID (for harvesting all videos from a user’s account): Put a dummy URL in harvest url field. Navigate to the video page for any video uploaded by the user. Beneath the video, click the hyperlinked username. DO NOT click the round image for the user, as this will take you to a separate user page. Clicking the hyperlinked username will take you to a URL with the user’s Channel ID after “/channel”, beginning with UC. Example: https://www.youtube.com/channel/UC4iOlcoyvdpGKda86Ih9M1w . To turn this into the user upload ID, replace the second letter “C” with a “U”--for the above example, you get UU4iOlcoyvdpGKda86Ih9M1w
 
-    VIDEO ID (for harvesting a single YouTube video): Put "Single" in the harvest url field to indicate single video harvesting. Navigate to the video page; the URL will include the video ID following the "v=" parameter. Example:
+    VIDEO ID (for harvesting a single YouTube video): Put "http://single.edu" in the harvest url field to indicate single video harvesting, as this field requires a URL. Navigate to the video page; the URL will include the video ID following the "v=" parameter. Example:
     https://www.youtube.com/watch?v=GCqS7DhJrzA
 
     '''
@@ -37,7 +37,7 @@ class YouTube_Fetcher(Fetcher):
         except KeyError as err:
             raise StopIteration
         # Single video harvesting, don't need playlist page
-        if self.url_base.lower() == 'single':
+        if self.url_base.lower() == 'http://single.edu':
             video_items = json.loads(
                 urllib.urlopen(self.url_video.format(
                     api_key=self.api_key, video_ids=self.playlist_id)).read())['items']
