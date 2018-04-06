@@ -45,6 +45,13 @@ def def_args():
         help='Should image harvester not get image if the object '
         'field exists for the doc (default: False, always get)'
     )
+    parser.add_argument(
+        '--ignore_content_type',
+        action='store_true',
+        default=False,
+        help='Should image harvester not check content type in URL '
+        'header if false or missing (default: False, always check)'
+    )
     return parser
 
 
@@ -57,6 +64,7 @@ def queue_image_harvest(redis_host,
                         url_couchdb=None,
                         object_auth=None,
                         get_if_object=False,
+                        ignore_content_type=False,
                         harvest_timeout=IMAGE_HARVEST_TIMEOUT):
     rQ = Queue(
         rq_queue,
@@ -71,7 +79,8 @@ def queue_image_harvest(redis_host,
             collection_key=collection_key,
             url_couchdb=url_couchdb,
             object_auth=object_auth,
-            get_if_object=get_if_object),
+            get_if_object=get_if_object,
+            ignore_content_type=ignore_content_type),
         timeout=harvest_timeout)
     return job
 
@@ -134,6 +143,8 @@ if __name__ == '__main__':
         kwargs['harvest_timeout'] = int(args.timeout)
     if args.get_if_object:
         kwargs['get_if_object'] = args.get_if_object
+    if args.ignore_content_type:
+        kwargs['ignore_content_type'] = args.ignore_content_type
     main(
         args.user_email,
         args.url_api_collection,
