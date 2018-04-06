@@ -66,7 +66,7 @@ class FailsImageTest(ImageHarvestError):
 
 def link_is_to_image(doc_id, url, auth=None):
     '''Check if the link points to an image content type.
-    Return True or False accordingly
+    Return True or False accordingly.
     '''
     if md5s3stash.is_s3_url(url):
         response = requests.head(url, allow_redirects=True)
@@ -106,6 +106,7 @@ def link_is_to_image(doc_id, url, auth=None):
 def stash_image_for_doc(doc,
                         url_cache,
                         hash_cache,
+                        ignore_content_type,
                         bucket_bases=BUCKET_BASES,
                         auth=None):
     '''Stash the images in s3, using md5s3stash
@@ -136,7 +137,8 @@ def stash_image_for_doc(doc,
         print >> sys.stderr, msg
         raise FailsImageTest(msg, doc_id=doc['_id'])
     reports = []
-    if link_is_to_image(doc['_id'], url_image, auth):
+    # If '--ignore_content_type' set, don't check link_is_to_image
+    if link_is_to_image(doc['_id'], url_image, auth) or ignore_content_type:
         for bucket_base in bucket_bases:
             try:
                 logging.getLogger('image_harvest.stash_image').info(
@@ -174,6 +176,7 @@ class ImageHarvester(object):
                  bucket_bases=BUCKET_BASES,
                  object_auth=None,
                  get_if_object=False,
+                 ignore_content_type=False,
                  url_cache=None,
                  hash_cache=None,
                  harvested_object_cache=None):
@@ -189,6 +192,7 @@ class ImageHarvester(object):
         # auth is a tuple of username, password
         self._auth = object_auth
         self.get_if_object = get_if_object  # if object field exists, get
+        self.ignore_content_type = ignore_content_type # Don't check content-type in headers
         self._redis = Redis(
             host=self._config['redis_host'],
             port=self._config['redis_port'],
@@ -211,6 +215,7 @@ class ImageHarvester(object):
             doc,
             self._url_cache,
             self._hash_cache,
+            self.ignore_content_type,
             bucket_bases=self._bucket_bases,
             auth=self._auth)
 
@@ -321,7 +326,8 @@ def harvest_image_for_doc(doc_id,
     harvester = ImageHarvester(
         url_couchdb=url_couchdb,
         object_auth=object_auth,
-        get_if_object=get_if_object)
+        get_if_object=get_if_object,
+        ignore_content_type=ignore_content_type)
     # get doc from couchdb
     couchdb = get_couchdb(url=url_couchdb)
     doc = couchdb[doc_id]
@@ -334,12 +340,14 @@ def harvest_image_for_doc(doc_id,
 def main(collection_key=None,
          url_couchdb=None,
          object_auth=None,
-         get_if_object=False):
+         get_if_object=False,
+         ignore_content_type=False):
     cleanup_work_dir()  # remove files from /tmp
     doc_ids, report_errors = ImageHarvester(
         url_couchdb=url_couchdb,
         object_auth=object_auth,
-        get_if_object=get_if_object).by_collection(collection_key)
+        get_if_object=get_if_object,
+        ignore_content_type=ignore_content_type).by_collection(collection_key)
 
 
 if __name__ == '__main__':
@@ -359,6 +367,13 @@ if __name__ == '__main__':
         default=False,
         help='Should image harvester not get image if the object field exists '
         'for the doc (default: False, always get)')
+    parser.add_argument(
+        '--get_if_object',
+        action='store_true',
+        default=False,
+        help='Should image harvester not get image if the object '
+        'field exists for the doc (default: False, always get)'
+    )
     args = parser.parse_args()
     print(args)
     object_auth = None
@@ -369,4 +384,5 @@ if __name__ == '__main__':
         args.collection_key,
         object_auth=object_auth,
         url_couchdb=args.url_couchdb,
-        get_if_object=args.get_if_object)
+        get_if_object=args.get_if_object,
+        ignore_content_type=args.ignore_content_type)

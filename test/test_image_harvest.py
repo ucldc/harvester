@@ -188,6 +188,38 @@ class ImageHarvestTestCase(TestCase):
         return_value=StashReport('test url', 'md5 test value', 's3 url object',
                                  'mime_type', 'dimensions'))
     @httpretty.activate
+    def test_ignore_content_type(self, mock_stash, mock_couch):
+        '''Test that content type check is not called if  --ignore_content_type parameter given'''
+        url = 'http://getthisimage/image'
+        doc = {'_id': 'IGNORE_CONTENT', 'isShownBy': url}
+        httpretty.register_uri(
+            httpretty.HEAD,
+            url,
+            body='',
+            content_length='0',
+            content_type='text/plain; charset=utf-8',
+            connection='close', )
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body='',
+            content_length='0',
+            content_type='text/html; charset=utf-8',
+            connection='close', )
+        image_harvester = image_harvest.ImageHarvester(
+            url_cache={}, hash_cache={}, bucket_bases=['region:x'], ignore_content_type=False)
+        r = StashReport('test url', 'md5 test value', 's3 url object',
+                        'mime_type', 'dimensions')
+        ret = image_harvester.stash_image(doc)
+        self.assertEqual(ret, [r])
+
+    @patch('couchdb.Server')
+    @patch(
+        'md5s3stash.md5s3stash',
+        autospec=True,
+        return_value=StashReport('test url', 'md5 test value', 's3 url object',
+                                 'mime_type', 'dimensions'))
+    @httpretty.activate
     def test_check_content_type(self, mock_stash, mock_couch):
         '''Test that the check for content type correctly aborts if the
         type is not a image
