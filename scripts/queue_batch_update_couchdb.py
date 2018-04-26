@@ -9,30 +9,31 @@ from rq import Queue
 
 JOB_TIMEOUT = 28800  # 8 hrs
 
+
 def def_args():
     import argparse
     parser = argparse.ArgumentParser(
-            description='Batch update field with new value for a given couchdb collection')
+        description='Batch update field with new value for a given couchdb collection'
+    )
     parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('rq_queue', type=str, help='RQ queue to put job in')
-    parser.add_argument('cid', type=str,
-            help='Collection ID')
-    parser.add_argument('fieldName', type=str,
-            help='Field to update. Cannot be _id or _rev')
-    parser.add_argument('newValue', type=str,
-            help='New value to insert in field')
+    parser.add_argument('cid', type=str, help='Collection ID')
+    parser.add_argument(
+        'fieldName', type=str, help='Field to update. Cannot be _id or _rev')
+    parser.add_argument(
+        'newValue', type=str, help='New value to insert in field')
     return parser
 
 
 def queue_update_couchdb_field(redis_host,
-                                   redis_port,
-                                   redis_password,
-                                   redis_timeout,
-                                   rq_queue,
-                                   collection_key,
-                                   fieldName,
-                                   newValue,
-                                   timeout=JOB_TIMEOUT):
+                               redis_port,
+                               redis_password,
+                               redis_timeout,
+                               rq_queue,
+                               collection_key,
+                               fieldName,
+                               newValue,
+                               timeout=JOB_TIMEOUT):
     rQ = Queue(
         rq_queue,
         connection=Redis(
@@ -42,8 +43,8 @@ def queue_update_couchdb_field(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='harvester.post_processing.batch_update_couchdb_by_collection.update_couch_docs_by_collection',
-        args=(collection_key,fieldName,newValue),
-            timeout=timeout)
+        args=(collection_key, fieldName, newValue),
+        timeout=timeout)
     return job
 
 
@@ -80,13 +81,16 @@ if __name__ == '__main__':
     if not args.cid or not args.fieldName or not args.newValue:
         parser.print_help()
         sys.exit(27)
-    if args.fieldName == '_id' or args.fieldname ==
-    '_rev':
+    if args.fieldName == '_id' or args.fieldname == '_rev':
         parser.print_help()
         sys.exit(27)
     kwargs = {}
-    main(args.collection_key, rq_queue=args.rq_queue, fieldName, newValue, **kwargs)
-
+    main(
+        args.collection_key,
+        rq_queue=args.rq_queue,
+        fieldName,
+        newValue,
+        **kwargs)
 
 # Copyright © 2016, Regents of the University of California
 # All rights reserved.
