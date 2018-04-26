@@ -23,7 +23,6 @@ def def_args():
             help='New value to insert in field')
     return parser
 
-
 def queue_update_couchdb_field(redis_host,
                                    redis_port,
                                    redis_password,
@@ -45,7 +44,6 @@ def queue_update_couchdb_field(redis_host,
         args=(collection_key,fieldName,newValue),
             timeout=timeout)
     return job
-
 
 def main(collection_keys,
          log_handler=None,
@@ -72,7 +70,6 @@ def main(collection_keys,
             **kwargs)
 
     log_handler.pop_application()
-
 
 if __name__ == '__main__':
     parser = def_args()
