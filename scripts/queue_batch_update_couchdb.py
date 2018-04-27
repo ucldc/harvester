@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import logbook
-from harvester.post_processing import batch_update_couchdb_by_collection
 from harvester.config import config as config_harvest
 from redis import Redis
 from rq import Queue
@@ -47,13 +46,12 @@ def queue_update_couchdb_field(redis_host,
         timeout=timeout)
     return job
 
-
 def main(collection_keys,
+         fieldName,
+         newValue,
          log_handler=None,
          config_file='akara.ini',
          rq_queue=None,
-         fieldName,
-         newValue,
          **kwargs):
     config = config_harvest(config_file=config_file)
 
@@ -81,15 +79,15 @@ if __name__ == '__main__':
     if not args.cid or not args.fieldName or not args.newValue:
         parser.print_help()
         sys.exit(27)
-    if args.fieldName == '_id' or args.fieldname == '_rev':
+    if args.fieldName == '_id' or args.fieldName == '_rev':
         parser.print_help()
         sys.exit(27)
     kwargs = {}
     main(
-        args.collection_key,
+        args.cid,
+        args.fieldName,
+        args.newValue,
         rq_queue=args.rq_queue,
-        fieldName,
-        newValue,
         **kwargs)
 
 # Copyright © 2016, Regents of the University of California
