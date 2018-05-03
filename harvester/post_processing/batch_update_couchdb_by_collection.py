@@ -28,7 +28,8 @@ def setprop(obj, path, val, keyErrorAsNone=False):
             else:
                 obj[path] = val
                 return
-
+    if type(obj) == list:
+        obj = obj[0]
     pp, pn = tuple(path.lstrip(PATH_DELIM).split(PATH_DELIM, 1))
     if pp not in obj:
         if not keyErrorAsNone:
