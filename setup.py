@@ -75,7 +75,6 @@ setup(
     tests_require=['mock>=1.0.1', 'httpretty>=0.8.3', ],
 )
 
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--upgrade pip==9.0.3'])
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'ansible'])
 
 #pip_main(['install', 'ansible'])
