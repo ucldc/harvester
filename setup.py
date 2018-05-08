@@ -1,5 +1,6 @@
 import os
-from pip import main as pip_main
+import sys
+import subprocess
 from setuptools import setup
 
 
@@ -74,7 +75,10 @@ setup(
     tests_require=['mock>=1.0.1', 'httpretty>=0.8.3', ],
 )
 
-pip_main(['install', 'ansible'])
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--upgrade pip==9.0.3'])
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'ansible'])
+
+#pip_main(['install', 'ansible'])
 #pip_main(['install',
 #'git+https://github.com/ucldc/pynux.git@b539959ac11caa6fec06f59a0b3768d97bec2693'])
 ###pip_main(['install',
