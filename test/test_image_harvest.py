@@ -207,7 +207,7 @@ class ImageHarvestTestCase(TestCase):
             content_type='text/html; charset=utf-8',
             connection='close', )
         image_harvester = image_harvest.ImageHarvester(
-            url_cache={}, hash_cache={}, bucket_bases=['region:x'], ignore_content_type=False)
+            url_cache={}, hash_cache={}, bucket_bases=['region:x'], ignore_content_type=True)
         r = StashReport('test url', 'md5 test value', 's3 url object',
                         'mime_type', 'dimensions')
         ret = image_harvester.stash_image(doc)
