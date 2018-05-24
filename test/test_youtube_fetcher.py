@@ -97,10 +97,9 @@ class YouTubeFetcherTestCase(LogOverrideMixin, TestCase):
 
     @httpretty.activate
     def test_single_fetching(self):
-        url = 'Single'
+        url = 'http://single.edu'
         playlist_id = 'PLwtrWl_IBMJtjP5zMk6dVR-BRjzKqCPOM'
         url_vids = fetcher.YouTube_Fetcher.url_video
-        # Ugly but works
         httpretty.register_uri(
             httpretty.GET,
             url_vids,

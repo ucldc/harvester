@@ -464,15 +464,10 @@ def has_required_fields(doc):
     doc_type = doc['sourceResource'].get('type', '')
     if not isinstance(doc_type, list) and  \
             'image' == doc_type.lower():
-        collection = doc.get('originalRecord', {}).get('collection', [{
-            'harvest_type': 'NONE'
-        }])[0]
-        if collection['harvest_type'] != 'NUX':
             # if doesnt have a reference_image_md5, reject
-            if 'object' not in doc:
-                raise MissingImage(
-                    '---- OMITTED: Doc:{0} is image type with no harvested '
-                    'image.'.format(doc['_id']))
+        if 'object' not in doc:
+            raise MissingImage(
+                '---- OMITTED: Doc:{0} is image type with no harvested image.'.format(doc['_id']))
     return True
 
 

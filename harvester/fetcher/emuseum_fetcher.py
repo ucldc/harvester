@@ -65,12 +65,11 @@ class eMuseum_Fetcher(Fetcher):
         '''get next objset, use etree to pythonize. Stop
         iterating when no more <object>s are found'''
         xml = requests.get(self.url_current).text
-        total = re.findall('<object>', xml)
-        self.docs_total = len(total)
+        tree = ET.fromstring(xml.encode('utf-8'))
+        hits = tree.findall("objects/object")
+        self.docs_total = len(hits)
         if self.docs_total == 0:
             raise StopIteration
-        tree = ET.fromstring(xml.encode('utf-8'))
-        hits = tree.findall("object")
         self.page_current += 1
         return self._dochits_to_objset(hits)
 
