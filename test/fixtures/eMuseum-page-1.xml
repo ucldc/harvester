@@ -1,5 +1,6 @@
-<objects xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<object>
+<results xmlns:xs="//www.w3.org/2001/XMLSchema">
+<objects>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/596/resize%3Aformat%3Dpreview</value>
 </field>
@@ -28,7 +29,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/597/resize%3Aformat%3Dpreview</value>
 </field>
@@ -57,7 +58,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/598/resize%3Aformat%3Dpreview</value>
 </field>
@@ -86,7 +87,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/599/resize%3Aformat%3Dpreview</value>
 </field>
@@ -115,7 +116,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/600/resize%3Aformat%3Dpreview</value>
 </field>
@@ -144,7 +145,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/606/resize%3Aformat%3Dpreview</value>
 </field>
@@ -173,7 +174,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/607/resize%3Aformat%3Dpreview</value>
 </field>
@@ -202,7 +203,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/608/resize%3Aformat%3Dpreview</value>
 </field>
@@ -231,7 +232,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/609/resize%3Aformat%3Dpreview</value>
 </field>
@@ -260,7 +261,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/610/resize%3Aformat%3Dpreview</value>
 </field>
@@ -289,7 +290,7 @@
 <value>0</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/3331/resize%3Aformat%3Dpreview</value>
 </field>
@@ -318,7 +319,7 @@
 <value>310</value>
 </field>
 </object>
-<object>
+<object xmlns:xs="//www.w3.org/2001/XMLSchema">
 <field label="primaryMedia" order="1" name="primaryMedia">
 <value>/internal/media/dispatcher/3334/resize%3Aformat%3Dpreview</value>
 </field>
@@ -348,3 +349,4 @@
 </field>
 </object>
 </objects>
+</results>
