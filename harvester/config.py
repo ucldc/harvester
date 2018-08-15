@@ -46,7 +46,7 @@ def parse_env(DPLA, redis_required=False):
     env['redis_password'] = None
     try:
         env['redis_password'] = os.environ['REDIS_PASSWORD']
-    except KeyError, e:
+    except KeyError as e:
         if redis_required:
             raise KeyError(''.join(('Please set environment variable ',
                                     'REDIS_PASSWORD to redis password!')))
