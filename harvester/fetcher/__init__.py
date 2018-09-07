@@ -16,6 +16,7 @@ from .cmis_atom_feed_fetcher import CMISAtomFeedFetcher
 from .flickr_fetcher import Flickr_Fetcher
 from .youtube_fetcher import YouTube_Fetcher
 from .xml_fetcher import XML_Fetcher
+from .ucd_json_fetcher import UCD_JSON_Fetcher
 from .emuseum_fetcher import eMuseum_Fetcher
 from .controller import HARVEST_TYPES
 from .controller import HarvestController
@@ -42,6 +43,7 @@ __all__ = (
         HarvestController,
         XML_Fetcher,
         eMuseum_Fetcher,
+        UCD_JSON_Fetcher,
         PySolrQueryFetcher,
         Flickr_Fetcher,
         YouTube_Fetcher,

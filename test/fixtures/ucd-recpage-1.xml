@@ -1,0 +1,126 @@
+<html lang="en">
+  <!--[if lte IE 10]>
+  <script type="text/javascript">
+    if ( document.URL.indexOf( 'ie' ) === -1 ) {
+      window.location = '/ie.html';
+    }
+  </script>
+  <![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <title>"Post Office," At Old Station Near Lassen Park, Calif - UC Davis Library Digital Collections</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+    <meta name="description" content="Two-story building with signs reading "CABINS AND GROCERIES," "ROOMS-CABINS WINE & BEER," "OLD STATION POST OFFICE," "AIR WATER," an automobile partially visible on left side, and trees in background. Lower right corner reads "J.H. Eastman.""/>
+    <meta name="keywords" content=""/>
+    <meta name="apple-mobile-web-app-title" content="UCD Digital">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" sizes="192x192" href="/images/logos/logo-192.png">
+    <link rel="icon" sizes="128x128" href="/images/logos/logo-128.png">
+    <link rel="apple-touch-icon" href="/images/logos/logo-64.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="/images/logos/logo-96.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="/images/logos/logo-128.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/logos/logo-192.png">
+    <link rel="apple-touch-startup-image" href="/images/logos/logo-192.png">
+
+    <!-- See https://goo.gl/qRE0vM -->
+    <meta name="theme-color" content="#FFFFFF">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- IE 10 detection -->
+		<script type="text/javascript">
+			if( window.navigator.appVersion.match(/MSIE 10/) ) {
+				window.location = '/ie.html';
+			}
+		</script>
+
+    <meta name="google-site-verification" content="iK2-C5oxLcdP0n7QBgKtXPd7hvEuMIHqB4d1sSe-okw" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65988958-10"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    </script>
+
+
+  <script>
+    var CORK_LOADER_VERSIONS = {
+      loader : '0.0.4',
+      bundle : '0.0.3'
+    }
+  </script>
+  <script src="/loader/loader.js?_=0.0.4"></script>
+
+    <!-- from spa-router-middleware -->
+    <script>var APP_CONFIG = {"user":{"loggedIn":false},"appRoutes":["search","record"]};</script>
+  </head>
+
+  <body>
+    <noscript>
+      The UC Davis Library Digital Collections requires JavaScript to
+      be enabled to view.  You have either disabled JavaScript or your
+      browser does not support it.
+    </noscript>
+    <fin-app></fin-app>
+
+    <div id="loading" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center">
+      <img src="/images/logos/logo-icon.svg" style="max-width: 128px" />
+    </div>
+
+
+    <script id="seo-jsonld" type="application/ld+json">{
+  "parent": "/collection/eastman/B-1",
+  "@type": [],
+  "publisherLink": "http://id.loc.gov/authorities/names/no2008108707",
+  "creators": [
+    "Eastman, Jervie Henry"
+  ],
+  "description": "Two-story building with signs reading \"CABINS AND GROCERIES,\" \"ROOMS-CABINS WINE & BEER,\" \"OLD STATION POST OFFICE,\" \"AIR WATER,\" an automobile partially visible on left side, and trees in background. Lower right corner reads \"J.H. Eastman.\"",
+  "fileFormats": [
+    "image/jpeg",
+    "image/tiff"
+  ],
+  "type": [
+    "CreativeWork",
+    "Photograph",
+    "MediaObject"
+  ],
+  "creatorLink": "http://id.loc.gov/authorities/names/no2014099630",
+  "id": "/collection/eastman/B-1/B-1022",
+  "@id": "/collection/eastman/B-1/B-1022",
+  "collectionId": "/collection/eastman",
+  "identifier": [
+    "B-1022",
+    "ark:/13030/tf129002mq"
+  ],
+  "image": {
+    "isWebFriendly": false,
+    "path": "/collection/eastman/B-1/B-1022/media/web",
+    "height": 2048,
+    "width": 2759,
+    "colorPalette": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAIAAAD38zoCAAAAdklEQVR42gXBMQrEIBAAwOgFQRYConZ2mneky3vzFWv77SxU2EZdbkZ833ddFyISkbU2hMDMAPADgBjjnHOMgYje+1przlm879taSyk553rva61SCjOfz/MQkVKKiIwxWuv7vo0xZ4xx730cx95bCDHnlFIy8x9g9D1zHH+43AAAAABJRU5ErkJggg=="
+  },
+  "creator": "Eastman, Jervie Henry",
+  "lastModifiedBy": "quinn@ucdavis.edu",
+  "yearPublished": 1939,
+  "associatedMedia": [
+    "/collection/eastman/B-1/B-1022/media/web",
+    "/collection/eastman/B-1/B-1022/media/full"
+  ],
+  "isPartOf": "/collection/eastman",
+  "datePublished": "1939",
+  "license": "http://rightsstatements.org/vocab/InC-NC/1.0/",
+  "isRootRecord": true,
+  "material": "1 photographic negative : b&w : 5 x 7 in.",
+  "createdBy": "quinn@ucdavis.edu",
+  "name": "\"Post Office,\" At Old Station Near Lassen Park, Calif",
+  "publisher": "University of California, Davis. General Library. Dept. of Special Collections",
+  "lastModified": "2018-06-14T22:25:06.380Z",
+  "@context": "http://schema.org"
+}</script>
+
+    <script src="https://use.typekit.net/rbu0rqt.js"></script>
+		<script>try{Typekit.load({ async: true });}catch(e){}</script>
+  </body>
+</html>
