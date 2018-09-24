@@ -7,7 +7,7 @@ from redis import Redis
 from harvester.config import parse_env
 
 JOB_TIMEOUT = 28800  # 8 hrs
-URL_REMOTE_COUCHDB = 'https://harvest-stg.cdlib.org/couchdb'
+URL_REMOTE_COUCHDB = 'https://harvest-stg.cdlib.org/newcouch'
 
 
 def queue_couch_sync(redis_host,
