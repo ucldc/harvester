@@ -450,7 +450,7 @@ def has_required_fields(doc):
     if 'title' not in doc['sourceResource']:
         raise MissingTitle(
             '---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
-    if 'rights' not in doc['sourceResource']:
+    if 'rights' not in doc['sourceResource'] and 'rightsURI' not in doc['sourceResource']:
         raise MissingRights(
             '---- OMITTED: Doc:{0} has no rights.'.format(doc['_id']))
     if 'isShownAt' not in doc:
