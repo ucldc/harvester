@@ -47,6 +47,13 @@
            "All requests to reproduce, publish, quote from, or otherwise use collection materials must be submitted in writing to the Head of Public Services, The Bancroft Library, University of California, Berkeley 94720-6000. See: http://bancroft.berkeley.edu/reference/permissions.html",
            "University of California, Berkeley, Berkeley, CA 94720-6000, Phone: (510) 642-6481, Fax: (510) 642-7589, Email: bancref@library.berkeley.edu"
        ],
+       "rightsURI": [
+           {
+               "text": "http://rightsstatements.org/vocab/NoC-CR/1.0/",
+               "attrib": {
+               }
+           }
+       ],
        "@id": "http://ucldc.cdlib.org/api/items/9039707de294bfe965e6f95d0c7da9ac#sourceResource",
        "title": [
            "Neighbor"

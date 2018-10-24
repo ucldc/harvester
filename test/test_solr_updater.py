@@ -28,7 +28,6 @@ from harvester.solr_updater import MissingMediaJSON
 from harvester.solr_updater import sync_couch_collection_to_solr
 from harvester.solr_updater import harvesting_report
 from botocore.exceptions import ClientError
-from akara import logger
 
 
 class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
@@ -232,6 +231,9 @@ class SolrUpdaterTestCase(ConfigFileOverrideMixin, TestCase):
             u'University of California, Berkeley, Berkeley, CA 94720-6000, '
             'Phone: (510) 642-6481, Fax: (510) 642-7589, Email: '
             'bancref@library.berkeley.edu'
+        ])
+        self.assertEqual(sdoc['rights_uri'], [
+            u'http://rightsstatements.org/vocab/NoC-CR/1.0/'
         ])
         self.assertEqual(sdoc['subject'], [
             u'Yoshiko Uchida photograph collection',

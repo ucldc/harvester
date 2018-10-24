@@ -38,6 +38,7 @@ def dict_for_data_field(field_src, data, field_dest):
     ddict = {}
     items_not_blank = []
     items = data.get(field_src)
+
     if items:
         items = dejson(field_src, items)  # this handles list, scalar
         # remove blanks
@@ -99,6 +100,7 @@ COUCHDOC_SRC_RESOURCE_TO_SOLR_MAPPING = {
     'publisher': lambda d: dict_for_data_field('publisher', d, 'publisher'),
     'relation': lambda d: dict_for_data_field('relation', d, 'relation'),
     'rights': lambda d: dict_for_data_field('rights', d, 'rights'),
+    'rightsURI': lambda d: dict_for_data_field('rightsURI', d, 'rights_uri'),
     'subject': lambda d: {'subject': [s['name']
                                       if isinstance(s, dict)
                                       else dejson('subject', s)
@@ -448,7 +450,7 @@ def has_required_fields(doc):
     if 'title' not in doc['sourceResource']:
         raise MissingTitle(
             '---- OMITTED: Doc:{0} has no title.'.format(doc['_id']))
-    if 'rights' not in doc['sourceResource']:
+    if 'rights' not in doc['sourceResource'] and 'rightsURI' not in doc['sourceResource']:
         raise MissingRights(
             '---- OMITTED: Doc:{0} has no rights.'.format(doc['_id']))
     if 'isShownAt' not in doc:
