@@ -83,7 +83,8 @@ class NuxeoFetcher(Fetcher):
             2) if component(s) have image, use first one we can find
             3) if object has PDF or video at parent level,
                 use image stashed on S3
-            4) return None
+            4) if component(s) have PDF or video, use first component image stashed on S3 we can find
+            5) return None
         '''
         is_shown_by = None
         uid = nuxeo_metadata['uid']
@@ -121,7 +122,20 @@ class NuxeoFetcher(Fetcher):
             self.logger.info("is_shown_by: {}".format(is_shown_by))
             return is_shown_by
 
-        # 4) return None
+        # 4) if component(s) have PDF or video, use first component image stashed on S3 we can find
+        first_thumb_component_uid = self._get_first_thumb_component(
+            nuxeo_metadata)
+        self.logger.info("first_thumb_component_uid: {}".format(
+            first_thumb_component_uid))
+        if first_thumb_component_uid:
+            self.logger.info("Nuxeo doc with uid {} has thumbnail at the"
+                             "component level".format(uid))
+            is_shown_by = NUXEO_S3_THUMB_URL_FORMAT.format(
+                first_thumb_component_uid)
+            self.logger.info("is_shown_by: {}".format(is_shown_by))
+            return is_shown_by
+
+        # 5) return None
         self.logger.info("Could not find any image for Nuxeo doc with uid "
                          "{}! Returning None".format(uid))
         return is_shown_by
@@ -171,6 +185,19 @@ class NuxeoFetcher(Fetcher):
                 break
 
         return component_uid
+
+    def _get_first_thumb_component(self, parent_metadata):
+        ''' get first non-image component with thumbnail we can find '''
+        component_uid = None
+
+        query = "SELECT * FROM Document WHERE ecm:parentId = '{}' AND " \
+                "ecm:currentLifeCycleState != 'deleted' ORDER BY " \
+                "ecm:pos".format(parent_metadata['uid'])
+        for child in self._nx.nxql(query):
+            child_metadata = self._nx.get_metadata(uid=child['uid'])
+            if self._has_s3_thumbnail(child_metadata):
+                component_uid = child_metadata['uid']
+                break
 
     def next(self):
         '''Return Nuxeo record by record to the controller'''
