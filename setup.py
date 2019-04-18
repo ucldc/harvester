@@ -72,7 +72,7 @@ setup(
         'mediajson'
         ],
     test_suite='test',
-    tests_require=['mock>=1.0.1', 'httpretty>=0.8.3', ],
+    tests_require=['mock>=1.0.1', 'httpretty==0.9.5', ],
 )
 
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'ansible'])
