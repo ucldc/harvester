@@ -381,21 +381,26 @@ def main(user_email,
     ingest_doc_id = harvester.create_ingest_doc()
     logger.info('Ingest DOC ID: ' + ingest_doc_id)
     logger.info('Start harvesting next')
+    num_recs = harvester.harvest()
+    msg = ''.join(('Finished harvest of ', collection.slug, '. ',
+                   str(num_recs), ' records harvested.'))
+    logger.info(msg)
+    logger.debug('-- get a new harvester --')
+    harvester = HarvestController(
+         user_email,
+         collection,
+         profile_path=profile_path,
+         config_file=config_file,
+         **kwargs)
+    harvester.ingest_doc_id = ingest_doc_id
+    harvester.couch = dplaingestion.couch.Couch(
+            config_file=harvester.config_file,
+            dpla_db_name=harvester.couch_db_name,
+            dashboard_db_name=harvester.couch_dashboard_name)
+    harvester.ingestion_doc = harvester.couch.dashboard_db[ingest_doc_id]
     try:
-        num_recs = harvester.harvest()
-        msg = ''.join(('Finished harvest of ', collection.slug, '. ',
-                       str(num_recs), ' records harvested.'))
         harvester.update_ingest_doc('complete', items=num_recs, num_coll=1)
-        logger.info(msg)
-        # email directly
-        mimetext = create_mimetext_msg(
-            EMAIL_RETURN_ADDRESS, user_email, ' '.join(
-                ('Finished harvest of raw records '
-                 'for ', collection.slug, ' enriching next')), msg)
-        try:
-            mail_handler.deliver(mimetext, 'mredar@gmail.com')
-        except:
-            pass
+        logger.debug('updated ingest doc!')
     except Exception as e:
         import traceback
         error_msg = ''.join(("Error while harvesting: type-> ", str(type(e)),
