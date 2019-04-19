@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<photoset id="72157678879765668" primary="32360108917" owner="49487266@N07" ownername="San Diego Air &amp; Space Museum Archives" page="1" per_page="3" perpage="3" pages="2" title="QC Dennis R. Jenkins" total="6">
+	<photo id="32360108917" secret="a682162867" server="7844" farm="8" title="Dennis R. Jenkins Space Collection Image from 1970" isprimary="0" ispublic="1" isfriend="0" isfamily="0"/>
+  <photo id="32360109617" secret="827a363af9" server="7815" farm="8" title="Dennis R. Jenkins Space Collection Image from 1970" isprimary="0" ispublic="1" isfriend="0" isfamily="0"/>
+  <photo id="46386983955" secret="31c95606d0" server="7818" farm="8" title="Dennis R. Jenkins Space Collection Image from 1970" isprimary="0" ispublic="1" isfriend="0" isfamily="0"/>
+</photoset>
+</rsp>
