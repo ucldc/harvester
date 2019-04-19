@@ -15,9 +15,9 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
     def testInit(self):
         '''Basic tdd start'''
         url = 'https://example.edu'
-        user_id = 'testuser'
+        user_id = 'test@Nuser'
         page_size = 10
-        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+        url_first = fetcher.Flickr_Fetcher.url_get_user_photos_template.format(
             api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
         httpretty.register_uri(
             httpretty.GET,
@@ -30,7 +30,7 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(h.page_current, 1)
         self.assertEqual(h.doc_current, 0)
         self.assertEqual(h.docs_fetched, 0)
-        self.assertEqual(h.url_get_photos_template,
+        self.assertEqual(h.url_get_user_photos_template,
                          'https://api.flickr.com/services/rest/'
                          '?api_key={api_key}&user_id={user_id}&per_page'
                          '={per_page}&method='
@@ -50,7 +50,7 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         user_id = 'testuser'
         page_size = 3
         page_range = '2,3'
-        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+        url_first = fetcher.Flickr_Fetcher.url_get_user_photos_template.format(
             api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
         httpretty.register_uri(
             httpretty.GET,
@@ -74,7 +74,7 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         url = 'https://example.edu'
         user_id = 'testuser'
         page_size = 3
-        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+        url_first = fetcher.Flickr_Fetcher.url_get_user_photos_template.format(
             api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
         # Ugly but works
         httpretty.register_uri(
@@ -129,7 +129,7 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         url = 'https://example.edu'
         user_id = 'testuser'
         page_size = 10
-        url_first = fetcher.Flickr_Fetcher.url_get_photos_template.format(
+        url_first = fetcher.Flickr_Fetcher.url_get_user_photos_template.format(
             api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
         # Ugly but works
         httpretty.register_uri(
@@ -319,6 +319,176 @@ class FlickrFetcherTestCase(LogOverrideMixin, TestCase):
         for k, v in key_list_values.items():
             self.assertEqual(photo_obj[k], v)
 
+    @httpretty.activate
+    def test_photoset_fetching(self):
+        url = 'https://example.edu'
+        user_id = 'testphotoset'
+        page_size = 6
+        url_first = fetcher.Flickr_Fetcher.url_get_photoset_template.format(
+            api_key='boguskey', user_id=user_id, per_page=page_size, page=1)
+        # Ugly but works
+        httpretty.register_uri(
+            httpretty.GET,
+            url_first,
+            responses=[
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photoset-1.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photoset-1.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photoset-2.xml')
+                    .read(),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+                httpretty.Response(
+                    body=open(DIR_FIXTURES + '/flickr-photo-info-0.xml').read(
+                    ),
+                    status=200),
+            ])
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size)
+        h.doc_current = 6
+        self.assertRaises(ValueError, h.next)
+        h.docs_fetched = 6
+        self.assertRaises(StopIteration, h.next)
+        h = fetcher.Flickr_Fetcher(url, user_id, page_size=page_size)
+        total = 0
+        all_objs = []
+        for objs in h:
+            total += len(objs)
+            all_objs.extend(objs)
+        self.assertEqual(total, 6)
+        self.assertEqual(len(all_objs), 6)
+        photo_obj = all_objs[0]
+        key_list_values = {
+            'description': {
+                'text':
+                'PictionID:56100666 - Catalog:C87-047-040.tif - '
+                'Title:Ryan Aeronautical Negative Collection Image - '
+                'Filename:C87-047-040.tif - - Image from the Teledyne Ryan '
+                'Archives, donated to SDASM in the 1990s. Many of these '
+                'images are from Ryan\'s UAV program-----Please Tag these '
+                'images so that the information can be permanently stored '
+                'with the digital file.---Repository: <a href='
+                '"http://www.sandiegoairandspace.org/library/stillimages.'
+                'html" rel="nofollow">San Diego Air and Space Museum </a>'
+            },
+            'isfavorite': '0',
+            'views': '499',
+            'farm': '5',
+            'people': {
+                'haspeople': '0',
+                'text': None
+            },
+            'visibility': {
+                'text': None,
+                'isfamily': '0',
+                'isfriend': '0',
+                'ispublic': '1'
+            },
+            'originalformat': 'jpg',
+            'owner': {
+                'text': None,
+                'nsid': "49487266@N07",
+                'username': "San Diego Air & Space Museum Archives",
+                'realname': "SDASM Archives",
+                'location': "",
+                'iconserver': "4070",
+                'iconfarm': "5",
+                'path_alias': "sdasmarchives",
+            },
+            'rotation': '0',
+            'id': '34394586825',
+            'dates': {
+                'text': None,
+                'lastupdate': '1493683351',
+                'posted': '1493683350',
+                'taken': '2017-05-01 17:02:30',
+                'takengranularity': '0',
+                'takenunknown': '1',
+            },
+            'originalsecret': 'd46e9b19cc',
+            'license': '7',
+            'title': {
+                'text': 'Ryan Aeronautical Image'
+            },
+            'media': 'photo',
+            'notes': [{
+                'x': '10',
+                'authorname': 'Bees',
+                'text': 'foo',
+                'w': '50',
+                'author': '12037949754@N01',
+                'y': '10',
+                'h': '50',
+                'id': '313'
+            }],
+            'tags': [{
+                'raw': 'woo yay',
+                'text': 'wooyay',
+                'id': '1234',
+                'author': '12037949754@N01'
+            }, {
+                'raw': 'hoopla',
+                'text': 'hoopla',
+                'id': '1235',
+                'author': '12037949754@N01'
+            }],
+            'publiceditability': {
+                'text': None,
+                'cancomment': '1',
+                'canaddmeta': '1'
+            },
+            'comments': {
+                'text': '0'
+            },
+            'server': '4169',
+            'dateuploaded': '1493683350',
+            'secret': '375e0b1706',
+            'safety_level': '0',
+            'urls': [{
+                'text':
+                'https://www.flickr.com/photos/sdasmarchives/34394586825/',
+                'type': 'photopage'
+            }],
+            'usage': {
+                'text': None,
+                'canblog': '0',
+                'candownload': '1',
+                'canprint': '0',
+                'canshare': '1'
+            },
+            'editability': {
+                'text': None,
+                'cancomment': '0',
+                'canaddmeta': '0'
+            },
+        }
+        self.assertEqual(len(photo_obj.keys()), len(key_list_values.keys()))
+        for k, v in key_list_values.items():
+            self.assertEqual(photo_obj[k], v)
 
 # Copyright © 2017, Regents of the University of California
 # All rights reserved.

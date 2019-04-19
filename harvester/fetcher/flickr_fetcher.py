@@ -7,19 +7,27 @@ from .fetcher import Fetcher
 
 
 class Flickr_Fetcher(Fetcher):
-    '''A fetcher for the Flicr API.
-    Currently, it takes a user id and grabs the flickr.people.getPublicPhotos
-    to get the list of all photos.
-    It then proceeds to use flickr.photos.getInfo to get metadata for the
-    photos
+    '''A fetcher for the Flickr API.
 
     NOTE: This fetcher DOES NOT use the url_harvest. The extra_data should
-    be the Flickr user id, such as 49487266@N07
+    be a Flickr user id, such as 49487266@N07, or photoset id, such as 72157701798943531
+
+    User ID: takes a user id and grabs the flickr.people.getPublicPhotos
+    to get the list of all photos.
+
+    photoset ID: takes a photoset id and grabs the flickr.photosets.getPhotos
+    to get the list of all photos.
+
+    It then proceeds to use flickr.photos.getInfo to get metadata for the
+    photos
     '''
 
-    url_get_photos_template = 'https://api.flickr.com/services/rest/' \
+    url_get_user_photos_template = 'https://api.flickr.com/services/rest/' \
         '?api_key={api_key}&user_id={user_id}&per_page={per_page}&method=' \
         'flickr.people.getPublicPhotos&page={page}'
+    url_get_photoset_template = 'https://api.flickr.com/services/rest/' \
+        '?api_key={api_key}&photoset_id={user_id}&per_page={per_page}&method=' \
+        'flickr.photosets.getPhotos&page={page}'
     url_get_photo_info_template = 'https://api.flickr.com/services/rest/' \
         '?api_key={api_key}&method=flickr.photos.getInfo&photo_id={photo_id}'
 
@@ -58,11 +66,19 @@ class Flickr_Fetcher(Fetcher):
 
     @property
     def url_current(self):
-        return self.url_get_photos_template.format(
-            api_key=self.api_key,
-            user_id=self.user_id,
-            per_page=self.page_size,
-            page=self.page_current)
+        '''If @N found in extra_data, it's a user ID. If not, it's a photoset'''
+        if "@N" in self.user_id:
+            return self.url_get_user_photos_template.format(
+                api_key=self.api_key,
+                user_id=self.user_id,
+                per_page=self.page_size,
+                page=self.page_current)
+        else:
+            return self.url_get_photoset_template.format(
+                api_key=self.api_key,
+                user_id=self.user_id,
+                per_page=self.page_size,
+                page=self.page_current)
 
     def parse_tags_for_photo_info(self, info_tree):
         '''Parse the sub tags of a photo info objects and add to the
