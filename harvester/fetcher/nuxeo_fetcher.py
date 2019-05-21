@@ -199,6 +199,8 @@ class NuxeoFetcher(Fetcher):
                 component_uid = child_metadata['uid']
                 break
 
+        return component_uid
+
     def next(self):
         '''Return Nuxeo record by record to the controller'''
         doc = self._children.next()
