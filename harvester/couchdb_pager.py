@@ -2,7 +2,7 @@ def couchdb_pager(db, view_name='_all_docs',
                   startkey=None, startkey_docid=None,
                   endkey=None, endkey_docid=None,
                   key=None,
-                  bulk=20000, **extra_options):
+                  bulk=200000, **extra_options):
     # Request one extra row to resume the listing there later.
     options = {'limit': bulk + 1}
     print("EXTRA: {}".format(extra_options))
