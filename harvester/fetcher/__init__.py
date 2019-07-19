@@ -18,6 +18,7 @@ from .youtube_fetcher import YouTube_Fetcher
 from .xml_fetcher import XML_Fetcher
 from .ucd_json_fetcher import UCD_JSON_Fetcher
 from .emuseum_fetcher import eMuseum_Fetcher
+from .ia_fetcher import IA_Fetcher
 from .controller import HARVEST_TYPES
 from .controller import HarvestController
 from .controller import get_log_file_path
@@ -43,6 +44,7 @@ __all__ = (
         HarvestController,
         XML_Fetcher,
         eMuseum_Fetcher,
+        IA_Fetcher,
         UCD_JSON_Fetcher,
         PySolrQueryFetcher,
         Flickr_Fetcher,
