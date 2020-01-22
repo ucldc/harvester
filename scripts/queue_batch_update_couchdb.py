@@ -21,6 +21,8 @@ def def_args():
         'fieldName', type=str, help='Field to update. Cannot be _id or _rev')
     parser.add_argument(
         'newValue', type=str, help='New value to insert in field')
+    parser.add_argument(
+        '--substring', help='Substring to find and replace with newValue')
     return parser
 
 
@@ -32,6 +34,7 @@ def queue_update_couchdb_field(redis_host,
                                collection_key,
                                fieldName,
                                newValue,
+                               substring,
                                timeout=JOB_TIMEOUT):
     rQ = Queue(
         rq_queue,
@@ -42,13 +45,14 @@ def queue_update_couchdb_field(redis_host,
             socket_connect_timeout=redis_timeout))
     job = rQ.enqueue_call(
         func='harvester.post_processing.batch_update_couchdb_by_collection.update_couch_docs_by_collection',
-        args=(collection_key, fieldName, newValue),
+        args=(collection_key, fieldName, newValue, substring),
         timeout=timeout)
     return job
 
 def main(collection_keys,
          fieldName,
          newValue,
+         substring=None,
          log_handler=None,
          config_file='akara.ini',
          rq_queue=None,
@@ -66,6 +70,7 @@ def main(collection_keys,
             config['redis_connect_timeout'],
             rq_queue=rq_queue,
             fieldName=fieldName,
+            substring=substring,
             newValue=newValue,
             collection_key=collection_key,
             **kwargs)
@@ -87,6 +92,7 @@ if __name__ == '__main__':
         args.cid,
         args.fieldName,
         args.newValue,
+        args.substring,
         rq_queue=args.rq_queue,
         **kwargs)
 
