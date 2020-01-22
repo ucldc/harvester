@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+import time
 import requests
 import re
 from xml.etree import ElementTree as ET
@@ -64,7 +66,10 @@ class eMuseum_Fetcher(Fetcher):
     def next(self):
         '''get next objset, use etree to pythonize. Stop
         iterating when no more <object>s are found'''
+        dt_start = dt_end = datetime.datetime.now()
         xml = requests.get(self.url_current).text
+        dt_end = datetime.datetime.now()
+        time.sleep((dt_end-dt_start).total_seconds())
         tree = ET.fromstring(xml.encode('utf-8'))
         hits = tree.findall("objects/object")
         self.docs_total = len(hits)
