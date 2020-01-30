@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
+import tempfile
 from urlparse import parse_qs
 from .fetcher import Fetcher
 from sickle import Sickle
 from sickle.models import Record as SickleDCRecord
+from pymarc import parse_xml_to_array
+from lxml import etree
 
 
 def etree_to_dict(t):
@@ -11,6 +14,28 @@ def etree_to_dict(t):
     d.update(('@' + k, v) for k, v in t.attrib.iteritems())
     d['text'] = t.text
     return d
+
+class SickleMARCRecord(SickleDCRecord):
+    '''Extend the sickle Record to handle oai marc xml
+    using pymarc's parse_xml_to_array function.
+
+    parse_xml_to_array takes a file and returns an array
+    of all records in the file, but in this case it's
+    guaranteed to be just one record per file, because
+    Sickle is handling iterating through the oai feed.
+    '''
+    def __init__(self, record_element, strip_ns=True):
+        super(SickleMARCRecord, self).__init__(
+            record_element, strip_ns=strip_ns)
+        if not self.deleted:
+            self.marc_file = tempfile.TemporaryFile()
+            self.marc_file.write(etree.tounicode(self.xml.find(
+                './/' + self._oai_namespace + 'metadata'
+            ).getchildren()[0]).encode('utf8'))
+            self.marc_file.seek(0)
+
+            records = parse_xml_to_array(self.marc_file)
+            self.metadata = records[0].as_dict()
 
 
 class SickleDIDLRecord(SickleDCRecord):
@@ -60,6 +85,9 @@ class OAIFetcher(Fetcher):
             if self._metadataPrefix.lower() == 'didl':
                 self.oai_client.class_mapping['ListRecords'] = SickleDIDLRecord
                 self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
+            elif self._metadataPrefix.lower() == 'marcxml':
+                self.oai_client.class_mapping['ListRecords'] = SickleMARCRecord
+                self.oai_client.class_mapping['GetRecord'] = SickleMARCRecord
             self.records = self.oai_client.ListRecords(
                 metadataPrefix=self._metadataPrefix,
                 set=self._set,
