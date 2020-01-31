@@ -150,8 +150,10 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertEqual(tind_fetcher._metadataPrefix, 'marcxml')
         rec = tind_fetcher.next()
         self.assertIsInstance(rec, dict)
-        self.assertIn('901', rec)
-        self.assertEqual(rec['901']['subfields'][0]['m'], 'b17680844')
+        self.assertIn('fields', rec)
+        filtered = filter(lambda x: '901' in x.keys(), rec['fields'])
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0]['901']['subfields'][0]['m'], 'b17680844')
         self.assertIn('datestamp', rec)
         self.assertEqual(rec['datestamp'], '2019-11-21T18:01:27Z')
         self.assertEqual(httpretty.last_request().querystring,
