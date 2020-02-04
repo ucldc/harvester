@@ -153,7 +153,7 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
         self.assertIn('fields', rec)
         filtered = filter(lambda x: '901' in x.keys(), rec['fields'])
         self.assertEqual(len(filtered), 1)
-        self.assertEqual(filtered[0]['901']['subfields'][0]['m'], u'b17680844')
+        self.assertEqual(filtered[0]['901']['subfields'][0]['m'], u'b17672647')
         self.assertIn('datestamp', rec)
         self.assertEqual(rec['datestamp'], '2019-11-21T18:01:27Z')
         self.assertEqual(httpretty.last_request().querystring,
