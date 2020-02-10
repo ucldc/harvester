@@ -8,7 +8,7 @@ from test.utils import DIR_FIXTURES
 from mypretty import httpretty
 # import httpretty
 import harvester.fetcher as fetcher
-
+import pprint
 
 class MARCFetcherTestCase(LogOverrideMixin, TestCase):
     '''Test MARC fetching'''

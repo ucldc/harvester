@@ -6,6 +6,7 @@ from test.utils import DIR_FIXTURES
 from harvester.collection_registry_client import Collection
 import harvester.fetcher as fetcher
 from mypretty import httpretty
+import pprint
 # import httpretty
 
 
