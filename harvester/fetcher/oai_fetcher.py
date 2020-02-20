@@ -23,20 +23,22 @@ class SickleMARCRecord(SickleDCRecord):
     of all records in the file, but in this case it's
     guaranteed to be just one record per file, because
     Sickle is handling iterating through the oai feed.
+
+    SickleDCRecord definition:
+    https://github.com/mloesch/sickle/blob/79d7c727af3a4437720116549d4c681e74799f7e/sickle/models.py#L120
     '''
     def __init__(self, record_element, strip_ns=True):
         super(SickleMARCRecord, self).__init__(
             record_element, strip_ns=strip_ns)
         if not self.deleted:
-            self.marc_file = tempfile.TemporaryFile()
-            self.marc_file.write(etree.tounicode(self.xml.find(
-                './/' + self._oai_namespace + 'metadata'
-            ).getchildren()[0]).encode('utf8'))
-            self.marc_file.seek(0)
-
-            records = parse_xml_to_array(self.marc_file)
-            self.metadata = records[0].as_dict()
-
+            marc_file = tempfile.TemporaryFile()
+            metadata = self.xml.find(
+                ".//" + self._oai_namespace + "metadata/")
+            marc_file.write(
+                etree.tostring(metadata, encoding='utf-8'))
+            marc_file.seek(0)
+            records = parse_xml_to_array(marc_file)
+            self.metadata = records[0].as_json()
 
 class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
