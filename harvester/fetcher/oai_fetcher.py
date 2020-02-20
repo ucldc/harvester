@@ -38,7 +38,7 @@ class SickleMARCRecord(SickleDCRecord):
                 etree.tostring(metadata, encoding='utf-8'))
             marc_file.seek(0)
             records = parse_xml_to_array(marc_file)
-            self.metadata = records[0].as_json()
+            self.metadata = records[0].as_dict()
 
 class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
