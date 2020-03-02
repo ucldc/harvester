@@ -367,13 +367,6 @@ if __name__ == '__main__':
         default=False,
         help='Should image harvester not get image if the object field exists '
         'for the doc (default: False, always get)')
-    parser.add_argument(
-        '--get_if_object',
-        action='store_true',
-        default=False,
-        help='Should image harvester not get image if the object '
-        'field exists for the doc (default: False, always get)'
-    )
     args = parser.parse_args()
     print(args)
     object_auth = None
@@ -384,5 +377,4 @@ if __name__ == '__main__':
         args.collection_key,
         object_auth=object_auth,
         url_couchdb=args.url_couchdb,
-        get_if_object=args.get_if_object,
-        ignore_content_type=args.ignore_content_type)
+        get_if_object=args.get_if_object)
