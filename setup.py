@@ -41,11 +41,11 @@ setup(
          'https://github.com/mredar/redis-collections/archive/master.zip#egg=redis-collections',
         'https://github.com/mredar/nuxeo-calisphere/archive/master.zip#egg=UCLDC-Deep-Harvester',
         'https://github.com/tingletech/mediajson/archive/master.zip#egg=mediajson',
-        'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle',
+        # 'https://github.com/mredar/sickle/archive/master.zip#egg=Sickle',
         # 'https://github.com/nvie/rq/archive/4875331b60ddf8ddfe5b374ec75c938eb9749602.zip#egg=rq',
     ],
     install_requires=[
-        'Sickle==0.5',
+        'Sickle==0.6.3',
         'argparse==1.2.1',
         'lxml==3.3.5',
         'requests==2.11.1',

@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="https://digicoll.lib.berkeley.edu/css/oai2.xsl.v1.0" ?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2020-01-27T22:14:43Z</responseDate>
+  <request verb="ListRecords" set="sugoroku" metadataPrefix="marcxml">https://digicoll.lib.berkeley.edu/oai2d</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:digicoll.lib.berkeley.edu:53877</identifier>
+        <datestamp>2019-11-21T18:01:27Z</datestamp>
+        <setSpec>sugoroku</setSpec>
+      </header>
+      <metadata>
+        <marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" type="Bibliographic">
+					<marc:leader>          22        4500</marc:leader>
+          <marc:controlfield tag="001">53877</marc:controlfield>
+          <marc:controlfield tag="005">20191121100127.0</marc:controlfield>
+          <marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(sugoroku)00001</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="041" ind1=" " ind2=" ">
+            <marc:subfield code="a">jpn</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="245" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-02</marc:subfield>
+            <marc:subfield code="a">Zensei fūki sugoroku </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="246" ind1=" " ind2=" ">
+            <marc:subfield code="a">全盛富貴寿古&amp;#x9332</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="260" ind1=" " ind2=" ">
+            <marc:subfield code="a">[Japan] </marc:subfield>
+            <marc:subfield code="b">[publisher not identified]</marc:subfield>
+            <marc:subfield code="c">[between 1868 and 1912]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="269" ind1=" " ind2=" ">
+            <marc:subfield code="a">1868</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="300" ind1=" " ind2=" ">
+            <marc:subfield code="a">1 folded sheet</marc:subfield>
+            <marc:subfield code="b">color illustrations</marc:subfield>
+            <marc:subfield code="c">70 x 71 cm, folded to 24 x 18 cm</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="336" ind1=" " ind2=" ">
+            <marc:subfield code="a">Photograph</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Illustration of capitalists in the Maiji period; in form of a sugoroku game board.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Reinforced cover pasted on verso of sugoroku.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Actual size: 69.3 x 70.5 cm.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Capitalists and financiers -- Japan.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Capitalists and financiers.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="651" ind1=" " ind2=" ">
+            <marc:subfield code="a">Japan.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="700" ind1="1" ind2=" ">
+            <marc:subfield code="6">880-01</marc:subfield>
+            <marc:subfield code="a">Utagawa, Hiroshige,  1826?-1869.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="852" ind1=" " ind2=" ">
+            <marc:subfield code="c">East Asian Library</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2="1">
+            <marc:subfield code="u">http://oskicat.berkeley.edu/record=b17672647</marc:subfield>
+            <marc:subfield code="y">View library catalog record.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">全盛富貴壽古錄 /</marc:subfield>
+            <marc:subfield code="s">16031749</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53877/files/UCB-17-07.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1="1" ind2=" ">
+            <marc:subfield code="6">700-01</marc:subfield>
+            <marc:subfield code="a">歌川廣重,  1826?-1869.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">245-02</marc:subfield>
+            <marc:subfield code="a">全盛富貴壽古錄 </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="901" ind1=" " ind2=" ">
+            <marc:subfield code="m">b17672647</marc:subfield>
+            <marc:subfield code="o">460783738</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="903" ind1=" " ind2=" ">
+            <marc:subfield code="b">m</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="909" ind1="C" ind2="O">
+            <marc:subfield code="o">oai:digicoll.lib.berkeley.edu:53877</marc:subfield>
+            <marc:subfield code="p">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="912" ind1=" " ind2=" ">
+            <marc:subfield code="a">全盛富貴壽古錄 </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="980" ind1=" " ind2=" ">
+            <marc:subfield code="a">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="982" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku</marc:subfield>
+            <marc:subfield code="b">Sugoroku Game Board</marc:subfield>
+          </marc:datafield>
+        </marc:record>
+      </metadata>
+    </record>
+  	<record>
+      <header>
+        <identifier>oai:digicoll.lib.berkeley.edu:53878</identifier>
+        <datestamp>2019-11-21T18:01:27Z</datestamp>
+        <setSpec>sugoroku</setSpec>
+      </header>
+      <metadata>
+        <marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" type="Bibliographic">
+					<marc:leader>          22        4500</marc:leader>
+          <marc:controlfield tag="001">53878</marc:controlfield>
+          <marc:controlfield tag="005">20191121100127.0</marc:controlfield>
+          <marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(sugoroku)00002</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="041" ind1=" " ind2=" ">
+              <marc:subfield code="a">jpn</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="245" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-02</marc:subfield>
+            <marc:subfield code="a">Dainihon kokusan sugoroku </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="246" ind1=" " ind2=" ">
+            <marc:subfield code="a">大日本国産双六</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="260" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-03</marc:subfield>
+            <marc:subfield code="a">Honjo-ku [Tokyo] </marc:subfield>
+            <marc:subfield code="b">Kobayashi Shinkichi</marc:subfield>
+            <marc:subfield code="c">Meiji 20 [1887]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="269" ind1=" " ind2=" ">
+            <marc:subfield code="a">1887</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="300" ind1=" " ind2=" ">
+            <marc:subfield code="a">1 folded sheet in wrapper</marc:subfield>
+            <marc:subfield code="b">color illustrations</marc:subfield>
+            <marc:subfield code="c">72 x 62 cm, folded to 26 x 20 cm</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="336" ind1=" " ind2=" ">
+            <marc:subfield code="a">Photograph</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Actual size: 71.6 x 61.3 cm.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Illustration of Industries in the Maiji period; in form of a sugoroku game board.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Picture on wrapper.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Industries -- Japan -- Pictorial works.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Industries.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="651" ind1=" " ind2=" ">
+            <marc:subfield code="a">Japan.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="655" ind1=" " ind2=" ">
+            <marc:subfield code="a">Pictorial works.</marc:subfield>
+            <marc:subfield code="2">fast</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="700" ind1="1" ind2=" ">
+            <marc:subfield code="6">880-01</marc:subfield>
+            <marc:subfield code="a">Utagawa, Kuniteru,  1830?-1874.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="852" ind1=" " ind2=" ">
+            <marc:subfield code="c">East Asian Library</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2="1">
+            <marc:subfield code="u">http://oskicat.berkeley.edu/record=b17680844</marc:subfield>
+            <marc:subfield code="y">View library catalog record.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">大日本國産雙六 /</marc:subfield>
+            <marc:subfield code="s">10007376</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53878/files/UCB-24-13.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">大日本國産雙六 /</marc:subfield>
+            <marc:subfield code="s">2544725</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53878/files/UCB-24-13-01.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">大日本國産雙六 /</marc:subfield>
+            <marc:subfield code="s">1999932</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53878/files/UCB-24-13-02.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1="1" ind2=" ">
+            <marc:subfield code="6">700-01</marc:subfield>
+            <marc:subfield code="a">歌川国輝,  1830?-1874.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">245-02</marc:subfield>
+            <marc:subfield code="a">大日本國産雙六 </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">260-03</marc:subfield>
+            <marc:subfield code="a">本所區 [Tokyo] </marc:subfield>
+            <marc:subfield code="b">小林新吉</marc:subfield>
+            <marc:subfield code="c">明治 20 [1887]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="901" ind1=" " ind2=" ">
+            <marc:subfield code="m">b17680844</marc:subfield>
+            <marc:subfield code="o">466422377</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="903" ind1=" " ind2=" ">
+            <marc:subfield code="b">m</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="909" ind1="C" ind2="O">
+            <marc:subfield code="o">oai:digicoll.lib.berkeley.edu:53878</marc:subfield>
+            <marc:subfield code="p">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="912" ind1=" " ind2=" ">
+            <marc:subfield code="a">大日本國産雙六 </marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="913" ind1=" " ind2=" ">
+            <marc:subfield code="a">本所區 [Tokyo] </marc:subfield>
+            <marc:subfield code="b">小林新吉</marc:subfield>
+            <marc:subfield code="c">明治 20 [1887]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="980" ind1=" " ind2=" ">
+            <marc:subfield code="a">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="982" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku</marc:subfield>
+            <marc:subfield code="b">Sugoroku Game Board</marc:subfield>
+          </marc:datafield>
+        </marc:record>
+      </metadata>
+    </record>
+  	<record>
+      <header>
+        <identifier>oai:digicoll.lib.berkeley.edu:53879</identifier>
+        <datestamp>2019-11-21T18:01:27Z</datestamp>
+        <setSpec>sugoroku</setSpec>
+      </header>
+      <metadata>
+        <marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" type="Bibliographic">
+					<marc:leader>          22        4500</marc:leader>
+          <marc:controlfield tag="001">53879</marc:controlfield>
+          <marc:controlfield tag="005">20191121100127.0</marc:controlfield>
+          <marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(sugoroku)00003</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="041" ind1=" " ind2=" ">
+            <marc:subfield code="a">jpn</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="245" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-01</marc:subfield>
+            <marc:subfield code="a">Shinpan Shizugadake shichihonyari tobimawari sugoroku.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="246" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-02</marc:subfield>
+            <marc:subfield code="a">Shizugadake shichihonyari tobimawari sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="260" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-03</marc:subfield>
+            <marc:subfield code="a">Nagoya </marc:subfield>
+            <marc:subfield code="b">Izutsuya Bunsuke hanmoto</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1986]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="269" ind1=" " ind2=" ">
+            <marc:subfield code="a">1600</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="300" ind1=" " ind2=" ">
+            <marc:subfield code="a">1 folded sheet</marc:subfield>
+            <marc:subfield code="b">illustrations</marc:subfield>
+            <marc:subfield code="c">33 x 49 cm, folded to 17 x 25 cm</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="336" ind1=" " ind2=" ">
+            <marc:subfield code="a">Photograph</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Actual size: 32.7 x 48.1 cm.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Illustration of the Battle of Shizugatake; in form of a sugoroku game board.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Shizugatake, Battle of, Japan, 1583, in art.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Shizugatake, Battle of (Japan : 1583) in art.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="852" ind1=" " ind2=" ">
+            <marc:subfield code="c">East Asian Library</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2="1">
+            <marc:subfield code="u">http://oskicat.berkeley.edu/record=b17680967</marc:subfield>
+            <marc:subfield code="y">View library catalog record.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">新版賤獄七本鎗飛廻双六.</marc:subfield>
+            <marc:subfield code="s">3481984</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53879/files/UCB-24-14.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">245-01</marc:subfield>
+            <marc:subfield code="a">新版賤獄七本鎗飛廻双六.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">246-02</marc:subfield>
+            <marc:subfield code="a">賤獄七本鎗飛廻双六</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">260-03</marc:subfield>
+            <marc:subfield code="a">名古屋 </marc:subfield>
+            <marc:subfield code="b">井筒屋文助版元</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1986]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="901" ind1=" " ind2=" ">
+            <marc:subfield code="m">b17680967</marc:subfield>
+            <marc:subfield code="o">466450085</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="903" ind1=" " ind2=" ">
+            <marc:subfield code="b">m</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="909" ind1="C" ind2="O">
+            <marc:subfield code="o">oai:digicoll.lib.berkeley.edu:53879</marc:subfield>
+            <marc:subfield code="p">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="912" ind1=" " ind2=" ">
+            <marc:subfield code="a">新版賤獄七本鎗飛廻双六.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="913" ind1=" " ind2=" ">
+            <marc:subfield code="a">名古屋 </marc:subfield>
+            <marc:subfield code="b">井筒屋文助版元</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1986]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="980" ind1=" " ind2=" ">
+            <marc:subfield code="a">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="982" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku</marc:subfield>
+            <marc:subfield code="b">Sugoroku Game Board</marc:subfield>
+          </marc:datafield>
+        </marc:record>
+      </metadata>
+    </record>
+    <record>
+      <header>
+        <identifier>oai:digicoll.lib.berkeley.edu:53880</identifier>
+        <datestamp>2019-11-21T18:01:27Z</datestamp>
+        <setSpec>sugoroku</setSpec>
+      </header>
+      <metadata>
+        <marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" type="Bibliographic">
+					<marc:leader>          22        4500</marc:leader>
+          <marc:controlfield tag="001">53880</marc:controlfield>
+          <marc:controlfield tag="005">20191121100127.0</marc:controlfield>
+          <marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(sugoroku)00004</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="041" ind1=" " ind2=" ">
+            <marc:subfield code="a">jpn</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="245" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-01</marc:subfield>
+            <marc:subfield code="a">Shinpan Ise sangū mawari sugoroku.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="246" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-02</marc:subfield>
+            <marc:subfield code="a">Ise sangū mawari sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="260" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-03</marc:subfield>
+            <marc:subfield code="a">Nagoya </marc:subfield>
+            <marc:subfield code="b">Izutsuya Bunsuke hanmoto</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1868]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="269" ind1=" " ind2=" ">
+            <marc:subfield code="a">1600</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="300" ind1=" " ind2=" ">
+            <marc:subfield code="a">1 folded sheet</marc:subfield>
+            <marc:subfield code="b">illustrations</marc:subfield>
+            <marc:subfield code="c">51 x 37 cm, folded to 26 x 19 cm</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="336" ind1=" " ind2=" ">
+            <marc:subfield code="a">Photograph</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Illustration of Ise pligrimages in the Edo peiod; in form of a sugoroku game board.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="500" ind1=" " ind2=" ">
+            <marc:subfield code="a">Actual size: 50.1 x 37 cm.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="650" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="651" ind1=" " ind2=" ">
+            <marc:subfield code="a">Japan -- Pictorial works.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="651" ind1=" " ind2=" ">
+            <marc:subfield code="a">Japan.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="655" ind1=" " ind2=" ">
+            <marc:subfield code="a">Pictorial works.</marc:subfield>
+            <marc:subfield code="2">fast</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="852" ind1=" " ind2=" ">
+            <marc:subfield code="c">East Asian Library</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2="1">
+            <marc:subfield code="u">http://oskicat.berkeley.edu/record=b17680973</marc:subfield>
+            <marc:subfield code="y">View library catalog record.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="856" ind1="4" ind2=" ">
+            <marc:subfield code="y">新板伊勢参宮巡双六.</marc:subfield>
+            <marc:subfield code="s">3949307</marc:subfield>
+            <marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53880/files/UCB-24-15.jpg</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">245-01</marc:subfield>
+            <marc:subfield code="a">新板伊勢参宮巡双六.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">246-02</marc:subfield>
+            <marc:subfield code="a">伊勢参宮巡双六</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="880" ind1=" " ind2=" ">
+            <marc:subfield code="6">260-03</marc:subfield>
+            <marc:subfield code="a">名古屋 </marc:subfield>
+            <marc:subfield code="b">井筒屋文助版元</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1868]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="901" ind1=" " ind2=" ">
+            <marc:subfield code="m">b17680973</marc:subfield>
+            <marc:subfield code="o">466453131</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="903" ind1=" " ind2=" ">
+            <marc:subfield code="b">m</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="909" ind1="C" ind2="O">
+            <marc:subfield code="o">oai:digicoll.lib.berkeley.edu:53880</marc:subfield>
+            <marc:subfield code="p">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="912" ind1=" " ind2=" ">
+            <marc:subfield code="a">新板伊勢参宮巡双六.</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="913" ind1=" " ind2=" ">
+            <marc:subfield code="a">名古屋 </marc:subfield>
+            <marc:subfield code="b">井筒屋文助版元</marc:subfield>
+            <marc:subfield code="c">[between 1600 and 1868]</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="980" ind1=" " ind2=" ">
+            <marc:subfield code="a">sugoroku</marc:subfield>
+          </marc:datafield>
+          <marc:datafield tag="982" ind1=" " ind2=" ">
+            <marc:subfield code="a">Sugoroku</marc:subfield>
+            <marc:subfield code="b">Sugoroku Game Board</marc:subfield>
+          </marc:datafield>
+        </marc:record>
+      </metadata>
+    </record>
+  	<record>
+      <header>
+        <identifier>oai:digicoll.lib.berkeley.edu:53881</identifier>
+        <datestamp>2019-11-21T18:01:27Z</datestamp>
+        <setSpec>sugoroku</setSpec>
+      </header>
+      <metadata>
+        <marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd" type="Bibliographic">
+					<marc:leader>          22        4500</marc:leader>
+          <marc:controlfield tag="001">53881</marc:controlfield>
+  				<marc:controlfield tag="005">20191121100127.0</marc:controlfield>
+  				<marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(sugoroku)00005</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="041" ind1=" " ind2=" ">
+  					<marc:subfield code="a">jpn</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="245" ind1=" " ind2=" ">
+  					<marc:subfield code="6">880-02</marc:subfield>
+  					<marc:subfield code="a">Daishinpan Nihon banbutsu hajimari tobimawari sugoroku </marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="246" ind1=" " ind2=" ">
+  					<marc:subfield code="a">大新板日本万物初序飛廻双六</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="260" ind1=" " ind2=" ">
+  					<marc:subfield code="a">[Japan] </marc:subfield>
+  					<marc:subfield code="b">[publisher not identified]</marc:subfield>
+  					<marc:subfield code="c">[between 1600 and 1986]</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="269" ind1=" " ind2=" ">
+  					<marc:subfield code="a">1600</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="300" ind1=" " ind2=" ">
+  					<marc:subfield code="a">1 folded sheet in envelope</marc:subfield>
+  					<marc:subfield code="b">color illustrations</marc:subfield>
+  					<marc:subfield code="c">34 x 43 cm, folded to 24 x 17 cm</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="336" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Photograph</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="500" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Illustration of the origins of various things in the Edo period; in form of a sugoroku game board.</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="500" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Actual size: 63.7 x 42.8 cm.</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="650" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="650" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Sugoroku (Game)</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="700" ind1="1" ind2=" ">
+  					<marc:subfield code="6">880-01</marc:subfield>
+  					<marc:subfield code="a">Nakamura, Nagahide,  active 19th century.</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="852" ind1=" " ind2=" ">
+  					<marc:subfield code="c">East Asian Library</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="856" ind1="4" ind2="1">
+  					<marc:subfield code="u">http://oskicat.berkeley.edu/record=b20911457</marc:subfield>
+  					<marc:subfield code="y">View library catalog record.</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="856" ind1="4" ind2=" ">
+  					<marc:subfield code="y">大新版日本萬物初序飛廻雙六 /</marc:subfield>
+  					<marc:subfield code="s">6692995</marc:subfield>
+  					<marc:subfield code="u">http://digicoll.lib.berkeley.edu/record/53881/files/UCB-39-03.jpg</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="880" ind1="1" ind2=" ">
+  					<marc:subfield code="6">700-01</marc:subfield>
+  					<marc:subfield code="a">中邑長秀,  active 19th century.</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="880" ind1=" " ind2=" ">
+  					<marc:subfield code="6">245-02</marc:subfield>
+  					<marc:subfield code="a">大新版日本萬物初序飛廻雙六 </marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="901" ind1=" " ind2=" ">
+  					<marc:subfield code="m">b20911457</marc:subfield>
+  					<marc:subfield code="o">870904480</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="903" ind1=" " ind2=" ">
+  					<marc:subfield code="b">m</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="909" ind1="C" ind2="O">
+  					<marc:subfield code="o">oai:digicoll.lib.berkeley.edu:53881</marc:subfield>
+  					<marc:subfield code="p">sugoroku</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="912" ind1=" " ind2=" ">
+  					<marc:subfield code="a">大新版日本萬物初序飛廻雙六 </marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="980" ind1=" " ind2=" ">
+  					<marc:subfield code="a">sugoroku</marc:subfield>
+  				</marc:datafield>
+  				<marc:datafield tag="982" ind1=" " ind2=" ">
+  					<marc:subfield code="a">Sugoroku</marc:subfield>
+  					<marc:subfield code="b">Sugoroku Game Board</marc:subfield>
+  				</marc:datafield>
+        </marc:record>
+      </metadata>
+		</record>
+    <resumptionToken cursor="0" completeListSize="155" expirationDate="2020-01-28T23:14:46Z">sugoroku___kwbSpr</resumptionToken>
+  </ListRecords>
+</OAI-PMH>
+
