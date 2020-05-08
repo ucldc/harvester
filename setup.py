@@ -65,7 +65,7 @@ setup(
         'pymarc==3.0.4',
         'facet_decade==2.0',
         'redis_collections==0.1.7',
-        'rdflib==4.2.2'
+        'rdflib==4.2.2',
         'xmljson==0.2.0',
         'UCLDC-Deep-Harvester',
         'boto3==1.9.160',
