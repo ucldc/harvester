@@ -48,7 +48,7 @@ setup(
         'Sickle==0.6.3',
         'argparse==1.2.1',
         'lxml==3.3.5',
-        'requests==2.11.1',
+        'requests==2.20.0',
         'solrpy==0.9.7',
         'pysolr==3.3.0',
         'pilbox==1.0.3',
