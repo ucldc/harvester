@@ -34,7 +34,7 @@ setup(
     dependency_links=[
         'https://github.com/zepheira/amara/archive/master.zip#egg=amara',
         'https://github.com/zepheira/akara/archive/master.zip#egg=akara',
-        'https://github.com/ucldc/md5s3stash/archive/7c32a3270198ae9b84f22a4852fe60105f74651b.zip#egg=md5s3stash',
+        'https://github.com/ucldc/md5s3stash/archive/legacy_harvester.zip#egg=md5s3stash',
         'https://github.com/ucldc/pynux/archive/master.zip#egg=pynux',
         'https://raw.githubusercontent.com/ucldc/facet_decade/master/facet_decade.py#egg=facet_decade-2.0',
         'https://pypi.python.org/packages/source/p/pilbox/pilbox-1.0.3.tar.gz#egg=pilbox',
