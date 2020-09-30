@@ -820,6 +820,7 @@ def harvesting_report(collection_key, updated_docs, num_added, report):
 
 def sync_couch_collection_to_solr(collection_key):
     # This works from inside an environment with default URLs for couch & solr
+    delete_solr_collection(collection_key)
     URL_SOLR = os.environ.get('URL_SOLR', None)
     collection_key = str(collection_key)  # Couch need string keys
     v = CouchDBCollectionFilter(

@@ -6,6 +6,7 @@ from test.utils import DIR_FIXTURES
 from harvester.collection_registry_client import Collection
 import harvester.fetcher as fetcher
 from mypretty import httpretty
+import pprint
 # import httpretty
 
 
@@ -140,6 +141,25 @@ class OAIFetcherTestCase(LogOverrideMixin, TestCase):
                 ['{urn:mpeg:mpeg21:2002:02-DIDL-NS}DIDLInfo'][0]['text'],
                 '2015-05-20T20:30:26Z')
         del didl_fetcher
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://content.cdlib.org/oai',
+            body=open(DIR_FIXTURES+'/testOAI-tind.xml').read())
+        tind_fetcher = fetcher.OAIFetcher('http://content.cdlib.org/oai',
+                                          'set=sugoroku&metadataPrefix=marcxml')
+        self.assertEqual(tind_fetcher._set, 'sugoroku')
+        self.assertEqual(tind_fetcher._metadataPrefix, 'marcxml')
+        rec = tind_fetcher.next()
+        self.assertIsInstance(rec, dict)
+        self.assertIn('fields', rec)
+        filtered = filter(lambda x: '901' in x.keys(), rec['fields'])
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0]['901']['subfields'][0]['m'], u'b17672647')
+        self.assertIn('datestamp', rec)
+        self.assertEqual(rec['datestamp'], '2019-11-21T18:01:27Z')
+        self.assertEqual(httpretty.last_request().querystring,
+                         {u'verb': [u'ListRecords'], u'set': [u'sugoroku'],
+                         u'metadataPrefix': [u'marcxml']})
 
     @httpretty.activate
     def testDCTERMS(self):

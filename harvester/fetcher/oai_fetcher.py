@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
+import tempfile
 from urlparse import parse_qs
 from .fetcher import Fetcher
 from sickle import Sickle
 from sickle.models import Record as SickleDCRecord
+from pymarc import parse_xml_to_array
+from lxml import etree
 
 
 def etree_to_dict(t):
@@ -12,6 +15,30 @@ def etree_to_dict(t):
     d['text'] = t.text
     return d
 
+class SickleMARCRecord(SickleDCRecord):
+    '''Extend the sickle Record to handle oai marc xml
+    using pymarc's parse_xml_to_array function.
+
+    parse_xml_to_array takes a file and returns an array
+    of all records in the file, but in this case it's
+    guaranteed to be just one record per file, because
+    Sickle is handling iterating through the oai feed.
+
+    SickleDCRecord definition:
+    https://github.com/mloesch/sickle/blob/79d7c727af3a4437720116549d4c681e74799f7e/sickle/models.py#L120
+    '''
+    def __init__(self, record_element, strip_ns=True):
+        super(SickleMARCRecord, self).__init__(
+            record_element, strip_ns=strip_ns)
+        if not self.deleted:
+            marc_file = tempfile.TemporaryFile()
+            metadata = self.xml.find(
+                ".//" + self._oai_namespace + "metadata/")
+            marc_file.write(
+                etree.tostring(metadata, encoding='utf-8'))
+            marc_file.seek(0)
+            records = parse_xml_to_array(marc_file)
+            self.metadata = records[0].as_dict()
 
 class SickleDIDLRecord(SickleDCRecord):
     '''Extend the Sickle Record to handle oai didl xml.
@@ -60,6 +87,9 @@ class OAIFetcher(Fetcher):
             if self._metadataPrefix.lower() == 'didl':
                 self.oai_client.class_mapping['ListRecords'] = SickleDIDLRecord
                 self.oai_client.class_mapping['GetRecord'] = SickleDIDLRecord
+            elif self._metadataPrefix.lower() == 'marcxml':
+                self.oai_client.class_mapping['ListRecords'] = SickleMARCRecord
+                self.oai_client.class_mapping['GetRecord'] = SickleMARCRecord
             self.records = self.oai_client.ListRecords(
                 metadataPrefix=self._metadataPrefix,
                 set=self._set,

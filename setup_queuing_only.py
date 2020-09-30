@@ -31,10 +31,10 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=[
-        'requests==2.11.1',
+        'requests==2.20.0',
         'Logbook==0.6.0',
         'redis==2.10.1',
-        'rq',
+        'rq==0.8.2',
         ],
     test_suite='test',
     tests_require=['mock>=1.0.1', 'httpretty==0.8.3', ],
