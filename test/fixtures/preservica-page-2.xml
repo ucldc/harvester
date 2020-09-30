@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ChildrenResponse xmlns="http://preservica.com/EntityAPI/v6.0" xmlns:xip="http://preservica.com/XIP/v6.0">
+    <Children>
+        <Child title="MS126_B4_608" ref="9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe</Child>
+        <Child title="MS126_B4_609" ref="d8606c7b-5b31-4341-b7f3-2e78a59ce55e" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/d8606c7b-5b31-4341-b7f3-2e78a59ce55e</Child>
+        <Child title="MS126_B4_610" ref="417e4f9a-e311-4d4a-9f79-751cf63c6619" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/417e4f9a-e311-4d4a-9f79-751cf63c6619</Child>
+        <Child title="MS126_B4_611" ref="ce1c7525-5247-44f5-b07c-8dd84af9518d" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/ce1c7525-5247-44f5-b07c-8dd84af9518d</Child>
+        <Child title="MS126_B4_612" ref="b9add265-16c9-412c-9eb9-ceeb1977c01a" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/b9add265-16c9-412c-9eb9-ceeb1977c01a</Child>
+        <Child title="MS126_B4_613" ref="a4acfa63-8110-46ae-b1e6-4d2e1e9f625b" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/a4acfa63-8110-46ae-b1e6-4d2e1e9f625b</Child>
+        <Child title="MS126_B4_614" ref="b52125b6-80e1-483f-939e-601195778584" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/b52125b6-80e1-483f-939e-601195778584</Child>
+        <Child title="MS126_B4_615" ref="a70660ee-5585-43d9-83eb-d5fa96cbd2f3" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/a70660ee-5585-43d9-83eb-d5fa96cbd2f3</Child>
+        <Child title="MS126_B4_616" ref="7bb6c63f-2ff9-4a56-9962-9428bbe2796e" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/7bb6c63f-2ff9-4a56-9962-9428bbe2796e</Child>
+        <Child title="MS126_B4_617" ref="fe46e217-06c2-48fb-bc75-99effd1a682f" type="IO">https://us.preservica.com/api/entity/v6.0/information-objects/fe46e217-06c2-48fb-bc75-99effd1a682f</Child>
+    </Children>
+    <Paging>
+        <Previous>https://us.preservica.com/api/entity/v6.0/structural-objects/eb2416ec-ac1e-4e5e-baee-84e3371c03e9/children?amp;max=100&amp;start=900&amp;max=100</Previous>
+        <TotalResults>17</TotalResults>
+    </Paging>
+    <AdditionalInformation>
+        <Self>https://us.preservica.com/api/entity/v6.0/structural-objects/eb2416ec-ac1e-4e5e-baee-84e3371c03e9/children?start=1000&amp;amp;max=100</Self>
+    </AdditionalInformation>
+</ChildrenResponse>

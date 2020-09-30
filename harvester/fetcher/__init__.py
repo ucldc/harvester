@@ -19,6 +19,7 @@ from .xml_fetcher import XML_Fetcher
 from .ucd_json_fetcher import UCD_JSON_Fetcher
 from .emuseum_fetcher import eMuseum_Fetcher
 from .ia_fetcher import IA_Fetcher
+from .preservica_api_fetcher import PreservicaFetcher
 from .controller import HARVEST_TYPES
 from .controller import HarvestController
 from .controller import get_log_file_path
@@ -45,6 +46,7 @@ __all__ = (
         XML_Fetcher,
         eMuseum_Fetcher,
         IA_Fetcher,
+        PreservicaFetcher,
         UCD_JSON_Fetcher,
         PySolrQueryFetcher,
         Flickr_Fetcher,

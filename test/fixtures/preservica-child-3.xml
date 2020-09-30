@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EntityResponse xmlns="http://preservica.com/EntityAPI/v6.0" xmlns:xip="http://preservica.com/XIP/v6.0">
+    <xip:InformationObject>
+        <xip:Ref>9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe</xip:Ref>
+        <xip:Title>MS126_B4_608</xip:Title>
+        <xip:SecurityTag>Public</xip:SecurityTag>
+        <xip:Parent>eb2416ec-ac1e-4e5e-baee-84e3371c03e9</xip:Parent>
+    </xip:InformationObject>
+    <AdditionalInformation>
+        <Self>https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe</Self>
+        <Parent>https://us.preservica.com/api/entity/v6.0/structural-objects/eb2416ec-ac1e-4e5e-baee-84e3371c03e9</Parent>
+        <Links>https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/links</Links>
+        <Identifiers>https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/identifiers</Identifiers>
+        <EventActions>https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/event-actions</EventActions>
+        <Representations>https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/representations</Representations>
+        <Metadata>
+            <Fragment schema="http://preservica.com/LegacyXIP">https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/metadata/0a4d2a57-f571-4871-b85c-c156e04e90f6</Fragment>
+            <Fragment schema="http://www.openarchives.org/OAI/2.0/oai_dc/">https://us.preservica.com/api/entity/v6.0/information-objects/9501e09f-1ae8-4abc-a9ec-6c705ff8fdbe/metadata/ec5c46e5-443e-4b6d-81b9-ec2a5252a50c</Fragment>
+        </Metadata>
+    </AdditionalInformation>
+</EntityResponse>
