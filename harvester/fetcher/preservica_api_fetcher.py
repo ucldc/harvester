@@ -86,6 +86,8 @@ class PreservicaFetcher(Fetcher):
                                         'EntityAPI/v6.0}Next')
         if next_url is not None:
             self.url_next = next_url.text
+        else:
+            self.url_next = None
 
         hits = tree.findall('{http://preservica.com/EntityAPI/v6.0}'
                                         'Children/{http://preservica.com/'
