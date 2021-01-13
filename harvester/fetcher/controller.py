@@ -31,6 +31,7 @@ from .xml_fetcher import XML_Fetcher
 from .emuseum_fetcher import eMuseum_Fetcher
 from .ucd_json_fetcher import UCD_JSON_Fetcher
 from .ia_fetcher import IA_Fetcher
+from .preservica_api_fetcher import PreservicaFetcher
 
 EMAIL_RETURN_ADDRESS = os.environ.get('EMAIL_RETURN_ADDRESS',
                                       'example@example.com')
@@ -52,7 +53,8 @@ HARVEST_TYPES = {
     'XML': XML_Fetcher,
     'EMS': eMuseum_Fetcher,
     'UCD': UCD_JSON_Fetcher,
-    'IAR': IA_Fetcher
+    'IAR': IA_Fetcher,
+    'PRA': PreservicaFetcher
 }
 
 
