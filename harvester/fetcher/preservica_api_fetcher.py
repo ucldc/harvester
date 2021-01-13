@@ -54,10 +54,7 @@ class PreservicaFetcher(Fetcher):
             preservica_id = url_object.split('information-objects/')[1]
             jRecord = json.loads(object[0])
             jRecord.update({"preservica_id": { "$": preservica_id } })
-            object = [
-                json.dumps(jRecord)
-                ]
-            objset.append(object)
+            objset.append(jRecord)
         self.doc_current += len(docHits)
         if self.url_next:
             self.url_API = self.url_next
