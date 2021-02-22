@@ -14,7 +14,7 @@ def def_args():
     parser.add_argument('user_email', type=str, help='user email')
     parser.add_argument('rq_queue', type=str, help='RQ Queue to put job in')
     parser.add_argument(
-        'collection_key',
+        'item_id',
         type=str,
         help='URL for the collection Django tastypie api resource')
     return parser
