@@ -790,6 +790,16 @@ class CouchdbLastSeq_S3(object):
         '''value should be last_seq from couchdb _changes'''
         self.s3object.put(Body=str(value))
 
+def delete_solr_item_by_id(item_id):
+    url_solr = os.environ['URL_SOLR']
+    body = 'stream.body=<delete><id>{}</id></delete>'.format(item_id)
+    url_delete = '{}/update?{}&commit=true'.format(url_solr, body)
+    response = requests.get(url_delete)
+    response.raise_for_status()
+    subject = format_results_subject(item_id,
+        'Deleted document from Solr {env} ')
+    publish_to_harvesting(subject,
+        'DELETED {}'.format(item_id))
 
 def delete_solr_collection(collection_key):
     '''Delete a solr  collection for the environment'''
