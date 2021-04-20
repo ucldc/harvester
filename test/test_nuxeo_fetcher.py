@@ -277,7 +277,7 @@ class NuxeoFetcherTestCase(LogOverrideMixin, TestCase):
             'https://example.edu/api/v1/path/@search?query=SELECT+%2A+FROM+'
             'Document+WHERE+ecm%3AparentId+%3D+'
             '%274c80e254-6def-4230-9f28-bc48878568d4%27+'
-            'AND+ecm%3AcurrentLifeCycleState+%21%3D+%27deleted%27+ORDER+BY+'
+            'AND+ecm%3AisTrashed+%3D+0+ORDER+BY+'
             'ecm%3Apos&currentPageIndex=0&pageSize=100',
             responses=[
                 httpretty.Response(

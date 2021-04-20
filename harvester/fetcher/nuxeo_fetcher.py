@@ -176,7 +176,7 @@ class NuxeoFetcher(Fetcher):
         component_uid = None
 
         query = "SELECT * FROM Document WHERE ecm:parentId = '{}' AND " \
-                "ecm:currentLifeCycleState != 'deleted' ORDER BY " \
+                "ecm:isTrashed = 0 ORDER BY " \
                 "ecm:pos".format(parent_metadata['uid'])
         for child in self._nx.nxql(query):
             child_metadata = self._nx.get_metadata(uid=child['uid'])
@@ -191,7 +191,7 @@ class NuxeoFetcher(Fetcher):
         component_uid = None
 
         query = "SELECT * FROM Document WHERE ecm:parentId = '{}' AND " \
-                "ecm:currentLifeCycleState != 'deleted' ORDER BY " \
+                "ecm:isTrashed = 0 ORDER BY " \
                 "ecm:pos".format(parent_metadata['uid'])
         for child in self._nx.nxql(query):
             child_metadata = self._nx.get_metadata(uid=child['uid'])
