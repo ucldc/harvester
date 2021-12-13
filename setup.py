@@ -47,7 +47,7 @@ setup(
     install_requires=[
         'Sickle==0.6.3',
         'argparse==1.2.1',
-        'lxml==3.3.5',
+        'lxml==4.6.5',
         'requests==2.20.0',
         'solrpy==0.9.7',
         'pysolr==3.3.0',
